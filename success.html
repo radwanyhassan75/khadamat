@@ -3,164 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إتمام الطلب - المكتب الرقمي</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>تم استلام طلبك - المكتب الرقمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/MrRio/jsPDF/examples/js/libs/amiri/Amiri-Regular.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
-            --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
-            --danger-color: #dc3545; --danger-bg: #f8d7da;
-            --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-        }
+        :root { --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff; --gray-color: #f4f7f9; --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); }
         body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
-        .payment-page-wrapper { max-width: 850px; margin: 50px auto; padding: 20px; }
-        .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
-        .card h2 { font-size: 1.8rem; color: var(--dark-color); margin-top: 0; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-        .order-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .summary-item p { margin: 0 0 5px; color: var(--text-color); }
-        .summary-item span { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; font-weight: 700; color: var(--dark-color); margin-bottom: 8px; }
-        .form-group label span.required { color: var(--danger-color); }
-        .form-group textarea, .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-family: 'Cairo', sans-serif; font-size: 1rem; box-sizing: border-box; }
-        .important-note { background-color: var(--danger-bg); border: 1px solid var(--danger-color); color: #58151c; padding: 20px; border-radius: var(--border-radius); }
-        .important-note p { margin: 0; line-height: 1.7; font-weight: 700; }
-        .methods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .method-card { border: 2px solid #ddd; border-radius: var(--border-radius); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-        .method-card.selected { border-color: var(--primary-color); background-color: #e7f1ff; }
-        .method-card h4 { margin:0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
-        .payment-instructions { display: none; background-color: #e7f1ff; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; border-right: 4px solid var(--primary-color); }
-        .payment-instructions.active { display: block; }
-        .payment-instructions p { margin-bottom: 10px; line-height: 1.8; }
-        .mono { font-family: 'Menlo', 'Consolas', monospace; direction: ltr; text-align: left; display: inline-block; background: #d0e3ff; padding: 5px 10px; border-radius: 4px; font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; color: var(--dark-color); }
-        .file-upload-wrapper { margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
-        .file-input { display: none; }
-        .file-input-label { background-color: var(--secondary-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); cursor: pointer; display: inline-block; margin-bottom: 10px; }
-        .file-name { color: #777; font-style: italic; }
-        .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; margin-top: 20px; background: #28a745; border: none; color: white; cursor: pointer; border-radius: var(--border-radius); font-weight: 900; }
+        .success-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .success-card { background: var(--light-color); padding: 50px; text-align: center; border-radius: var(--border-radius); box-shadow: var(--box-shadow); max-width: 600px; }
+        .success-icon { font-size: 5rem; color: #28a745; margin-bottom: 20px; animation: scaleUp 0.5s ease-out; }
+        @keyframes scaleUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-title { font-size: 2.2rem; color: var(--dark-color); margin-bottom: 10px; }
+        .success-subtitle { font-size: 1.1rem; color: #555; margin-bottom: 30px; }
+        .order-id-box { background: var(--gray-color); border: 2px dashed var(--primary-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px; }
+        .order-id-box p { margin: 0; font-weight: 700; }
+        #order-id-display { font-size: 2rem; color: var(--primary-color); font-weight: 900; letter-spacing: 2px; }
+        .success-note { font-size: 0.9rem; color: #777; margin-bottom: 30px; }
+        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; background-color: var(--primary-color); color: var(--light-color); }
     </style>
 </head>
 <body>
-    <main class="payment-page-wrapper">
-        <form id="order-form">
-            <div class="card">
-                <h2><i class="fas fa-shopping-cart"></i> ملخص طلبك</h2>
-                <div class="order-summary-grid">
-                    <div class="summary-item"><p>الخدمة المطلوبة:</p><span id="display-service-name">...</span></div>
-                    <div class="summary-item"><p>المبلغ للدفع:</p><span id="display-service-price">...</span></div>
-                </div>
+    <main class="success-container">
+        <div class="success-card">
+            <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+            <h1 class="success-title">شكراً لك، تم استلام طلبك بنجاح!</h1>
+            <p class="success-subtitle">لقد قمنا بتسجيل طلبك وسنبدأ في معالجته في أقرب وقت ممكن.</p>
+            <div class="order-id-box">
+                <p>رقم طلبك هو:</p>
+                <h2 id="order-id-display">...</h2>
             </div>
-
-            <div class="card">
-                <h2><i class="fas fa-user-circle"></i> معلوماتك الشخصية</h2>
-                <div class="form-grid">
-                    <div class="form-group"><label for="customer-name">الاسم الكامل <span class="required">*</span></label><input type="text" id="customer-name" name="customer_name" required></div>
-                    <div class="form-group"><label for="customer-email">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="customer-email" name="customer_email" required></div>
-                    <div class="form-group full-width"><label for="customer-phone">رقم الهاتف (واتساب) <span class="required">*</span></label><input type="tel" id="customer-phone" name="customer_phone" required></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-info-circle"></i> تفاصيل الطلب</h2>
-                <div class="form-group"><label for="order-details">تفاصيل الطلب (معلومات، ملاحظات...) <span class="required">*</span></label><textarea id="order-details" name="order_details" rows="4" required></textarea></div>
-                <div class="form-group"><label for="order-link">رابط إضافي (اختياري)</label><input type="url" id="order-link" name="order_link" placeholder="https://example.com/..."></div>
-                <div class="form-group"><label for="receipt-file">إرفاق ملف (اختياري)</label><input type="file" id="receipt-file" name="receipt_file" class="file-input"><label for="receipt-file" class="file-input-label"><i class="fas fa-paperclip"></i> اختر ملف</label><span id="file-name-display" class="file-name"></span></div>
-            </div>
-
-            <div class="card">
-                <h2><i class="fas fa-money-check-alt"></i> إتمام الدفع</h2>
-                <div class="important-note"><p><i class="fas fa-exclamation-triangle"></i> ستتم معالجة طلبك بعد التأكد من الدفع ومراجعته. وقت المعالجة هو يوم إلى ثلاثة أيام. يمكنك التواصل معنا في حال حدوث مشكلة.</p></div>
-                <div style="margin-top: 30px;">
-                    <p><strong>1. اختر طريقة الدفع لإظهار التعليمات:</strong></p>
-                    <div class="methods-grid">
-                        <div class="method-card" data-method="cashplus"><h4><i class="fas fa-wallet"></i> Cash Plus</h4></div>
-                        <div class="method-card" data-method="orange"><h4><i class="fab fa-orange"></i> Orange Money</h4></div>
-                        <div class="method-card" data-method="cih"><h4><i class="fas fa-university"></i> CIH Bank</h4></div>
-                        <div class="method-card" data-method="bmce"><h4><i class="fas fa-university"></i> BMCE Bank</h4></div>
-                        <div class="method-card" data-method="attijari"><h4><i class="fas fa-university"></i> Attijariwafa</h4></div>
-                        <div class="method-card" data-method="soge"><h4><i class="fas fa-university"></i> Société Générale</h4></div>
-                    </div>
-                    <div id="cashplus-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>رقم الهاتف:</strong> <span class="mono">0621638488</span></p></div>
-                    <div id="orange-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>رقم الهاتف المرتبط:</strong> <span class="mono">0621638488</span></p></div>
-                    <div id="cih-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي CIH:</strong> <span class="mono">230810624745521100540088</span></p></div>
-                    <div id="bmce-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي BMCE:</strong> <span class="mono">960000162000010401810011</span></p></div>
-                    <div id="attijari-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي Attijariwafa:</strong> <span class="mono">007810000457430040232577</span></p></div>
-                    <div id="soge-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي Société Générale:</strong> <span class="mono">022780000760004157217174</span></p></div>
-                </div>
-                <button type="submit" id="submit-order-btn" class="submit-btn"><i class="fas fa-check-circle"></i> تأكيد الطلب وتوليد الفاتورة</button>
-            </div>
-        </form>
+            <p class="success-note">سنتواصل معك عبر الواتساب أو البريد الإلكتروني لمتابعة التفاصيل. يرجى الاحتفاظ برقم الطلب للرجوع إليه مستقبلًا.</p>
+            <a href="index.html" class="btn">العودة إلى الصفحة الرئيسية</a>
+        </div>
     </main>
-
     <script>
-        window.jsPDF = window.jspdf.jsPDF;
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const serviceName = params.get('service') || "خدمة غير محددة";
-            const servicePrice = params.get('price') || "0";
-
-            document.getElementById('display-service-name').textContent = serviceName;
-            document.getElementById('display-service-price').textContent = servicePrice + " درهم";
-
-            const methodCards = document.querySelectorAll('.method-card');
-            const instructions = document.querySelectorAll('.payment-instructions');
-            methodCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    methodCards.forEach(c => c.classList.remove('selected'));
-                    instructions.forEach(inst => inst.classList.remove('active'));
-                    card.classList.add('selected');
-                    const method = card.getAttribute('data-method');
-                    document.getElementById(method + '-instructions').classList.add('active');
-                });
-            });
-
-            const fileInput = document.getElementById('receipt-file');
-            const fileNameDisplay = document.getElementById('file-name-display');
-            fileInput.addEventListener('change', () => {
-                fileNameDisplay.textContent = fileInput.files.length > 0 ? `تم اختيار: ${fileInput.files[0].name}` : "لم يتم اختيار أي ملف.";
-            });
-
-            const orderForm = document.getElementById('order-form');
-            orderForm.addEventListener('submit', (e) => {
-                e.preventDefault(); 
-                
-                const orderId = 'KH-' + Date.now().toString().slice(-6);
-                const today = new Date().toLocaleDateString('ar-MA');
-                const customerName = document.getElementById('customer-name').value;
-                const customerEmail = document.getElementById('customer-email').value;
-                
-                const doc = new jsPDF();
-                doc.addFileToVFS("Amiri-Regular.ttf", amiriFont);
-                doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
-                doc.setFont("Amiri");
-                doc.setR2L(true);
-                doc.setFontSize(22);
-                doc.text('وصل طلب خدمة', 105, 20, { align: 'center' });
-                doc.setFontSize(12);
-                doc.text('-----------------------------------', 105, 30, { align: 'center' });
-                doc.text(`رقم الطلب: ${orderId}`, 190, 45, { align: 'right' });
-                doc.text(`تاريخ الطلب: ${today}`, 190, 55, { align: 'right' });
-                doc.text(`اسم العميل: ${customerName}`, 190, 65, { align: 'right' });
-                doc.text(`الخدمة المطلوبة: ${serviceName}`, 190, 75, { align: 'right' });
-                doc.setFontSize(16);
-                doc.text(`المبلغ: ${servicePrice} درهم`, 190, 85, { align: 'right' });
-                doc.setFontSize(12);
-                doc.text('شكرا لثقتكم!', 105, 105, { align: 'center' });
-                doc.save(`receipt-${orderId}.pdf`);
-
-                localStorage.setItem('lastOrderId', orderId);
-                setTimeout(() => { window.location.href = 'success.html'; }, 500);
-            });
+            const orderId = localStorage.getItem('lastOrderId');
+            const orderIdDisplay = document.getElementById('order-id-display');
+            if (orderId) {
+                orderIdDisplay.textContent = orderId;
+                localStorage.removeItem('lastOrderId');
+            } else {
+                orderIdDisplay.textContent = "لا يوجد رقم طلب";
+            }
         });
     </script>
 </body>
