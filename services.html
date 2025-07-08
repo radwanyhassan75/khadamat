@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدماتنا الكاملة - المكتب الرقمي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root { --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50; --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555; --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); }
+        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
+        main { display: block; }
+        .main-header { background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; }
+        .navbar-logo img { height: 80px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; position: relative; transition: color 0.3s; }
+        .navbar-menu a.active { color: var(--primary-color); }
+        .navbar-actions { display: flex; gap: 15px; }
+        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; cursor: pointer;}
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); border-color: var(--primary-color); }
+        .btn-light { background-color: #e7f1ff; color: var(--primary-color); font-style: italic; }
+        .hamburger-menu { display: none; }
+        .page-header { background: var(--dark-color); text-align: center; padding: 60px 20px; color: var(--light-color); }
+        .page-header h1 { font-size: 3.2rem; font-weight: 900; margin-bottom: 10px; }
+        .page-header p { font-size: 1.2rem; color: #bdc3c7; max-width: 600px; margin: 0 auto; }
+        .accordion-container { max-width: 900px; margin: 60px auto; padding: 0 20px; }
+        .accordion-item { margin-bottom: 15px; background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: var(--border-radius); }
+        .accordion-header { background: transparent; border: none; width: 100%; padding: 20px 25px; text-align: right; font-size: 1.5rem; font-weight: 800; color: var(--dark-color); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s; font-family: 'Cairo', sans-serif; }
+        .accordion-header i:first-child { color: var(--primary-color); margin-left: 15px; }
+        .accordion-header .fa-chevron-down { transition: transform 0.3s ease; }
+        .accordion-header.active .fa-chevron-down { transform: rotate(180deg); }
+        .accordion-header:hover { background-color: var(--gray-color); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+        .service-list { padding: 0 25px 20px 25px; }
+        .service-entry { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee; }
+        .service-entry:last-child { border-bottom: none; }
+        .service-info h4 { margin: 0 0 5px; font-size: 1.1rem; }
+        .service-info p { margin: 0; font-size: 0.9rem; color: var(--text-color); }
+        .service-price-action { display: flex; align-items: center; gap: 20px; }
+        .price { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); white-space: nowrap; }
+        .btn-order { background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; }
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 50px 5% 20px; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html" class="active">الخدمات</a></li>
+                <li><a href="prices.html">الأسعار</a></li>
+                <li><a href="payment.html">طرق الدفع</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
+                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>قائمة الخدمات الكاملة</h1>
+            <p>تصفح جميع خدماتنا واختر ما يناسب احتياجاتك بسهولة.</p>
+        </section>
+
+        <div class="accordion-container">
+            <div class="accordion-item"><button class="accordion-header"><i class="fas fa-file-signature"></i><h3>خدمات إدارية</h3><i class="fas fa-chevron-down"></i></button><div class="accordion-content"><div class="service-list">
+                <div class="service-entry" data-price="20" data-service="تحرير الطلبات الخطية"><div class="service-info"><h4>تحرير الطلبات الخطية</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="التصريحات بالشرف"><div class="service-info"><h4>التصريحات بالشرف</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="صياغة التزامات والعقود"><div class="service-info"><h4>صياغة التزامات والعقود</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="10" data-service="السيرة الذاتية (CV)"><div class="service-info"><h4>السيرة الذاتية (CV)</h4></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="10" data-service="ملء مطبوعات أو استمارات"><div class="service-info"><h4>ملء مطبوعات أو استمارات</h4></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="ترجمة بسيطة للوثائق"><div class="service-info"><h4>ترجمة بسيطة للوثائق</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="10" data-service="تصحيح الأخطاء اللغوية"><div class="service-info"><h4>تصحيح الأخطاء اللغوية</h4></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="إنشاء حسابات إلكترونية (Gmail، outlook… embarking)"><div class="service-info"><h4>إنشاء حسابات إلكترونية</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="تصغير أو تعديل ملفات PDF"><div class="service-info"><h4>تصغير أو تعديل ملفات PDF</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="تصفح وتحميل وثائق من مواقع رسمية"><div class="service-info"><h4>تصفح وتحميل وثائق رسمية</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="50" data-service="صياغة الفواتير للمقاولات صغرى والشركات"><div class="service-info"><h4>صياغة فواتير للمقاولات</h4></div><div class="service-price-action"><span class="price">50 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="30" data-service="إرسال شكايات"><div class="service-info"><h4>إرسال شكايات</h4></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="40" data-service="صياغة مراسلات الى جهات المعنية"><div class="service-info"><h4>صياغة مراسلات للجهات المعنية</h4></div><div class="service-price-action"><span class="price">40 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="مقاول ذاتي"><div class="service-info"><h4>مقاول ذاتي</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+            </div></div></div>
+
+            <div class="accordion-item"><button class="accordion-header"><i class="fas fa-user-graduate"></i><h3>خدمات التعليم</h3><i class="fas fa-chevron-down"></i></button><div class="accordion-content"><div class="service-list">
+                <div class="service-entry" data-price="20" data-service="التسجيل في منحتي"><div class="service-info"><h4>التسجيل في منحتي</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="التسجيل في التكوين المهني"><div class="service-info"><h4>التسجيل في التكوين المهني</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="التسجيل في المدارس العليا"><div class="service-info"><h4>التسجيل في المدارس العليا</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="40" data-service="التسجيل في الجامعات"><div class="service-info"><h4>التسجيل في الجامعات</h4></div><div class="service-price-action"><span class="price">40 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="25" data-service="طلب السكن الجامعي"><div class="service-info"><h4>طلب السكن الجامعي</h4></div><div class="service-price-action"><span class="price">25 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+            </div></div></div>
+
+            <div class="accordion-item"><button class="accordion-header"><i class="fas fa-briefcase"></i><h3>خدمات التوظيف والمباريات</h3><i class="fas fa-chevron-down"></i></button><div class="accordion-content"><div class="service-list">
+                <div class="service-entry" data-price="80" data-service="تسجيل في مباريات الأمن الوطني، الوقاية المدنية، الجمارك، القوات المساعدة…"><div class="service-info"><h4>تسجيل في مباريات عمومية</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="إعداد ملفات الترشح"><div class="service-info"><h4>إعداد ملفات الترشح</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="ملء الطلبات الخاصة بالمباريات"><div class="service-info"><h4>ملء طلبات المباريات</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="تتبع النتائج وطبع لوائح الناجحين"><div class="service-info"><h4>تتبع النتائج وطبع اللوائح</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="المساعدة في التسجيل في ANAPEC"><div class="service-info"><h4>المساعدة في التسجيل في ANAPEC</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="السيرة الذاتية (CV) للتوظيف"><div class="service-info"><h4>السيرة الذاتية (CV) للتوظيف</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="نموذج رسالة تحفيزية"><div class="service-info"><h4>نموذج رسالة تحفيزية</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="80" data-service="طلب للموارد البشرية"><div class="service-info"><h4>طلب للموارد البشرية</h4></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+            </div></div></div>
+
+            <div class="accordion-item"><button class="accordion-header"><i class="fas fa-heart-pulse"></i><h3>خدمات الاجتماعي والصحة</h3><i class="fas fa-chevron-down"></i></button><div class="accordion-content"><div class="service-list">
+                <div class="service-entry" data-price="20" data-service="التسجيل في السجل الوطني للسكان (RNP)"><div class="service-info"><h4>التسجيل في السجل الوطني للسكان</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="التسجيل في السجل الاجتماعي الموحد (RSU)"><div class="service-info"><h4>التسجيل في السجل الاجتماعي الموحد</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="تسجيل في الدعم الاجتماعي المباشر"><div class="service-info"><h4>تسجيل في الدعم الاجتماعي المباشر</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="المساعدة في إدخال أو تعديل المعطيات"><div class="service-info"><h4>المساعدة في إدخال المعطيات</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="استخراج وصل التسجيل أو شهادة الاستفادة"><div class="service-info"><h4>استخراج وصل التسجيل</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="استفسار وحل جميع المشاكل CNSS و AMO"><div class="service-info"><h4>حل مشاكل CNSS و AMO</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+            </div></div></div>
+            
+            <div class="accordion-item"><button class="accordion-header"><i class="fas fa-laptop-code"></i><h3>خدمات رقمية وتقنية</h3><i class="fas fa-chevron-down"></i></button><div class="accordion-content"><div class="service-list">
+                <div class="service-entry" data-price="200" data-service="إنشاء مواقع إلكترونية بسيطة"><div class="service-info"><h4>إنشاء مواقع إلكترونية بسيطة</h4></div><div class="service-price-action"><span class="price">200 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="60" data-service="تصميم لوغوهات، بطاقات عمل، إعلانات"><div class="service-info"><h4>تصميم لوغوهات وبطاقات عمل</h4></div><div class="service-price-action"><span class="price">60 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="30" data-service="تصاميم السوشيال ميديا"><div class="service-info"><h4>تصاميم السوشيال ميديا</h4></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="تعديل الصور والوثائق"><div class="service-info"><h4>تعديل الصور والوثائق</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="10" data-service="إنشاء QR Code"><div class="service-info"><h4>إنشاء QR Code</h4></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="20" data-service="فواتير Word/Excel"><div class="service-info"><h4>فواتير Word/Excel</h4></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="30" data-service="إدخال البيانات في ملفات Excel"><div class="service-info"><h4>إدخال البيانات في Excel</h4></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="15" data-service="تحويل الملفات (PDF إلى Word...)"><div class="service-info"><h4>تحويل الملفات</h4></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                <div class="service-entry" data-price="25" data-service="تعبئة استبيانات أو استمارات إلكترونية"><div class="service-info"><h4>تعبئة استبيانات إلكترونية</h4></div><div class="service-price-action"><span class="price">25 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+            </div></div></div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logic for Hamburger Menu
+            // ... (keep the hamburger logic from previous steps if needed)
+
+            // Logic for Accordion
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.accordion-header.active');
+                    if(currentlyActive && currentlyActive !== header) {
+                        currentlyActive.classList.remove('active');
+                        currentlyActive.nextElementSibling.style.maxHeight = null;
+                    }
+
+                    header.classList.toggle('active');
+                    const content = header.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // Logic for Order Buttons
+            const orderButtons = document.querySelectorAll('.btn-order');
+            orderButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevents the accordion from closing when button is clicked
+                    const serviceEntry = e.target.closest('.service-entry');
+                    const serviceName = serviceEntry.getAttribute('data-service');
+                    const servicePrice = serviceEntry.getAttribute('data-price');
+                    
+                    const url = `payment-gateway.html?service=${encodeURIComponent(serviceName)}&price=${encodeURIComponent(servicePrice)}`;
+                    window.location.href = url;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

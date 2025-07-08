@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="أول منصة رقمية في المغرب تجمع كل خدماتك المكتبية والتقنية في مكان واحد.">
+    <title>المكتب الرقمي | بوابتك الأولى للخدمات المتكاملة</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* --- GLOBAL STYLES & VARIABLES --- */
+        :root {
+            --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
+            --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
+            --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        }
+        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--light-color); }
+
+        /* --- HEADER & NAVBAR --- */
+        .main-header { position: absolute; width: 100%; top: 0; left: 0; z-index: 1000; transition: background-color 0.3s ease; }
+        .main-header.scrolled { position: sticky; background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; }
+        .navbar-logo img { height: 80px; width: auto; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; }
+        .main-header.transparent .navbar-menu a { color: var(--light-color); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .main-header.scrolled .navbar-menu a { color: var(--dark-color); }
+        .navbar-menu a { text-decoration: none; font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; position: relative; transition: color 0.3s; }
+        .navbar-menu a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); }
+        .main-header.transparent .navbar-menu a:hover, .main-header.transparent .navbar-menu a.active { color: #87cefa; }
+        .main-header.transparent .navbar-menu a:hover::after, .main-header.transparent .navbar-menu a.active::after { background-color: #87cefa; }
+        .navbar-menu a:hover::after, .navbar-menu a.active::after { width: 100%; }
+        .navbar-actions { display: flex; gap: 15px; }
+        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); border-color: var(--primary-color); }
+        .btn-primary:hover { background-color: #004085; transform: translateY(-2px); }
+        .btn-light { background-color: rgba(255, 255, 255, 0.2); color: var(--light-color); border-color: var(--light-color); font-style: italic; }
+        .main-header.scrolled .btn-light { background-color: #e7f1ff; color: var(--primary-color); border-color: transparent; }
+        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- HERO SECTION --- */
+        .hero-fiverr { position: relative; height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
+        .hero-video-background { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); z-index: 1; }
+        .hero-video-background video { min-width: 100%; min-height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000000; opacity: 0.6; z-index: 2; }
+        .hero-content { position: relative; z-index: 3; color: var(--light-color); }
+        .hero-title { font-size: 3.8rem; font-weight: 900; margin-bottom: 20px; line-height: 1.3; }
+        .hero-subtitle { font-size: 1.3rem; color: #e0e0e0; max-width: 700px; margin: 0 auto 30px; }
+        .search-wrapper { max-width: 700px; margin: 0 auto 30px; }
+        .search-form { display: flex; background-color: var(--light-color); border-radius: var(--border-radius); overflow: hidden; }
+        .search-form input { flex-grow: 1; border: none; padding: 20px; font-size: 1.2rem; font-family: 'Cairo', sans-serif; outline: none; direction: rtl; }
+        .search-form button { border: none; background-color: var(--primary-color); color: var(--light-color); padding: 0 25px; cursor: pointer; font-size: 1.5rem; transition: background-color 0.3s; }
+        .popular-tags { display: flex; justify-content: center; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .popular-tags span { font-weight: 700; }
+        .popular-tags a { text-decoration: none; color: var(--light-color); border: 1px solid var(--light-color); padding: 8px 15px; border-radius: 50px; transition: all 0.3s; }
+        .popular-tags a:hover { background-color: var(--light-color); color: var(--dark-color); }
+
+        /* --- FEATURED SERVICES SECTION --- */
+        .featured-services-section { padding: 80px 5%; background-color: var(--gray-color); }
+        .section-container { max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 2.8rem; font-weight: 800; color: var(--dark-color); text-align: center; margin-bottom: 15px; }
+        .section-subtitle { font-size: 1.2rem; color: var(--text-color); text-align: center; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .tabs-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+        .tab-link { padding: 15px 30px; border: 2px solid transparent; background-color: #fff; color: var(--text-color); border-radius: var(--border-radius); cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .tab-link:hover { transform: translateY(-3px); color: var(--primary-color); }
+        .tab-link.active { color: var(--light-color); background-color: var(--primary-color); border-color: var(--primary-color); transform: translateY(-3px); }
+        .tabs-content { position: relative; min-height: 250px; }
+        .tab-pane { display: none; animation: fadeIn 0.6s; width: 100%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-pane.active { display: block; }
+        .featured-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .featured-service-item { background-color: #fff; padding: 25px; border-radius: var(--border-radius); border: 1px solid #eef; display: flex; gap: 20px; align-items: center; transition: all 0.3s ease; }
+        .featured-service-item:hover { transform: scale(1.03); box-shadow: var(--box-shadow); }
+        .featured-service-item .icon { font-size: 2rem; color: var(--primary-color); }
+        .featured-service-item h4 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--dark-color); }
+        .featured-service-item p { margin: 0; color: var(--text-color); font-size: 0.9rem; }
+        .see-more-wrapper { text-align: center; margin-top: 50px; }
+        .btn-secondary { background-color: var(--light-color); color: var(--primary-color); border: 2px solid var(--primary-color); }
+        .btn-secondary:hover { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-lg { padding: 15px 40px; font-size: 1.1rem; }
+
+        /* --- FOOTER --- */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 50px 5% 20px; }
+        /* ... (rest of footer styles) ... */
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1200px) {
+            .navbar-menu { gap: 20px; }
+        }
+        @media (max-width: 992px) {
+            .navbar-menu, .navbar-actions { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: absolute; top: 90px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 0; }
+            .navbar-menu.mobile-active li { padding: 15px 0; width: 100%; }
+            .navbar-menu.mobile-active a { color: var(--dark-color) !important; text-shadow: none; }
+            .navbar-menu.mobile-active a::after { display: none; }
+            .hero-title { font-size: 2.8rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .search-form input { padding: 15px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header transparent">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="prices.html">الأسعار</a></li>
+                <li><a href="payment.html">طرق الدفع</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
+                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-fiverr">
+            <div class="hero-video-background"><video autoplay muted loop playsinline><source src="https://cdn-useast1.kapwing.com/teams/661dac01f37c22ab30faf438/jobs/686d4716e76b66eb02a14ee9/final_686d47098bb8135ca0d6c282_68715.mp4" type="video/mp4"></video></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">أول منصة رقمية تجمع كل خدماتك في مكان واحد</h1>
+                <p class="hero-subtitle">جودة، سرعة، وأسعار تنافسية لإنجاز جميع معاملاتك الإدارية والتقنية بكل سهولة.</p>
+                <div class="search-wrapper">
+                    <form action="#" class="search-form"><input type="text" placeholder="ابحث عن أي خدمة تحتاجها..."><button type="submit"><i class="fas fa-search"></i></button></form>
+                </div>
+                <div class="popular-tags"><span>الاكثر طلباً:</span><a href="services.html">خدمات إدارية</a><a href="services.html">خدمات التوظيف</a><a href="services.html">تصاميم رقمية</a><a href="services.html">تسجيل بالجامعات</a></div>
+            </div>
+        </section>
+
+        <section id="featured-services" class="featured-services-section">
+            <div class="section-container">
+                <h2 class="section-title">أبرز خدماتنا</h2>
+                <p class="section-subtitle">تصفح مجموعة من خدماتنا الأكثر طلبًا في مختلف الفئات، مصممة لتلبية احتياجاتك بسرعة وكفاءة.</p>
+                <div class="tabs-nav">
+                    <button class="tab-link active" data-tab="tab-1"><i class="fas fa-file-signature"></i> خدمات إدارية</button>
+                    <button class="tab-link" data-tab="tab-2"><i class="fas fa-user-graduate"></i> خدمات التعليم</button>
+                    <button class="tab-link" data-tab="tab-3"><i class="fas fa-briefcase"></i> خدمات التوظيف</button>
+                    <button class="tab-link" data-tab="tab-4"><i class="fas fa-heart-pulse"></i> الاجتماعي والصحة</button>
+                    <button class="tab-link" data-tab="tab-5"><i class="fas fa-laptop-code"></i> رقمية وتقنية</button>
+                </div>
+                <div class="tabs-content">
+                    <div class="tab-pane active" id="tab-1"><div class="featured-services-grid"><div class="featured-service-item"><i class="icon fas fa-pen-nib"></i><div><h4>صياغة العقود والالتزامات</h4><p>صياغة دقيقة ومحكمة لمختلف أنواع العقود لضمان حقوقك.</p></div></div><div class="featured-service-item"><i class="icon fas fa-file-invoice-dollar"></i><div><h4>صياغة الفواتير</h4><p>إعداد فواتير احترافية للمقاولين الذاتيين والشركات الصغيرة.</p></div></div><div class="featured-service-item"><i class="icon fas fa-id-card"></i><div><h4>مقاول ذاتي</h4><p>مساعدة شاملة لإنشاء وتدبير ملف المقاول الذاتي بكل سهولة.</p></div></div></div></div>
+                    <div class="tab-pane" id="tab-2"><div class="featured-services-grid"><div class="featured-service-item"><i class="icon fas fa-university"></i><div><h4>التسجيل في الجامعات</h4><p>نساعدك في إتمام إجراءات التسجيل بالجامعات المغربية.</p></div></div><div class="featured-service-item"><i class="icon fas fa-school"></i><div><h4>التسجيل في المدارس العليا</h4><p>تسهيل عملية تقديم ملفات الترشح للمدارس والمعاهد العليا.</p></div></div><div class="featured-service-item"><i class="icon fas fa-award"></i><div><h4>التسجيل في منحتي</h4><p>تقديم طلب منحة التعليم العالي "منحتي" بشكل صحيح لضمان قبول ملفك.</p></div></div></div></div>
+                    <div class="tab-pane" id="tab-3"><div class="featured-services-grid"><div class="featured-service-item"><i class="icon fas fa-shield-alt"></i><div><h4>تسجيل في المباريات العمومية</h4><p>تسجيل في مباريات الأمن، الوقاية المدنية، والوظائف الحكومية.</p></div></div><div class="featured-service-item"><i class="icon fas fa-file-alt"></i><div><h4>إعداد ملفات الترشح</h4><p>تجهيز ملف ترشح متكامل (CV، طلب خطي، ...) حسب المتطلبات.</p></div></div><div class="featured-service-item"><i class="icon fas fa-envelope-open-text"></i><div><h4>نموذج رسالة تحفيزية</h4><p>كتابة رسالة تحفيزية مقنعة ومخصصة للوظيفة التي تتقدم إليها.</p></div></div></div></div>
+                    <div class="tab-pane" id="tab-4"><div class="featured-services-grid"><div class="featured-service-item"><i class="icon fas fa-users"></i><div><h4>التسجيل في السجل الاجتماعي</h4><p>المساعدة في التسجيل بالسجل الاجتماعي الموحد للاستفادة من الدعم.</p></div></div><div class="featured-service-item"><i class="icon fas fa-hospital-user"></i><div><h4>حل مشاكل CNSS و AMO</h4><p>استشارات ومساعدة في فهم وحل المشاكل المتعلقة بملفات الضمان الصحي.</p></div></div><div class="featured-service-item"><i class="icon fas fa-id-card-clip"></i><div><h4>التسجيل في السجل الوطني للسكان</h4><p>مساعدة الأسر والأفراد على التسجيل للحصول على المعرف الرقمي.</p></div></div></div></div>
+                    <div class="tab-pane" id="tab-5"><div class="featured-services-grid"><div class="featured-service-item"><i class="icon fas fa-palette"></i><div><h4>تصميم الشعارات والهويات</h4><p>ابتكار هوية بصرية احترافية لعملك تشمل تصميم شعار جذاب.</p></div></div><div class="featured-service-item"><i class="icon fas fa-globe"></i><div><h4>إنشاء مواقع إلكترونية</h4><p>تصميم وتطوير مواقع تعريفية سريعة وأنيقة للشركات والأفراد.</p></div></div><div class="featured-service-item"><i class="icon fas fa-share-alt"></i><div><h4>تصاميم السوشيال ميديا</h4><p>إعداد قوالب وتصاميم احترافية لمنشوراتك على مواقع التواصل.</p></div></div></div></div>
+                </div>
+                <div class="see-more-wrapper"><a href="services.html" class="btn btn-secondary btn-lg">شاهد جميع الخدمات <i class="fas fa-arrow-left"></i></a></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hamburger & Header Scroll Logic
+            const header = document.querySelector('.main-header');
+            const hamburger = document.querySelector('.hamburger-menu');
+            const navMenu = document.querySelector('.navbar-menu');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                    header.classList.remove('transparent');
+                } else {
+                    header.classList.remove('scrolled');
+                    header.classList.add('transparent');
+                }
+            });
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('mobile-active');
+                const icon = hamburger.querySelector('i');
+                if (icon.classList.contains('fa-bars')) {
+                    icon.classList.remove('fa-bars'); icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times'); icon.classList.add('fa-bars');
+                }
+            });
+
+            // Featured Services Tabs Logic
+            const featuredServicesSection = document.querySelector('#featured-services');
+            if (featuredServicesSection) {
+                const tabs = featuredServicesSection.querySelectorAll('.tab-link');
+                const panes = featuredServicesSection.querySelectorAll('.tab-pane');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        tabs.forEach(item => item.classList.remove('active'));
+                        panes.forEach(pane => pane.classList.remove('active'));
+                        tab.classList.add('active');
+                        const targetPane = document.getElementById(tabId);
+                        if(targetPane) {
+                            targetPane.classList.add('active');
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

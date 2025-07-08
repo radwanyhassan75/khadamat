@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الطلب - المكتب الرقمي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar"><a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a><div class="navbar-actions" style="margin-right: auto;"><a href="index.html" class="btn btn-light">العودة للرئيسية</a></div></nav>
+    </header>
+
+    <main>
+        <div id="payment-step-1" class="payment-step active">
+            <div class="payment-container">
+                <div class="order-summary-card">
+                    <h2><i class="fas fa-shopping-cart"></i> ملخص طلبك</h2>
+                    <div class="order-details">
+                        <p><strong>الخدمة المطلوبة:</strong></p>
+                        <p id="service-name-summary" class="service-name-display">...</p>
+                        <p><strong>المبلغ الإجمالي للدفع:</strong></p>
+                        <p id="service-price-summary" class="price-display">...</p>
+                    </div>
+                </div>
+                <div class="payment-methods-card">
+                    <h2><i class="fas fa-credit-card"></i> 1. اختر طريقة الدفع</h2>
+                    <div class="methods-grid">
+                        <div class="method-card" data-method="cih"><h4><i class="fas fa-university"></i> CIH Bank</h4></div>
+                        <div class="method-card" data-method="bmce"><h4><i class="fas fa-university"></i> BMCE Bank</h4></div>
+                        <div class="method-card" data-method="attijari"><h4><i class="fas fa-university"></i> Attijariwafa Bank</h4></div>
+                        <div class="method-card" data-method="soge"><h4><i class="fas fa-university"></i> Société Générale</h4></div>
+                        <div class="method-card" data-method="cashplus"><h4><i class="fas fa-wallet"></i> Cash Plus</h4></div>
+                        <div class="method-card" data-method="orange"><h4><i class="fab fa-orange"></i> Orange Money</h4></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="payment-step-2" class="payment-step">
+            <div class="payment-container">
+                <div class="confirmation-card">
+                    <button id="back-btn" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لاختيار الطريقة</button>
+                    <h2><i class="fas fa-clipboard-check"></i> 2. تأكيد الدفع وإرفاق الوصل</h2>
+                    <div id="payment-instructions" class="payment-instructions">
+                        </div>
+                    <div class="upload-section">
+                        <p class="upload-prompt">الرجاء إرفاق لقطة شاشة أو صورة لوصل الدفع لتأكيد طلبك.</p>
+                        <textarea id="payment-notes" class="notes-textarea" placeholder="هل لديك أي ملاحظات؟ (اختياري)"></textarea>
+                        <input type="file" id="receipt-upload" class="file-input" accept="image/*,application/pdf">
+                        <label for="receipt-upload" class="file-input-label"><i class="fas fa-paperclip"></i> اختر ملف الوصل</label>
+                        <span id="file-name-display" class="file-name">لم يتم اختيار أي ملف.</span>
+                    </div>
+                    <button id="confirm-payment-btn" class="btn btn-primary btn-pay-now" disabled>لقد قمت بالدفع، أكد الطلب الآن</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const serviceName = params.get('service') || "خدمة غير محددة";
+            const servicePrice = params.get('price') || "0";
+
+            document.getElementById('service-name-summary').textContent = serviceName;
+            document.getElementById('service-price-summary').textContent = servicePrice + " درهم";
+
+            const paymentMethods = {
+                cih: { title: 'CIH Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">230810624745521100540088</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
+                bmce: { title: 'BMCE Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">96 0000162000010401 810 011</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
+                attijari: { title: 'Attijariwafa Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">007810000457430040232577</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
+                soge: { title: 'Société Générale', details: '<strong>رقم الحساب:</strong> <span class="mono">022780000760004157217174</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
+                cashplus: { title: 'Cash Plus', details: '<strong>رقم الهاتف:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><small>(يمكنك الإرسال من وكالة أو تطبيق Cash Plus)</small>' },
+                orange: { title: 'Orange Money', details: '<strong>رقم الهاتف:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><small>(أرسل المبلغ مباشرة إلى رقم الهاتف عبر تطبيق أو وكالات Orange Money)</small>' }
+            };
+
+            const step1 = document.getElementById('payment-step-1');
+            const step2 = document.getElementById('payment-step-2');
+            const instructionsDiv = document.getElementById('payment-instructions');
+            const methodCards = document.querySelectorAll('.method-card');
+            const backBtn = document.getElementById('back-btn');
+            const confirmBtn = document.getElementById('confirm-payment-btn');
+            const fileInput = document.getElementById('receipt-upload');
+            const fileNameDisplay = document.getElementById('file-name-display');
+
+            methodCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const methodKey = card.getAttribute('data-method');
+                    const methodData = paymentMethods[methodKey];
+                    
+                    instructionsDiv.innerHTML = `<h4>الرجاء تحويل المبلغ إلى حساب ${methodData.title} التالي:</h4><p>${methodData.details}</p>`;
+                    step1.classList.remove('active');
+                    step2.classList.add('active');
+                });
+            });
+
+            backBtn.addEventListener('click', () => {
+                step2.classList.remove('active');
+                step1.classList.add('active');
+                fileInput.value = ''; // Clear file input
+                confirmBtn.disabled = true;
+                fileNameDisplay.textContent = 'لم يتم اختيار أي ملف.';
+            });
+            
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    confirmBtn.disabled = false;
+                    fileNameDisplay.textContent = `تم اختيار ملف: ${fileInput.files[0].name}`;
+                } else {
+                    confirmBtn.disabled = true;
+                    fileNameDisplay.textContent = 'لم يتم اختيار أي ملف.';
+                }
+            });
+
+            confirmBtn.addEventListener('click', () => {
+                const orderId = 'KH-' + Date.now().toString().slice(-6);
+                localStorage.setItem('lastOrderId', orderId);
+                localStorage.setItem('lastOrderService', serviceName);
+                window.location.href = 'success.html';
+            });
+        });
+    </script>
+</body>
+</html>
