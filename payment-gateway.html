@@ -58,69 +58,47 @@
         </div>
     </main>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const serviceName = params.get('service') || "خدمة غير محددة";
-            const servicePrice = params.get('price') || "0";
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // ... (الكود الخاص باستلام اسم وسعر الخدمة يبقى كما هو)
 
-            document.getElementById('service-name-summary').textContent = serviceName;
-            document.getElementById('service-price-summary').textContent = servicePrice + " درهم";
+        const confirmBtn = document.getElementById('confirm-payment-btn');
+        confirmBtn.addEventListener('click', async () => {
+            const serviceName = params.get('service');
+            const servicePrice = params.get('price');
+            const notes = document.getElementById('payment-notes').value;
 
-            const paymentMethods = {
-                cih: { title: 'CIH Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">230810624745521100540088</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
-                bmce: { title: 'BMCE Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">96 0000162000010401 810 011</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
-                attijari: { title: 'Attijariwafa Bank', details: '<strong>رقم الحساب:</strong> <span class="mono">007810000457430040232577</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
-                soge: { title: 'Société Générale', details: '<strong>رقم الحساب:</strong> <span class="mono">022780000760004157217174</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY' },
-                cashplus: { title: 'Cash Plus', details: '<strong>رقم الهاتف:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><small>(يمكنك الإرسال من وكالة أو تطبيق Cash Plus)</small>' },
-                orange: { title: 'Orange Money', details: '<strong>رقم الهاتف:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><small>(أرسل المبلغ مباشرة إلى رقم الهاتف عبر تطبيق أو وكالات Orange Money)</small>' }
-            };
+            // تعطيل الزر لمنع الضغطات المتكررة
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'الرجاء الانتظار...';
 
-            const step1 = document.getElementById('payment-step-1');
-            const step2 = document.getElementById('payment-step-2');
-            const instructionsDiv = document.getElementById('payment-instructions');
-            const methodCards = document.querySelectorAll('.method-card');
-            const backBtn = document.getElementById('back-btn');
-            const confirmBtn = document.getElementById('confirm-payment-btn');
-            const fileInput = document.getElementById('receipt-upload');
-            const fileNameDisplay = document.getElementById('file-name-display');
-
-            methodCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const methodKey = card.getAttribute('data-method');
-                    const methodData = paymentMethods[methodKey];
-                    
-                    instructionsDiv.innerHTML = `<h4>الرجاء تحويل المبلغ إلى حساب ${methodData.title} التالي:</h4><p>${methodData.details}</p>`;
-                    step1.classList.remove('active');
-                    step2.classList.add('active');
+            try {
+                // إرسال البيانات إلى Netlify Function
+                const response = await fetch('/.netlify/functions/submit-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ service: serviceName, price: servicePrice, notes: notes })
                 });
-            });
 
-            backBtn.addEventListener('click', () => {
-                step2.classList.remove('active');
-                step1.classList.add('active');
-                fileInput.value = ''; // Clear file input
-                confirmBtn.disabled = true;
-                fileNameDisplay.textContent = 'لم يتم اختيار أي ملف.';
-            });
-            
-            fileInput.addEventListener('change', () => {
-                if (fileInput.files.length > 0) {
-                    confirmBtn.disabled = false;
-                    fileNameDisplay.textContent = `تم اختيار ملف: ${fileInput.files[0].name}`;
-                } else {
-                    confirmBtn.disabled = true;
-                    fileNameDisplay.textContent = 'لم يتم اختيار أي ملف.';
+                if (!response.ok) {
+                    throw new Error('حدث خطأ أثناء إرسال الطلب');
                 }
-            });
 
-            confirmBtn.addEventListener('click', () => {
-                const orderId = 'KH-' + Date.now().toString().slice(-6);
-                localStorage.setItem('lastOrderId', orderId);
-                localStorage.setItem('lastOrderService', serviceName);
+                const result = await response.json();
+
+                // حفظ رقم الطلب والانتقال إلى صفحة النجاح
+                localStorage.setItem('lastOrderId', result.orderId);
                 window.location.href = 'success.html';
-            });
+
+            } catch (error) {
+                alert('فشل إرسال الطلب. الرجاء المحاولة مرة أخرى.');
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'لقد قمت بالدفع، أكد الطلب الآن';
+            }
         });
-    </script>
+
+        // ... (باقي الكود الخاص بالواجهة مثل اختيار طريقة الدفع يبقى كما هو)
+    });
+</script>
 </body>
 </html>
