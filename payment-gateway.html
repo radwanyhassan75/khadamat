@@ -31,18 +31,19 @@
         .form-group { margin-bottom: 20px; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-group label { display: block; font-weight: 700; color: var(--dark-color); margin-bottom: 8px; }
+        .form-group label span.required { color: var(--danger-color); }
         .form-group textarea, .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-family: 'Cairo', sans-serif; font-size: 1rem; box-sizing: border-box; }
-        .important-note { background-color: var(--danger-bg); border: 1px solid var(--danger-color); color: #58151c; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; }
+        .important-note { background-color: var(--danger-bg); border: 1px solid var(--danger-color); color: #58151c; padding: 20px; border-radius: var(--border-radius); }
         .important-note p { margin: 0; line-height: 1.7; font-weight: 700; }
         .methods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .method-card { border: 2px solid #ddd; border-radius: var(--border-radius); padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
         .method-card.selected { border-color: var(--primary-color); background-color: #e7f1ff; }
         .method-card h4 { margin:0; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem; }
-        .payment-instructions { display: none; background-color: #e7f1ff; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; }
+        .payment-instructions { display: none; background-color: #e7f1ff; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; border-right: 4px solid var(--primary-color); }
         .payment-instructions.active { display: block; }
         .payment-instructions p { margin-bottom: 10px; line-height: 1.8; }
         .mono { font-family: 'Menlo', 'Consolas', monospace; direction: ltr; text-align: left; display: inline-block; background: #d0e3ff; padding: 5px 10px; border-radius: 4px; font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; color: var(--dark-color); }
-        .file-upload-wrapper { margin-top: 20px; }
+        .file-upload-wrapper { margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
         .file-input { display: none; }
         .file-input-label { background-color: var(--secondary-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); cursor: pointer; display: inline-block; margin-bottom: 10px; }
         .file-name { color: #777; font-style: italic; }
@@ -56,60 +57,53 @@
                 <h2><i class="fas fa-shopping-cart"></i> ملخص طلبك</h2>
                 <div class="order-summary-grid">
                     <div class="summary-item"><p>الخدمة المطلوبة:</p><span id="display-service-name">...</span></div>
-                    <div class="summary-item"><p>المبلغ الإجمالي للدفع:</p><span id="display-service-price">...</span></div>
+                    <div class="summary-item"><p>المبلغ للدفع:</p><span id="display-service-price">...</span></div>
                 </div>
             </div>
 
             <div class="card">
                 <h2><i class="fas fa-user-circle"></i> معلوماتك الشخصية</h2>
                 <div class="form-grid">
-                    <div class="form-group"><label for="customer-name">الاسم الكامل *</label><input type="text" id="customer-name" required></div>
-                    <div class="form-group"><label for="customer-email">البريد الإلكتروني *</label><input type="email" id="customer-email" required></div>
-                    <div class="form-group full-width"><label for="customer-phone">رقم الهاتف (واتساب) *</label><input type="tel" id="customer-phone" required></div>
+                    <div class="form-group"><label for="customer-name">الاسم الكامل <span class="required">*</span></label><input type="text" id="customer-name" name="customer_name" required></div>
+                    <div class="form-group"><label for="customer-email">البريد الإلكتروني <span class="required">*</span></label><input type="email" id="customer-email" name="customer_email" required></div>
+                    <div class="form-group full-width"><label for="customer-phone">رقم الهاتف (واتساب) <span class="required">*</span></label><input type="tel" id="customer-phone" name="customer_phone" required></div>
                 </div>
             </div>
 
             <div class="card">
                 <h2><i class="fas fa-info-circle"></i> تفاصيل الطلب</h2>
-                <div class="form-group"><label for="order-details">ماذا تريد في هذا الطلب بالضبط؟ (تفاصيل، معلومات...)</label><textarea id="order-details" rows="4"></textarea></div>
-                <div class="form-group"><label for="order-link">رابط إضافي (إذا توفر - اختياري)</label><input type="url" id="order-link" placeholder="https://example.com/..."></div>
-                 <div class="important-note"><p><i class="fas fa-exclamation-triangle"></i> ستتم معالجة طلبك بعد التأكد من الدفع ومراجعته. وقت معالجة الطلب هو يوم إلى ثلاثة أيام حسب نوع الخدمة. يمكنك التواصل معنا في حال حدوث مشكلة أو تأخر.</p></div>
+                <div class="form-group"><label for="order-details">تفاصيل الطلب (معلومات، ملاحظات...) <span class="required">*</span></label><textarea id="order-details" name="order_details" rows="4" required></textarea></div>
+                <div class="form-group"><label for="order-link">رابط إضافي (اختياري)</label><input type="url" id="order-link" name="order_link" placeholder="https://example.com/..."></div>
+                <div class="form-group"><label for="receipt-file">إرفاق ملف (اختياري)</label><input type="file" id="receipt-file" name="receipt_file" class="file-input"><label for="receipt-file" class="file-input-label"><i class="fas fa-paperclip"></i> اختر ملف</label><span id="file-name-display" class="file-name"></span></div>
             </div>
 
             <div class="card">
-                <h2><i class="fas fa-money-check-alt"></i> طرق الدفع وإرفاق الوصل</h2>
-                <p><strong>1. الرجاء اختيار طريقة الدفع التي تناسبك:</strong></p>
-                <div class="methods-grid">
-                    <div class="method-card" data-method="cashplus"><h4><i class="fas fa-wallet"></i> Cash Plus</h4></div>
-                    <div class="method-card" data-method="orange"><h4><i class="fab fa-orange"></i> Orange Money</h4></div>
-                    <div class="method-card" data-method="cih"><h4><i class="fas fa-university"></i> CIH Bank</h4></div>
-                    <div class="method-card" data-method="bmce"><h4><i class="fas fa-university"></i> BMCE Bank</h4></div>
-                    <div class="method-card" data-method="attijari"><h4><i class="fas fa-university"></i> Attijariwafa</h4></div>
-                    <div class="method-card" data-method="soge"><h4><i class="fas fa-university"></i> Société Générale</h4></div>
+                <h2><i class="fas fa-money-check-alt"></i> إتمام الدفع</h2>
+                <div class="important-note"><p><i class="fas fa-exclamation-triangle"></i> ستتم معالجة طلبك بعد التأكد من الدفع ومراجعته. وقت المعالجة هو يوم إلى ثلاثة أيام. يمكنك التواصل معنا في حال حدوث مشكلة.</p></div>
+                <div style="margin-top: 30px;">
+                    <p><strong>1. اختر طريقة الدفع لإظهار التعليمات:</strong></p>
+                    <div class="methods-grid">
+                        <div class="method-card" data-method="cashplus"><h4><i class="fas fa-wallet"></i> Cash Plus</h4></div>
+                        <div class="method-card" data-method="orange"><h4><i class="fab fa-orange"></i> Orange Money</h4></div>
+                        <div class="method-card" data-method="cih"><h4><i class="fas fa-university"></i> CIH Bank</h4></div>
+                        <div class="method-card" data-method="bmce"><h4><i class="fas fa-university"></i> BMCE Bank</h4></div>
+                        <div class="method-card" data-method="attijari"><h4><i class="fas fa-university"></i> Attijariwafa</h4></div>
+                        <div class="method-card" data-method="soge"><h4><i class="fas fa-university"></i> Société Générale</h4></div>
+                    </div>
+                    <div id="cashplus-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>رقم الهاتف:</strong> <span class="mono">0621638488</span></p></div>
+                    <div id="orange-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>رقم الهاتف المرتبط:</strong> <span class="mono">0621638488</span></p></div>
+                    <div id="cih-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي CIH:</strong> <span class="mono">230810624745521100540088</span></p></div>
+                    <div id="bmce-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي BMCE:</strong> <span class="mono">960000162000010401810011</span></p></div>
+                    <div id="attijari-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي Attijariwafa:</strong> <span class="mono">007810000457430040232577</span></p></div>
+                    <div id="soge-instructions" class="payment-instructions"><p><strong>الاسم:</strong> HASSAN ER-RADOUANY<br><strong>الحساب البنكي Société Générale:</strong> <span class="mono">022780000760004157217174</span></p></div>
                 </div>
-                
-                <div id="cashplus-instructions" class="payment-instructions"><p><strong>رقم الهاتف:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                <div id="orange-instructions" class="payment-instructions"><p><strong>رقم الهاتف المرتبط:</strong> <span class="mono">0621638488</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                <div id="cih-instructions" class="payment-instructions"><p><strong>الحساب البنكي CIH:</strong> <span class="mono">230810624745521100540088</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                <div id="bmce-instructions" class="payment-instructions"><p><strong>الحساب البنكي BMCE:</strong> <span class="mono">960000162000010401810011</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                <div id="attijari-instructions" class="payment-instructions"><p><strong>الحساب البنكي Attijariwafa:</strong> <span class="mono">007810000457430040232577</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                <div id="soge-instructions" class="payment-instructions"><p><strong>الحساب البنكي Société Générale:</strong> <span class="mono">022780000760004157217174</span><br><strong>الاسم:</strong> HASSAN ER-RADOUANY</p></div>
-                
-                <div class="file-upload-wrapper">
-                    <label for="receipt-file"><strong>2. بعد الدفع، يرجى إرفاق وصل التحويل هنا: *</strong></label>
-                    <input type="file" id="receipt-file" class="file-input">
-                    <label for="receipt-file" class="file-input-label"><i class="fas fa-paperclip"></i> اختر صورة الوصل</label>
-                    <span id="file-name-display" class="file-name">لم يتم اختيار أي ملف.</span>
-                </div>
-
-                <button type="submit" id="submit-order-btn" class="submit-btn"><i class="fas fa-check-circle"></i> تأكيد الطلب والدفع</button>
+                <button type="submit" id="submit-order-btn" class="submit-btn"><i class="fas fa-check-circle"></i> تأكيد الطلب وتوليد الفاتورة</button>
             </div>
         </form>
     </main>
 
     <script>
         window.jsPDF = window.jspdf.jsPDF;
-
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const serviceName = params.get('service') || "خدمة غير محددة";
@@ -138,52 +132,34 @@
 
             const orderForm = document.getElementById('order-form');
             orderForm.addEventListener('submit', (e) => {
-                e.preventDefault(); // نوقف الإرسال التلقائي لنتحكم بالعملية
-
+                e.preventDefault(); 
+                
                 const orderId = 'KH-' + Date.now().toString().slice(-6);
                 const today = new Date().toLocaleDateString('ar-MA');
-                
                 const customerName = document.getElementById('customer-name').value;
                 const customerEmail = document.getElementById('customer-email').value;
                 
-                // --- PDF Generation with Arabic Support ---
                 const doc = new jsPDF();
-
-                // Add the Amiri font for Arabic support
-                doc.addFileToVFS("Amiri-Regular.ttf", amiriFont); // amiriFont is loaded from the external script
+                doc.addFileToVFS("Amiri-Regular.ttf", amiriFont);
                 doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
                 doc.setFont("Amiri");
-
-                // Set text alignment to right
                 doc.setR2L(true);
-
                 doc.setFontSize(22);
                 doc.text('وصل طلب خدمة', 105, 20, { align: 'center' });
-                
                 doc.setFontSize(12);
                 doc.text('-----------------------------------', 105, 30, { align: 'center' });
-
                 doc.text(`رقم الطلب: ${orderId}`, 190, 45, { align: 'right' });
                 doc.text(`تاريخ الطلب: ${today}`, 190, 55, { align: 'right' });
                 doc.text(`اسم العميل: ${customerName}`, 190, 65, { align: 'right' });
                 doc.text(`الخدمة المطلوبة: ${serviceName}`, 190, 75, { align: 'right' });
-                
                 doc.setFontSize(16);
                 doc.text(`المبلغ: ${servicePrice} درهم`, 190, 85, { align: 'right' });
-                
                 doc.setFontSize(12);
                 doc.text('شكرا لثقتكم!', 105, 105, { align: 'center' });
-
-                // Download PDF
                 doc.save(`receipt-${orderId}.pdf`);
 
-                // --- Redirect to Success Page ---
                 localStorage.setItem('lastOrderId', orderId);
-                
-                // Redirect after a short delay to ensure PDF download starts
-                setTimeout(() => {
-                    window.location.href = 'success.html'; 
-                }, 1000);
+                setTimeout(() => { window.location.href = 'success.html'; }, 500);
             });
         });
     </script>
