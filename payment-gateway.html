@@ -2,260 +2,279 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إتمام الطلب – المكتب الرقمي</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>بوابة الدفع - المكتب الرقمي</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #0056b3; --secondary: #4a90e2; --dark: #2c3e50;
-      --light: #fff; --gray: #f4f7f9; --danger: #dc3545;
-      --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0,0,0,0.08);
-    }
     body {
-      font-family: 'Cairo',sans-serif;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f4f7f9;
       margin: 0;
-      background: var(--gray);
+      padding: 20px;
       direction: rtl;
     }
-    .wrapper {
+
+    .container {
       max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
     }
-    .card {
-      background: var(--light);
-      padding: 25px 30px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      margin-bottom: 25px;
-    }
+
     h2 {
-      font-size: 1.6rem;
-      margin-bottom: 15px;
-      color: var(--dark);
+      color: #2c3e50;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
       border-bottom: 2px solid #eee;
       padding-bottom: 10px;
     }
+
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
+
     label {
+      font-weight: bold;
+      margin-bottom: 8px;
       display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
     }
+
+    .required-star {
+      color: red;
+    }
+
     input, textarea, select {
       width: 100%;
-      padding: 10px 12px;
-      font-size: 1rem;
+      padding: 12px;
       border: 1px solid #ccc;
-      border-radius: var(--border-radius);
-      box-sizing: border-box;
+      border-radius: 8px;
+      font-size: 1rem;
     }
-    input[readonly] { background: #f0f0f0; }
-    .required-star { color: var(--danger); }
-    textarea { resize: vertical; height: 100px; }
-    .file-label {
-      display: inline-block;
-      margin-top: 6px;
-      background: var(--secondary);
-      color: #fff;
-      padding: 10px 15px;
-      border-radius: var(--border-radius);
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    input[type="file"] {
+      border: none;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.1rem;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s;
     }
-    input[type="file"] { display: none; }
-    .warning {
-      background: #fff3cd;
+
+    .submit-btn:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+    }
+
+    .payment-info {
+      display: none;
+      background: #f9f9f9;
+      padding: 15px;
+      border: 1px dashed #0056b3;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .alert {
+      background-color: #fff3cd;
       border: 1px solid #ffeeba;
       color: #856404;
       padding: 12px;
-      border-radius: var(--border-radius);
       margin-bottom: 20px;
+      border-radius: 8px;
     }
-    .submit-btn {
-      width: 100%;
-      padding: 14px;
-      font-size: 1.2rem;
-      background: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: background .3s;
-      font-weight: 700;
+
+    .flag-prefix {
+      display: flex;
     }
-    .submit-btn:disabled {
-      background: #a5d6a7;
-      cursor: not-allowed;
+
+    .flag-prefix select {
+      width: 25%;
+      margin-left: 5px;
     }
-    .payment-methods > label {
-      display: block;
-      margin-bottom: 10px;
-      cursor: pointer;
+
+    .flag-prefix input {
+      width: 75%;
     }
-    .payment-info {
-      display: none;
-      padding: 12px;
-      background: #eef5ff;
-      border-left: 4px solid var(--primary);
-      margin-bottom: 18px;
-      white-space: pre-line;
-      line-height: 1.5;
-      border-radius: 4px;
-    }
-    .payment-info.active { display: block; }
   </style>
 </head>
+
 <body>
-  <div class="wrapper">
-    <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" action="/success.html">
-      <input type="hidden" name="form-name" value="order-form"/>
-      <input type="hidden" name="رقم_الطلب" id="order-id-input"/>
-      <!-- الطلب والتحقق -->
-      <div class="card">
-        <h2><i class="fas fa-shopping-cart"></i> تفاصيل الطلب</h2>
-        <div class="form-group">
-          <label>الخدمة المطلوبة<span class="required-star">*</span></label>
-          <input type="text" id="service-name" name="الخدمة_المطلوبة" readonly required/>
-        </div>
-        <div class="form-group">
-          <label>السعر (درهم)<span class="required-star">*</span></label>
-          <input type="text" id="service-price" name="السعر" readonly required/>
-        </div>
-      </div>
-      <!-- البيانات الشخصية -->
-      <div class="card">
-        <h2><i class="fas fa-user"></i> بياناتك الشخصية</h2>
-        <div class="form-group">
-          <label>الاسم الكامل<span class="required-star">*</span></label>
-          <input type="text" name="الاسم_الكامل" required/>
-        </div>
-        <div class="form-group">
-          <label>البريد الإلكتروني<span class="required-star">*</span></label>
-          <input type="email" name="البريد_الإلكتروني" required/>
-        </div>
-        <div class="form-group">
-          <label>رقم الهاتف (يشمل رمز الدولة)<span class="required-star">*</span></label>
-          <input type="tel" name="الهاتف" placeholder="+212612345678" required/>
-        </div>
-      </div>
-      <!-- تفاصيل اضافية ورابط -->
-      <div class="card">
-        <h2><i class="fas fa-info-circle"></i> معلومات إضافية</h2>
-        <div class="form-group">
-          <label>رابط (اختياري، أي موقع)</label>
-          <input type="url" name="الرابط" placeholder="https://"/>
-        </div>
-        <div class="form-group">
-          <label>تفاصيل الخدمة (اقصى 500 حرف)<span class="required-star">*</span></label>
-          <textarea name="تفاصيل_الطلب" maxlength="500" required></textarea>
-        </div>
-        <div class="form-group">
-          <label class="file-label"><i class="fas fa-paperclip"></i> إرفاق صورة أو مستند<span class="required-star">*</span></label>
-          <input type="file" name="الملف_المرفق" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx" required/>
-        </div>
-      </div>
-      <!-- طرق الدفع -->
-      <div class="card">
-        <h2><i class="fas fa-credit-card"></i> طريقة الدفع<span class="required-star">*</span></h2>
-        <div class="form-group payment-methods">
-          <!-- أضف كل الخيارات -->
-          <label><input type="radio" name="طريقة_الدفع" value="Cash Plus بنك" required> Cash Plus – وكالة/بنك</label>
-          <label><input type="radio" name="طريقة_الدفع" value="Cash Plus تطبيق"> Cash Plus – وكالة/تطبيق</label>
-          <label><input type="radio" name="طريقة_الدفع" value="Orange Money بنك"> Orange Money – بنك</label>
-          <label><input type="radio" name="طريقة_الدفع" value="Orange Money تطبيق"> Orange Money – وكالة/تطبيق</label>
-          <label><input type="radio" name="طريقة_الدفع" value="BMCE"> حوالة بنكية – BMCE</label>
-          <label><input type="radio" name="طريقة_الدفع" value="Attijariwafa"> حوالة بنكية – Attijariwafa</label>
-          <label><input type="radio" name="طريقة_الدفع" value="CIH"> حوالة بنكية – CIH</label>
-          <label><input type="radio" name="طريقة_الدفع" value="SOGE"> حوالة بنكية – Société Générale</label>
-        </div>
-        <div id="info-Cash Plus بنك" class="payment-info">
-🏦 Cash Plus – بنك/وكالة
-IB: 835780030017346031053226
-الاسم: HASSAN ER‑RADOUANY
-📞 رقم الهاتف للاتصال: 0621638488
-        </div>
-        <div id="info-Cash Plus تطبيق" class="payment-info">
-🏦 Cash Plus – تطبيق
-📞 رقم الهاتف: 0621638488
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-Orange Money بنك" class="payment-info">
-💵 Orange Money – بنك
-رقم الحساب: 857780000000000109572339
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-Orange Money تطبيق" class="payment-info">
-💵 Orange Money – تطبيق
-📞 0621638488
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-BMCE" class="payment-info">
-🏦 BMCE Bank
-رقم الحساب: 96 0000162000010401 810 011
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-Attijariwafa" class="payment-info">
-🏦 Attijariwafa Bank
-رقم الحساب: 007810000457430040232577
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-CIH" class="payment-info">
-🏦 CIH Bank
-رقم الحساب: 230810624745521100540088
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-        <div id="info-SOGE" class="payment-info">
-🏦 Société Générale
-رقم الحساب: 022780000760004157217174
-الاسم: HASSAN ER‑RADOUANY
-        </div>
-      </div>
-      <!-- تذكير -->
-      <div class="warning">
-        سيتم التحقق من استلام طريقة الدفع الخاصة بك ثم متابعة تنفيذ الطلب. يمكنك تتبع حالة الدفع والطلب عبر صفحة التتبع بعد الإرسال.
-      </div>
-      <button type="submit" id="submit-btn" class="submit-btn" disabled>أرسل الطلب</button>
-    </form>
+<div class="container">
+  <h2>إتمام الطلب</h2>
+  <div class="alert">
+    ⚠️ سيتم مراجعة معلومات الدفع الخاصة بك يدويًا. تأكد من إرسال الأموال قبل إتمام الطلب.
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.forms['order-form'];
-      const submit = document.getElementById('submit-btn');
-      const requireds = form.querySelectorAll('[required]');
-      const radios = form.querySelectorAll('input[name="طريقة_الدفع"]');
-      const infos = document.querySelectorAll('.payment-info');
-      document.getElementById('order-id-input').value = 'KH-' + Date.now().toString().slice(-6);
-      const p = new URLSearchParams(location.search);
-      document.getElementById('service-name').value = p.get('service') || '';
-      document.getElementById('service-price').value = p.get('price') || '';
-      const toggle = () => {
-        let ok = true;
-        requireds.forEach(i => {
-          if (i.type === 'radio') {
-            if (![...radios].some(r=>r.checked)) ok = false;
-          } else if ((i.type !== 'file' && i.value.trim()==='') || (i.type==='file' && !i.files.length)) {
-            ok = false;
-          }
-        });
-        submit.disabled = !ok;
-      };
-      form.addEventListener('change', e => {
-        if (e.target.name === 'طريقة_الدفع') {
-          infos.forEach(d => d.classList.remove('active'));
-          const sel = document.getElementById('info-' + e.target.value);
-          if (sel) sel.classList.add('active');
+
+  <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html" enctype="multipart/form-data">
+    <input type="hidden" name="form-name" value="order-form" />
+    <input type="hidden" name="رقم_الطلب" id="order-id" />
+    <p hidden><label>لا تعبئ هذا الحقل: <input name="bot-field" /></label></p>
+
+    <div class="form-group">
+      <label for="name">الاسم الكامل <span class="required-star">*</span></label>
+      <input type="text" name="الاسم_الكامل" id="name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+      <input type="email" name="البريد_الإلكتروني" id="email" required />
+    </div>
+
+    <div class="form-group">
+      <label>رقم الهاتف / واتساب <span class="required-star">*</span></label>
+      <div class="flag-prefix">
+        <select name="رمز_الدولة" required>
+          <option value="+212">+212 🇲🇦 المغرب</option>
+          <option value="+966">+966 🇸🇦 السعودية</option>
+          <option value="+20">+20 🇪🇬 مصر</option>
+          <option value="+971">+971 🇦🇪 الإمارات</option>
+          <option value="+1">+1 🇺🇸 أمريكا</option>
+        </select>
+        <input type="tel" name="الهاتف" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
+      <select name="طريقة_الدفع" id="payment-method" required onchange="showPaymentInfo(this.value)">
+        <option value="">-- اختر --</option>
+        <option value="cashplus">Cash Plus</option>
+        <option value="orange">Orange Money</option>
+        <option value="bmce">BMCE Bank</option>
+        <option value="attijari">Attijariwafa</option>
+        <option value="cih">CIH Bank</option>
+        <option value="soge">Société Générale</option>
+      </select>
+    </div>
+
+    <div id="payment-info" class="payment-info"></div>
+    <div class="form-group">
+      <label>تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
+      <textarea name="تفاصيل_الخدمة" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="service-link">رابط (اختياري)</label>
+      <input type="url" name="رابط_الخدمة" id="service-link" placeholder="https://example.com" />
+    </div>
+
+    <div class="form-group">
+      <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
+      <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
+    </div>
+
+    <button type="submit" class="submit-btn" id="submit-btn" disabled>
+      <i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب
+    </button>
+  </form>
+</div>
+
+<script>
+  // توليد رقم الطلب
+  const orderId = 'KH-' + Date.now().toString().slice(-6);
+  document.getElementById('order-id').value = orderId;
+
+  // عرض معلومات الدفع
+  function showPaymentInfo(method) {
+    const box = document.getElementById('payment-info');
+    let info = '';
+
+    switch (method) {
+      case 'cashplus':
+        info = `
+        <strong>📍 Cash Plus</strong><br>
+        إذا كنت ترسل من وكالة بنك أو تطبيق بنك:<br>
+        🔢 IBAN: 835780030017346031053226<br>
+        👤 الاسم: HASSAN ER-RADOUANY<br><br>
+        إذا كنت ترسل من وكالة Cash Plus:<br>
+        📞 رقم الهاتف: 0621638488<br>
+        👤 الاسم: HASSAN ER-RADOUANY
+        `;
+        break;
+
+      case 'orange':
+        info = `
+        <strong>📱 Orange Money</strong><br>
+        رقم الحساب البنكي: 857780000000000109572339<br>
+        📞 رقم الهاتف: 0621638488<br>
+        👤 الاسم: HASSAN ER-RADOUANY
+        `;
+        break;
+
+      case 'bmce':
+        info = `🏦 BMCE Bank<br>رقم الحساب: 96 0000162000010401 810 011<br>👤 الاسم: HASSAN ER-RADOUANY`;
+        break;
+
+      case 'attijari':
+        info = `🏦 Attijariwafa Bank<br>رقم الحساب: 007810000457430040232577<br>👤 الاسم: HASSAN ER-RADOUANY`;
+        break;
+
+      case 'cih':
+        info = `🏦 CIH Bank<br>رقم الحساب: 230810624745521100540088<br>👤 الاسم: HASSAN ER-RADOUANY`;
+        break;
+
+      case 'soge':
+        info = `🏦 Société Générale<br>رقم الحساب: 022780000760004157217174<br>👤 الاسم: HASSAN ER-RADOUANY`;
+        break;
+
+      default:
+        info = '';
+    }
+
+    box.innerHTML = info;
+    box.style.display = method ? 'block' : 'none';
+  }
+
+  // تفعيل زر الإرسال
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function validateForm() {
+      const requiredInputs = form.querySelectorAll('[required]');
+      let isValid = true;
+
+      requiredInputs.forEach(input => {
+        if (input.type === 'file') {
+          if (!input.files.length) isValid = false;
+        } else if (!input.value.trim()) {
+          isValid = false;
         }
-        toggle();
       });
-      form.addEventListener('input', toggle);
-      form.addEventListener('submit', () => {
-        localStorage.setItem('lastOrderId', form['رقم_الطلب'].value);
-      });
-      toggle();
+
+      submitBtn.disabled = !isValid;
+      submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
+    }
+
+    form.querySelectorAll('[required]').forEach(input => {
+      input.addEventListener('input', validateForm);
+      if (input.type === 'file') {
+        input.addEventListener('change', validateForm);
+      }
     });
-  </script>
+
+    validateForm();
+
+    form.addEventListener('submit', () => {
+      localStorage.setItem('lastOrderId', orderId);
+    });
+  });
+</script>
 </body>
 </html>
