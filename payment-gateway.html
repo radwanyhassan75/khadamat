@@ -1,86 +1,171 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>إتمام الطلب - المكتب الرقمي</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --primary-color: #0056b3; --secondary-color: #4a90e2;
-      --dark-color: #2c3e50; --light-color: #ffffff;
-      --gray-color: #f4f7f9; --danger-color: #dc3545;
-      --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+      --primary-color: #0056b3;
+      --secondary-color: #4a90e2;
+      --dark-color: #2c3e50;
+      --light-color: #ffffff;
+      --gray-color: #f4f7f9;
+      --danger-color: #dc3545;
+      --border-radius: 8px;
+      --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
     }
-    body { font-family: 'Cairo', sans-serif; margin: 0; background: var(--gray-color); direction: rtl; }
-    .payment-page-wrapper { max-width: 850px; margin: 50px auto; padding: 20px; }
-    .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
-    h2 { font-size: 1.8rem; color: var(--dark-color); border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px; }
-    .form-group { margin-bottom: 20px; }
-    .form-group label { font-weight: bold; display: block; margin-bottom: 8px; }
-    .form-group .required-star { color: var(--danger-color); }
-    input, textarea { width: 100%; padding: 12px; font-size: 1rem; border: 1px solid #ccc; border-radius: var(--border-radius); }
-    input[readonly] { background-color: #f0f0f0; cursor: not-allowed; }
-    .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; background: #28a745; border: none; color: white; cursor: pointer; border-radius: var(--border-radius); font-weight: bold; }
-    .submit-btn:disabled { background: #a5d6a7; cursor: not-allowed; }
-    .file-input-label { background-color: var(--secondary-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); cursor: pointer; display: inline-block; }
-    input[type="file"] { display: none; }
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      background: var(--gray-color);
+      direction: rtl;
+    }
+    .payment-page-wrapper {
+      max-width: 850px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .card {
+      background: var(--light-color);
+      padding: 30px 40px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+    }
+    h2 {
+      font-size: 1.8rem;
+      color: var(--dark-color);
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .required-star {
+      color: var(--danger-color);
+    }
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+      box-sizing: border-box;
+    }
+    input[readonly] {
+      background-color: #f0f0f0;
+      cursor: not-allowed;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2rem;
+      background: #28a745;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: var(--border-radius);
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .submit-btn:disabled {
+      background: #a5d6a7;
+      cursor: not-allowed;
+    }
+    .file-input-label {
+      background-color: var(--secondary-color);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 5px;
+    }
+    input[type='file'] {
+      display: none;
+    }
   </style>
 </head>
-
 <body>
   <main class="payment-page-wrapper">
-    <form id="order-form" name="order-form" method="POST" action="/" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
-      <input type="hidden" name="form-name" value="order-form">
-      <p style="display:none;"><label>Don’t fill this out: <input name="bot-field"></label></p>
+    <form
+      name="order-form"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      enctype="multipart/form-data"
+      action="/success.html"
+    >
+      <p style="display:none;">
+        <label>لا تعبئ هذا الحقل إذا كنت إنسانًا: <input name="bot-field" /></label>
+      </p>
 
-      <!-- معلومات الخدمة -->
-      <input type="hidden" id="service-name-input" name="الخدمة_المطلوبة">
-      <input type="hidden" id="service-price-input" name="السعر">
-      <input type="hidden" id="order-id-field" name="رقم_الطلب">
+      <!-- مفتاح لتأكيد النموذج -->
+      <input type="hidden" name="form-name" value="order-form" />
+      <!-- رقم الطلب سيُملأ جافاسكريبت -->
+      <input type="hidden" name="رقم_الطلب" id="order-id-input" />
 
       <div class="card">
         <h2><i class="fas fa-shopping-cart"></i> تفاصيل طلبك</h2>
+
         <div class="form-group">
-          <label>الخدمة:</label>
-          <input type="text" id="display-service-name" readonly>
+          <label for="service-name">الخدمة المطلوبة</label>
+          <input type="text" id="service-name" name="الخدمة_المطلوبة" readonly />
         </div>
+
         <div class="form-group">
-          <label>السعر:</label>
-          <input type="text" id="display-service-price" readonly>
+          <label for="service-price">السعر</label>
+          <input type="text" id="service-price" name="السعر" readonly />
         </div>
       </div>
 
-      <!-- معلومات العميل -->
       <div class="card">
         <h2><i class="fas fa-user-circle"></i> معلوماتك الشخصية</h2>
+
         <div class="form-group">
           <label for="customer-name">الاسم الكامل <span class="required-star">*</span></label>
-          <input type="text" id="customer-name" name="الاسم_الكامل" required>
+          <input type="text" id="customer-name" name="الاسم_الكامل" required />
         </div>
+
         <div class="form-group">
           <label for="customer-email">البريد الإلكتروني <span class="required-star">*</span></label>
-          <input type="email" id="customer-email" name="البريد_الإلكتروني" required>
+          <input type="email" id="customer-email" name="البريد_الإلكتروني" required />
         </div>
+
         <div class="form-group">
           <label for="customer-phone">رقم الهاتف (واتساب) <span class="required-star">*</span></label>
-          <input type="tel" id="customer-phone" name="الهاتف" required>
+          <input type="tel" id="customer-phone" name="الهاتف" required />
         </div>
       </div>
 
-      <!-- تفاصيل إضافية -->
       <div class="card">
         <h2><i class="fas fa-info-circle"></i> تفاصيل إضافية</h2>
+
         <div class="form-group">
           <label for="order-details">تفاصيل الطلب (اختياري)</label>
           <textarea id="order-details" name="تفاصيل_الطلب" rows="4"></textarea>
         </div>
+
         <div class="form-group">
-          <label for="receipt-file">إرفاق وصل الدفع <span class="required-star">*</span></label>
-          <input type="file" id="receipt-file" name="وصل_الدفع" required>
-          <label for="receipt-file" class="file-input-label"><i class="fas fa-paperclip"></i> اختر صورة الوصل</label>
+          <label for="receipt-file" class="file-input-label"
+            ><i class="fas fa-paperclip"></i> اختر صورة وصل الدفع <span class="required-star">*</span></label
+          >
+          <input type="file" id="receipt-file" name="وصل_الدفع" required />
         </div>
       </div>
 
@@ -92,37 +177,41 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('order-form');
+      const form = document.querySelector('form');
       const submitBtn = document.getElementById('submit-order-btn');
       const requiredInputs = Array.from(form.querySelectorAll('[required]'));
 
+      // توليد رقم الطلب وتخزينه
+      const orderId = 'KH-' + Date.now().toString().slice(-6);
+      const orderIdInput = document.getElementById('order-id-input');
+      orderIdInput.value = orderId;
+
+      // قراءة الخدمة والسعر من الرابط (URL Parameters)
+      const params = new URLSearchParams(window.location.search);
+      const serviceName = params.get('service') || 'غير محدد';
+      const servicePrice = params.get('price') || 'غير محدد';
+
+      document.getElementById('service-name').value = serviceName;
+      document.getElementById('service-price').value = servicePrice + ' درهم';
+
+      // تفعيل زر الإرسال فقط إذا تم ملء كل الحقول المطلوبة
       function validateForm() {
-        const isValid = requiredInputs.every(input => {
+        const isValid = requiredInputs.every((input) => {
           if (input.type === 'file') return input.files.length > 0;
           return input.value.trim() !== '';
         });
         submitBtn.disabled = !isValid;
-        submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول الإجبارية';
+        submitBtn.innerHTML = isValid
+          ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن'
+          : '<i class="fas fa-lock"></i> أكمل الحقول الإجبارية';
       }
 
-      requiredInputs.forEach(input => input.addEventListener('input', validateForm));
+      requiredInputs.forEach((input) => input.addEventListener('input', validateForm));
+      validateForm();
 
-      const params = new URLSearchParams(window.location.search);
-      const serviceName = params.get('service') || "غير محددة";
-      const servicePrice = params.get('price') || "0";
-
-      document.getElementById('display-service-name').value = serviceName;
-      document.getElementById('display-service-price').value = servicePrice + " درهم";
-      document.getElementById('service-name-input').value = serviceName;
-      document.getElementById('service-price-input').value = servicePrice;
-
-      const orderId = 'KH-' + Date.now().toString().slice(-6);
-      document.getElementById('order-id-field').value = orderId;
-      localStorage.setItem('lastOrderId', orderId);
-
+      // عند الإرسال، خزّن رقم الطلب في localStorage لعرضه في صفحة النجاح
       form.addEventListener('submit', () => {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+        localStorage.setItem('lastOrderId', orderId);
       });
     });
   </script>
