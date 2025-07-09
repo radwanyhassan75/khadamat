@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الإدارية</title>
+    <title>لوحة التحكم الإدارية - المكتب الرقمي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
-            --gray-color: #f4f7f9; --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            --gray-color: #f4f7f9; --border-radius: 8px; --success-color: #28a745;
         }
         body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
         .admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        h1 { font-size: 2.5rem; color: var(--dark-color); margin: 0; }
-        .btn { padding: 10px 20px; border: none; border-radius: var(--border-radius); font-weight: 700; cursor: pointer; }
+        .admin-header h1 { font-size: 2.5rem; color: var(--dark-color); margin: 0; }
+        .btn { padding: 10px 20px; border: none; border-radius: var(--border-radius); font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
         .btn-primary { background-color: var(--primary-color); color: white; }
-        .orders-table-wrapper { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow-x: auto; }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .orders-table-wrapper { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: 0 5px 25px rgba(0,0,0,0.08); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: right; }
         th, td { padding: 15px 20px; border-bottom: 1px solid #eee; white-space: nowrap; }
-        th { background-color: #f8f9fa; font-size: 1.1rem; }
-        select { padding: 8px; border-radius: var(--border-radius); border: 1px solid #ccc; }
-        #loader { text-align: center; padding: 50px; font-size: 1.5rem; }
+        th { background-color: #f8f9fa; font-size: 1.1rem; color: var(--dark-color); }
+        td { color: #555; vertical-align: middle; }
+        select { padding: 8px; border-radius: var(--border-radius); border: 1px solid #ccc; font-family: 'Cairo', sans-serif; background-color: #fff; }
+        #loader { text-align: center; padding: 50px; font-size: 1.5rem; font-weight: 700; }
         .fa-spinner { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
@@ -31,22 +35,25 @@
     <div class="admin-container">
         <div class="admin-header">
             <h1><i class="fas fa-tasks"></i> إدارة الطلبات</h1>
-            <button class="btn btn-primary" id="refresh-btn"><i class="fas fa-sync-alt"></i> تحديث</button>
+            <button class="btn btn-primary" id="refresh-btn"><i class="fas fa-sync-alt"></i> تحديث القائمة</button>
         </div>
+
         <div class="orders-table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>رقم الطلب</th>
                         <th>اسم العميل</th>
-                        <th>الخدمة</th>
+                        <th>الخدمة المطلوبة</th>
                         <th>حالة الدفع</th>
                         <th>حالة الطلب</th>
                         <th>إجراء</th>
                     </tr>
                 </thead>
                 <tbody id="orders-tbody">
-                    <tr id="loader"><td colspan="6"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>
+                    <tr id="loader">
+                        <td colspan="6"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -54,17 +61,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDsqnTQkC6Dn3LaKaC52QOwC8_oXfhJ2vFIeOa4zjP4nFN_E48O-06o9ALTt6BLUh8hA/exec"; // 👈 ألصق رابطك الجديد هنا
+            // ✅ ضع هنا نفس الرابط الناجح الذي استخدمته في صفحة تتبع الطلب
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzWemEMoqLzQ0USWjxTSMMzplqKTzRRmdBz6T6Q6CedNbMuTegpKFSxiwQadBSCapU6A/exec";
+            
             const ordersTbody = document.getElementById('orders-tbody');
             const refreshBtn = document.getElementById('refresh-btn');
 
             async function fetchAndDisplayOrders() {
-                ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 50px;"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</td></tr>';
+                ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 50px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>';
                 try {
                     const response = await fetch(`${SCRIPT_URL}?action=getAll`);
-                    if (!response.ok) {
-                        throw new Error(`Network Error: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error('فشل الاتصال بالشبكة.');
+                    
                     const orders = await response.json();
                     ordersTbody.innerHTML = ''; 
 
@@ -80,10 +88,21 @@
                         tr.innerHTML = `
                             <td>${order.orderId}</td>
                             <td>${order.customerName}</td>
-                            <td>${order.serviceName || ''}</td>
-                            <td><select class="payment-status"><option value="لم يتم الدفع" ${order.paymentStatus === 'لم يتم الدفع' ? 'selected' : ''}>لم يتم الدفع</option><option value="تم الدفع" ${order.paymentStatus === 'تم الدفع' ? 'selected' : ''}>تم الدفع</option></select></td>
-                            <td><select class="order-status"><option value="قيد المعالجة" ${order.orderStatus === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option><option value="تم الإنجاز" ${order.orderStatus === 'تم الإنجاز' ? 'selected' : ''}>تم الإنجاز</option></select></td>
-                            <td><button class="btn btn-primary btn-save" data-order-id="${order.orderId}">حفظ</button></td>
+                            <td>${order.serviceName || 'غير محدد'}</td>
+                            <td>
+                                <select class="payment-status">
+                                    <option value="لم يتم الدفع" ${order.paymentStatus === 'لم يتم الدفع' ? 'selected' : ''}>لم يتم الدفع</option>
+                                    <option value="تم الدفع" ${order.paymentStatus === 'تم الدفع' ? 'selected' : ''}>تم الدفع</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="order-status">
+                                    <option value="قيد المعالجة" ${order.orderStatus === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option>
+                                    <option value="تم الإنجاز" ${order.orderStatus === 'تم الإنجاز' ? 'selected' : ''}>تم الإنجاز</option>
+                                    <option value="معلومات ناقصة" ${order.orderStatus === 'معلومات ناقصة' ? 'selected' : ''}>معلومات ناقصة</option>
+                                </select>
+                            </td>
+                            <td><button class="btn btn-success btn-save" data-order-id="${order.orderId}">حفظ</button></td>
                         `;
                         ordersTbody.appendChild(tr);
                     });
@@ -96,7 +115,38 @@
             ordersTbody.addEventListener('click', async function(e) {
                 if (e.target && e.target.classList.contains('btn-save')) {
                     const saveButton = e.target;
-                    // ... (The rest of the save logic) ...
+                    const row = saveButton.closest('tr');
+                    const orderId = saveButton.dataset.orderId;
+                    const paymentStatus = row.querySelector('.payment-status').value;
+                    const orderStatus = row.querySelector('.order-status').value;
+
+                    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    saveButton.disabled = true;
+
+                    try {
+                        const response = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ orderId, paymentStatus, orderStatus }),
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' } // Use text/plain for POST to Apps Script from browser
+                        });
+
+                        if (!response.ok) throw new Error('فشل تحديث الطلب.');
+                        
+                        const result = await response.json();
+
+                        if (result.status === "success") {
+                            alert(result.message);
+                        } else {
+                            throw new Error(result.message);
+                        }
+
+                    } catch (error) {
+                        alert(`حدث خطأ أثناء تحديث الطلب: ${error.message}`);
+                        console.error('Error updating order:', error);
+                    } finally {
+                        saveButton.innerHTML = 'حفظ';
+                        saveButton.disabled = false;
+                    }
                 }
             });
 
