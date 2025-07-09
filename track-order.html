@@ -1,141 +1,92 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تتبع طلبك - المكتب الرقمي</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
-            --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
-            --success-color: #28a745; --warning-color: #ffc107; --danger-color: #dc3545;
-            --success-bg: #e9f7ef; --warning-bg: #fff8e1; --danger-bg: #fdecea;
-            --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-        }
-        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
-        .track-order-container { max-width: 800px; margin: 60px auto; padding: 0 20px; }
-        .track-form-card { padding: 40px; background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; margin-bottom: 40px; }
-        .track-form-card h1 { font-size: 2.5rem; font-weight: 900; color: var(--dark-color); margin-top: 0; margin-bottom: 10px; }
-        .track-form { display: flex; gap: 10px; margin-bottom: 20px; }
-        .track-form input { flex-grow: 1; border: 2px solid #ddd; padding: 15px; border-radius: var(--border-radius); font-size: 1.1rem; text-align: left; direction: ltr; }
-        .track-form input:focus { border-color: var(--primary-color); outline: none; }
-        .track-form button { padding: 0 30px; border-radius: var(--border-radius); background: var(--primary-color); color: white; border: none; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
-        
-        #result-area, #not-found-message, #loading-message { display: none; }
-        #loading-message { text-align: center; font-size: 1.2rem; font-weight: 700; color: var(--text-color); }
-        #loading-message .fa-spinner { margin-left: 10px; animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .order-result-card { background: var(--light-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
-        .order-result-header { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        .order-result-header h2 { margin: 0; font-size: 1.5rem; }
-        .order-result-header p { margin: 8px 0 0; color: var(--text-color); font-weight: 700; }
-        .order-result-header span { color: var(--dark-color); font-weight: 400; }
-        
-        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .status-box { padding: 20px; border-radius: var(--border-radius); border-right: 5px solid; }
-        .status-box h4 { margin: 0 0 10px; font-size: 1rem; opacity: 0.8; }
-        .status-value { font-size: 1.2rem; font-weight: 900; }
-        
-        .status-green { border-color: var(--success-color); background-color: var(--success-bg); color: #155724; }
-        .status-yellow { border-color: var(--warning-color); background-color: var(--warning-bg); color: #856404; }
-        .status-red { border-color: var(--danger-color); background-color: var(--danger-bg); color: #721c24; }
-        #not-found-message { color: var(--danger-color); font-weight: 700; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: var(--border-radius); text-align: center; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تتبع طلبك - المكتب الرقمي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: #f4f7f9; }
+    main { max-width: 600px; margin: auto; padding: 2rem; }
+    .track-form-card { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px #ddd; text-align: center; }
+    .track-form input { padding: 12px; width: 100%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+    .track-form button { padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 1.1rem; cursor: pointer; }
+    #result-area, #not-found-message, #loading-message { margin-top: 20px; background: #fff; padding: 1rem; border-radius: 6px; box-shadow: 0 0 10px #ddd; }
+    .field { margin-bottom: 10px; }
+    .label { font-weight: bold; }
+    .value { color: #333; }
+    #not-found-message { color: red; text-align: center; font-weight: bold; }
+    #loading-message { text-align: center; font-weight: bold; color: #555; }
+  </style>
 </head>
 <body>
-    <main class="track-order-container">
-        <div class="track-form-card">
-            <h1><i class="fas fa-shipping-fast" style="color: var(--primary-color);"></i> تتبع حالة طلبك</h1>
-            <p>أدخل رقم الطلب لمعرفة آخر التحديثات.</p>
-            <form id="track-form" class="track-form">
-                <input type="text" id="order-id-input" placeholder="أدخل رقم الطلب هنا..." required>
-                <button type="submit">تتبع</button>
-            </form>
-            <div id="loading-message"><i class="fas fa-spinner"></i> جاري البحث...</div>
-        </div>
+  <main>
+    <div class="track-form-card">
+      <h1><i class="fas fa-shipping-fast"></i> تتبع حالة طلبك</h1>
+      <form id="track-form" class="track-form">
+        <input type="text" id="order-id-input" placeholder="أدخل رقم الطلب هنا..." required>
+        <button type="submit">تتبع</button>
+      </form>
+      <div id="loading-message" style="display: none;"><i class="fas fa-spinner fa-spin"></i> جاري البحث...</div>
+    </div>
 
-        <div id="result-area">
-            <div class="order-result-card">
-                <div class="order-result-header">
-                    <h2>تفاصيل الطلب: <span id="result-order-id"></span></h2>
-                    <p>العميل: <span id="result-customer-name"></span></p>
-                    <p>البريد الإلكتروني: <span id="result-customer-email"></span></p>
-                    <p>الهاتف: <span id="result-customer-phone"></span></p>
-                </div>
-                <div class="status-grid">
-                    <div id="payment-status-box" class="status-box">
-                        <h4><i class="fas fa-credit-card"></i> حالة الدفع</h4>
-                        <p id="result-payment-status" class="status-value"></p>
-                    </div>
-                    <div id="order-status-box" class="status-box">
-                        <h4><i class="fas fa-cogs"></i> حالة الطلب</h4>
-                        <p id="result-order-status" class="status-value"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="not-found-message" style="display: none;"><p><i class="fas fa-exclamation-triangle"></i> عذراً، لم يتم العثور على طلب بهذا الرقم.</p></div>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const trackForm = document.getElementById('track-form');
-            const resultArea = document.getElementById('result-area');
-            const notFoundMessage = document.getElementById('not-found-message');
-            const loadingMessage = document.getElementById('loading-message');
-            
-            // ✅ تم إصلاح الرابط هنا بوضع علامتي التنصيص ""
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzDsqnTQkC6Dn3LaKaC52QOwC8_oXfhJ2vFIeOa4zjP4nFN_E48O-06o9ALTt6BLUh8hA/exec"; 
+    <div id="result-area" style="display: none;">
+      <div class="field"><span class="label">رقم الطلب:</span> <span class="value" id="result-order-id"></span></div>
+      <div class="field"><span class="label">الاسم الكامل:</span> <span class="value" id="result-name"></span></div>
+      <div class="field"><span class="label">البريد الإلكتروني:</span> <span class="value" id="result-email"></span></div>
+      <div class="field"><span class="label">رقم الهاتف:</span> <span class="value" id="result-phone"></span></div>
+      <div class="field"><span class="label">تفاصيل الطلب:</span> <span class="value" id="result-details"></span></div>
+      <div class="field"><span class="label">حالة الدفع:</span> <span class="value" id="result-payment"></span></div>
+      <div class="field"><span class="label">حالة الطلب:</span> <span class="value" id="result-status"></span></div>
+    </div>
 
-            trackForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const orderId = document.getElementById('order-id-input').value.trim();
-                if (!orderId) return;
+    <div id="not-found-message" style="display: none;">رقم الطلب غير موجود. تأكد من إدخاله بشكل صحيح.</div>
+  </main>
 
-                loadingMessage.style.display = 'block';
-                resultArea.style.display = 'none';
-                notFoundMessage.style.display = 'none';
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const trackForm = document.getElementById('track-form');
+      const resultArea = document.getElementById('result-area');
+      const notFoundMessage = document.getElementById('not-found-message');
+      const loadingMessage = document.getElementById('loading-message');
 
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?orderId=${orderId}`);
-                    const data = await response.json();
-                    loadingMessage.style.display = 'none';
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6Ejh5Ywdj0n6npnUBrZ9qANAmLUgi1LkMNMpg5tNaDVNUlNQ_xuiO8llg_it4f7X4Hg/exec";
 
-                    if (data.error) {
-                        notFoundMessage.style.display = 'block';
-                    } else {
-                        document.getElementById('result-order-id').textContent = data.رقم_الطلب;
-                        document.getElementById('result-customer-name').textContent = data.الاسم_الكامل;
-                        document.getElementById('result-customer-email').textContent = data.البريد_الإلكتروني;
-                        document.getElementById('result-customer-phone').textContent = data.الهاتف;
-                        
-                        const paymentStatusEl = document.getElementById('result-payment-status');
-                        const paymentBox = document.getElementById('payment-status-box');
-                        paymentStatusEl.textContent = data.حالة_الدفع;
-                        paymentBox.className = 'status-box';
-                        if (data.حالة_الدفع === 'تم الدفع') paymentBox.classList.add('status-green');
-                        else paymentBox.classList.add('status-red');
+      trackForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const orderId = document.getElementById('order-id-input').value.trim();
+        if (!orderId) return;
 
-                        const orderStatusEl = document.getElementById('result-order-status');
-                        const orderBox = document.getElementById('order-status-box');
-                        orderStatusEl.textContent = data.حالة_الطلب;
-                        orderBox.className = 'status-box';
-                        if (data.حالة_الطلب === 'تم الإنجاز') orderBox.classList.add('status-green');
-                        else if (data.حالة_الطلب === 'قيد المعالجة') orderBox.classList.add('status-yellow');
-                        else orderBox.classList.add('status-red');
-                        
-                        resultArea.style.display = 'block';
-                    }
-                } catch (error) {
-                    loadingMessage.style.display = 'none';
-                    notFoundMessage.style.display = 'block';
-                }
-            });
-        });
-    </script>
+        loadingMessage.style.display = 'block';
+        resultArea.style.display = 'none';
+        notFoundMessage.style.display = 'none';
+
+        try {
+          const response = await fetch(`${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`);
+          const data = await response.json();
+          loadingMessage.style.display = 'none';
+
+          if (data.error) {
+            notFoundMessage.style.display = 'block';
+          } else {
+            document.getElementById('result-order-id').textContent = data.رقم_الطلب || '';
+            document.getElementById('result-name').textContent = data.الاسم_الكامل || '';
+            document.getElementById('result-email').textContent = data.البريد_الإلكتروني || '';
+            document.getElementById('result-phone').textContent = data.الهاتف || '';
+            document.getElementById('result-details').textContent = data.تفاصيل_الطلب || '';
+            document.getElementById('result-payment').textContent = data.حالة_الدفع || '';
+            document.getElementById('result-status').textContent = data.حالة_الطلب || '';
+            resultArea.style.display = 'block';
+          }
+        } catch (error) {
+          loadingMessage.style.display = 'none';
+          notFoundMessage.textContent = 'فشل الاتصال بالخادم، تأكد من توفر الإنترنت أو من صلاحية الرابط.';
+          notFoundMessage.style.display = 'block';
+          console.error(error);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
