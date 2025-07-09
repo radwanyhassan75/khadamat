@@ -52,7 +52,7 @@
                 </thead>
                 <tbody id="orders-tbody">
                     <tr id="loader">
-                        <td colspan="6"><i class="fas fa-spinner"></i> جاري تحميل الطلبات...</td>
+                        <td colspan="6"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td>
                     </tr>
                 </tbody>
             </table>
@@ -61,19 +61,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // ✅ تم وضع رابط السكريبت الخاص بك هنا
-            const SCRIPT_URL = "hhttps://script.google.com/macros/s/AKfycbyXe8zHRAYxY7K86SxW14eikfLRdNaCc3c62pQxVC7QvjGlob3_RDh9-Z16gKIlRS9sig/exec";
+            // ✅ تم وضع رابط السكريبت الجديد الخاص بك هنا
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7ccjYvz2Y9Tn8MV2UUH_49PvRuCM3s6sI_uZyxrfNI3-96riwxiz4GrUpcjPaEHDtrw/exec";
             const ordersTbody = document.getElementById('orders-tbody');
-            const loader = document.getElementById('loader');
             const refreshBtn = document.getElementById('refresh-btn');
 
-            // --- دالة لجلب وعرض جميع الطلبات ---
             async function fetchAndDisplayOrders() {
-                ordersTbody.innerHTML = '<tr><td colspan="6" id="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>';
+                ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 50px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>';
                 try {
                     const response = await fetch(`${SCRIPT_URL}?action=getAll`);
+                    if (!response.ok) throw new Error('Network response was not ok.');
                     const orders = await response.json();
-                    ordersTbody.innerHTML = ''; // مسح "جاري التحميل"
+                    
+                    ordersTbody.innerHTML = ''; 
 
                     if (orders.length === 0) {
                         ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد طلبات حاليًا.</td></tr>';
@@ -85,7 +85,7 @@
                         tr.innerHTML = `
                             <td>${order.orderId}</td>
                             <td>${order.customerName}</td>
-                            <td>${order.serviceName}</td>
+                            <td>${order.serviceName || 'غير محدد'}</td>
                             <td>
                                 <select class="payment-status">
                                     <option value="لم يتم الدفع" ${order.paymentStatus === 'لم يتم الدفع' ? 'selected' : ''}>لم يتم الدفع</option>
@@ -104,12 +104,11 @@
                         ordersTbody.appendChild(tr);
                     });
                 } catch (error) {
-                    ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">حدث خطأ أثناء جلب البيانات.</td></tr>';
+                    ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">حدث خطأ أثناء جلب البيانات. تأكد من صحة الرابط وأنك قمت بنشر السكريبت.</td></tr>';
                     console.error('Error fetching orders:', error);
                 }
             }
 
-            // --- دالة لتحديث حالة الطلب ---
             ordersTbody.addEventListener('click', async function(e) {
                 if (e.target && e.target.classList.contains('btn-save')) {
                     const saveButton = e.target;
@@ -124,7 +123,7 @@
                     try {
                         const response = await fetch(SCRIPT_URL, {
                             method: 'POST',
-                            mode: 'no-cors', // Important for simple POST requests to Apps Script
+                            mode: 'no-cors', 
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify({ orderId, paymentStatus, orderStatus })
                         });
@@ -141,7 +140,6 @@
                 }
             });
 
-            // --- جلب الطلبات عند تحميل الصفحة وتحديثها عند الضغط على الزر ---
             fetchAndDisplayOrders();
             refreshBtn.addEventListener('click', fetchAndDisplayOrders);
         });
