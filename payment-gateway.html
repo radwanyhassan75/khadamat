@@ -4,91 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إتمام الطلب - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        :root { --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50; --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555; --danger-color: #dc3545; --border-radius: 8px; --box-shadow: 0 5px 25px rgba(0,0,0,0.08); }
+        :root {
+            --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
+            --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
+            --danger-color: #dc3545; --border-radius: 8px; 
+            --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        }
         body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
         .payment-page-wrapper { max-width: 850px; margin: 50px auto; padding: 20px; }
         .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
-        .card h2 { font-size: 1.8rem; margin-top: 0; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .card h2 { font-size: 1.8rem; color: var(--dark-color); margin-top: 0; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 700; color: var(--dark-color); margin-bottom: 8px; }
         .form-group label .required-star { color: var(--danger-color); }
-        .form-group textarea, .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; }
-        .form-group input[readonly] { background-color: #f0f0f0; cursor: not-allowed; }
+        .form-group textarea, .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        .form-group input[readonly] { background-color: #f0f0f0; cursor: not-allowed; border: none; }
         .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; margin-top: 20px; background: #28a745; border: none; color: white; cursor: pointer; border-radius: var(--border-radius); font-weight: 900; }
         .submit-btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
-        .file-input { display: none; }
         .file-input-label { background-color: var(--secondary-color); color: white; padding: 12px 20px; border-radius: var(--border-radius); cursor: pointer; display: inline-block; }
+        input[type="file"] { display: none; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <main class="payment-page-wrapper">
-        <form id="order-form" name="order-form" data-netlify="true" netlify-honeypot="bot-field">
-            <p style="display:none;"><label>Don’t fill this out: <input name="bot-field"></label></p>
-            <input type="hidden" id="service-name-input" name="الخدمة_المطلوبة">
-            <input type="hidden" id="service-price-input" name="السعر">
+        <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html">
+            
+            <p class="hidden">
+                <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+            </p>
+            <input type="hidden" name="form-name" value="order-form">
 
             <div class="card">
                 <h2><i class="fas fa-shopping-cart"></i> تفاصيل طلبك</h2>
-                <div class="form-group"><label>الخدمة:</label><input type="text" id="display-service-name" readonly></div>
-                <div class="form-group"><label>السعر:</label><input type="text" id="display-service-price" readonly></div>
+                <div class="form-group">
+                    <label>الخدمة المطلوبة:</label>
+                    <input type="text" id="display-service-name" name="الخدمة_المطلوبة" readonly>
+                </div>
+                <div class="form-group">
+                    <label>السعر:</label>
+                    <input type="text" id="display-service-price" name="السعر" readonly>
+                </div>
             </div>
+
             <div class="card">
                 <h2><i class="fas fa-user-circle"></i> معلوماتك الشخصية</h2>
-                <div class="form-group"><label for="customer-name">الاسم الكامل <span class="required-star">*</span></label><input type="text" id="customer-name" name="الاسم_الكامل" required></div>
-                <div class="form-group"><label for="customer-email">البريد الإلكتروني <span class="required-star">*</span></label><input type="email" id="customer-email" name="البريد_الإلكتروني" required></div>
-                <div class="form-group"><label for="receipt-file">إرفاق وصل الدفع <span class="required-star">*</span></label><input type="file" id="receipt-file" name="وصل_الدفع" class="file-input" required><label for="receipt-file" class="file-input-label">اختر صورة الوصل</label></div>
+                <div class="form-group">
+                    <label for="customer-name">الاسم الكامل <span class="required-star">*</span></label>
+                    <input type="text" id="customer-name" name="الاسم_الكامل" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">البريد الإلكتروني <span class="required-star">*</span></label>
+                    <input type="email" id="customer-email" name="البريد_الإلكتروني" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">رقم الهاتف (واتساب) <span class="required-star">*</span></label>
+                    <input type="tel" id="customer-phone" name="الهاتف" required>
+                </div>
             </div>
-            <button type="submit" id="submit-order-btn" class="submit-btn" disabled><i class="fas fa-lock"></i> أكمل الحقول الإجبارية</button>
+            
+            <div class="card">
+                 <h2><i class="fas fa-paperclip"></i> إرفاق الملفات</h2>
+                 <p> لإتمام طلبك، الرجاء إرسال وصل الدفع عبر الواتساب مع ذكر اسمك.</p>
+                 <div class="form-group">
+                    <label for="extra-file">يمكنك إرفاق ملف إضافي هنا (اختياري)</label>
+                    <input type="file" id="extra-file" name="ملف_إضافي" class="file-input">
+                    <label for="extra-file" class="file-input-label"><i class="fas fa-upload"></i> اختر ملفًا</label>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-order-btn" class="submit-btn" disabled>
+                <i class="fas fa-lock"></i> أكمل الحقول الإجبارية لإرسال الطلب
+            </button>
         </form>
     </main>
+
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('order-form');
-        const submitBtn = document.getElementById('submit-order-btn');
-        const requiredInputs = Array.from(form.querySelectorAll('[required]'));
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submit-order-btn');
+            const requiredInputs = Array.from(form.querySelectorAll('[required]'));
 
-        function validateForm() {
-            const isValid = requiredInputs.every(input => {
-                if (input.type === 'file') return input.files.length > 0;
-                return input.value.trim() !== '';
-            });
-            submitBtn.disabled = !isValid;
-            submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> تأكيد وإرسال الطلب' : '<i class="fas fa-lock"></i> أكمل الحقول الإجبارية';
-        }
+            function validateForm() {
+                const isValid = requiredInputs.every(input => input.value.trim() !== '');
+                submitBtn.disabled = !isValid;
+                submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول الإجبارية';
+            }
 
-        requiredInputs.forEach(input => input.addEventListener('input', validateForm));
-        
-        const params = new URLSearchParams(window.location.search);
-        const serviceName = params.get('service') || "N/A";
-        const servicePrice = params.get('price') || "N/A";
-        
-        document.getElementById('display-service-name').value = serviceName;
-        document.getElementById('display-service-price').value = servicePrice + " درهم";
-        document.getElementById('service-name-input').value = serviceName;
-        document.getElementById('service-price-input').value = servicePrice;
+            requiredInputs.forEach(input => input.addEventListener('input', validateForm));
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const serviceName = params.get('service') || "N/A";
+            const servicePrice = params.get('price') || "N/A";
             
-            const orderId = 'KH-' + Date.now().toString().slice(-6);
-            localStorage.setItem('lastOrderId', orderId);
-
-            const formData = new FormData(form);
-            formData.append("رقم_الطلب", orderId); // Add the generated order ID to the form data
-
-            fetch("/", {
-                method: "POST",
-                headers: { "Accept": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams(formData).toString()
-            })
-            .then(() => {
-                window.location.href = 'success.html';
-            })
-            .catch((error) => alert(error));
+            document.getElementById('display-service-name').value = serviceName;
+            document.getElementById('display-service-price').value = servicePrice + " درهم";
         });
-    });
     </script>
 </body>
 </html>
