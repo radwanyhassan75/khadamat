@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تحكم المسؤول – المكتب الرقمي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f4f7f9;
+      margin: 0; padding: 20px;
+      direction: rtl;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+    }
+    h1 { color: #0056b3; margin-bottom: 20px; text-align: center; }
+    label { display: block; margin-bottom: 8px; font-weight: bold; }
+    input, select {
+      width: 100%; padding: 10px; margin-bottom: 20px;
+      border: 1px solid #ccc; border-radius: 8px;
+    }
+    button {
+      width: 100%; padding: 14px;
+      background: #0056b3; color: white;
+      border: none; border-radius: 8px;
+      font-size: 1rem; cursor: pointer;
+    }
+    .info-box {
+      background: #eef5ff;
+      padding: 15px; border-radius: 8px;
+      margin-top: 20px; display: none;
+    }
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+    }
+    .message.success { background: #d4edda; color: #155724; }
+    .message.error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 لوحة التحكم – تحديث الطلبات</h1>
+    <label for="admin-pass">كلمة مرور المسؤول</label>
+    <input type="password" id="admin-pass" placeholder="أدخل كلمة المرور">
+
+    <label for="order-id">رقم الطلب</label>
+    <input type="text" id="order-id" placeholder="مثلاً KH-123456">
+
+    <button onclick="loadOrder()">تحميل بيانات الطلب</button>
+
+    <div class="info-box" id="order-info">
+      <p><strong>🔍 الطلب من:</strong> <span id="info-name"></span></p>
+      <p><strong>💳 حالة الدفع حالياً:</strong> <span id="info-payment"></span></p>
+      <p><strong>📦 حالة التنفيذ حالياً:</strong> <span id="info-status"></span></p>
+
+      <label for="payment-status">تعديل حالة الدفع</label>
+      <select id="payment-status">
+        <option value="تم الدفع">✅ تم الدفع</option>
+        <option value="لم يتم الدفع">❌ لم يتم الدفع</option>
+        <option value="انتظار الدفع">⏳ انتظار الدفع</option>
+      </select>
+
+      <label for="order-status">تعديل حالة التنفيذ</label>
+      <select id="order-status">
+        <option value="قيد المعالجة">🚧 قيد المعالجة</option>
+        <option value="تم الإنجاز">✅ تم الإنجاز</option>
+        <option value="مرفوض">❌ مرفوض</option>
+      </select>
+
+      <button onclick="saveOrder()">حفظ التعديلات</button>
+    </div>
+
+    <div class="message success" id="msg-success">تم حفظ التعديلات بنجاح!</div>
+    <div class="message error" id="msg-error">حدث خطأ، حاول مرة أخرى.</div>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = "Vpn098765";
+
+    // محاكاة بيانات طلب (في النظام الحقيقي نأتي بها من Google Sheets أو DB)
+    const orders = {
+      "KH-123456": { name: "أحمد محمد", payment: "انتظار الدفع", status: "قيد المعالجة" }
+    };
+
+    function loadOrder() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass !== ADMIN_PASSWORD) {
+        alert("🔐 كلمة المرور غير صحيحة!");
+        return;
+      }
+      const id = document.getElementById('order-id').value.trim();
+      const data = orders[id];
+      if (!data) {
+        alert("لم يتم العثور على هذا الطلب.");
+        return;
+      }
+      document.getElementById('info-name').textContent = data.name;
+      document.getElementById('info-payment').textContent = data.payment;
+      document.getElementById('info-status').textContent = data.status;
+      document.getElementById('payment-status').value = data.payment;
+      document.getElementById('order-status').value = data.status;
+      document.getElementById('order-info').style.display = "block";
+    }
+
+    function saveOrder() {
+      const pass = document.getElementById('admin-pass').value;
+      if (pass !== ADMIN_PASSWORD) {
+        alert("🔐 كلمة المرور غير صحيحة!");
+        return;
+      }
+      const id = document.getElementById('order-id').value.trim();
+      if (!orders[id]) {
+        alert("🚫 لا يوجد طلب بهذا الرقم.");
+        return;
+      }
+      const newPayment = document.getElementById('payment-status').value;
+      const newStatus = document.getElementById('order-status').value;
+      // تحديث البيانات في النظام (هنا فقط محاكاة)
+      orders[id].payment = newPayment;
+      orders[id].status = newStatus;
+      document.getElementById('info-payment').textContent = newPayment;
+      document.getElementById('info-status').textContent = newStatus;
+      showMessage("success");
+      // لاحقًا يمكن هنا إرسال طلب إلى Google Sheets أو تفعيل Make لإرسال بريد الكتروني
+    }
+
+    function showMessage(type) {
+      const el = document.getElementById(type === "success" ? "msg-success" : "msg-error");
+      el.style.display = "block";
+      setTimeout(() => el.style.display = "none", 5000);
+    }
+  </script>
+</body>
+</html>
