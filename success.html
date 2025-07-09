@@ -7,24 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { /* ... All CSS variables ... */ }
-        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: #f4f7f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .success-card { background: #ffffff; padding: 50px; text-align: center; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); max-width: 600px; margin: 20px; }
-        .success-icon { font-size: 5rem; color: #28a745; margin-bottom: 20px; animation: scaleUp 0.5s ease-out; }
-        @keyframes scaleUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .success-title { font-size: 2.2rem; color: #2c3e50; margin: 0 0 10px 0; }
-        .success-subtitle { font-size: 1.1rem; color: #555; margin: 0 0 30px 0; line-height: 1.7; }
-        .order-id-box { background: #e7f1ff; border: 2px dashed #0056b3; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .order-id-box p { margin: 0; font-weight: 700; }
-        #order-id-display { font-size: 2rem; color: #0056b3; font-weight: 900; letter-spacing: 2px; }
-        .btn { padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 700; background-color: #0056b3; color: #ffffff; display: inline-block; }
+        /* ... CSS from your last correct version of success.html ... */
     </style>
 </head>
 <body>
     <div class="success-card">
         <div class="success-icon"><i class="fas fa-check-circle"></i></div>
         <h1 class="success-title">شكراً لك، تم إرسال طلبك بنجاح!</h1>
-        <p class="success-subtitle">سنتواصل معك عبر الواتساب أو البريد الإلكتروني الذي أدخلته في أقرب وقت ممكن لتأكيد الطلب والبدء في تنفيذه.</p>
+        <p class="success-subtitle">سنتواصل معك عبر الواتساب أو البريد الإلكتروني الذي أدخلته في أقرب وقت ممكن.</p>
         <div class="order-id-box">
             <p>احتفظ برقم طلبك لاستخدامه في التتبع:</p>
             <h2 id="order-id-display">...</h2>
@@ -37,7 +27,7 @@
             const orderIdDisplay = document.getElementById('order-id-display');
             if (orderId) {
                 orderIdDisplay.textContent = orderId;
-                localStorage.removeItem('lastOrderId'); // نمسحه حتى لا يظهر في زيارة أخرى
+                localStorage.removeItem('lastOrderId'); 
             } else {
                 orderIdDisplay.textContent = "لا يوجد رقم طلب";
             }
