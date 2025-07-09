@@ -1,158 +1,256 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الإدارية - المكتب الرقمي</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
-            --gray-color: #f4f7f9; --border-radius: 8px; --success-color: #28a745;
-        }
-        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); }
-        .admin-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .admin-header h1 { font-size: 2.5rem; color: var(--dark-color); margin: 0; }
-        .btn { padding: 10px 20px; border: none; border-radius: var(--border-radius); font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-        .btn-primary { background-color: var(--primary-color); color: white; }
-        .btn-success { background-color: var(--success-color); color: white; }
-        .orders-table-wrapper { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: 0 5px 25px rgba(0,0,0,0.08); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 15px 20px; border-bottom: 1px solid #eee; white-space: nowrap; }
-        th { background-color: #f8f9fa; font-size: 1.1rem; color: var(--dark-color); }
-        td { color: #555; vertical-align: middle; }
-        select { padding: 8px; border-radius: var(--border-radius); border: 1px solid #ccc; font-family: 'Cairo', sans-serif; background-color: #fff; }
-        #loader { text-align: center; padding: 50px; font-size: 1.5rem; font-weight: 700; }
-        .fa-spinner { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لوحة التحكم الإدارية - المكتب الرقمي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <style>
+    :root {
+      --primary: #0056b3;
+      --success: #28a745;
+      --danger: #dc3545;
+      --gray: #f4f7f9;
+      --white: #ffffff;
+      --dark: #2c3e50;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--gray);
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+    }
+    .admin-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .admin-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      gap: 10px;
+    }
+    .admin-header h1 {
+      font-size: 2rem;
+      color: var(--dark);
+      margin: 0;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary { background-color: var(--primary); color: var(--white); }
+    .btn-success { background-color: var(--success); color: var(--white); }
+    .btn-danger { background-color: var(--danger); color: var(--white); }
+
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 300px;
+    }
+
+    .orders-table-wrapper {
+      background-color: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: right;
+    }
+
+    th, td {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+
+    td {
+      color: #555;
+      vertical-align: middle;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    #loader {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1><i class="fas fa-tasks"></i> إدارة الطلبات</h1>
-            <button class="btn btn-primary" id="refresh-btn"><i class="fas fa-sync-alt"></i> تحديث القائمة</button>
-        </div>
-
-        <div class="orders-table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>رقم الطلب</th>
-                        <th>اسم العميل</th>
-                        <th>الخدمة المطلوبة</th>
-                        <th>حالة الدفع</th>
-                        <th>حالة الطلب</th>
-                        <th>إجراء</th>
-                    </tr>
-                </thead>
-                <tbody id="orders-tbody">
-                    <tr id="loader">
-                        <td colspan="6"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1><i class="fas fa-tasks"></i> إدارة الطلبات</h1>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="text" id="search-input" placeholder="ابحث برقم الطلب..." />
+        <button class="btn btn-primary" id="search-btn"><i class="fas fa-search"></i> بحث</button>
+        <button class="btn btn-danger" id="show-all-btn"><i class="fas fa-list"></i> عرض الكل</button>
+        <button class="btn btn-success" id="refresh-btn"><i class="fas fa-sync-alt"></i> تحديث</button>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ✅ ضع هنا نفس الرابط الناجح الذي استخدمته في صفحة تتبع الطلب
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzWemEMoqLzQ0USWjxTSMMzplqKTzRRmdBz6T6Q6CedNbMuTegpKFSxiwQadBSCapU6A/exec";
-            
-            const ordersTbody = document.getElementById('orders-tbody');
-            const refreshBtn = document.getElementById('refresh-btn');
+    <div class="orders-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم الطلب</th>
+            <th>اسم العميل</th>
+            <th>الخدمة</th>
+            <th>حالة الدفع</th>
+            <th>حالة الطلب</th>
+            <th>حفظ</th>
+          </tr>
+        </thead>
+        <tbody id="orders-tbody">
+          <tr id="loader">
+            <td colspan="6"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-            async function fetchAndDisplayOrders() {
-                ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 50px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>';
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?action=getAll`);
-                    if (!response.ok) throw new Error('فشل الاتصال بالشبكة.');
-                    
-                    const orders = await response.json();
-                    ordersTbody.innerHTML = ''; 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzWemEMoqLzQ0USWjxTSMMzplqKTzRRmdBz6T6Q6CedNbMuTegpKFSxiwQadBSCapU6A/exec";
+      const ordersTbody = document.getElementById('orders-tbody');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+      const showAllBtn = document.getElementById('show-all-btn');
+      const refreshBtn = document.getElementById('refresh-btn');
 
-                    if (orders.error) throw new Error(orders.error);
+      let allOrders = [];
 
-                    if (orders.length === 0) {
-                        ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد طلبات حاليًا.</td></tr>';
-                        return;
-                    }
-                    
-                    orders.reverse().forEach(order => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${order.orderId}</td>
-                            <td>${order.customerName}</td>
-                            <td>${order.serviceName || 'غير محدد'}</td>
-                            <td>
-                                <select class="payment-status">
-                                    <option value="لم يتم الدفع" ${order.paymentStatus === 'لم يتم الدفع' ? 'selected' : ''}>لم يتم الدفع</option>
-                                    <option value="تم الدفع" ${order.paymentStatus === 'تم الدفع' ? 'selected' : ''}>تم الدفع</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="order-status">
-                                    <option value="قيد المعالجة" ${order.orderStatus === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option>
-                                    <option value="تم الإنجاز" ${order.orderStatus === 'تم الإنجاز' ? 'selected' : ''}>تم الإنجاز</option>
-                                    <option value="معلومات ناقصة" ${order.orderStatus === 'معلومات ناقصة' ? 'selected' : ''}>معلومات ناقصة</option>
-                                </select>
-                            </td>
-                            <td><button class="btn btn-success btn-save" data-order-id="${order.orderId}">حفظ</button></td>
-                        `;
-                        ordersTbody.appendChild(tr);
-                    });
-                } catch (error) {
-                    ordersTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">حدث خطأ: ${error.message}</td></tr>`;
-                    console.error('Error fetching orders:', error);
-                }
-            }
+      async function fetchAndDisplayOrders() {
+        ordersTbody.innerHTML = `<tr><td colspan="6" style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل الطلبات...</td></tr>`;
+        try {
+          const res = await fetch(`${SCRIPT_URL}?action=getAll`);
+          const data = await res.json();
+          allOrders = data.reverse();
+          displayOrders(allOrders);
+        } catch (error) {
+          ordersTbody.innerHTML = `<tr><td colspan="6" style="color:red;text-align:center;">فشل في جلب الطلبات: ${error.message}</td></tr>`;
+        }
+      }
 
-            ordersTbody.addEventListener('click', async function(e) {
-                if (e.target && e.target.classList.contains('btn-save')) {
-                    const saveButton = e.target;
-                    const row = saveButton.closest('tr');
-                    const orderId = saveButton.dataset.orderId;
-                    const paymentStatus = row.querySelector('.payment-status').value;
-                    const orderStatus = row.querySelector('.order-status').value;
-
-                    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    saveButton.disabled = true;
-
-                    try {
-                        const response = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({ orderId, paymentStatus, orderStatus }),
-                            headers: { 'Content-Type': 'text/plain;charset=utf-8' } // Use text/plain for POST to Apps Script from browser
-                        });
-
-                        if (!response.ok) throw new Error('فشل تحديث الطلب.');
-                        
-                        const result = await response.json();
-
-                        if (result.status === "success") {
-                            alert(result.message);
-                        } else {
-                            throw new Error(result.message);
-                        }
-
-                    } catch (error) {
-                        alert(`حدث خطأ أثناء تحديث الطلب: ${error.message}`);
-                        console.error('Error updating order:', error);
-                    } finally {
-                        saveButton.innerHTML = 'حفظ';
-                        saveButton.disabled = false;
-                    }
-                }
-            });
-
-            fetchAndDisplayOrders();
-            refreshBtn.addEventListener('click', fetchAndDisplayOrders);
+      function displayOrders(orders) {
+        ordersTbody.innerHTML = '';
+        if (orders.length === 0) {
+          ordersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">لا توجد طلبات مطابقة.</td></tr>';
+          return;
+        }
+        orders.forEach(order => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${order.orderId}</td>
+            <td>${order.customerName}</td>
+            <td>${order.serviceName || 'غير محدد'}</td>
+            <td>
+              <select class="payment-status">
+                <option value="لم يتم الدفع" ${order.paymentStatus === 'لم يتم الدفع' ? 'selected' : ''}>لم يتم الدفع</option>
+                <option value="تم الدفع" ${order.paymentStatus === 'تم الدفع' ? 'selected' : ''}>تم الدفع</option>
+              </select>
+            </td>
+            <td>
+              <select class="order-status">
+                <option value="قيد المعالجة" ${order.orderStatus === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option>
+                <option value="تم الإنجاز" ${order.orderStatus === 'تم الإنجاز' ? 'selected' : ''}>تم الإنجاز</option>
+                <option value="معلومات ناقصة" ${order.orderStatus === 'معلومات ناقصة' ? 'selected' : ''}>معلومات ناقصة</option>
+              </select>
+            </td>
+            <td><button class="btn btn-success btn-save" data-order-id="${order.orderId}">حفظ</button></td>
+          `;
+          ordersTbody.appendChild(tr);
         });
-    </script>
+      }
+
+      ordersTbody.addEventListener('click', async function(e) {
+        if (e.target && e.target.classList.contains('btn-save')) {
+          const btn = e.target;
+          const row = btn.closest('tr');
+          const orderId = btn.dataset.orderId;
+          const paymentStatus = row.querySelector('.payment-status').value;
+          const orderStatus = row.querySelector('.order-status').value;
+
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+          btn.disabled = true;
+
+          try {
+            const response = await fetch(SCRIPT_URL, {
+              method: 'POST',
+              body: JSON.stringify({ orderId, paymentStatus, orderStatus }),
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            });
+            const result = await response.json();
+            if (result.status === "success") {
+              alert("✅ تم التحديث بنجاح");
+            } else {
+              throw new Error(result.message);
+            }
+          } catch (err) {
+            alert("❌ حدث خطأ: " + err.message);
+          } finally {
+            btn.innerHTML = 'حفظ';
+            btn.disabled = false;
+          }
+        }
+      });
+
+      searchBtn.addEventListener('click', () => {
+        const searchTerm = searchInput.value.trim();
+        if (!searchTerm) return displayOrders(allOrders);
+        const filtered = allOrders.filter(order => order.orderId.toString().includes(searchTerm));
+        displayOrders(filtered);
+      });
+
+      showAllBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        displayOrders(allOrders);
+      });
+
+      refreshBtn.addEventListener('click', fetchAndDisplayOrders);
+
+      fetchAndDisplayOrders();
+    });
+  </script>
 </body>
 </html>
