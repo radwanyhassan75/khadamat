@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
+            --gray-color: #f4f7f9; --text-color: #555; --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+        body {
+            font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
+            background-color: var(--gray-color);
+        }
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #4a627a;
+        }
+        .avatar-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--light-color);
+        }
+        .avatar-wrapper .change-avatar {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--light-color);
+        }
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            color: #bdc3c7;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: #4a627a;
+            color: var(--light-color);
+        }
+        .sidebar-nav a i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-footer a {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #ffc1c7;
+        }
+        .sidebar-footer a:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .content-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 0 0 30px 0;
+        }
+        .card {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        .card h2 {
+            font-size: 1.5rem;
+            margin: 0 0 20px 0;
+            color: var(--dark-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .info-item label {
+            display: block;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        .info-item p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        .orders-table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: var(--gray-color);
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+        .status-completed { background-color: #e9f7ef; color: #28a745; }
+        .status-processing { background-color: #fff8e1; color: #ffc107; }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar { position: fixed; transform: translateX(100%); z-index: 1100; height: 100%; }
+            .sidebar.open { transform: translateX(0); }
+            .hamburger-toggle { display: block; position: fixed; top: 20px; right: 20px; z-index: 1200; background: var(--dark-color); color: white; border: none; width: 50px; height: 50px; font-size: 1.5rem; border-radius: 50%; cursor: pointer; }
+        }
+        @media (min-width: 993px) {
+            .hamburger-toggle { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="hamburger-toggle"><i class="fas fa-bars"></i></button>
+
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="avatar-wrapper">
+                    <img src="https://placehold.co/150x150/e0e0e0/555?text=User" alt="صورة المستخدم الشخصية" id="user-avatar">
+                    <label for="avatar-upload" class="change-avatar" title="تغيير الصورة">
+                        <i class="fas fa-camera"></i>
+                        <input type="file" id="avatar-upload" style="display:none;">
+                    </label>
+                </div>
+                <h3 id="sidebar-user-name">...</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
+                    <li><a href="#orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
+                    <li><a href="track-order.html"><i class="fas fa-shipping-fast"></i> تتبع طلب</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <!-- ✅ تم تفعيل زر تسجيل الخروج -->
+                <a href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>مرحباً بك، <span id="welcome-name">...</span>!</h1>
+            </div>
+
+            <div class="card" id="profile">
+                <h2><i class="fas fa-id-card"></i> معلوماتي الشخصية</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>الاسم الكامل</label>
+                        <p id="display-name">...</p>
+                    </div>
+                    <div class="info-item">
+                        <label>البريد الإلكتروني</label>
+                        <p id="display-email">...</p>
+                    </div>
+                    <div class="info-item">
+                        <label>رقم الهاتف</label>
+                        <p id="display-phone">(سيتم جلبه من قاعدة البيانات لاحقًا)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="orders">
+                <h2><i class="fas fa-history"></i> سجل طلباتي</h2>
+                <div class="orders-table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>الخدمة</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- سيتم ملء الطلبات هنا لاحقًا من قاعدة البيانات -->
+                            <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ✅ تم إضافة كود Firebase والتفاعلية هنا -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script>
+        // --- 1. Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // --- 2. Auth Guard and Data Display ---
+        auth.onAuthStateChanged((user) => {
+            if (user && user.emailVerified) {
+                // User is signed in and verified, show their data
+                document.getElementById("sidebar-user-name").textContent = user.displayName || "مستخدم جديد";
+                document.getElementById("welcome-name").textContent = user.displayName?.split(" ")[0] || "مستخدم";
+                document.getElementById("display-name").textContent = user.displayName || "لم يتم تحديد الاسم";
+                document.getElementById("display-email").textContent = user.email;
+                // Note: Phone number needs to be fetched from your database (e.g., Firestore) later
+            } else {
+                // User is not signed in or not verified, redirect to login page
+                window.location.href = "login.html";
+            }
+        });
+
+        // --- 3. Logout Function ---
+        function logoutUser() {
+            if (confirm("هل أنت متأكد من أنك تريد تسجيل الخروج؟")) {
+                auth.signOut().then(() => {
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    console.error("Logout Error:", error);
+                });
+            }
+        }
+
+        // --- 4. Mobile Sidebar Toggle ---
+        const sidebar = document.querySelector('.sidebar');
+        const hamburger = document.querySelector('.hamburger-toggle');
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+    </script>
+</body>
+</html>
