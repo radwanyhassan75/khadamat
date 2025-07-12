@@ -31,6 +31,41 @@
             direction: rtl;
         }
         
+        /* --- تصميم الشريط العلوي الاحترافي الجديد --- */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
+        .user-menu-button:hover { background-color: var(--gray-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
+        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dropdown-menu a:hover { background-color: var(--gray-color); }
+        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
         /* --- تصميم لوحة التحكم --- */
         .dashboard-wrapper {
             max-width: 1200px;
@@ -115,6 +150,11 @@
             padding: 12px;
             border: none;
             transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
         }
         .sidebar-footer .btn-logout:hover {
             background-color: var(--danger-color);
@@ -171,6 +211,7 @@
         table { width: 100%; border-collapse: collapse; text-align: right; }
         th, td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
         th { background-color: var(--gray-color); font-size: 1rem; color: var(--dark-color); }
+        tbody tr:nth-child(even) { background-color: var(--gray-color); }
         .status-badge {
             padding: 5px 12px;
             border-radius: 50px;
@@ -208,10 +249,36 @@
         @media (max-width: 992px) {
             .dashboard-layout { grid-template-columns: 1fr; }
             .sidebar { position: static; top: auto; margin-bottom: 30px; }
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+        }
+        @media (min-width: 993px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
         }
     </style>
 </head>
 <body>
+    <!-- ✅ إضافة الشريط العلوي الكامل -->
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
     <main class="dashboard-wrapper">
         <div class="dashboard-layout">
             <aside class="sidebar">
@@ -228,9 +295,6 @@
                         <li><a data-target="orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
                     </ul>
                 </nav>
-                <div class="sidebar-footer">
-                    <a href="#" onclick="logoutUser()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
-                </div>
             </aside>
             <div class="main-content">
                 <div id="profile" class="content-pane active">
@@ -244,7 +308,6 @@
                     </div>
                 </div>
                 
-                <!-- ✅ قسم تعديل الملف الشخصي الجديد -->
                 <div id="edit-profile" class="content-pane">
                     <div class="card">
                         <h2><i class="fas fa-user-edit"></i> تعديل معلوماتي</h2>
@@ -286,21 +349,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <!-- لا نحتاج auth.js هنا لأننا سندير كل شيء من هذه الصفحة -->
+    <script src="auth.js"></script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- تهيئة Firebase ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
-            authDomain: "khadamatukdigital.firebaseapp.com",
-            projectId: "khadamatukdigital",
-            storageBucket: "khadamatukdigital.appspot.com",
-            messagingSenderId: "690661888019",
-            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        // نستخدم 'auth' و 'db' المعرفة مسبقاً في auth.js
+        // ولكن للتأكد من عدم حدوث أخطاء، سنقوم بتهيئة محلية أيضاً
+        if (typeof firebase === 'undefined') {
+            console.error("Firebase is not loaded!");
+            return;
+        }
         const db = firebase.firestore();
 
         // --- دوال الواجهة ---
@@ -314,16 +372,14 @@
         const editForm = document.getElementById("edit-profile-form");
         const editFormMessage = document.getElementById("edit-form-message");
 
-        // دالة لعرض رسائل للمستخدم
         function showMessage(element, message, isSuccess) {
             element.textContent = message;
-            element.className = 'form-message'; // Reset classes
+            element.className = 'form-message';
             element.classList.add(isSuccess ? 'success' : 'error');
             element.style.display = 'block';
             setTimeout(() => { element.style.display = 'none'; }, 4000);
         }
 
-        // دالة لجلب وعرض بيانات المستخدم
         async function loadUserData(user) {
             sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
             sidebarUserName.textContent = user.displayName || 'مستخدم';
@@ -338,11 +394,9 @@
                     displayNameP.textContent = finalDisplayName;
                     displayEmailP.textContent = userData.email || user.email;
                     displayPhoneP.textContent = userData.phoneNumber || "غير متوفر";
-                    // ملء نموذج التعديل بالبيانات الحالية
                     editNameInput.value = finalDisplayName;
                     editPhoneInput.value = userData.phoneNumber || "";
                 } else {
-                    console.warn("لم يتم العثور على مستند للمستخدم في Firestore.");
                     displayNameP.textContent = user.displayName || "لا يوجد اسم";
                     displayEmailP.textContent = user.email;
                     displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
@@ -354,15 +408,15 @@
             }
         }
 
-        // ✅ [مُحسَّن] دالة لجلب وعرض الطلبات
+        // ✅ [تم الإصلاح] دالة لجلب وعرض الطلبات
         async function fetchAndDisplayOrders(user) {
             const ordersTbody = document.getElementById('orders-tbody');
             if (!ordersTbody) return;
             ordersTbody.innerHTML = `<tr><td colspan="4"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
             
             try {
-                // البحث عن الطلبات باستخدام البريد الإلكتروني للمستخدم
-                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
+                // البحث باستخدام userId هو الطريقة الصحيحة والموثوقة
+                const ordersQuery = db.collection('orders').where('userId', '==', user.uid);
                 const ordersSnapshot = await ordersQuery.get();
                 
                 if (ordersSnapshot.empty) {
@@ -373,18 +427,19 @@
                 let ordersHtml = '';
                 ordersSnapshot.forEach(doc => {
                     const order = doc.data();
-                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG') : 'غير محدد';
+                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG') : (order.data ? new Date(order.data.createdAt).toLocaleDateString('ar-EG') : 'غير محدد');
                     
                     let statusClass = 'status-pending';
-                    if (order.status === 'مكتمل') statusClass = 'status-completed';
-                    if (order.status === 'ملغي') statusClass = 'status-cancelled';
+                    let statusText = order.status || 'قيد المراجعة';
+                    if (statusText.includes('مكتمل')) statusClass = 'status-completed';
+                    if (statusText.includes('ملغي')) statusClass = 'status-cancelled';
 
                     ordersHtml += `
                         <tr>
-                            <td><strong>${order.رقم_الطلب || doc.id}</strong></td>
-                            <td>${order.الخدمة_المطلوبة || 'غير محدد'}</td>
-                            <td>${orderDate || 'غير محدد'}</td>
-                            <td><span class="status-badge ${statusClass}">${order.status || 'قيد المراجعة'}</span></td>
+                            <td><strong>${order.رقم_الطلب || order.data?.رقم_الطلب || doc.id}</strong></td>
+                            <td>${order.الخدمة_المطلوبة || order.data?.الخدمة_المطلوبة || 'غير محدد'}</td>
+                            <td>${orderDate}</td>
+                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         </tr>
                     `;
                 });
@@ -392,11 +447,10 @@
 
             } catch (error) {
                 console.error("خطأ في جلب الطلبات:", error);
-                ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
+                ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات. تأكد من إعداد الفهرس في Firestore.</td></tr>';
             }
         }
         
-        // ✅ دالة لحفظ تعديلات الملف الشخصي
         async function saveProfileChanges(event) {
             event.preventDefault();
             const user = auth.currentUser;
@@ -415,12 +469,13 @@
                 await userDocRef.set({
                     displayName: newName,
                     phoneNumber: newPhone,
-                }, { merge: true }); // merge: true تمنع حذف البيانات الأخرى مثل الإيميل
+                    email: user.email // حفظ الإيميل أيضاً
+                }, { merge: true });
 
                 await user.updateProfile({ displayName: newName });
                 
                 showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
-                loadUserData(user); // إعادة تحميل البيانات المحدثة
+                loadUserData(user);
             } catch (error) {
                 console.error("خطأ في حفظ التغييرات:", error);
                 showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
@@ -428,7 +483,6 @@
         }
         editForm.addEventListener('submit', saveProfileChanges);
 
-        // --- منطق التشغيل الرئيسي ---
         const navLinks = document.querySelectorAll('.sidebar-nav a');
         const contentPanes = document.querySelectorAll('.main-content .content-pane');
         navLinks.forEach(link => {
@@ -441,12 +495,6 @@
                 document.getElementById(targetId)?.classList.add('active');
             });
         });
-
-        function logoutUser() {
-            auth.signOut().then(() => { window.location.href = "index.html"; });
-        }
-        // جعل الدالة متاحة للزر في HTML
-        window.logoutUser = logoutUser;
 
         auth.onAuthStateChanged(user => {
             if (user) {
