@@ -1,202 +1,191 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تتبع طلبك - المكتب الرقمي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      direction: rtl;
-      background-color: #f4f7f9;
-    }
-    main {
-      max-width: 600px;
-      margin: auto;
-      padding: 2rem;
-    }
-    .track-form-card {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ddd;
-      text-align: center;
-    }
-    .track-form input {
-      padding: 12px;
-      width: 100%;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    .track-form button {
-      padding: 12px;
-      background: #0056b3;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-    #result-area,
-    #not-found-message,
-    #loading-message {
-      margin-top: 20px;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #ddd;
-    }
-    .field {
-      margin-bottom: 10px;
-    }
-    .label {
-      font-weight: bold;
-    }
-    .value {
-      color: #333;
-    }
-    #not-found-message {
-      color: red;
-      text-align: center;
-      font-weight: bold;
-    }
-    #loading-message {
-      text-align: center;
-      font-weight: bold;
-      color: #555;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تتبع طلبك - المكتب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            direction: rtl;
+            background-color: #f4f7f9;
+        }
+        /* ✅ تعديل بسيط لإعطاء مساحة للهيدر الثابت */
+        main {
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+            padding-top: 120px; 
+        }
+        .track-form-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ddd;
+            text-align: center;
+        }
+        .track-form input {
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .track-form button {
+            padding: 12px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+        #result-area,
+        #not-found-message,
+        #loading-message {
+            margin-top: 20px;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 0 10px #ddd;
+        }
+        .field { margin-bottom: 10px; }
+        .label { font-weight: bold; }
+        .value { color: #333; }
+        #not-found-message { color: red; text-align: center; font-weight: bold; }
+        #loading-message { text-align: center; font-weight: bold; color: #555; }
+    </style>
 </head>
 <body>
-  <header id="main-header-placeholder"></header>
-  <main>
-    <div class="track-form-card">
-      <h1><i class="fas fa-shipping-fast"></i> تتبع حالة طلبك</h1>
-      <form id="track-form" class="track-form">
-        <input
-          type="text"
-          id="order-id-input"
-          placeholder="أدخل رقم الطلب هنا..."
-          required
-        />
-        <button type="submit">تتبع</button>
-      </form>
-      <div id="loading-message" style="display: none;">
-        <i class="fas fa-spinner fa-spin"></i> جاري البحث...
-      </div>
-    </div>
 
-    <div id="result-area" style="display: none;">
-      <div class="field">
-        <span class="label">رقم الطلب:</span>
-        <span class="value" id="result-order-id"></span>
-      </div>
-      <div class="field">
-        <span class="label">الاسم الكامل:</span>
-        <span class="value" id="result-name"></span>
-      </div>
-      <div class="field">
-        <span class="label">البريد الإلكتروني:</span>
-        <span class="value" id="result-email"></span>
-      </div>
-      <div class="field">
-        <span class="label">رقم الهاتف:</span>
-        <span class="value" id="result-phone"></span>
-      </div>
-      <div class="field">
-        <span class="label">تفاصيل الطلب:</span>
-        <span class="value" id="result-details"></span>
-      </div>
-      <div class="field">
-        <span class="label">حالة الدفع:</span>
-        <span class="value" id="result-payment"></span>
-      </div>
-      <div class="field">
-        <span class="label">حالة الطلب:</span>
-        <span class="value" id="result-status"></span>
-      </div>
-    </div>
+    <header class="main-header" style="background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; top: 0; width: 100%; z-index: 1000;">
+        <nav style="display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; max-width: 1200px; margin: 0 auto;">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي" style="height: 80px;">
+            </a>
+            <div id="navbar-actions" style="display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end;">
+                </div>
+        </nav>
+    </header>
 
-    <div
-      id="not-found-message"
-      style="display: none;"
-    >
-      رقم الطلب غير موجود. تأكد من إدخاله بشكل صحيح.
-    </div>
-  </main>
+    <main>
+        <div class="track-form-card">
+            <h1><i class="fas fa-shipping-fast"></i> تتبع حالة طلبك</h1>
+            <form id="track-form" class="track-form">
+                <input
+                    type="text"
+                    id="order-id-input"
+                    placeholder="أدخل رقم الطلب هنا..."
+                    required
+                />
+                <button type="submit">تتبع</button>
+            </form>
+            <div id="loading-message" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> جاري البحث...
+            </div>
+        </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const trackForm = document.getElementById('track-form');
-        const orderIdInput = document.getElementById('order-id-input');
-        const resultArea = document.getElementById('result-area');
-        const notFoundMessage = document.getElementById('not-found-message');
-        const loadingMessage = document.getElementById('loading-message');
+        <div id="result-area" style="display: none;">
+            <div class="field">
+                <span class="label">رقم الطلب:</span>
+                <span class="value" id="result-order-id"></span>
+            </div>
+            <div class="field">
+                <span class="label">الاسم الكامل:</span>
+                <span class="value" id="result-name"></span>
+            </div>
+            <div class="field">
+                <span class="label">البريد الإلكتروني:</span>
+                <span class="value" id="result-email"></span>
+            </div>
+            <div class="field">
+                <span class="label">رقم الهاتف:</span>
+                <span class="value" id="result-phone"></span>
+            </div>
+            <div class="field">
+                <span class="label">تفاصيل الطلب:</span>
+                <span class="value" id="result-details"></span>
+            </div>
+            <div class="field">
+                <span class="label">حالة الدفع:</span>
+                <span class="value" id="result-payment"></span>
+            </div>
+            <div class="field">
+                <span class="label">حالة الطلب:</span>
+                <span class="value" id="result-status"></span>
+            </div>
+        </div>
 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUm98Nrt1WUDbLsKLgvSQyoczzFCOtaxHhdfOHOVfmNrf2NZGNR5ZNna3J4qRhehZopQ/exec';
+        <div id="not-found-message" style="display: none;">
+            رقم الطلب غير موجود. تأكد من إدخاله بشكل صحيح.
+        </div>
+    </main>
 
-        // ✅ دالة جديدة للبحث يمكننا استدعاؤها في أي وقت
-        async function searchForOrder(orderId) {
-            if (!orderId) return;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const trackForm = document.getElementById('track-form');
+            const orderIdInput = document.getElementById('order-id-input');
+            const resultArea = document.getElementById('result-area');
+            const notFoundMessage = document.getElementById('not-found-message');
+            const loadingMessage = document.getElementById('loading-message');
 
-            loadingMessage.style.display = 'block';
-            resultArea.style.display = 'none';
-            notFoundMessage.style.display = 'none';
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUm98Nrt1WUDbLsKLgvSQyoczzFCOtaxHhdfOHOVfmNrf2NZGNR5ZNna3J4qRhehZopQ/exec';
 
-            try {
-                const response = await fetch(`${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`);
-                const data = await response.json();
-                loadingMessage.style.display = 'none';
-
-                if (data.error) {
+            async function searchForOrder(orderId) {
+                if (!orderId) return;
+                loadingMessage.style.display = 'block';
+                resultArea.style.display = 'none';
+                notFoundMessage.style.display = 'none';
+                try {
+                    const response = await fetch(`${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`);
+                    const data = await response.json();
+                    loadingMessage.style.display = 'none';
+                    if (data.error) {
+                        notFoundMessage.style.display = 'block';
+                        resultArea.style.display = 'none';
+                    } else {
+                        document.getElementById('result-order-id').textContent = data.رقم_الطلب || '';
+                        document.getElementById('result-name').textContent = data.الاسم_الكامل || '';
+                        document.getElementById('result-email').textContent = data.البريد_الإلكتروني || '';
+                        document.getElementById('result-phone').textContent = data.الهاتف || '';
+                        document.getElementById('result-details').textContent = data.تفاصيل_الطلب || '';
+                        document.getElementById('result-payment').textContent = data.حالة_الدفع || '';
+                        document.getElementById('result-status').textContent = data.حالة_الطلب || '';
+                        resultArea.style.display = 'block';
+                        notFoundMessage.style.display = 'none';
+                    }
+                } catch (error) {
+                    loadingMessage.style.display = 'none';
+                    notFoundMessage.textContent = 'فشل الاتصال بالخادم، تأكد من توفر الإنترنت أو من صلاحية الرابط.';
                     notFoundMessage.style.display = 'block';
-                    resultArea.style.display = 'none';
-                } else {
-                    document.getElementById('result-order-id').textContent = data.رقم_الطلب || '';
-                    document.getElementById('result-name').textContent = data.الاسم_الكامل || '';
-                    document.getElementById('result-email').textContent = data.البريد_الإلكتروني || '';
-                    document.getElementById('result-phone').textContent = data.الهاتف || '';
-                    document.getElementById('result-details').textContent = data.تفاصيل_الطلب || '';
-                    document.getElementById('result-payment').textContent = data.حالة_الدفع || '';
-                    document.getElementById('result-status').textContent = data.حالة_الطلب || '';
-                    resultArea.style.display = 'block';
-                    notFoundMessage.style.display = 'none';
+                    console.error(error);
                 }
-            } catch (error) {
-                loadingMessage.style.display = 'none';
-                notFoundMessage.textContent = 'فشل الاتصال بالخادم، تأكد من توفر الإنترنت أو من صلاحية الرابط.';
-                notFoundMessage.style.display = 'block';
-                console.error(error);
             }
-        }
 
-        // عند إرسال النموذج يدوياً
-        trackForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const orderId = orderIdInput.value.trim();
-            searchForOrder(orderId);
+            trackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const orderId = orderIdInput.value.trim();
+                searchForOrder(orderId);
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const urlOrderId = params.get('orderId');
+            if (urlOrderId) {
+                orderIdInput.value = urlOrderId;
+                searchForOrder(urlOrderId);
+            }
         });
+    </script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
 
-        // ✅ [مهم] البحث التلقائي عند تحميل الصفحة
-        // هذا الكود يقرأ رقم الطلب من الرابط ويبحث عنه فوراً
-        const params = new URLSearchParams(window.location.search);
-        const urlOrderId = params.get('orderId');
-        if (urlOrderId) {
-            orderIdInput.value = urlOrderId; // ملء حقل البحث
-            searchForOrder(urlOrderId);     // البدء في البحث تلقائياً
-        }
-    });
-</script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="auth-nav.js"></script>
 </body>
 </html>
