@@ -11,30 +11,117 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* CSS styles remain the same, no changes needed here */
         :root {
             --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
             --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
             --danger-color: #dc3545; --border-radius: 12px; 
             --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--gray-color); margin: 0; padding: 20px; direction: rtl; }
-        .container { max-width: 800px; margin: auto; }
-        .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
-        .card-header { display: flex; align-items: center; gap: 15px; color: var(--dark-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .card-header .step-icon { background-color: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .form-group { margin-bottom: 20px; }
-        label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--gray-color);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .card {
+            background: var(--light-color);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .card-header .step-icon {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+            color: var(--dark-color);
+        }
         .required-star { color: var(--danger-color); }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: border-color 0.3s; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); }
-        input[readonly] { background-color: #f0f0f0; cursor: not-allowed; border: none; font-weight: bold; font-size: 1.1rem; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+            border: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
         textarea { resize: vertical; min-height: 100px; }
-        .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; background-color: #28a745; border: none; color: white; font-weight: bold; border-radius: var(--border-radius); cursor: pointer; transition: background 0.3s; }
-        .submit-btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
-        .payment-info { display: none; background: #e7f1ff; padding: 20px; border: 1px dashed var(--primary-color); border-radius: var(--border-radius); margin-top: 15px; }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+        }
+        .payment-info {
+            display: none;
+            background: #e7f1ff;
+            padding: 20px;
+            border: 1px dashed var(--primary-color);
+            border-radius: var(--border-radius);
+            margin-top: 15px;
+        }
         .payment-info.active { display: block; }
-        .alert { background-color: #fff3cd; border-right: 5px solid #ffeeba; color: #856404; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); }
+        .alert {
+            background-color: #fff3cd;
+            border-right: 5px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
         .flag-prefix { display: flex; }
         .flag-prefix select { width: auto; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
         .flag-prefix input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
@@ -45,21 +132,83 @@
 <div class="container">
     <div class="card">
         <h2>إتمام الطلب</h2>
+        <div class="alert">
+            ⚠️ سيتم مراجعة معلومات الدفع الخاصة بك يدويًا. تأكد من إرسال الأموال قبل إتمام الطلب.
         </div>
+        <div class="form-group">
+            <label>الخدمة المطلوبة:</label>
+            <input type="text" id="display-service-name" readonly>
+        </div>
+        <div class="form-group">
+            <label>السعر:</label>
+            <input type="text" id="display-service-price" readonly>
+        </div>
+    </div>
 
     <form method="POST" action="YOUR_CLOUDFLARE_WORKER_URL_HERE" enctype="multipart/form-data">
+        
         <input type="hidden" name="رقم_الطلب" id="order-id" />
         <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
         <input type="hidden" id="form-service-price" name="السعر">
 
         <div class="card">
+            <div class="card-header"><span class="step-icon">1</span><h3>معلوماتك الشخصية</h3></div>
+            <div class="form-group">
+                <label for="name">الاسم الكامل <span class="required-star">*</span></label>
+                <input type="text" name="الاسم_الكامل" id="name" required />
             </div>
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+                <input type="email" name="البريد_الإلكتروني" id="email" required />
+            </div>
+            <div class="form-group">
+                <label>رقم الهاتف / واتساب <span class="required-star">*</span></label>
+                <div class="flag-prefix">
+                    <select name="رمز_الدولة" required>
+                        <option value="+212" selected>🇲🇦 +212</option>
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+20">🇪🇬 +20</option>
+                    </select>
+                    <input type="tel" name="الهاتف" required />
+                </div>
+            </div>
+        </div>
 
         <div class="card">
+            <div class="card-header"><span class="step-icon">2</span><h3>تفاصيل إضافية</h3></div>
+            <div class="form-group">
+                <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
+                <textarea name="تفاصيل_الخدمة" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
             </div>
+            <div class="form-group">
+                <label for="service-link">رابط (اختياري)</label>
+                <input type="url" name="رابط_الخدمة" id="service-link" placeholder="https://example.com" />
+            </div>
+        </div>
 
         <div class="card">
+            <div class="card-header"><span class="step-icon">3</span><h3>الدفع وتأكيد الطلب</h3></div>
+            <div class="form-group">
+                <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
+                <select name="طريقة_الدفع" id="payment-method" required onchange="showPaymentInfo(this.value)">
+                    <option value="" disabled selected>-- اختر --</option>
+                    <option value="cashplus">Cash Plus</option>
+                    <option value="orange">Orange Money</option>
+                    <option value="bmce">BMCE Bank</option>
+                    <option value="attijari">Attijariwafa</option>
+                    <option value="cih">CIH Bank</option>
+                    <option value="soge">Société Générale</option>
+                </select>
             </div>
+            <div id="payment-info" class="payment-info"></div>
+            <div class="form-group">
+                <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
+                <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
+            </div>
+            <button type="submit" class="submit-btn" id="submit-btn" disabled>
+                <i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب
+            </button>
+        </div>
     </form>
 </div>
 
@@ -68,6 +217,7 @@
     const orderId = 'KH-' + Date.now().toString().slice(-6);
     document.getElementById('order-id').value = orderId;
 
+    // دالة عرض معلومات الدفع مع أرقام حساباتك
     function showPaymentInfo(method) {
         const box = document.getElementById('payment-info');
         let info = '';
@@ -86,10 +236,6 @@
 
     // --- الجزء الثاني: منطق تشغيل الصفحة ---
     document.addEventListener('DOMContentLoaded', () => {
-        // ... The rest of the JavaScript is the same. It is not dependent on Netlify.
-        // It correctly handles form validation and populating fields.
-        // The form.addEventListener('submit', ...) is not needed in this new setup
-        // because the redirect is handled by the Worker.
         const form = document.querySelector('form');
         const submitBtn = document.getElementById('submit-btn');
 
