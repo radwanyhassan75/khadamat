@@ -86,7 +86,7 @@
             box-shadow: var(--box-shadow);
             padding: 25px;
             position: sticky;
-            top: 40px;
+            top: 120px; /* Adjusted for sticky header */
             transition: all 0.3s ease;
         }
         .sidebar-header {
@@ -136,31 +136,7 @@
             box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
         }
         .sidebar-nav a i { font-size: 1.2rem; width: 20px; text-align: center; }
-        .sidebar-footer {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid #eee;
-        }
-        .sidebar-footer .btn-logout {
-            width: 100%;
-            background-color: #fdecea;
-            color: var(--danger-color);
-            justify-content: center;
-            font-weight: 700;
-            padding: 12px;
-            border: none;
-            transition: all 0.3s ease;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .sidebar-footer .btn-logout:hover {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
+        
         /* --- المحتوى الرئيسي --- */
         .main-content .content-pane { display: none; }
         .main-content .content-pane.active { display: block; animation: fadeIn 0.5s; }
@@ -353,8 +329,8 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // نستخدم 'auth' و 'db' المعرفة مسبقاً في auth.js
-        // ولكن للتأكد من عدم حدوث أخطاء، سنقوم بتهيئة محلية أيضاً
+        // نستخدم 'auth' المعرف مسبقاً في auth.js
+        // ولكن للتأكد من عدم حدوث أخطاء، سنقوم بتهيئة محلية لـ Firestore
         if (typeof firebase === 'undefined') {
             console.error("Firebase is not loaded!");
             return;
@@ -415,8 +391,8 @@
             ordersTbody.innerHTML = `<tr><td colspan="4"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
             
             try {
-                // البحث باستخدام userId هو الطريقة الصحيحة والموثوقة
-                const ordersQuery = db.collection('orders').where('userId', '==', user.uid);
+                // البحث باستخدام البريد الإلكتروني للمستخدم لضمان جلب كل الطلبات
+                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
                 const ordersSnapshot = await ordersQuery.get();
                 
                 if (ordersSnapshot.empty) {
@@ -427,7 +403,14 @@
                 let ordersHtml = '';
                 ordersSnapshot.forEach(doc => {
                     const order = doc.data();
-                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG') : (order.data ? new Date(order.data.createdAt).toLocaleDateString('ar-EG') : 'غير محدد');
+                    // محاولة قراءة التاريخ من كلا الصيغتين المحتملتين
+                    const orderDateRaw = order.createdAt || (order.data ? order.data.createdAt : null);
+                    let orderDate = 'غير محدد';
+                    if (orderDateRaw) {
+                        // التحقق إذا كان التاريخ من Firestore (كائن Timestamp) أو من Make.com (نص ISO)
+                        const dateObj = orderDateRaw.seconds ? new Date(orderDateRaw.seconds * 1000) : new Date(orderDateRaw);
+                        orderDate = dateObj.toLocaleDateString('ar-EG');
+                    }
                     
                     let statusClass = 'status-pending';
                     let statusText = order.status || 'قيد المراجعة';
@@ -436,8 +419,8 @@
 
                     ordersHtml += `
                         <tr>
-                            <td><strong>${order.رقم_الطلب || order.data?.رقم_الطلب || doc.id}</strong></td>
-                            <td>${order.الخدمة_المطلوبة || order.data?.الخدمة_المطلوبة || 'غير محدد'}</td>
+                            <td><strong>${order.رقم_الطلب || (order.data ? order.data.رقم_الطلب : '') || doc.id}</strong></td>
+                            <td>${order.الخدمة_المطلوبة || (order.data ? order.data.الخدمة_المطلوبة : '') || 'غير محدد'}</td>
                             <td>${orderDate}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         </tr>
@@ -475,7 +458,7 @@
                 await user.updateProfile({ displayName: newName });
                 
                 showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
-                loadUserData(user);
+                loadUserData(user); // إعادة تحميل البيانات لعرضها محدثة
             } catch (error) {
                 console.error("خطأ في حفظ التغييرات:", error);
                 showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
