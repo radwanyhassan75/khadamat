@@ -30,29 +30,6 @@
             background-color: var(--gray-color);
             direction: rtl;
         }
-
-        /* --- تصميم الشريط العلوي --- */
-        .main-header {
-            background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
-        .navbar-actions { position: relative; }
         
         /* --- تصميم لوحة التحكم --- */
         .dashboard-wrapper {
@@ -62,8 +39,9 @@
         }
         .dashboard-layout {
             display: grid;
-            grid-template-columns: 280px 1fr;
+            grid-template-columns: 300px 1fr;
             gap: 30px;
+            align-items: flex-start;
         }
 
         /* --- الشريط الجانبي (Sidebar) --- */
@@ -72,9 +50,8 @@
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 25px;
-            align-self: flex-start;
             position: sticky;
-            top: 120px;
+            top: 40px;
             transition: all 0.3s ease;
         }
         .sidebar-header {
@@ -85,8 +62,8 @@
         }
         .avatar-wrapper {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 15px;
         }
         .avatar-wrapper img {
@@ -99,7 +76,7 @@
         }
         .sidebar-header h3 {
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--dark-color);
             font-weight: 900;
         }
@@ -121,15 +98,25 @@
             background-color: var(--primary-color);
             color: var(--light-color);
             transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
         }
         .sidebar-nav a i { font-size: 1.2rem; width: 20px; text-align: center; }
-        .sidebar-footer a {
-            margin-top: 20px;
+        .sidebar-footer {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        .sidebar-footer .btn-logout {
+            width: 100%;
             background-color: #fdecea;
             color: var(--danger-color);
             justify-content: center;
+            font-weight: 700;
+            padding: 12px;
+            border: none;
+            transition: all 0.3s ease;
         }
-        .sidebar-footer a:hover {
+        .sidebar-footer .btn-logout:hover {
             background-color: var(--danger-color);
             color: white;
         }
@@ -190,11 +177,32 @@
             font-weight: 700;
             font-size: 0.9rem;
             color: white;
+            min-width: 90px;
+            text-align: center;
         }
         .status-pending { background-color: var(--warning-color); color: var(--dark-color); }
         .status-completed { background-color: var(--success-color); }
         .status-cancelled { background-color: var(--danger-color); }
         .loading-spinner { text-align: center; padding: 40px; font-size: 1.5rem; color: var(--primary-color); }
+
+        /* --- قسم تعديل الملف الشخصي --- */
+        .edit-form .form-group { margin-bottom: 20px; }
+        .edit-form input {
+            width: 100%; padding: 12px 15px; border: 1px solid #ced4da;
+            border-radius: var(--border-radius); font-size: 1rem; font-family: 'Cairo', sans-serif;
+            box-sizing: border-box; transition: all 0.3s ease;
+        }
+        .edit-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
+        .edit-form .btn-save {
+            background-color: var(--success-color); color: white; border: none; padding: 12px 30px;
+            font-size: 1.1rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer;
+        }
+        .form-message {
+            padding: 10px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: 700;
+            display: none; /* Hidden by default */
+        }
+        .form-message.success { background-color: #d1e7dd; color: #0f5132; }
+        .form-message.error { background-color: #f8d7da; color: #842029; }
 
         /* --- التصميم المتجاوب --- */
         @media (max-width: 992px) {
@@ -204,24 +212,6 @@
     </style>
 </head>
 <body>
-
-    <!-- ✅ هيكل الهيدر الموحد -->
-    <header class="main-header">
-        <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-            </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
-        </nav>
-    </header>
-
     <main class="dashboard-wrapper">
         <div class="dashboard-layout">
             <aside class="sidebar">
@@ -234,9 +224,13 @@
                 <nav class="sidebar-nav">
                     <ul>
                         <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
+                        <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل الملف الشخصي</a></li>
                         <li><a data-target="orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
                     </ul>
                 </nav>
+                <div class="sidebar-footer">
+                    <a href="#" onclick="logoutUser()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </div>
             </aside>
             <div class="main-content">
                 <div id="profile" class="content-pane active">
@@ -249,6 +243,26 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- ✅ قسم تعديل الملف الشخصي الجديد -->
+                <div id="edit-profile" class="content-pane">
+                    <div class="card">
+                        <h2><i class="fas fa-user-edit"></i> تعديل معلوماتي</h2>
+                        <form id="edit-profile-form" class="edit-form">
+                            <div class="form-group">
+                                <label for="edit-name">الاسم الكامل</label>
+                                <input type="text" id="edit-name" placeholder="أدخل اسمك الكامل" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-phone">رقم الهاتف</label>
+                                <input type="tel" id="edit-phone" placeholder="مثال: 0612345678" required>
+                            </div>
+                            <button type="submit" class="btn-save">حفظ التغييرات</button>
+                            <div id="edit-form-message" class="form-message"></div>
+                        </form>
+                    </div>
+                </div>
+
                 <div id="orders" class="content-pane">
                     <div class="card">
                         <h2><i class="fas fa-history"></i> سجل طلباتي</h2>
@@ -272,42 +286,67 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="auth.js"></script>
+    <!-- لا نحتاج auth.js هنا لأننا سندير كل شيء من هذه الصفحة -->
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- تهيئة Firebase ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // --- دوال الواجهة ---
+        const sidebarUserName = document.getElementById("sidebar-user-name");
+        const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
+        const displayNameP = document.getElementById("display-name");
+        const displayEmailP = document.getElementById("display-email");
+        const displayPhoneP = document.getElementById("display-phone");
+        const editNameInput = document.getElementById("edit-name");
+        const editPhoneInput = document.getElementById("edit-phone");
+        const editForm = document.getElementById("edit-profile-form");
+        const editFormMessage = document.getElementById("edit-form-message");
+
+        // دالة لعرض رسائل للمستخدم
+        function showMessage(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = 'form-message'; // Reset classes
+            element.classList.add(isSuccess ? 'success' : 'error');
+            element.style.display = 'block';
+            setTimeout(() => { element.style.display = 'none'; }, 4000);
+        }
 
         // دالة لجلب وعرض بيانات المستخدم
         async function loadUserData(user) {
-            const sidebarUserName = document.getElementById("sidebar-user-name");
-            const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
-            const displayNameP = document.getElementById("display-name");
-            const displayEmailP = document.getElementById("display-email");
-            const displayPhoneP = document.getElementById("display-phone");
-            
-            // عرض الصورة والاسم من حساب جوجل أولاً
             sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
             sidebarUserName.textContent = user.displayName || 'مستخدم';
-
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
                 const userDoc = await userDocRef.get();
 
                 if (userDoc.exists) {
                     const userData = userDoc.data();
-                    // تحديث البيانات من Firestore
                     const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
                     sidebarUserName.textContent = finalDisplayName;
                     displayNameP.textContent = finalDisplayName;
                     displayEmailP.textContent = userData.email || user.email;
                     displayPhoneP.textContent = userData.phoneNumber || "غير متوفر";
+                    // ملء نموذج التعديل بالبيانات الحالية
+                    editNameInput.value = finalDisplayName;
+                    editPhoneInput.value = userData.phoneNumber || "";
                 } else {
-                    // إذا لم يكن للمستخدم ملف في Firestore، ربما هو حساب جديد
                     console.warn("لم يتم العثور على مستند للمستخدم في Firestore.");
                     displayNameP.textContent = user.displayName || "لا يوجد اسم";
                     displayEmailP.textContent = user.email;
                     displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
+                    editNameInput.value = user.displayName || "";
                 }
             } catch (error) {
                 console.error("⛔️ خطأ في جلب بيانات المستخدم:", error);
@@ -315,15 +354,15 @@
             }
         }
 
-        // دالة لجلب وعرض الطلبات
-        async function fetchAndDisplayOrders(userId) {
+        // ✅ [مُحسَّن] دالة لجلب وعرض الطلبات
+        async function fetchAndDisplayOrders(user) {
             const ordersTbody = document.getElementById('orders-tbody');
             if (!ordersTbody) return;
             ordersTbody.innerHTML = `<tr><td colspan="4"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
             
             try {
-                // جلب الطلبات من Firestore
-                const ordersQuery = db.collection('orders').where('userId', '==', userId);
+                // البحث عن الطلبات باستخدام البريد الإلكتروني للمستخدم
+                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
                 const ordersSnapshot = await ordersQuery.get();
                 
                 if (ordersSnapshot.empty) {
@@ -344,7 +383,7 @@
                         <tr>
                             <td><strong>${order.رقم_الطلب || doc.id}</strong></td>
                             <td>${order.الخدمة_المطلوبة || 'غير محدد'}</td>
-                            <td>${orderDate}</td>
+                            <td>${orderDate || 'غير محدد'}</td>
                             <td><span class="status-badge ${statusClass}">${order.status || 'قيد المراجعة'}</span></td>
                         </tr>
                     `;
@@ -356,8 +395,40 @@
                 ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
             }
         }
+        
+        // ✅ دالة لحفظ تعديلات الملف الشخصي
+        async function saveProfileChanges(event) {
+            event.preventDefault();
+            const user = auth.currentUser;
+            if (!user) return;
 
-        // منطق التبديل بين التبويبات
+            const newName = editNameInput.value.trim();
+            const newPhone = editPhoneInput.value.trim();
+
+            if (!newName || !newPhone) {
+                showMessage(editFormMessage, "يرجى ملء جميع الحقول.", false);
+                return;
+            }
+
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                await userDocRef.set({
+                    displayName: newName,
+                    phoneNumber: newPhone,
+                }, { merge: true }); // merge: true تمنع حذف البيانات الأخرى مثل الإيميل
+
+                await user.updateProfile({ displayName: newName });
+                
+                showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
+                loadUserData(user); // إعادة تحميل البيانات المحدثة
+            } catch (error) {
+                console.error("خطأ في حفظ التغييرات:", error);
+                showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
+            }
+        }
+        editForm.addEventListener('submit', saveProfileChanges);
+
+        // --- منطق التشغيل الرئيسي ---
         const navLinks = document.querySelectorAll('.sidebar-nav a');
         const contentPanes = document.querySelectorAll('.main-content .content-pane');
         navLinks.forEach(link => {
@@ -367,21 +438,21 @@
                 contentPanes.forEach(pane => pane.classList.remove('active'));
                 link.classList.add('active');
                 const targetId = link.getAttribute('data-target');
-                const targetPane = document.getElementById(targetId);
-                if(targetPane) {
-                    targetPane.classList.add('active');
-                }
+                document.getElementById(targetId)?.classList.add('active');
             });
         });
 
-        // النقطة الرئيسية: عند تغير حالة المستخدم
+        function logoutUser() {
+            auth.signOut().then(() => { window.location.href = "index.html"; });
+        }
+        // جعل الدالة متاحة للزر في HTML
+        window.logoutUser = logoutUser;
+
         auth.onAuthStateChanged(user => {
             if (user) {
-                // المستخدم مسجل دخوله
                 loadUserData(user);
-                fetchAndDisplayOrders(user.uid);
+                fetchAndDisplayOrders(user);
             } else {
-                // المستخدم غير مسجل، قم بتوجيهه لصفحة الدخول
                 window.location.href = "login.html";
             }
         });
