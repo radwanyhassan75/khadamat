@@ -252,7 +252,6 @@
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
-            <!-- تم حذف قسم navbar-actions من هنا ليبقى الهيدر نظيفاً كما طلبت -->
         </nav>
     </header>
 
@@ -329,8 +328,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <!-- لا نحتاج auth.js هنا لأننا سندير كل شيء من هذه الصفحة -->
-
+    
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- تهيئة Firebase ---
@@ -408,15 +406,25 @@
                     ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">لا يوجد طلبات سابقة.</td></tr>';
                     return;
                 }
+                
+                // تحويل النتائج إلى مصفوفة للفرز في المتصفح
+                const ordersList = [];
+                ordersSnapshot.forEach(doc => {
+                    ordersList.push(doc.data());
+                });
+
+                // فرز الطلبات حسب التاريخ (الأحدث أولاً)
+                ordersList.sort((a, b) => {
+                    const dateA = a.createdAt?.seconds || 0;
+                    const dateB = b.createdAt?.seconds || 0;
+                    return dateB - dateA;
+                });
 
                 let ordersHtml = '';
-                ordersSnapshot.forEach(doc => {
-                    const order = doc.data();
-                    // محاولة قراءة التاريخ من كلا الصيغتين المحتملتين
+                ordersList.forEach(order => {
                     const orderDateRaw = order.createdAt || (order.data ? order.data.createdAt : null);
                     let orderDate = 'غير محدد';
                     if (orderDateRaw) {
-                        // التحقق إذا كان التاريخ من Firestore (كائن Timestamp) أو من Make.com (نص ISO)
                         const dateObj = orderDateRaw.seconds ? new Date(orderDateRaw.seconds * 1000) : new Date(orderDateRaw);
                         orderDate = dateObj.toLocaleDateString('ar-EG');
                     }
@@ -428,7 +436,7 @@
 
                     ordersHtml += `
                         <tr>
-                            <td><strong>${order.رقم_الطلب || (order.data ? order.data.رقم_الطلب : '') || doc.id}</strong></td>
+                            <td><strong>${order.رقم_الطلب || (order.data ? order.data.رقم_الطلب : '') || 'N/A'}</strong></td>
                             <td>${order.الخدمة_المطلوبة || (order.data ? order.data.الخدمة_المطلوبة : '') || 'غير محدد'}</td>
                             <td>${orderDate}</td>
                             <td><span class="status-badge ${statusClass}">${statusText}</span></td>
@@ -439,8 +447,7 @@
 
             } catch (error) {
                 console.error("خطأ في جلب الطلبات:", error);
-                const firestoreErrorLink = "https://console.firebase.google.com/project/" + firebaseConfig.projectId + "/firestore/indexes";
-                ordersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات. قد تحتاج إلى إنشاء فهرس في Firestore. <a href="${firestoreErrorLink}" target="_blank">اضغط هنا لإعداد الفهرس</a></td></tr>`;
+                ordersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات. الرجاء المحاولة مرة أخرى.</td></tr>`;
             }
         }
         
@@ -492,7 +499,6 @@
         function logoutUser() {
             auth.signOut().then(() => { window.location.href = "index.html"; });
         }
-        // جعل الدالة متاحة للزر في HTML
         window.logoutUser = logoutUser;
 
         auth.onAuthStateChanged(user => {
