@@ -12,71 +12,213 @@
 
     <style>
         :root {
-            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
-            --gray-color: #f4f7f9; --text-color: #555; --border-radius: 12px;
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
-        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
             background-color: var(--gray-color);
+            direction: rtl;
         }
-        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; cursor: pointer; }
-        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
-        .main-header { background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
-        .navbar-logo img { height: 80px; }
+
+        /* --- تصميم الشريط العلوي --- */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
         .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
-        .navbar-menu a.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
-        .navbar-actions { display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end; }
-        .user-nav-link { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: var(--dark-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
-        .dashboard-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .dashboard-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; }
-        .sidebar { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 25px; align-self: flex-start; position: sticky; top: 40px; }
-        .sidebar-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        .sidebar-header h3 { margin: 0; font-size: 1.3rem; color: var(--dark-color); }
+        .navbar-actions { position: relative; }
+        
+        /* --- تصميم لوحة التحكم --- */
+        .dashboard-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        /* --- الشريط الجانبي (Sidebar) --- */
+        .sidebar {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            align-self: flex-start;
+            position: sticky;
+            top: 120px;
+            transition: all 0.3s ease;
+        }
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .avatar-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--primary-color);
+            object-fit: cover;
+            background-color: #eee;
+        }
+        .sidebar-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            font-weight: 900;
+        }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-color); text-decoration: none; border-radius: var(--border-radius); transition: all 0.3s ease; font-weight: 700; margin-bottom: 5px; cursor: pointer; }
-        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--primary-color); color: var(--light-color); }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-weight: 700;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            transform: translateX(-5px);
+        }
         .sidebar-nav a i { font-size: 1.2rem; width: 20px; text-align: center; }
-        .sidebar-footer a { margin-top: 20px; background-color: #fdecea; color: #dc3545; justify-content: center; }
-        .sidebar-footer a:hover { background-color: #dc3545; color: white; }
+        .sidebar-footer a {
+            margin-top: 20px;
+            background-color: #fdecea;
+            color: var(--danger-color);
+            justify-content: center;
+        }
+        .sidebar-footer a:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* --- المحتوى الرئيسي --- */
         .main-content .content-pane { display: none; }
         .main-content .content-pane.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card { background: var(--light-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
-        .card h2 { font-size: 1.5rem; margin: 0 0 20px 0; color: var(--dark-color); border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .info-item label { display: block; font-weight: 700; color: var(--text-color); margin-bottom: 5px; font-size: 0.9rem; }
-        .info-item p { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--dark-color); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+        .card h2 {
+            font-size: 1.6rem;
+            margin: 0 0 25px 0;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .info-item label {
+            display: block;
+            font-weight: 700;
+            color: #888;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .info-item p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            background: var(--gray-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        /* --- جدول الطلبات --- */
         .orders-table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 15px; border-bottom: 1px solid #eee; }
-        th { background-color: var(--gray-color); }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        th { background-color: var(--gray-color); font-size: 1rem; color: var(--dark-color); }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+        }
+        .status-pending { background-color: var(--warning-color); color: var(--dark-color); }
+        .status-completed { background-color: var(--success-color); }
+        .status-cancelled { background-color: var(--danger-color); }
+        .loading-spinner { text-align: center; padding: 40px; font-size: 1.5rem; color: var(--primary-color); }
+
+        /* --- التصميم المتجاوب --- */
         @media (max-width: 992px) {
-            .navbar-menu, .navbar-actions { display: none; }
-            .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 90px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
             .dashboard-layout { grid-template-columns: 1fr; }
-            .sidebar { position: static; top: auto; }
+            .sidebar { position: static; top: auto; margin-bottom: 30px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- ✅ هيكل الهيدر الموحد -->
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
             <ul class="navbar-menu">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
-                <div id="mobile-navbar-actions"></div>
+                <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
-            <div id="navbar-actions" class="navbar-actions"></div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+            </div>
         </nav>
     </header>
 
@@ -84,7 +226,10 @@
         <div class="dashboard-layout">
             <aside class="sidebar">
                 <div class="sidebar-header">
-                    <h3 id="sidebar-user-name">...</h3>
+                    <div class="avatar-wrapper">
+                        <img src="https://placehold.co/150x150/e0e0e0/555?text=U" alt="صورة المستخدم" id="sidebar-user-avatar">
+                    </div>
+                    <h3 id="sidebar-user-name">جاري التحميل...</h3>
                 </div>
                 <nav class="sidebar-nav">
                     <ul>
@@ -92,9 +237,6 @@
                         <li><a data-target="orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
                     </ul>
                 </nav>
-                <div class="sidebar-footer">
-                    <a href="#" onclick="logoutUser()" class="btn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
-                </div>
             </aside>
             <div class="main-content">
                 <div id="profile" class="content-pane active">
@@ -113,10 +255,11 @@
                         <div class="orders-table-wrapper">
                             <table>
                                 <thead>
-                                    <tr><th>رقم الطلب</th><th>الخدمة</th><th>الحالة</th></tr>
+                                    <tr><th>رقم الطلب</th><th>الخدمة</th><th>تاريخ الطلب</th><th>الحالة</th></tr>
                                 </thead>
                                 <tbody id="orders-tbody">
-                                    </tbody>
+                                    <!-- سيتم ملء الطلبات هنا عبر الجافاسكريبت -->
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -125,151 +268,124 @@
         </div>
     </main>
     
+    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    
+    <script src="auth.js"></script>
+
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78", // ⚠️ هام: لا تترك مفتاح الواجهة البرمجية هنا في النسخة النهائية
-            authDomain: "khadamatukdigital.firebaseapp.com",
-            projectId: "khadamatukdigital",
-            storageBucket: "khadamatukdigital.appspot.com",
-            messagingSenderId: "690661888019",
-            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+    document.addEventListener('DOMContentLoaded', () => {
         const db = firebase.firestore();
 
-        function updateHeaderUI(user) {
-            const navbarActions = document.getElementById('navbar-actions');
-            const mobileNavbarActions = document.getElementById('mobile-navbar-actions');
-            if (!navbarActions || !mobileNavbarActions) return;
-
-            let desktopNavHtml = '';
-            let mobileNavHtml = '';
+        // دالة لجلب وعرض بيانات المستخدم
+        async function loadUserData(user) {
+            const sidebarUserName = document.getElementById("sidebar-user-name");
+            const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
+            const displayNameP = document.getElementById("display-name");
+            const displayEmailP = document.getElementById("display-email");
+            const displayPhoneP = document.getElementById("display-phone");
             
-            if (user) {
-                const userName = user.displayName || 'مستخدم';
-                const userAvatar = user.photoURL || 'https://placehold.co/40x40/0056b3/ffffff?text=U';
-                
-                desktopNavHtml = `<a href="dashboard.html" class="user-nav-link"><img src="${userAvatar}" alt="${userName}" class="user-avatar"><span>${userName}</span></a>`;
-                mobileNavHtml = `<li><a href="dashboard.html">لوحة التحكم</a></li><li><a href="#" onclick="logoutUser()">تسجيل الخروج</a></li>`;
-            } else {
-                desktopNavHtml = `<a href="login.html" class="btn btn-light">تسجيل الدخول</a><a href="register.html" class="btn btn-primary">إنشاء حساب</a>`;
-                mobileNavHtml = `<li><a href="login.html">تسجيل الدخول</a></li><li><a href="register.html">إنشاء حساب</a></li>`;
+            // عرض الصورة والاسم من حساب جوجل أولاً
+            sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
+            sidebarUserName.textContent = user.displayName || 'مستخدم';
+
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const userDoc = await userDocRef.get();
+
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    // تحديث البيانات من Firestore
+                    const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
+                    sidebarUserName.textContent = finalDisplayName;
+                    displayNameP.textContent = finalDisplayName;
+                    displayEmailP.textContent = userData.email || user.email;
+                    displayPhoneP.textContent = userData.phoneNumber || "غير متوفر";
+                } else {
+                    // إذا لم يكن للمستخدم ملف في Firestore، ربما هو حساب جديد
+                    console.warn("لم يتم العثور على مستند للمستخدم في Firestore.");
+                    displayNameP.textContent = user.displayName || "لا يوجد اسم";
+                    displayEmailP.textContent = user.email;
+                    displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
+                }
+            } catch (error) {
+                console.error("⛔️ خطأ في جلب بيانات المستخدم:", error);
+                displayNameP.textContent = "خطأ في تحميل البيانات";
             }
-            navbarActions.innerHTML = desktopNavHtml;
-            mobileNavbarActions.innerHTML = mobileNavHtml;
         }
 
-        function logoutUser() {
-            auth.signOut().then(() => { window.location.href = "index.html"; });
-        }
-
+        // دالة لجلب وعرض الطلبات
         async function fetchAndDisplayOrders(userId) {
             const ordersTbody = document.getElementById('orders-tbody');
             if (!ordersTbody) return;
-            ordersTbody.innerHTML = '<tr><td colspan="3">جاري تحميل الطلبات...</td></tr>';
+            ordersTbody.innerHTML = `<tr><td colspan="4"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
             
             try {
-                const ordersSnapshot = await db.collection('orders').where('userId', '==', userId).get();
+                // جلب الطلبات من Firestore
+                const ordersQuery = db.collection('orders').where('userId', '==', userId);
+                const ordersSnapshot = await ordersQuery.get();
+                
                 if (ordersSnapshot.empty) {
-                    ordersTbody.innerHTML = '<tr><td colspan="3">لا يوجد طلبات سابقة.</td></tr>';
+                    ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">لا يوجد طلبات سابقة.</td></tr>';
                     return;
                 }
+
                 let ordersHtml = '';
                 ordersSnapshot.forEach(doc => {
                     const order = doc.data();
+                    const orderDate = order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('ar-EG') : 'غير محدد';
+                    
+                    let statusClass = 'status-pending';
+                    if (order.status === 'مكتمل') statusClass = 'status-completed';
+                    if (order.status === 'ملغي') statusClass = 'status-cancelled';
+
                     ordersHtml += `
                         <tr>
-                            <td>${order.orderNumber || doc.id}</td>
-                            <td>${order.serviceName || 'غير محدد'}</td>
-                            <td>${order.status || 'قيد المراجعة'}</td>
+                            <td><strong>${order.رقم_الطلب || doc.id}</strong></td>
+                            <td>${order.الخدمة_المطلوبة || 'غير محدد'}</td>
+                            <td>${orderDate}</td>
+                            <td><span class="status-badge ${statusClass}">${order.status || 'قيد المراجعة'}</span></td>
                         </tr>
                     `;
                 });
                 ordersTbody.innerHTML = ordersHtml;
+
             } catch (error) {
                 console.error("خطأ في جلب الطلبات:", error);
-                ordersTbody.innerHTML = '<tr><td colspan="3">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
+                ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(async (user) => {
-                updateHeaderUI(user);
-                
-                const isDashboardPage = window.location.pathname.includes('dashboard.html');
-                if (!user && isDashboardPage) {
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                if (user && isDashboardPage) {
-                    console.log("المستخدم مسجل دخوله:", user.uid);
-                    
-                    const sidebarUserName = document.getElementById("sidebar-user-name");
-                    const displayNameP = document.getElementById("display-name");
-                    const displayEmailP = document.getElementById("display-email");
-                    const displayPhoneP = document.getElementById("display-phone");
-
-                    try {
-                        const userDocRef = db.collection('users').doc(user.uid);
-                        const userDoc = await userDocRef.get();
-
-                        if (userDoc.exists) {
-                            const userData = userDoc.data();
-                            console.log("تم العثور على بيانات المستخدم في Firestore:", userData);
-
-                            if (!userData.phoneNumber) {
-                                window.location.href = "complete-profile.html";
-                                return;
-                            }
-
-                            const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
-                            const finalEmail = userData.email || user.email;
-                            
-                            sidebarUserName.textContent = finalDisplayName;
-                            displayNameP.textContent = finalDisplayName;
-                            displayEmailP.textContent = finalEmail;
-                            displayPhoneP.textContent = userData.phoneNumber;
-
-                        } else {
-                            console.warn("لم يتم العثور على مستند للمستخدم. سيتم تحويله لإكمال الملف الشخصي.");
-                            window.location.href = "complete-profile.html";
-                            return;
-                        }
-                        
-                        fetchAndDisplayOrders(user.uid);
-
-                    } catch (error) {
-                        console.error("⛔️ حدث خطأ فادح عند جلب بيانات المستخدم من Firestore:", error);
-                        displayNameP.textContent = "خطأ في تحميل البيانات";
-                        displayEmailP.textContent = "خطأ";
-                        displayPhoneP.textContent = "خطأ";
-                    }
+        // منطق التبديل بين التبويبات
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+        const contentPanes = document.querySelectorAll('.main-content .content-pane');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(item => item.classList.remove('active'));
+                contentPanes.forEach(pane => pane.classList.remove('active'));
+                link.classList.add('active');
+                const targetId = link.getAttribute('data-target');
+                const targetPane = document.getElementById(targetId);
+                if(targetPane) {
+                    targetPane.classList.add('active');
                 }
             });
-
-            const navLinks = document.querySelectorAll('.sidebar-nav a');
-            const contentPanes = document.querySelectorAll('.main-content .content-pane');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    navLinks.forEach(item => item.classList.remove('active'));
-                    contentPanes.forEach(pane => pane.classList.remove('active'));
-                    link.classList.add('active');
-                    const targetId = link.getAttribute('data-target');
-                    document.getElementById(targetId)?.classList.add('active');
-                });
-            });
-
-            const hamburger = document.querySelector('.hamburger-menu');
-            const navbarMenu = document.querySelector('.navbar-menu');
-            hamburger?.addEventListener('click', () => navbarMenu?.classList.toggle('mobile-active'));
         });
+
+        // النقطة الرئيسية: عند تغير حالة المستخدم
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // المستخدم مسجل دخوله
+                loadUserData(user);
+                fetchAndDisplayOrders(user.uid);
+            } else {
+                // المستخدم غير مسجل، قم بتوجيهه لصفحة الدخول
+                window.location.href = "login.html";
+            }
+        });
+    });
     </script>
 </body>
 </html>
