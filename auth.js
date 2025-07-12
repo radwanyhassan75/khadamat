@@ -13,35 +13,47 @@ const firebaseConfig = {
 // 2. Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.firestore();
+// const db = firebase.firestore(); // لا نحتاج قاعدة البيانات في هذا الملف
 
-// 3. Function to update the header based on user status
+// 3. ✅ [مُصحح] Function to update the header based on user status
 function updateHeaderUI(user) {
     const navbarActions = document.getElementById('navbar-actions');
-    const mobileNavbarActions = document.getElementById('mobile-navbar-actions'); // For mobile menu
+    const mobileNavbarActions = document.getElementById('mobile-navbar-actions');
     
-    if (!navbarActions) return; // Exit if the header elements don't exist on the page
+    if (!navbarActions) return;
 
     let desktopNavHtml = '';
     let mobileNavHtml = '';
 
-    if (user && user.emailVerified) {
-        // User is logged in
+    if (user) { // تم تبسيط الشرط ليعمل بمجرد تسجيل الدخول
+        // --- حالة المستخدم مسجل دخوله ---
         const userName = user.displayName || 'مستخدم';
-        const userAvatar = user.photoURL || 'https://placehold.co/40x40/e0e0e0/555?text=U';
+        const userAvatar = user.photoURL || 'https://placehold.co/40x40/0056b3/ffffff?text=U';
         
+        // أزرار سطح المكتب
         desktopNavHtml = `
             <a href="dashboard.html" class="user-nav-link">
                 <img src="${userAvatar}" alt="${userName}" class="user-avatar">
                 <span>${userName}</span>
             </a>
-            <a href="#" onclick="logoutUser()" class="btn btn-primary">تسجيل الخروج</a>
-      
+            <a href="#" onclick="logoutUser()" class="btn btn-light" style="padding: 8px 15px;">تسجيل الخروج</a>
+        `;
+        
+        // روابط القائمة في الجوال
+        mobileNavHtml = `
+            <li><a href="dashboard.html">لوحة التحكم</a></li>
+            <li><a href="#" onclick="logoutUser()">تسجيل الخروج</a></li>
         `;
     } else {
-        // User is not logged in
+        // --- حالة المستخدم زائر (غير مسجل دخوله) ---
         
+        // أزرار سطح المكتب
+        desktopNavHtml = `
+            <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
+            <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+        `;
         
+        // روابط القائمة في الجوال
         mobileNavHtml = `
             <li><a href="login.html">تسجيل الدخول</a></li>
             <li><a href="register.html">إنشاء حساب</a></li>
@@ -72,14 +84,20 @@ function logoutUser() {
 
 // 6. Global Hamburger Menu Logic
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.querySelector('.hamburger-menu');
-    const navMenu = document.querySelector('.navbar-menu');
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('mobile-active');
-            const icon = hamburger.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-        });
+    // --- هذا الجزء مخصص للهيدر الذي يحتوي على قائمة الهامبرغر ---
+    const mainHeader = document.querySelector('.main-header');
+    if(mainHeader) {
+        const hamburger = mainHeader.querySelector('.hamburger-menu');
+        const navMenu = mainHeader.querySelector('.navbar-menu');
+        if (hamburger && navMenu) {
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('mobile-active');
+                const icon = hamburger.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+            });
+        }
     }
 });

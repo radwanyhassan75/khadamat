@@ -76,6 +76,7 @@
   </style>
 </head>
 <body>
+  <header id="main-header-placeholder"></header>
   <main>
     <div class="track-form-card">
       <h1><i class="fas fa-shipping-fast"></i> تتبع حالة طلبك</h1>
@@ -132,63 +133,70 @@
     </div>
   </main>
 
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', () => {
-      const trackForm = document.getElementById('track-form');
-      const resultArea = document.getElementById('result-area');
-      const notFoundMessage = document.getElementById('not-found-message');
-      const loadingMessage = document.getElementById('loading-message');
+        const trackForm = document.getElementById('track-form');
+        const orderIdInput = document.getElementById('order-id-input');
+        const resultArea = document.getElementById('result-area');
+        const notFoundMessage = document.getElementById('not-found-message');
+        const loadingMessage = document.getElementById('loading-message');
 
-      // تحديث الرابط هنا إلى الرابط الجديد الخاص بك
-      const SCRIPT_URL =
-        'https://script.google.com/macros/s/AKfycbzUm98Nrt1WUDbLsKLgvSQyoczzFCOtaxHhdfOHOVfmNrf2NZGNR5ZNna3J4qRhehZopQ/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUm98Nrt1WUDbLsKLgvSQyoczzFCOtaxHhdfOHOVfmNrf2NZGNR5ZNna3J4qRhehZopQ/exec';
 
-      trackForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const orderId = document.getElementById('order-id-input').value.trim();
-        if (!orderId) return;
+        // ✅ دالة جديدة للبحث يمكننا استدعاؤها في أي وقت
+        async function searchForOrder(orderId) {
+            if (!orderId) return;
 
-        loadingMessage.style.display = 'block';
-        resultArea.style.display = 'none';
-        notFoundMessage.style.display = 'none';
-
-        try {
-          const response = await fetch(
-            `${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`
-          );
-          const data = await response.json();
-          loadingMessage.style.display = 'none';
-
-          if (data.error) {
-            notFoundMessage.style.display = 'block';
+            loadingMessage.style.display = 'block';
             resultArea.style.display = 'none';
-          } else {
-            document.getElementById('result-order-id').textContent =
-              data.رقم_الطلب || '';
-            document.getElementById('result-name').textContent =
-              data.الاسم_الكامل || '';
-            document.getElementById('result-email').textContent =
-              data.البريد_الإلكتروني || '';
-            document.getElementById('result-phone').textContent =
-              data.الهاتف || '';
-            document.getElementById('result-details').textContent =
-              data.تفاصيل_الطلب || '';
-            document.getElementById('result-payment').textContent =
-              data.حالة_الدفع || '';
-            document.getElementById('result-status').textContent =
-              data.حالة_الطلب || '';
-            resultArea.style.display = 'block';
             notFoundMessage.style.display = 'none';
-          }
-        } catch (error) {
-          loadingMessage.style.display = 'none';
-          notFoundMessage.textContent =
-            'فشل الاتصال بالخادم، تأكد من توفر الإنترنت أو من صلاحية الرابط.';
-          notFoundMessage.style.display = 'block';
-          console.error(error);
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`);
+                const data = await response.json();
+                loadingMessage.style.display = 'none';
+
+                if (data.error) {
+                    notFoundMessage.style.display = 'block';
+                    resultArea.style.display = 'none';
+                } else {
+                    document.getElementById('result-order-id').textContent = data.رقم_الطلب || '';
+                    document.getElementById('result-name').textContent = data.الاسم_الكامل || '';
+                    document.getElementById('result-email').textContent = data.البريد_الإلكتروني || '';
+                    document.getElementById('result-phone').textContent = data.الهاتف || '';
+                    document.getElementById('result-details').textContent = data.تفاصيل_الطلب || '';
+                    document.getElementById('result-payment').textContent = data.حالة_الدفع || '';
+                    document.getElementById('result-status').textContent = data.حالة_الطلب || '';
+                    resultArea.style.display = 'block';
+                    notFoundMessage.style.display = 'none';
+                }
+            } catch (error) {
+                loadingMessage.style.display = 'none';
+                notFoundMessage.textContent = 'فشل الاتصال بالخادم، تأكد من توفر الإنترنت أو من صلاحية الرابط.';
+                notFoundMessage.style.display = 'block';
+                console.error(error);
+            }
         }
-      });
+
+        // عند إرسال النموذج يدوياً
+        trackForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderId = orderIdInput.value.trim();
+            searchForOrder(orderId);
+        });
+
+        // ✅ [مهم] البحث التلقائي عند تحميل الصفحة
+        // هذا الكود يقرأ رقم الطلب من الرابط ويبحث عنه فوراً
+        const params = new URLSearchParams(window.location.search);
+        const urlOrderId = params.get('orderId');
+        if (urlOrderId) {
+            orderIdInput.value = urlOrderId; // ملء حقل البحث
+            searchForOrder(urlOrderId);     // البدء في البحث تلقائياً
+        }
     });
-  </script>
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="auth-nav.js"></script>
 </body>
 </html>
