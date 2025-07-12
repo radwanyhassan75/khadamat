@@ -1,141 +1,200 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>تم استلام طلبك بنجاح!</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تم استلام طلبك بنجاح!</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <style>
-    :root {
-      --primary-color: #0056b3;
-      --secondary-color: #4a90e2;
-      --dark-color: #2c3e50;
-      --light-color: #ffffff;
-      --gray-color: #f4f7f9;
-      --success-color: #28a745;
-      --border-radius: 8px;
-      --box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-    }
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      background-color: var(--gray-color);
-      direction: rtl;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .success-card {
-      background: var(--light-color);
-      padding: 40px 50px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      max-width: 600px;
-      width: 100%;
-      text-align: center;
-    }
-    .success-icon {
-      font-size: 5rem;
-      color: var(--success-color);
-      margin-bottom: 25px;
-      animation: scaleUp 0.6s ease-out;
-    }
-    @keyframes scaleUp {
-      from {
-        transform: scale(0.5);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    .success-title {
-      font-size: 2.4rem;
-      color: var(--dark-color);
-      margin-bottom: 15px;
-      font-weight: 900;
-    }
-    .success-subtitle {
-      font-size: 1.1rem;
-      color: #555;
-      margin-bottom: 30px;
-      line-height: 1.6;
-    }
-    .order-id-box {
-      background: #e7f1ff;
-      border: 2px dashed var(--primary-color);
-      padding: 20px;
-      border-radius: var(--border-radius);
-      margin-bottom: 30px;
-    }
-    .order-id-box p {
-      margin: 0 0 10px 0;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: var(--primary-color);
-    }
-    #order-id-display {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      font-weight: 900;
-      letter-spacing: 3px;
-      user-select: all;
-    }
-    .btn {
-      display: inline-block;
-      background-color: var(--primary-color);
-      color: white;
-      padding: 14px 35px;
-      border-radius: var(--border-radius);
-      font-weight: 900;
-      font-size: 1.2rem;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
-    }
-    .btn:hover {
-      background-color: var(--secondary-color);
-      box-shadow: 0 6px 15px rgba(74, 144, 226, 0.5);
-    }
-  </style>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #212529;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --success-color: #198754;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .success-card {
+            background: var(--light-color);
+            padding: 40px 50px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            border-top: 5px solid var(--success-color);
+        }
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success-color);
+            margin-bottom: 25px;
+            animation: scaleUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .success-title {
+            font-size: 2.2rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+        .success-subtitle {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        .order-id-box {
+            background: #e9f5ff;
+            border: 1px solid #bde0fe;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+        }
+        .order-id-box p {
+            margin: 0 0 15px 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+        .order-id-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: var(--border-radius);
+        }
+        #order-id-display {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            letter-spacing: 2px;
+            user-select: all;
+            flex-grow: 1;
+        }
+        #copy-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #copy-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
+        }
+        .btn:hover {
+            background-color: #00458a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 86, 179, 0.3);
+        }
+        .btn.secondary {
+            background-color: #6c757d;
+        }
+        .btn.secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
 </head>
 <body>
-  <div class="success-card">
-    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-    <h1 class="success-title">شكراً لك، تم إرسال طلبك بنجاح!</h1>
-    <p class="success-subtitle">
-      سنتواصل معك عبر الواتساب أو البريد الإلكتروني الذي أدخلته في أقرب وقت ممكن.
-    </p>
+    <div class="success-card">
+        <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+        <h1 class="success-title">شكراً لك، تم استلام طلبك بنجاح!</h1>
+        <p class="success-subtitle">
+            سنتواصل معك عبر الواتساب أو البريد الإلكتروني الذي أدخلته في أقرب وقت ممكن لمتابعة الطلب.
+        </p>
 
-    <div class="order-id-box" role="region" aria-live="polite" aria-atomic="true">
-      <p>احتفظ برقم طلبك لاستخدامه في التتبع:</p>
-      <h2 id="order-id-display" tabindex="0" title="اضغط لتحديد الرقم">...</h2>
+        <div class="order-id-box">
+            <p>احتفظ برقم طلبك لاستخدامه في التتبع:</p>
+            <div class="order-id-container">
+                <h2 id="order-id-display" style="margin: 0;">...</h2>
+                <button id="copy-btn" title="نسخ رقم الطلب"><i class="fas fa-copy"></i></button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="#" id="track-order-btn" class="btn secondary" role="button">
+                <i class="fas fa-truck"></i> تتبع طلبك
+            </a>
+            <a href="index.html" class="btn" role="button">العودة للرئيسية</a>
+        </div>
     </div>
 
-    <a href="index.html" class="btn" role="button" aria-label="العودة إلى الصفحة الرئيسية">العودة إلى الصفحة الرئيسية</a>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const display = document.getElementById('order-id-display');
+            const copyBtn = document.getElementById('copy-btn');
+            const trackBtn = document.getElementById('track-order-btn');
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const orderId = localStorage.getItem('lastOrderId');
-      const display = document.getElementById('order-id-display');
+            // قراءة رقم الطلب من رابط الصفحة (مثال: success.html?orderId=KH-123456)
+            const params = new URLSearchParams(window.location.search);
+            const orderId = params.get('orderId');
 
-      if (orderId) {
-        display.textContent = orderId;
-        localStorage.removeItem('lastOrderId'); // حذف الرقم بعد العرض
-      } else {
-        display.textContent = 'رقم الطلب غير متوفر';
-      }
-    });
-  </script>
+            if (orderId) {
+                display.textContent = orderId;
+
+                // تفعيل زر النسخ
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(orderId).then(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                        }, 2000);
+                    });
+                });
+
+                // تفعيل زر تتبع الطلب وتوجيهه للصفحة الصحيحة مع رقم الطلب
+                trackBtn.href = `track_order.html?orderId=${orderId}`;
+
+            } else {
+                display.textContent = 'رقم الطلب غير متوفر';
+                copyBtn.disabled = true;
+                trackBtn.style.display = 'none'; // إخفاء زر التتبع إذا لم يوجد رقم طلب
+            }
+        });
+    </script>
 </body>
 </html>
