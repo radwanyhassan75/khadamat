@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
+            --gray-color: #f4f7f9; --text-color: #555; --border-radius: 8px;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
+            background-color: var(--gray-color);
+        }
+        /* --- SHARED HEADER --- */
+        .main-header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 80px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
+        .navbar-actions { display: flex; gap: 15px; }
+        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; cursor: pointer; }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
+        .hamburger-menu { display: none; }
+
+        /* --- LOGIN PAGE CONTENT --- */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+        .login-card {
+            background: var(--light-color); padding: 40px;
+            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+        .login-card h1 { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin: 0 0 10px 0; }
+        .login-card p { font-size: 1rem; color: var(--text-color); margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; }
+        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.9rem; }
+        .remember-me { display: flex; align-items: center; gap: 8px; }
+        .remember-me label { margin: 0; }
+        .form-footer { margin-top: 20px; font-size: 0.9rem; }
+        .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
+        .separator { display: flex; align-items: center; text-align: center; color: #aaa; margin: 25px 0; }
+        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid #ddd; }
+        .btn-google { background-color: #db4437; color:white; }
+        #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); font-weight: 700; }
+        #message-box.error { background-color: #fdecea; color: #dc3545; }
+
+        /* SHARED FOOTER */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 40px 5% 20px; box-sizing: border-box; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        .footer-bottom a { color: #777; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
+                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <div class="login-card">
+            <h1>تسجيل الدخول</h1>
+            <p>مرحباً بعودتك! أدخل بياناتك للمتابعة.</p>
+
+            <div id="message-box"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">كلمة المرور</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">تذكرني</label>
+                    </div>
+                    <a href="#forgot-password">هل نسيت كلمة المرور؟</a>
+                </div>
+                <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+            </form>
+
+            <div class="separator">أو</div>
+
+            <button id="google-signin-btn" class="btn btn-google">
+                <i class="fab fa-google"></i> متابعة باستخدام جوجل
+            </button>
+
+            <div class="form-footer">
+                <p>ليس لديك حساب؟ <a href="register.html">أنشئ حسابًا جديدًا</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط سريعة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">الخدمات</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const loginForm = document.getElementById('login-form');
+        const googleBtn = document.getElementById('google-signin-btn');
+        const messageBox = document.getElementById('message-box');
+
+        // Redirect if user is already logged in
+        auth.onAuthStateChanged(user => {
+            if (user && user.emailVerified) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        async function checkProfileAndRedirect(user) {
+            const userDocRef = db.collection('users').doc(user.uid);
+            const userDoc = await userDocRef.get();
+            if (!userDoc.exists || !userDoc.data().phoneNumber) {
+                window.location.href = 'complete-profile.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+            const persistence = rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
+            
+            auth.setPersistence(persistence)
+                .then(() => auth.signInWithEmailAndPassword(email, password))
+                .then(userCredential => {
+                    if (!userCredential.user.emailVerified) {
+                        throw new Error("الرجاء تفعيل حسابك عبر الرابط الذي تم إرساله إلى بريدك الإلكتروني.");
+                    }
+                    return checkProfileAndRedirect(userCredential.user);
+                })
+                .catch(error => {
+                    messageBox.textContent = `خطأ: ${error.message}`;
+                    messageBox.style.display = 'block';
+                });
+        });
+
+        googleBtn.addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    const user = result.user;
+                    if (result.additionalUserInfo.isNewUser) {
+                        db.collection('users').doc(user.uid).set({
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            email: user.email,
+                            phoneNumber: null
+                        }).then(() => checkProfileAndRedirect(user));
+                    } else {
+                        checkProfileAndRedirect(user);
+                    }
+                })
+                .catch(error => {
+                    messageBox.textContent = `خطأ في تسجيل الدخول عبر جوجل: ${error.message}`;
+                    messageBox.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+</html>

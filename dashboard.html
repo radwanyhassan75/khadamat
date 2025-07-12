@@ -16,258 +16,122 @@
             --gray-color: #f4f7f9; --text-color: #555; --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
             background-color: var(--gray-color);
         }
-        .dashboard-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 280px;
-            background-color: var(--dark-color);
-            color: var(--light-color);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease;
-        }
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #4a627a;
-        }
-        .avatar-wrapper {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 15px;
-        }
-        .avatar-wrapper img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 4px solid var(--light-color);
-        }
-        .avatar-wrapper .change-avatar {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 2px solid var(--light-color);
-        }
-        .sidebar-header h3 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-        .sidebar-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-        .sidebar-nav a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            color: #bdc3c7;
-            text-decoration: none;
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .sidebar-nav a:hover, .sidebar-nav a.active {
-            background-color: #4a627a;
-            color: var(--light-color);
-        }
-        .sidebar-nav a i {
-            font-size: 1.2rem;
-            width: 20px;
-            text-align: center;
-        }
-        .sidebar-footer a {
-            background-color: rgba(220, 53, 69, 0.2);
-            color: #ffc1c7;
-        }
-        .sidebar-footer a:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex-grow: 1;
-            padding: 40px;
-            overflow-y: auto;
-        }
-        .content-header h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--dark-color);
-            margin: 0 0 30px 0;
-        }
-        .card {
-            background: var(--light-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 30px;
-        }
-        .card h2 {
-            font-size: 1.5rem;
-            margin: 0 0 20px 0;
-            color: var(--dark-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .info-item label {
-            display: block;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-        .info-item p {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--dark-color);
-        }
-        .orders-table-wrapper {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background-color: var(--gray-color);
-        }
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            display: inline-block;
-        }
-        .status-completed { background-color: #e9f7ef; color: #28a745; }
-        .status-processing { background-color: #fff8e1; color: #ffc107; }
-        
-        /* Responsive */
+        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; cursor: pointer; }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
+        .main-header { background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 80px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
+        .navbar-menu a.active { color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
+        .navbar-actions { display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end; }
+        .user-nav-link { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: var(--dark-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        .dashboard-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .dashboard-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; }
+        .sidebar { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 25px; align-self: flex-start; position: sticky; top: 40px; }
+        .sidebar-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .sidebar-header h3 { margin: 0; font-size: 1.3rem; color: var(--dark-color); }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-color); text-decoration: none; border-radius: var(--border-radius); transition: all 0.3s ease; font-weight: 700; margin-bottom: 5px; cursor: pointer; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--primary-color); color: var(--light-color); }
+        .sidebar-nav a i { font-size: 1.2rem; width: 20px; text-align: center; }
+        .sidebar-footer a { margin-top: 20px; background-color: #fdecea; color: #dc3545; justify-content: center; }
+        .sidebar-footer a:hover { background-color: #dc3545; color: white; }
+        .main-content .content-pane { display: none; }
+        .main-content .content-pane.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: var(--light-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; }
+        .card h2 { font-size: 1.5rem; margin: 0 0 20px 0; color: var(--dark-color); border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .info-item label { display: block; font-weight: 700; color: var(--text-color); margin-bottom: 5px; font-size: 0.9rem; }
+        .info-item p { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--dark-color); }
+        .orders-table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: right; }
+        th, td { padding: 15px; border-bottom: 1px solid #eee; }
+        th { background-color: var(--gray-color); }
         @media (max-width: 992px) {
-            .sidebar { position: fixed; transform: translateX(100%); z-index: 1100; height: 100%; }
-            .sidebar.open { transform: translateX(0); }
-            .hamburger-toggle { display: block; position: fixed; top: 20px; right: 20px; z-index: 1200; background: var(--dark-color); color: white; border: none; width: 50px; height: 50px; font-size: 1.5rem; border-radius: 50%; cursor: pointer; }
-        }
-        @media (min-width: 993px) {
-            .hamburger-toggle { display: none; }
+            .navbar-menu, .navbar-actions { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 90px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; top: auto; }
         }
     </style>
 </head>
 <body>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
 
-    <button class="hamburger-toggle"><i class="fas fa-bars"></i></button>
-
-    <div class="dashboard-layout">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="avatar-wrapper">
-                    <img src="https://placehold.co/150x150/e0e0e0/555?text=User" alt="صورة المستخدم الشخصية" id="user-avatar">
-                    <label for="avatar-upload" class="change-avatar" title="تغيير الصورة">
-                        <i class="fas fa-camera"></i>
-                        <input type="file" id="avatar-upload" style="display:none;">
-                    </label>
+    <main class="dashboard-wrapper">
+        <div class="dashboard-layout">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3 id="sidebar-user-name">...</h3>
                 </div>
-                <h3 id="sidebar-user-name">...</h3>
-            </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
-                    <li><a href="#orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
-                    <li><a href="track-order.html"><i class="fas fa-shipping-fast"></i> تتبع طلب</a></li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <!-- ✅ تم تفعيل زر تسجيل الخروج -->
-                <a href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <div class="content-header">
-                <h1>مرحباً بك، <span id="welcome-name">...</span>!</h1>
-            </div>
-
-            <div class="card" id="profile">
-                <h2><i class="fas fa-id-card"></i> معلوماتي الشخصية</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>الاسم الكامل</label>
-                        <p id="display-name">...</p>
-                    </div>
-                    <div class="info-item">
-                        <label>البريد الإلكتروني</label>
-                        <p id="display-email">...</p>
-                    </div>
-                    <div class="info-item">
-                        <label>رقم الهاتف</label>
-                        <p id="display-phone">(سيتم جلبه من قاعدة البيانات لاحقًا)</p>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
+                        <li><a data-target="orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <a href="#" onclick="logoutUser()" class="btn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </div>
+            </aside>
+            <div class="main-content">
+                <div id="profile" class="content-pane active">
+                    <div class="card">
+                        <h2><i class="fas fa-id-card"></i> معلوماتي الشخصية</h2>
+                        <div class="info-grid">
+                            <div class="info-item"><label>الاسم الكامل</label><p id="display-name">...</p></div>
+                            <div class="info-item"><label>البريد الإلكتروني</label><p id="display-email">...</p></div>
+                            <div class="info-item"><label>رقم الهاتف</label><p id="display-phone">...</p></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card" id="orders">
-                <h2><i class="fas fa-history"></i> سجل طلباتي</h2>
-                <div class="orders-table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>رقم الطلب</th>
-                                <th>الخدمة</th>
-                                <th>التاريخ</th>
-                                <th>الحالة</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- سيتم ملء الطلبات هنا لاحقًا من قاعدة البيانات -->
-                            <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-                        </tbody>
-                    </table>
+                <div id="orders" class="content-pane">
+                    <div class="card">
+                        <h2><i class="fas fa-history"></i> سجل طلباتي</h2>
+                        <div class="orders-table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr><th>رقم الطلب</th><th>الخدمة</th><th>الحالة</th></tr>
+                                </thead>
+                                <tbody id="orders-tbody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-    </div>
-
-    <!-- ✅ تم إضافة كود Firebase والتفاعلية هنا -->
+        </div>
+    </main>
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
     <script>
-        // --- 1. Firebase Configuration ---
         const firebaseConfig = {
-            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78", // ⚠️ هام: لا تترك مفتاح الواجهة البرمجية هنا في النسخة النهائية
             authDomain: "khadamatukdigital.firebaseapp.com",
             projectId: "khadamatukdigital",
             storageBucket: "khadamatukdigital.appspot.com",
@@ -276,41 +140,136 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // --- 2. Auth Guard and Data Display ---
-        auth.onAuthStateChanged((user) => {
-            if (user && user.emailVerified) {
-                // User is signed in and verified, show their data
-                document.getElementById("sidebar-user-name").textContent = user.displayName || "مستخدم جديد";
-                document.getElementById("welcome-name").textContent = user.displayName?.split(" ")[0] || "مستخدم";
-                document.getElementById("display-name").textContent = user.displayName || "لم يتم تحديد الاسم";
-                document.getElementById("display-email").textContent = user.email;
-                // Note: Phone number needs to be fetched from your database (e.g., Firestore) later
+        function updateHeaderUI(user) {
+            const navbarActions = document.getElementById('navbar-actions');
+            const mobileNavbarActions = document.getElementById('mobile-navbar-actions');
+            if (!navbarActions || !mobileNavbarActions) return;
+
+            let desktopNavHtml = '';
+            let mobileNavHtml = '';
+            
+            if (user) {
+                const userName = user.displayName || 'مستخدم';
+                const userAvatar = user.photoURL || 'https://placehold.co/40x40/0056b3/ffffff?text=U';
+                
+                desktopNavHtml = `<a href="dashboard.html" class="user-nav-link"><img src="${userAvatar}" alt="${userName}" class="user-avatar"><span>${userName}</span></a>`;
+                mobileNavHtml = `<li><a href="dashboard.html">لوحة التحكم</a></li><li><a href="#" onclick="logoutUser()">تسجيل الخروج</a></li>`;
             } else {
-                // User is not signed in or not verified, redirect to login page
-                window.location.href = "login.html";
+                desktopNavHtml = `<a href="login.html" class="btn btn-light">تسجيل الدخول</a><a href="register.html" class="btn btn-primary">إنشاء حساب</a>`;
+                mobileNavHtml = `<li><a href="login.html">تسجيل الدخول</a></li><li><a href="register.html">إنشاء حساب</a></li>`;
             }
-        });
+            navbarActions.innerHTML = desktopNavHtml;
+            mobileNavbarActions.innerHTML = mobileNavHtml;
+        }
 
-        // --- 3. Logout Function ---
         function logoutUser() {
-            if (confirm("هل أنت متأكد من أنك تريد تسجيل الخروج؟")) {
-                auth.signOut().then(() => {
-                    window.location.href = "index.html";
-                }).catch((error) => {
-                    console.error("Logout Error:", error);
+            auth.signOut().then(() => { window.location.href = "index.html"; });
+        }
+
+        async function fetchAndDisplayOrders(userId) {
+            const ordersTbody = document.getElementById('orders-tbody');
+            if (!ordersTbody) return;
+            ordersTbody.innerHTML = '<tr><td colspan="3">جاري تحميل الطلبات...</td></tr>';
+            
+            try {
+                const ordersSnapshot = await db.collection('orders').where('userId', '==', userId).get();
+                if (ordersSnapshot.empty) {
+                    ordersTbody.innerHTML = '<tr><td colspan="3">لا يوجد طلبات سابقة.</td></tr>';
+                    return;
+                }
+                let ordersHtml = '';
+                ordersSnapshot.forEach(doc => {
+                    const order = doc.data();
+                    ordersHtml += `
+                        <tr>
+                            <td>${order.orderNumber || doc.id}</td>
+                            <td>${order.serviceName || 'غير محدد'}</td>
+                            <td>${order.status || 'قيد المراجعة'}</td>
+                        </tr>
+                    `;
                 });
+                ordersTbody.innerHTML = ordersHtml;
+            } catch (error) {
+                console.error("خطأ في جلب الطلبات:", error);
+                ordersTbody.innerHTML = '<tr><td colspan="3">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
             }
         }
 
-        // --- 4. Mobile Sidebar Toggle ---
-        const sidebar = document.querySelector('.sidebar');
-        const hamburger = document.querySelector('.hamburger-toggle');
-        if (hamburger) {
-            hamburger.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.onAuthStateChanged(async (user) => {
+                updateHeaderUI(user);
+                
+                const isDashboardPage = window.location.pathname.includes('dashboard.html');
+                if (!user && isDashboardPage) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                if (user && isDashboardPage) {
+                    console.log("المستخدم مسجل دخوله:", user.uid);
+                    
+                    const sidebarUserName = document.getElementById("sidebar-user-name");
+                    const displayNameP = document.getElementById("display-name");
+                    const displayEmailP = document.getElementById("display-email");
+                    const displayPhoneP = document.getElementById("display-phone");
+
+                    try {
+                        const userDocRef = db.collection('users').doc(user.uid);
+                        const userDoc = await userDocRef.get();
+
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            console.log("تم العثور على بيانات المستخدم في Firestore:", userData);
+
+                            if (!userData.phoneNumber) {
+                                window.location.href = "complete-profile.html";
+                                return;
+                            }
+
+                            const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
+                            const finalEmail = userData.email || user.email;
+                            
+                            sidebarUserName.textContent = finalDisplayName;
+                            displayNameP.textContent = finalDisplayName;
+                            displayEmailP.textContent = finalEmail;
+                            displayPhoneP.textContent = userData.phoneNumber;
+
+                        } else {
+                            console.warn("لم يتم العثور على مستند للمستخدم. سيتم تحويله لإكمال الملف الشخصي.");
+                            window.location.href = "complete-profile.html";
+                            return;
+                        }
+                        
+                        fetchAndDisplayOrders(user.uid);
+
+                    } catch (error) {
+                        console.error("⛔️ حدث خطأ فادح عند جلب بيانات المستخدم من Firestore:", error);
+                        displayNameP.textContent = "خطأ في تحميل البيانات";
+                        displayEmailP.textContent = "خطأ";
+                        displayPhoneP.textContent = "خطأ";
+                    }
+                }
             });
-        }
+
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            const contentPanes = document.querySelectorAll('.main-content .content-pane');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    contentPanes.forEach(pane => pane.classList.remove('active'));
+                    link.classList.add('active');
+                    const targetId = link.getAttribute('data-target');
+                    document.getElementById(targetId)?.classList.add('active');
+                });
+            });
+
+            const hamburger = document.querySelector('.hamburger-menu');
+            const navbarMenu = document.querySelector('.navbar-menu');
+            hamburger?.addEventListener('click', () => navbarMenu?.classList.toggle('mobile-active'));
+        });
     </script>
 </body>
 </html>

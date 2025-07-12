@@ -145,7 +145,7 @@
         </div>
     </div>
 
-    <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html" enctype="multipart/form-data">
+    <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
         <input type="hidden" name="form-name" value="order-form" />
         <input type="hidden" name="رقم_الطلب" id="order-id" />
         <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
@@ -214,11 +214,10 @@
 </div>
 
 <script>
-    // توليد رقم الطلب
+    // --- الجزء الأول: إعدادات النموذج الأساسية ---
     const orderId = 'KH-' + Date.now().toString().slice(-6);
     document.getElementById('order-id').value = orderId;
 
-    // عرض معلومات الدفع
     function showPaymentInfo(method) {
         const box = document.getElementById('payment-info');
         let info = '';
@@ -235,17 +234,16 @@
         box.classList.toggle('active', !!method);
     }
 
+    // --- الجزء الثاني: منطق تشغيل الصفحة ---
     document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form');
+        const form = document.querySelector('form[name="order-form"]');
         const submitBtn = document.getElementById('submit-btn');
 
-        // ✅ الكود الذي يقرأ المعلومات من الرابط ويعرضها
         const params = new URLSearchParams(window.location.search);
         const serviceName = params.get('service') || "خدمة غير محددة";
         const servicePrice = params.get('price') || "0";
         document.getElementById('display-service-name').value = serviceName;
         document.getElementById('display-service-price').value = servicePrice + " درهم";
-        // ملء الحقول المخفية التي سيتم إرسالها
         document.getElementById('form-service-name').value = serviceName;
         document.getElementById('form-service-price').value = servicePrice;
 
@@ -266,7 +264,6 @@
                 input.addEventListener('change', validateForm);
             }
         });
-
         validateForm();
 
         form.addEventListener('submit', () => {

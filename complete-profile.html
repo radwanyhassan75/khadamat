@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إكمال الملف الشخصي - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
+            --gray-color: #f4f7f9; --text-color: #555; --border-radius: 8px;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
+            background-color: var(--gray-color); display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; padding: 20px;
+        }
+        .profile-container { width: 100%; max-width: 480px; }
+        .profile-card {
+            background: var(--light-color); padding: 40px;
+            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+        .profile-card h1 { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin: 0 0 10px 0; }
+        .profile-card p { font-size: 1rem; color: var(--text-color); margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; }
+        .btn {
+            width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--primary-color);
+            border: none; color: white; font-weight: bold; border-radius: var(--border-radius);
+            cursor: pointer; transition: background 0.3s;
+        }
+        .btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
+        #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); font-weight: 700; }
+        #message-box.error { background-color: #fdecea; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-card">
+            <h1>خطوة أخيرة!</h1>
+            <p>مرحباً بك. يرجى إدخال رقم هاتفك لإكمال ملفك الشخصي.</p>
+
+            <div id="message-box"></div>
+
+            <form id="complete-profile-form">
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف (واتساب)</label>
+                    <input type="tel" id="phone" required placeholder="مثال: 0612345678">
+                </div>
+                <button type="submit" id="submit-btn" class="btn">حفظ ومتابعة</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // --- 1. Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const profileForm = document.getElementById('complete-profile-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const messageBox = document.getElementById('message-box');
+        let currentUser = null;
+
+        // --- 2. Auth Guard ---
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in.
+                currentUser = user;
+            } else {
+                // No user is signed in, redirect to login.
+                window.location.href = "login.html";
+            }
+        });
+
+        // --- 3. Form Submission Logic ---
+        profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const phoneNumber = document.getElementById('phone').value;
+            if (!phoneNumber.trim()) {
+                alert('الرجاء إدخال رقم الهاتف.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            messageBox.style.display = 'none';
+
+            // Get a reference to the user's document in Firestore
+            const userDocRef = db.collection('users').doc(currentUser.uid);
+
+            // Save the user's data to Firestore
+            // We use { merge: true } to avoid overwriting existing data like displayName and email
+            userDocRef.set({
+                uid: currentUser.uid,
+                displayName: currentUser.displayName,
+                email: currentUser.email,
+                phoneNumber: phoneNumber
+            }, { merge: true })
+            .then(() => {
+                // On success, redirect to the dashboard
+                window.location.href = "dashboard.html";
+            })
+            .catch((error) => {
+                messageBox.textContent = `خطأ في الحفظ: ${error.message}`;
+                messageBox.className = 'error';
+                messageBox.style.display = 'block';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'حفظ ومتابعة';
+            });
+        });
+    </script>
+</body>
+</html>
