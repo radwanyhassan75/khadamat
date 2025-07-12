@@ -258,16 +258,17 @@
         const db = firebase.firestore();
         const ordersContainer = document.getElementById('orders-container');
 
-        // ✅ دالة لجلب وعرض الطلبات
+        // ✅ [تم الإصلاح] دالة لجلب وعرض الطلبات
         async function fetchMyOrders(user) {
-            if (!user || !user.email) {
+            if (!user) {
                 ordersContainer.innerHTML = '<p>خطأ: لا يمكن تحديد المستخدم.</p>';
                 return;
             }
 
             try {
-                // البحث باستخدام البريد الإلكتروني للمستخدم
-                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
+                // الطريقة الصحيحة: البحث باستخدام معرّف المستخدم الفريد (userId)
+                // هذا لا يتطلب فهرساً معقداً وهو أكثر أماناً
+                const ordersQuery = db.collection('orders').where('userId', '==', user.uid);
                 const querySnapshot = await ordersQuery.get();
                 
                 if (querySnapshot.empty) {
@@ -284,7 +285,8 @@
                 
                 const ordersList = [];
                 querySnapshot.forEach(doc => {
-                    ordersList.push(doc.data());
+                    // دمج بيانات الطلب مع معرّف المستند الفريد
+                    ordersList.push({ id: doc.id, ...doc.data() });
                 });
 
                 // فرز الطلبات حسب التاريخ (الأحدث أولاً)
@@ -296,7 +298,8 @@
 
                 let ordersHtml = '<div class="orders-grid">';
                 ordersList.forEach(order => {
-                    const orderDateRaw = order.createdAt || (order.data ? order.data.createdAt : null);
+                    const orderData = order.data || order; // للتوافق مع الطلبات القديمة والجديدة
+                    const orderDateRaw = orderData.createdAt;
                     let orderDate = 'غير محدد';
                     if (orderDateRaw) {
                         const dateObj = orderDateRaw.seconds ? new Date(orderDateRaw.seconds * 1000) : new Date(orderDateRaw);
@@ -304,7 +307,7 @@
                     }
                     
                     let statusClass = 'status-pending';
-                    let statusText = order.status || 'قيد المراجعة';
+                    let statusText = orderData.status || 'قيد المراجعة';
                     if (statusText.includes('مكتمل')) statusClass = 'status-completed';
                     if (statusText.includes('ملغي')) statusClass = 'status-cancelled';
 
@@ -312,14 +315,14 @@
                         <div class="order-card">
                             <div class="order-card-header">
                                 <div>
-                                    <h3>الخدمة: ${order.الخدمة_المطلوبة || 'غير محدد'}</h3>
+                                    <h3>الخدمة: ${orderData.الخدمة_المطلوبة || 'غير محدد'}</h3>
                                     <span>تاريخ الطلب: ${orderDate}</span>
                                 </div>
                             </div>
                             <div class="order-card-body">
                                 <div class="order-detail">
                                     <span class="label">رقم الطلب:</span>
-                                    <span class="value"><strong>${order.رقم_الطلب || 'N/A'}</strong></span>
+                                    <span class="value"><strong>${orderData.رقم_الطلب || 'N/A'}</strong></span>
                                 </div>
                                 <div class="order-detail">
                                     <span class="label">الحالة:</span>
@@ -338,7 +341,7 @@
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i>
                         <h3>حدث خطأ أثناء تحميل الطلبات</h3>
-                        <p>الرجاء المحاولة مرة أخرى لاحقاً. إذا استمرت المشكلة، قد تحتاج إلى إنشاء فهرس في Firestore.</p>
+                        <p>الرجاء المحاولة مرة أخرى لاحقاً. إذا استمرت المشكلة، قد تحتاج إلى إضافة حقل 'userId' لطلباتك عند إنشائها.</p>
                     </div>
                 `;
             }
