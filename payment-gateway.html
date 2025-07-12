@@ -215,29 +215,36 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const orderId = 'KH-' + Date.now().toString().slice(-6);
-        document.getElementById('order-id').value = orderId;
+    // --- الجزء الأول: إعدادات النموذج الأساسية ---
 
-        function showPaymentInfo(method) {
-            const box = document.getElementById('payment-info');
-            let info = '';
-            const name = 'HASSAN ER-RADOUANY';
-            switch (method) {
-                case 'cashplus': info = `<strong>📍 Cash Plus</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-                case 'orange': info = `<strong>📱 Orange Money</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-                case 'bmce': info = `🏦 BMCE Bank<br><strong>رقم الحساب:</strong> 96 0000162000010401 810 011<br><strong>الاسم:</strong> ${name}`; break;
-                case 'attijari': info = `🏦 Attijariwafa Bank<br><strong>رقم الحساب:</strong> 007810000457430040232577<br><strong>الاسم:</strong> ${name}`; break;
-                case 'cih': info = `🏦 CIH Bank<br><strong>رقم الحساب:</strong> 230810624745521100540088<br><strong>الاسم:</strong> ${name}`; break;
-                case 'soge': info = `🏦 Société Générale<br><strong>رقم الحساب:</strong> 022780000760004157217174<br><strong>الاسم:</strong> ${name}`; break;
-            }
-            box.innerHTML = info;
-            box.classList.toggle('active', !!method);
+    // توليد رقم الطلب
+    const orderId = 'KH-' + Date.now().toString().slice(-6);
+    document.getElementById('order-id').value = orderId;
+
+    // ✅ دالة عرض معلومات الدفع مع أرقام حساباتك
+    function showPaymentInfo(method) {
+        const box = document.getElementById('payment-info');
+        let info = '';
+        const name = 'HASSAN ER-RADOUANY';
+        switch (method) {
+            case 'cashplus': info = `<strong>📍 Cash Plus</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
+            case 'orange': info = `<strong>📱 Orange Money</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
+            case 'bmce': info = `🏦 BMCE Bank<br><strong>رقم الحساب:</strong> 96 0000162000010401 810 011<br><strong>الاسم:</strong> ${name}`; break;
+            case 'attijari': info = `🏦 Attijariwafa Bank<br><strong>رقم الحساب:</strong> 007810000457430040232577<br><strong>الاسم:</strong> ${name}`; break;
+            case 'cih': info = `🏦 CIH Bank<br><strong>رقم الحساب:</strong> 230810624745521100540088<br><strong>الاسم:</strong> ${name}`; break;
+            case 'soge': info = `🏦 Société Générale<br><strong>رقم الحساب:</strong> 022780000760004157217174<br><strong>الاسم:</strong> ${name}`; break;
         }
+        box.innerHTML = info;
+        box.classList.toggle('active', !!method);
+    }
 
+    // --- الجزء الثاني: منطق تشغيل الصفحة ---
+
+    document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('form[name="order-form"]');
         const submitBtn = document.getElementById('submit-btn');
 
+        // قراءة معلومات الخدمة من رابط الصفحة
         const params = new URLSearchParams(window.location.search);
         const serviceName = params.get('service') || "خدمة غير محددة";
         const servicePrice = params.get('price') || "0";
@@ -246,6 +253,7 @@
         document.getElementById('form-service-name').value = serviceName;
         document.getElementById('form-service-price').value = servicePrice;
 
+        // دالة التحقق من الحقول
         function validateForm() {
             const requiredInputs = form.querySelectorAll('[required]');
             let isValid = true;
@@ -257,6 +265,7 @@
             submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
         }
 
+        // ربط دالة التحقق بالحقول
         form.querySelectorAll('[required]').forEach(input => {
             input.addEventListener('input', validateForm);
             if (input.type === 'file' || input.tagName === 'SELECT') {
@@ -265,10 +274,12 @@
         });
         validateForm();
 
+        // الكود الوحيد الذي نحتاجه عند إرسال النموذج
         form.addEventListener('submit', () => {
+            // فقط قم بحفظ رقم الطلب في الذاكرة المؤقتة لصفحة النجاح
             localStorage.setItem('lastOrderId', orderId);
         });
     });
-</script>
+</script>>
 </body>
 </html>
