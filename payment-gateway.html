@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3; --secondary-color: #0d6efd; --dark-color: #2c3e50;
             --light-color: #ffffff; --gray-color: #f8f9fa; --text-color: #555;
@@ -23,143 +24,85 @@
             margin: 0;
             direction: rtl;
         }
-        .main-container {
-            padding: 20px;
-            padding-top: 120px; /* لإعطاء مساحة للهيدر الثابت */
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        .card {
+
+        /* --- تصميم الشريط العلوي الاحترافي الجديد --- */
+        .main-header {
             background: var(--light-color);
-            padding: 30px 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 30px;
-            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky; /* جعله ثابتاً في الأعلى */
+            top: 0;
+            width: 100%;
+            z-index: 1000;
         }
-        .card-header {
+        .navbar {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            color: var(--dark-color);
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary-color);
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .card-header .step-icon {
-            background-color: var(--primary-color);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: block;
-            color: var(--dark-color);
-        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
+        .user-menu-button:hover { background-color: var(--gray-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
+        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dropdown-menu a:hover { background-color: var(--gray-color); }
+        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
+        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; }
+        .btn-header.primary { background-color: var(--primary-color); color: white; }
+        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
+        
+        /* --- تصميم باقي الصفحة --- */
+        .main-container { padding: 20px; padding-top: 40px; }
+        .container { max-width: 800px; margin: auto; }
+        .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; border: 1px solid #e9ecef; }
+        .card-header { display: flex; align-items: center; gap: 15px; color: var(--dark-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--primary-color); }
+        .card-header .step-icon { background-color: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .form-group { margin-bottom: 20px; }
+        label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
         .required-star { color: var(--danger-color); }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
-        }
-        input[readonly] {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-            border: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
+        input, textarea, select { width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 1rem; font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: all 0.3s ease; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
+        input[readonly] { background-color: #e9ecef; cursor: not-allowed; border: none; font-weight: bold; font-size: 1.1rem; }
         textarea { resize: vertical; min-height: 120px; }
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, var(--success-color), #20c997);
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-        .submit-btn:disabled {
-            background: #a5d6a7;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        .payment-info {
-            display: none;
-            background: #e7f1ff;
-            padding: 20px;
-            border: 1px dashed var(--primary-color);
-            border-radius: var(--border-radius);
-            margin-top: 15px;
-        }
+        .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; background: linear-gradient(45deg, var(--success-color), #20c997); border: none; color: white; font-weight: bold; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+        .submit-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4); }
+        .submit-btn:disabled { background: #a5d6a7; cursor: not-allowed; box-shadow: none; }
+        .payment-info { display: none; background: #e7f1ff; padding: 20px; border: 1px dashed var(--primary-color); border-radius: var(--border-radius); margin-top: 15px; }
         .payment-info.active { display: block; }
-        .alert {
-            background-color: #fff3cd;
-            border-right: 5px solid #ffc107;
-            color: #664d03;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: var(--border-radius);
-        }
+        .alert { background-color: #fff3cd; border-right: 5px solid #ffc107; color: #664d03; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); }
         .flag-prefix { display: flex; }
         .flag-prefix select { width: auto; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
         .flag-prefix input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-        .contact-support {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        .contact-support a {
-            color: var(--primary-color);
-            font-weight: 700;
-            text-decoration: none;
-        }
+        .contact-support { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #6c757d; }
+        .contact-support a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
     </style>
 </head>
 
 <body>
 
-    <!-- ✅ الإضافة 1: هيكل الهيدر الموحد -->
-    <header class="main-header" style="background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; top: 0; width: 100%; z-index: 1000;">
-        <nav style="display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; max-width: 1200px; margin: 0 auto;">
+    <!-- ✅ الإضافة 1: هيكل الهيدر الموحد والجديد -->
+    <header class="main-header">
+        <nav class="navbar">
             <a href="index.html" class="navbar-logo">
-                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي" style="height: 80px;">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
             </a>
-            <div id="navbar-actions" style="display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end;">
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
                 <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
             </div>
         </nav>
@@ -242,9 +185,9 @@
                         <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
                     </div>
                     <button type="submit" class="submit-btn" id="submit-btn" disabled>
-                        <i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب
+                        <i class="fas fa-check-circle"></i> إرسال الطلب الآن
                     </button>
-                    <!-- ✅ الإضافة 3: رابط الدعم -->
+                    <!-- ✅ الإضافة 2: رابط الدعم -->
                     <p class="contact-support">
                         هل تواجه مشكلة؟ <a href="contact.html">اتصل بنا</a>
                     </p>
@@ -253,12 +196,13 @@
         </div>
     </div>
 
-    <!-- ✅ الإضافة 2: السكريبتات بالترتيب الصحيح لحل كل المشاكل -->
+    <!-- ✅ الإضافة 3: السكريبتات بالترتيب الصحيح لحل كل المشاكل -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
 
     <script>
+    // --- هذا الكود خاص فقط بصفحة الدفع ---
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('form');
         const submitBtn = document.getElementById('submit-btn');
@@ -277,14 +221,15 @@
         document.getElementById('form-service-price').value = servicePrice;
 
         // الملء التلقائي لمعلومات المستخدم
+        // نحن نستخدم 'auth' الذي تم تعريفه مسبقاً في ملف auth.js
         auth.onAuthStateChanged(user => {
             if (user) {
                 if (user.displayName) nameInput.value = user.displayName;
                 if (user.email) emailInput.value = user.email;
-                validateForm();
+                validateForm(); // إعادة التحقق بعد ملء البيانات
             }
         });
-
+        
         function showPaymentInfo(method) {
             const box = document.getElementById('payment-info');
             let info = '';
@@ -322,6 +267,5 @@
         validateForm();
     });
     </script>
-
 </body>
 </html>
