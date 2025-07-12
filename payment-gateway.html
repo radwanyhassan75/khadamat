@@ -146,6 +146,7 @@
     </div>
 
     <form name="order-form" method="POST" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data">
+        
         <input type="hidden" name="form-name" value="order-form" />
         <input type="hidden" name="رقم_الطلب" id="order-id" />
         <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
@@ -214,28 +215,26 @@
 </div>
 
 <script>
-    // --- الجزء الأول: إعدادات النموذج الأساسية ---
-    const orderId = 'KH-' + Date.now().toString().slice(-6);
-    document.getElementById('order-id').value = orderId;
-
-    function showPaymentInfo(method) {
-        const box = document.getElementById('payment-info');
-        let info = '';
-        const name = 'HASSAN ER-RADOUANY';
-        switch (method) {
-            case 'cashplus': info = `<strong>📍 Cash Plus</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-            case 'orange': info = `<strong>📱 Orange Money</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-            case 'bmce': info = `🏦 BMCE Bank<br><strong>رقم الحساب:</strong> 96 0000162000010401 810 011<br><strong>الاسم:</strong> ${name}`; break;
-            case 'attijari': info = `🏦 Attijariwafa Bank<br><strong>رقم الحساب:</strong> 007810000457430040232577<br><strong>الاسم:</strong> ${name}`; break;
-            case 'cih': info = `🏦 CIH Bank<br><strong>رقم الحساب:</strong> 230810624745521100540088<br><strong>الاسم:</strong> ${name}`; break;
-            case 'soge': info = `🏦 Société Générale<br><strong>رقم الحساب:</strong> 022780000760004157217174<br><strong>الاسم:</strong> ${name}`; break;
-        }
-        box.innerHTML = info;
-        box.classList.toggle('active', !!method);
-    }
-
-    // --- الجزء الثاني: منطق تشغيل الصفحة ---
     document.addEventListener('DOMContentLoaded', () => {
+        const orderId = 'KH-' + Date.now().toString().slice(-6);
+        document.getElementById('order-id').value = orderId;
+
+        function showPaymentInfo(method) {
+            const box = document.getElementById('payment-info');
+            let info = '';
+            const name = 'HASSAN ER-RADOUANY';
+            switch (method) {
+                case 'cashplus': info = `<strong>📍 Cash Plus</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
+                case 'orange': info = `<strong>📱 Orange Money</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
+                case 'bmce': info = `🏦 BMCE Bank<br><strong>رقم الحساب:</strong> 96 0000162000010401 810 011<br><strong>الاسم:</strong> ${name}`; break;
+                case 'attijari': info = `🏦 Attijariwafa Bank<br><strong>رقم الحساب:</strong> 007810000457430040232577<br><strong>الاسم:</strong> ${name}`; break;
+                case 'cih': info = `🏦 CIH Bank<br><strong>رقم الحساب:</strong> 230810624745521100540088<br><strong>الاسم:</strong> ${name}`; break;
+                case 'soge': info = `🏦 Société Générale<br><strong>رقم الحساب:</strong> 022780000760004157217174<br><strong>الاسم:</strong> ${name}`; break;
+            }
+            box.innerHTML = info;
+            box.classList.toggle('active', !!method);
+        }
+
         const form = document.querySelector('form[name="order-form"]');
         const submitBtn = document.getElementById('submit-btn');
 
