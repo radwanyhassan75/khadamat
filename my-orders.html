@@ -193,6 +193,7 @@
                     <div class="info-item"><span class="label">حالة الدفع</span><span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span></div>
                     <div class="info-item"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span></div>
                     ${(orderStatus === 'لم يتم الإنجاز' && order.reason) ? 
+                    
                         `<div class="reason-note"><strong>سبب عدم الإنجاز:</strong> ${order.reason}</div>` : ''}
                     ${(paymentStatus === 'مشكلة في الدفع' && order.paymentReason) ? 
                         `<div class="reason-note"><strong>مشكلة الدفع:</strong> ${order.paymentReason}</div>` : ''}
@@ -219,6 +220,7 @@
                 loadingState.style.display = 'none';
                 emptyState.innerHTML = '<h3>يرجى تسجيل الدخول لعرض طلباتك.</h3>';
                 emptyState.style.display = 'block';
+
             }
         });
 
