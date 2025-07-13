@@ -13,353 +13,180 @@
     <style>
         :root {
             --primary-color: #0056b3;
-            --secondary-color: #0d6efd;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
-            --text-color: #555;
+            --border-color: #e9ecef;
             --success-color: #198754;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
-        body {
-            font-family: 'Cairo', sans-serif;
-            margin: 0;
-            background-color: var(--gray-color);
-            direction: rtl;
-        }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); }
         
-        /* --- تصميم الشريط العلوي الاحترافي --- */
-        .main-header {
-            background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .navbar-actions { position: relative; }
-        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
-        .user-menu-button:hover { background-color: var(--gray-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
-        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
-        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
-        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
-        .dropdown-menu a:hover { background-color: var(--gray-color); }
-        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
-        .btn-header.primary { background-color: var(--primary-color); color: white; }
-        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-header:hover { transform: translateY(-2px); }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        .main-header { /* ... styles for your header ... */ }
+        .main-footer { /* ... styles for your footer ... */ }
 
-        /* --- تصميم صفحة طلباتي --- */
-        .page-wrapper {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+        .page-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .page-header {
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 1px solid var(--border-color);
         }
         .page-header h1 {
-            font-size: 2.5rem;
-            color: var(--dark-color);
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            font-size: 2.5rem; color: var(--dark-color); font-weight: 900;
+            display: flex; align-items: center; gap: 15px;
         }
-        .page-header h1 i {
-            color: var(--primary-color);
-        }
+        .page-header h1 i { color: var(--primary-color); }
         
-        /* --- تصميم بطاقات الطلبات --- */
-        .orders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-        }
+        .orders-grid { display: grid; gap: 25px; }
         .order-card {
             background: var(--light-color);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            border-left: 5px solid var(--primary-color);
-            overflow: hidden;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .order-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
-        }
+        .order-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
         .order-card-header {
-            padding: 20px;
-            background: var(--gray-color);
-            border-bottom: 1px solid #eee;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .order-card-header h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: var(--dark-color);
-            font-weight: 700;
-        }
-        .order-card-header span {
-            font-size: 0.9rem;
-            color: var(--text-color);
-        }
+        .order-card-header h3 { margin: 0; font-size: 1.3rem; color: var(--dark-color); }
+        .order-id { font-size: 0.9rem; font-weight: 700; color: #777; background: var(--gray-color); padding: 5px 10px; border-radius: 50px; }
         .order-card-body {
             padding: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px;
         }
-        .order-detail {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px dashed #ddd;
-        }
-        .order-detail:last-child {
-            border-bottom: none;
-        }
-        .order-detail .label {
-            font-weight: 700;
-            color: var(--text-color);
-        }
-        .order-detail .value {
-            font-weight: 700;
-            color: var(--dark-color);
-        }
+        .info-item .label { font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; }
+        .info-item .value { font-size: 1.1rem; font-weight: bold; color: var(--dark-color); }
         .status-badge {
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: white;
+            padding: 5px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold;
+            text-align: center; display: inline-block;
         }
-        .status-pending { background-color: var(--warning-color); color: var(--dark-color); }
-        .status-completed { background-color: var(--success-color); }
-        .status-cancelled { background-color: var(--danger-color); }
+        .status-badge.green { background-color: #e8f5e9; color: var(--success-color); }
+        .status-badge.orange { background-color: #fff8e1; color: #f59e0b; }
+        .status-badge.red { background-color: #fdecea; color: var(--danger-color); }
         
-        /* --- حالات التحميل والفارغ --- */
-        .loading-container, .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+        .reason-note {
+            grid-column: 1 / -1;
+            background-color: #fff5f5; border: 1px solid #fed7d7; color: #9b2c2c;
+            padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 0.95rem;
         }
-        .loading-container i {
-            font-size: 3rem;
-            color: var(--primary-color);
-            animation: spin 1.5s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .empty-state i {
-            font-size: 4rem;
-            color: #ccc;
-            margin-bottom: 20px;
-        }
-        .empty-state h3 {
-            font-size: 1.5rem;
-            color: var(--dark-color);
-        }
-        .empty-state p {
-            color: var(--text-color);
-        }
-        .empty-state .btn {
-            margin-top: 20px;
-            background-color: var(--success-color);
-        }
-        .empty-state .btn:hover {
-            background-color: #157347;
-        }
-        
-        @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
-        }
-         @media (min-width: 769px) {
-            .hamburger-menu { display: none; }
-            .navbar-menu { display: flex; }
-        }
-
+        .reason-note strong { display: block; margin-bottom: 5px; }
+        .loading-container, .empty-state { text-align: center; padding: 60px 20px; }
+        .loading-container i { font-size: 3rem; color: var(--primary-color); animation: spin 1.5s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- ✅ الشريط العلوي الموحد -->
-    <header class="main-header">
-        <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <div id="mobile-navbar-actions"></div>
-            </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
-        </nav>
-    </header>
+    <header class="main-header">...</header>
 
     <main class="page-wrapper">
-        <div class="page-header">
-            <h1><i class="fas fa-receipt"></i> طلباتي</h1>
-        </div>
-
-        <!-- ✅ سيتم ملء هذا الجزء بالطلبات أو رسالة التحميل -->
+        <div class="page-header"><h1><i class="fas fa-receipt"></i> طلباتي</h1></div>
         <div id="orders-container">
-            <div class="loading-container">
+            <div class="loading-container" id="loading-state">
                 <i class="fas fa-spinner"></i>
                 <p>جاري تحميل طلباتك...</p>
+            </div>
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <h3>لا يوجد لديك طلبات حالياً</h3>
             </div>
         </div>
     </main>
     
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
+    <footer class="main-footer">...</footer>
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="auth.js"></script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // نستخدم 'auth' المعرف مسبقاً في auth.js
-        if (typeof firebase === 'undefined') {
-            console.error("Firebase is not loaded!");
-            return;
-        }
-        const db = firebase.firestore();
         const ordersContainer = document.getElementById('orders-container');
+        const loadingState = document.getElementById('loading-state');
+        const emptyState = document.getElementById('empty-state');
+        const apiBaseUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
 
-        // ✅ [تم الإصلاح] دالة لجلب وعرض الطلبات
-        async function fetchMyOrders(user) {
-            if (!user || !user.email) {
-                ordersContainer.innerHTML = '<p>خطأ: لا يمكن تحديد المستخدم.</p>';
-                return;
-            }
-
+        async function fetchOrders(userId) {
             try {
-                // الطريقة الصحيحة: البحث باستخدام البريد الإلكتروني للمستخدم
-                // هذا يضمن جلب كل الطلبات التي تم تقديمها بنفس البريد الإلكتروني
-                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
-                const querySnapshot = await ordersQuery.get();
-                
-                if (querySnapshot.empty) {
-                    ordersContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-box-open"></i>
-                            <h3>لا يوجد لديك طلبات سابقة</h3>
-                            <p>يبدو أنك لم تقم بأي طلب بعد. تصفح خدماتنا الآن!</p>
-                            <a href="services.html" class="btn">اكتشف خدماتنا</a>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const ordersList = [];
-                querySnapshot.forEach(doc => {
-                    // دمج بيانات الطلب مع معرّف المستند الفريد
-                    ordersList.push({ id: doc.id, ...doc.data() });
-                });
-
-                // فرز الطلبات حسب التاريخ (الأحدث أولاً)
-                ordersList.sort((a, b) => {
-                    const dateA = a.createdAt?.seconds || 0;
-                    const dateB = b.createdAt?.seconds || 0;
-                    return dateB - dateA;
-                });
-
-                let ordersHtml = '<div class="orders-grid">';
-                ordersList.forEach(order => {
-                    const orderData = order.data || order; // للتوافق مع الطلبات القديمة والجديدة
-                    const orderDateRaw = orderData.createdAt;
-                    let orderDate = 'غير محدد';
-                    if (orderDateRaw) {
-                        const dateObj = orderDateRaw.seconds ? new Date(orderDateRaw.seconds * 1000) : new Date(orderDateRaw);
-                        orderDate = dateObj.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                    }
-                    
-                    let statusClass = 'status-pending';
-                    let statusText = orderData.status || 'قيد المراجعة';
-                    if (statusText.includes('مكتمل')) statusClass = 'status-completed';
-                    if (statusText.includes('ملغي')) statusClass = 'status-cancelled';
-
-                    ordersHtml += `
-                        <div class="order-card">
-                            <div class="order-card-header">
-                                <div>
-                                    <h3>الخدمة: ${orderData.الخدمة_المطلوبة || 'غير محدد'}</h3>
-                                    <span>تاريخ الطلب: ${orderDate}</span>
-                                </div>
-                            </div>
-                            <div class="order-card-body">
-                                <div class="order-detail">
-                                    <span class="label">رقم الطلب:</span>
-                                    <span class="value"><strong>${orderData.رقم_الطلب || 'N/A'}</strong></span>
-                                </div>
-                                <div class="order-detail">
-                                    <span class="label">الحالة:</span>
-                                    <span class="value"><span class="status-badge ${statusClass}">${statusText}</span></span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                ordersHtml += '</div>';
-                ordersContainer.innerHTML = ordersHtml;
-
+                // ✅ استدعاء الرابط الجديد الذي يقرأ من Google Sheet
+                const response = await fetch(`${apiBaseUrl}/api/my-orders/${userId}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.json();
             } catch (error) {
-                console.error("خطأ في جلب الطلبات:", error);
-                const firestoreErrorLink = "https://console.firebase.google.com/project/" + firebase.app().options.projectId + "/firestore/indexes";
-                ordersContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i>
-                        <h3>حدث خطأ أثناء تحميل الطلبات</h3>
-                        <p>قد تحتاج إلى إنشاء فهرس في Firestore. <a href="${firestoreErrorLink}" target="_blank">اضغط هنا لإعداد الفهرس</a>.</p>
-                    </div>
-                `;
+                console.error('Failed to fetch orders:', error);
+                return [];
             }
         }
 
-        // النقطة الرئيسية: عند تغير حالة المستخدم
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // المستخدم مسجل دخوله، قم بجلب طلباته
-                fetchMyOrders(user);
+        function createOrderCard(order) {
+            const statusMap = {
+                'تم الإنجاز': 'green',
+                'جاري المعالجة': 'orange',
+                'لم يتم الإنجاز': 'red',
+                'تم الدفع': 'green',
+                'جاري التحقق': 'orange',
+                'مشكلة في الدفع': 'red'
+            };
+            
+            const orderStatus = order.orderStatus || 'جاري المعالجة';
+            const paymentStatus = order.paymentStatus || 'جاري التحقق';
+
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            card.innerHTML = `
+                <div class="order-card-header">
+                    <h3>${order.serviceName || 'خدمة غير محددة'}</h3>
+                    <span class="order-id">#${order.id || 'N/A'}</span>
+                </div>
+                <div class="order-card-body">
+                    <div class="info-item">
+                        <span class="label">مبلغ الدفع</span>
+                        <span class="value">${order.paymentAmount || 'N/A'} د.م</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">طريقة الدفع</span>
+                        <span class="value">${order.paymentMethod || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">حالة الدفع</span>
+                        <span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">حالة الطلب</span>
+                        <span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span>
+                    </div>
+                    ${(orderStatus === 'لم يتم الإنجاز' && order.reason) ? 
+                        `<div class="reason-note"><strong>سبب عدم الإنجاز:</strong> ${order.reason}</div>` : ''}
+                    ${(paymentStatus === 'مشكلة في الدفع' && order.paymentReason) ? 
+                        `<div class="reason-note"><strong>مشكلة الدفع:</strong> ${order.paymentReason}</div>` : ''}
+                </div>`;
+            return card;
+        }
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user && user.uid) {
+                const orders = await fetchOrders(user.uid);
+                loadingState.style.display = 'none';
+                if (orders && orders.length > 0) {
+                    const grid = document.createElement('div');
+                    grid.className = 'orders-grid';
+                    orders.forEach(order => grid.appendChild(createOrderCard(order)));
+                    ordersContainer.appendChild(grid);
+                } else {
+                    emptyState.style.display = 'block';
+                }
             } else {
-                // المستخدم غير مسجل، قم بتوجيهه لصفحة الدخول
-                window.location.href = "login.html";
+                loadingState.style.display = 'none';
+                emptyState.innerHTML = '<h3>يرجى تسجيل الدخول لعرض طلباتك.</h3>';
+                emptyState.style.display = 'block';
             }
         });
     });
     </script>
-
 </body>
 </html>

@@ -162,9 +162,11 @@
         </div>
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-    <script src="auth.js"></script> 
-
+    <script src="auth.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const contactContainer = document.getElementById('contact-container');
@@ -174,7 +176,7 @@
             if (!userId) return [];
             try {
                 const response = await fetch(`${apiBaseUrl}/api/orders/${userId}`);
-                if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                if (!response.ok) throw new Error(`Server error`);
                 return await response.json();
             } catch (error) {
                 console.error("فشل جلب طلبات المستخدم:", error);
@@ -187,7 +189,6 @@
                 <form id="contact-form">
                     <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" required></div>
                     <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" required></div>
-                    
                     <div class="form-group">
                         <label for="inquiry-type">نوع الاستفسار</label>
                         <select id="inquiry-type">
@@ -196,39 +197,35 @@
                             <option value="complaint">شكوى</option>
                         </select>
                     </div>
-
                     <div class="form-group" id="orders-group" style="display: none;">
                         <label for="order-select">اختر الطلب</label>
-                        <select id="order-select" disabled><option>جاري تحميل...</option></select>
+                        <select id="order-select" disabled><option>اختر نوع الاستفسار أولاً</option></select>
                     </div>
-
                     <div class="form-group"><label for="message">رسالتك</label><textarea id="message" required placeholder="اكتب استفسارك..."></textarea></div>
                     <button type="submit" class="submit-btn">بدء المحادثة</button>
                 </form>`;
             contactContainer.innerHTML = formHtml;
-            
+
             const nameInput = document.getElementById('name');
             const emailInput = document.getElementById('email');
             const inquiryTypeSelect = document.getElementById('inquiry-type');
             const ordersGroup = document.getElementById('orders-group');
             const orderSelect = document.getElementById('order-select');
 
-            // --- ✅ آلية التشخيص ---
             if (user && user.uid) {
-                alert('✅ تم العثور على مستخدم مسجل: ' + (user.email || 'لا يوجد بريد إلكتروني'));
                 nameInput.value = user.displayName || 'مستخدم مسجل';
                 emailInput.value = user.email || '';
                 nameInput.readOnly = true;
                 emailInput.readOnly = true;
 
-                // جلب الطلبات عند الحاجة إليها فقط
                 inquiryTypeSelect.addEventListener('change', async (e) => {
                     const type = e.target.value;
                     if (type === 'order_related' || type === 'complaint') {
                         ordersGroup.style.display = 'block';
+                        orderSelect.innerHTML = '<option>جاري تحميل طلباتك...</option>';
                         const orders = await getUserOrders(user.uid);
                         let orderOptionsHtml = '';
-                        if (orders.length > 0) {
+                        if (orders && orders.length > 0) {
                             orderOptionsHtml = orders.map(order => `<option value="${order.id}">${order.serviceName} (#${order.id})</option>`).join('');
                         } else {
                             orderOptionsHtml = '<option value="" disabled>لا توجد طلبات سابقة</option>';
@@ -239,30 +236,25 @@
                         ordersGroup.style.display = 'none';
                     }
                 });
-
             } else {
-                alert('⚠️ لم يتم العثور على مستخدم مسجل. سيتم عرض نموذج الزائر.');
-                inquiryTypeSelect.addEventListener('change', (e) => {
+                inquiryTypeSelect.addEventListener('change', () => {
                     ordersGroup.style.display = 'none';
                 });
             }
-
-            document.getElementById('contact-form').addEventListener('submit', (e) => { e.preventDefault(); alert("تم منع الإرسال مؤقتًا لحين إصلاح مشكلة المصادقة."); });
         }
         
-        // --- نقطة البداية الرئيسية ---
-        try {
-            if (typeof auth !== 'undefined' && auth) {
-                auth.onAuthStateChanged(user => {
-                    renderContactForm(user);
-                });
-            } else {
-                console.warn("auth.js not found. Rendering guest form.");
-                renderContactForm(null);
-            }
-        } catch (error) {
-            console.error("An error occurred during auth initialization:", error);
-            renderContactForm(null);
+        // --- ✅ تعديل: نقطة البداية النهائية والأكثر أمانًا ---
+        // هذا الكود يتحقق أولاً إذا كان 'auth' موجودًا قبل محاولة استخدامه
+        if (typeof auth !== 'undefined' && auth) {
+            // إذا كان موجودًا، نستمع لتغيرات حالة الدخول
+            auth.onAuthStateChanged(user => {
+                renderContactForm(user);
+            });
+        } else {
+            // إذا لم يكن موجودًا (لأن الملف غير موجود أو به خطأ)،
+            // نعرض رسالة تحذير في الكونسول ونرسم نموذج الزائر مباشرة
+            console.warn("auth.js failed to load or 'auth' object is missing. Rendering guest form as a fallback.");
+            renderContactForm(null); // عرض نموذج الزائر كخطة بديلة
         }
         
         document.getElementById('current-year').textContent = new Date().getFullYear();
