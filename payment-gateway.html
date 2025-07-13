@@ -1,28 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- =================================================================
-         META TAGS, FONTS, AND ICONS
-         This section contains essential metadata, links to Google Fonts for typography,
-         and Font Awesome for icons, ensuring a professional and modern look.
-    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إتمام الطلب - المكتب الرقمي</title>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- =================================================================
-         INTERNAL CSS STYLES
-         This extensive style block defines the entire look and feel of the page,
-         from colors and fonts to layout, animations, and responsiveness.
-    ================================================================== -->
     <style>
         /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
@@ -37,6 +25,7 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
             --success-color: #198754;
             --warning-color: #ffc107;
+            --danger-color: #dc3545;
         }
 
         /* --- إعدادات الجسم العامة --- */
@@ -214,6 +203,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .payment-option:hover {
             border-color: var(--primary-color);
@@ -232,7 +225,7 @@
             margin-bottom: 10px;
         }
         .payment-option.cashplus img, .payment-option.cih img {
-            height: 50px;
+            height: 55px;
         }
         .payment-option span {
             font-weight: 700;
@@ -245,10 +238,15 @@
             padding: 20px;
             border-radius: var(--border-radius);
             margin-top: 20px;
+            border: 1px solid #bde0fe;
         }
         .payment-details-container.active {
             display: block;
             animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .detail-row {
             display: flex;
@@ -258,19 +256,32 @@
             background-color: var(--light-color);
             border-radius: 8px;
             margin-bottom: 10px;
+            border: 1px solid #eee;
         }
         .detail-row .label { font-weight: 700; color: var(--text-color); margin: 0; }
         .detail-row .value { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; }
-        .copy-button { background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 1rem; margin-right: 10px; transition: color 0.2s; }
+        .copy-button { background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 1rem; margin-right: 10px; padding: 5px; transition: color 0.2s; }
         .copy-button:hover { color: var(--primary-color); }
         .instruction-note {
             font-size: 0.9rem;
             color: var(--text-color);
             margin-top: 15px;
-            padding: 10px;
+            padding: 10px 15px;
             background-color: #fffbe6;
             border-radius: 8px;
             border: 1px solid #ffe58f;
+        }
+        .payment-details-container h4 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .payment-details-container h4 i {
+            color: var(--primary-color);
         }
 
         /* --- التصميم المتجاوب --- */
@@ -278,6 +289,8 @@
             .navbar-menu { display: none; }
             .hamburger-menu { display: block; }
             .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+            .card { padding: 20px; }
+            .card-header { padding: 15px 20px; margin: -20px -20px 20px; }
         }
         @media (min-width: 769px) {
             .hamburger-menu { display: none; }
@@ -288,7 +301,6 @@
 
 <body>
 
-    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo">
@@ -301,8 +313,7 @@
                 <div id="mobile-navbar-actions"></div>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
+                </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
@@ -341,15 +352,8 @@
                     <input type="email" name="البريد_الإلكتروني" id="email" required />
                 </div>
                 <div class="form-group">
-                    <label>رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                    <div class="flag-prefix">
-                        <select name="رمز_الدولة" required>
-                            <option value="+212" selected>🇲🇦 +212</option>
-                            <option value="+966">🇸� +966</option>
-                            <option value="+20">🇪🇬 +20</option>
-                        </select>
-                        <input type="tel" name="الهاتف" required />
-                    </div>
+                    <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
+                    <input type="tel" name="الهاتف" id="phone" required placeholder="مثال: 0612345678" />
                 </div>
             </div>
 
@@ -371,14 +375,12 @@
                 <div class="form-group">
                     <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
                     <div class="payment-options-grid" id="payment-options">
-                        <!-- سيتم ملء هذا الجزء بواسطة الجافاسكريبت -->
-                    </div>
+                        </div>
                     <input type="hidden" name="طريقة_الدفع" id="payment-method-input" required>
                 </div>
 
                 <div id="payment-details-container" class="payment-details-container">
-                    <!-- سيتم عرض تفاصيل الدفع هنا -->
-                </div>
+                    </div>
                 
                 <div class="form-group">
                     <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
@@ -394,14 +396,13 @@
         </form>
     </div>
 
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
 
     <script>
     // =================================================================
-    //          السكريبت الخاص بصفحة بوابة الدفع
+    //         السكريبت الخاص بصفحة بوابة الدفع
     // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         // --- 1. تعريف عناصر الواجهة ---
@@ -413,14 +414,16 @@
         const paymentDetailsContainer = document.getElementById('payment-details-container');
         const paymentMethodInput = document.getElementById('payment-method-input');
 
-        // --- 2. بيانات طرق الدفع ---
+        // --- 2. بيانات طرق الدفع (مع روابط شعارات ثابتة وصحيحة) ---
         const paymentMethods = [
             { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png', class: 'cashplus' },
             { id: 'orange', name: 'Orange Money', logo: 'https://yop.l-frii.com/wp-content/uploads/2022/12/Orange-Money-recrute-pour-ce-poste-28-Decembre-2022-1024x683.png' },
-            { id: 'bmce', name: 'BMCE Bank', logo: 'https://play-lh.googleusercontent.com/JMn_wqx90dAczqCEQayt2UeY3xQF6IWVCJcQlI090oqOU0LdP_ArMdjLPI9WDqGI6-6z' },
-            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/2560px-Logo_AWB.svg.png' },
+            // ✅ تم تحديث الرابط الجديد لبنك أفريقيا
+            { id: 'bmce', name: 'بنك أفريقيا', logo: 'https://www.ir-bankofafrica.ma/sites/default/files/styles/actualite/public/default_images/imgpsh_fullsize_anim.png?itok=UUjnntlS' },
+            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
             { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png', class: 'cih' },
-            { id: 'soge', name: 'Société Générale', logo: 'https://cdn.snrtnews.com/sites/default/files/2025/06/18/whatsapp-image-2025-06-18-at-13-1750248285.jpeg' }
+            // ✅ تم تحديث الرابط والاسم الجديد للشركة العامة
+            { id: 'soge', name: 'الشركة العامة (سهام)', logo: 'https://cdn.snrtnews.com/sites/default/files/2025/06/18/whatsapp-image-2025-06-18-at-13-1750248285.jpeg' }
         ];
 
         // --- 3. الدوال الرئيسية ---
@@ -431,10 +434,10 @@
         function renderPaymentOptions() {
             paymentMethods.forEach(method => {
                 const optionDiv = document.createElement('div');
-                optionDiv.className = 'payment-option';
+                optionDiv.className = `payment-option ${method.class || ''}`;
                 optionDiv.dataset.method = method.id;
                 optionDiv.innerHTML = `
-                    <img src="${method.logo}" alt="شعار ${method.name}" class="${method.class || ''}">
+                    <img src="${method.logo}" alt="شعار ${method.name}">
                     <span>${method.name}</span>
                 `;
                 optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
@@ -447,18 +450,11 @@
          * @param {string} selectedMethodId - معرف طريقة الدفع المختارة
          */
         function selectPaymentMethod(selectedMethodId) {
-            // تحديث الواجهة البصرية للأزرار
             document.querySelectorAll('.payment-option').forEach(opt => {
                 opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
             });
-
-            // تحديث قيمة الحقل المخفي
-            paymentMethodInput.value = selectedMethodId;
-
-            // عرض تفاصيل الدفع
+            paymentMethodInput.value = paymentMethods.find(m => m.id === selectedMethodId).name;
             renderPaymentDetails(selectedMethodId);
-            
-            // إعادة التحقق من النموذج
             validateForm();
         }
 
@@ -473,39 +469,57 @@
             switch (methodId) {
                 case 'cashplus':
                     detailsHtml = `
-                        <h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنكي (حوالة)</h4>
-                        <div class="detail-row">
-                            <span class="label">رقم الحساب (IBAN):</span>
-                            <span class="value" id="cashplus-iban">835780030017346031053226</span>
-                            <button type="button" class="copy-button" onclick="copyToClipboard('cashplus-iban')"><i class="far fa-copy"></i></button>
-                        </div>
-                        <p class="instruction-note">استخدم هذا الرقم للتحويل من أي تطبيق بنكي في المغرب. ننصح بنسخ الرقم لتجنب الأخطاء.</p>
+                        <h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنك (حوالة)</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب (IBAN):</span><span class="value" id="cashplus-iban">835780030017346031053226</span><button type="button" class="copy-button" onclick="copyToClipboard('cashplus-iban')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
                         <hr style="border: 1px dashed #ccc; margin: 20px 0;">
-                        <h4><i class="fas fa-mobile-alt"></i> عبر وكالة أو تطبيق Cash Plus</h4>
-                        <div class="detail-row">
-                            <span class="label">رقم الهاتف:</span>
-                            <span class="value" id="cashplus-phone">0621638488</span>
-                            <button type="button" class="copy-button" onclick="copyToClipboard('cashplus-phone')"><i class="far fa-copy"></i></button>
-                        </div>
+                        <h4><i class="fas fa-store"></i> عبر وكالة أو تطبيق Cash Plus</h4>
+                        <div class="detail-row"><span class="label">رقم الهاتف:</span><span class="value" id="cashplus-phone">0621638488</span><button type="button" class="copy-button" onclick="copyToClipboard('cashplus-phone')"><i class="far fa-copy"></i></button></div>
+                         <div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
                     `;
                     break;
-                // يمكنك إضافة باقي الحالات هنا بنفس الطريقة
+                case 'orange':
+                    detailsHtml = `
+                        <h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنك</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب:</span><span class="value" id="orange-rib">857780000000000109572339</span><button type="button" class="copy-button" onclick="copyToClipboard('orange-rib')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
+                        <hr style="border: 1px dashed #ccc; margin: 20px 0;">
+                        <h4><i class="fas fa-mobile-alt"></i> عبر وكالة أو تطبيق Orange Money</h4>
+                        <div class="detail-row"><span class="label">رقم الهاتف:</span><span class="value" id="orange-phone">0621638488</span><button type="button" class="copy-button" onclick="copyToClipboard('orange-phone')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
+                        <p class="instruction-note">أرسل المبلغ مباشرة إلى رقم الهاتف عبر تطبيق Orange Money أو الوكالات.</p>
+                    `;
+                    break;
                 case 'bmce':
                     detailsHtml = `
-                        <h4><i class="fas fa-landmark"></i> التحويل البنكي المباشر</h4>
-                        <div class="detail-row">
-                            <span class="label">رقم الحساب (RIB):</span>
-                            <span class="value" id="bmce-rib">96 0000162000010401 810 011</span>
-                            <button type="button" class="copy-button" onclick="copyToClipboard('bmce-rib')"><i class="far fa-copy"></i></button>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">اسم المستفيد:</span>
-                            <span class="value" style="direction:rtl;">${beneficiaryName}</span>
-                        </div>
+                        <h4><i class="fas fa-landmark"></i> التحويل عبر بنك أفريقيا</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="bmce-rib">960000162000010401810011</span><button type="button" class="copy-button" onclick="copyToClipboard('bmce-rib')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
+                    `;
+                    break;
+                case 'attijari':
+                    detailsHtml = `
+                        <h4><i class="fas fa-landmark"></i> التحويل عبر Attijariwafa Bank</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="attijari-rib">007810000457430040232577</span><button type="button" class="copy-button" onclick="copyToClipboard('attijari-rib')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
+                    `;
+                    break;
+                case 'cih':
+                    detailsHtml = `
+                        <h4><i class="fas fa-landmark"></i> التحويل عبر CIH Bank</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="cih-rib">230810624745521100540088</span><button type="button" class="copy-button" onclick="copyToClipboard('cih-rib')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
+                    `;
+                    break;
+                case 'soge':
+                    detailsHtml = `
+                        <h4><i class="fas fa-landmark"></i> التحويل عبر الشركة العامة (سهام)</h4>
+                        <div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="soge-rib">022780000760004157217174</span><button type="button" class="copy-button" onclick="copyToClipboard('soge-rib')"><i class="far fa-copy"></i></button></div>
+                        <div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>
                     `;
                     break;
                 default:
-                    detailsHtml = `<p>يرجى اختيار وسيلة دفع لعرض التفاصيل.</p>`;
+                    detailsHtml = `<p class="instruction-note">يرجى اختيار وسيلة دفع لعرض التفاصيل.</p>`;
             }
 
             paymentDetailsContainer.innerHTML = detailsHtml;
@@ -519,7 +533,7 @@
         window.copyToClipboard = function(elementId) {
             const textElement = document.getElementById(elementId);
             if (!textElement) return;
-            navigator.clipboard.writeText(textElement.innerText.trim()).then(() => {
+            navigator.clipboard.writeText(textElement.innerText.trim().replace(/\s/g, '')).then(() => {
                 const button = textElement.nextElementSibling;
                 if (button) {
                     const originalIcon = button.innerHTML;
@@ -545,10 +559,8 @@
 
         // --- 4. منطق تشغيل الصفحة ---
 
-        // عرض خيارات الدفع
         renderPaymentOptions();
         
-        // قراءة معلومات الخدمة والسعر من الرابط
         const params = new URLSearchParams(window.location.search);
         const serviceName = params.get('service') || "خدمة غير محددة";
         const servicePrice = params.get('price') || "0";
@@ -557,7 +569,6 @@
         document.getElementById('form-service-name').value = serviceName;
         document.getElementById('form-service-price').value = servicePrice;
 
-        // الملء التلقائي لمعلومات المستخدم
         auth.onAuthStateChanged(user => {
             if (user) {
                 if (user.displayName) nameInput.value = user.displayName;
@@ -566,16 +577,14 @@
             }
         });
 
-        // ربط دالة التحقق بالحقول
         form.querySelectorAll('[required]').forEach(input => {
             input.addEventListener('input', validateForm);
             if (input.type === 'file' || input.tagName === 'SELECT') {
                 input.addEventListener('change', validateForm);
             }
         });
-        validateForm(); // التحقق عند تحميل الصفحة
+        validateForm();
     });
     </script>
 </body>
 </html>
-�

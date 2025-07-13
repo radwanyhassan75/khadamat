@@ -1,44 +1,27 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- =================================================================
-         META TAGS, FONTS, AND ICONS
-         This section contains essential metadata, links to Google Fonts for typography,
-         and Font Awesome for icons, ensuring a professional and modern look.
-    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اتصل بنا - المكتب الرقمي</title>
     
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- =================================================================
-         INTERNAL CSS STYLES
-         This extensive style block defines the entire look and feel of the page,
-         from colors and fonts to layout, animations, and responsiveness.
-    ================================================================== -->
     <style>
-        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3;
-            --secondary-color: #0d6efd;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --text-color: #555;
             --border-color: #dee2e6;
             --border-radius: 12px;
-            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
-            --success-color: #198754;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
 
-        /* --- إعدادات الجسم العامة --- */
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
@@ -48,49 +31,26 @@
             color: var(--text-color);
         }
 
-        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
+        /* --- تصميم الشريط العلوي --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
+            position: sticky; top: 0; width: 100%; z-index: 1000;
         }
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto;
         }
         .navbar-logo img { height: 70px; }
-        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .navbar-actions { position: relative; }
-        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
-        .user-menu-button:hover { background-color: var(--gray-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
-        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
-        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
-        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
-        .dropdown-menu a:hover { background-color: var(--gray-color); }
-        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
-        .btn-header.primary { background-color: var(--primary-color); color: white; }
-        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-header:hover { transform: translateY(-2px); }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; }
 
-        /* --- تصميم حاوية الصفحة والترويسة --- */
+        /* --- تصميم حاوية الصفحة وترويستها --- */
         .page-container {
             max-width: 900px;
-            margin: 40px auto;
+            margin: 50px auto;
             padding: 0 20px;
         }
         .page-header {
@@ -98,11 +58,12 @@
             margin-bottom: 50px;
         }
         .page-header .icon {
-            font-size: 3.5rem;
+            font-size: 4rem;
             color: var(--primary-color);
+            margin-bottom: 10px;
         }
         .page-header h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 900;
             color: var(--dark-color);
             margin: 10px 0;
@@ -122,353 +83,190 @@
             box-shadow: var(--box-shadow);
             border: 1px solid var(--border-color);
         }
-        .form-group { margin-bottom: 20px; }
-        label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
+        .form-group { margin-bottom: 25px; }
+        label { font-weight: 700; margin-bottom: 10px; display: block; color: var(--dark-color); }
         input, textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
+            width: 100%; padding: 14px 18px; border: 1px solid #ced4da;
+            border-radius: 8px; font-size: 1rem; font-family: 'Cairo', sans-serif;
+            box-sizing: border-box; transition: all 0.3s ease;
         }
         input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
         }
-        input[readonly] {
-            background-color: #e9ecef;
-            cursor: not-allowed;
-        }
-        textarea { resize: vertical; min-height: 150px; }
+        input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
         .submit-btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            background: var(--primary-color);
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all 0.3s ease;
+            width: 100%; padding: 15px; font-size: 1.2rem; background: var(--primary-color);
+            border: none; color: white; font-weight: bold; border-radius: 8px;
+            cursor: pointer; transition: all 0.3s ease;
         }
-        .submit-btn:hover { background-color: #00458e; }
+        .submit-btn:hover { background-color: #00458e; transform: translateY(-3px); }
         
         /* --- تصميم واجهة المحادثة --- */
-        .chat-container {
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-        .chat-messages {
-            height: 400px;
-            overflow-y: auto;
-            padding: 20px;
+        .chat-container { border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; }
+        .chat-header {
+            padding: 15px 20px;
             background-color: var(--gray-color);
-        }
-        .message {
-            display: flex;
-            margin-bottom: 15px;
-            max-width: 80%;
-        }
-        .message-bubble {
-            padding: 10px 15px;
-            border-radius: 20px;
-            line-height: 1.6;
-        }
-        .message.sent {
-            margin-right: auto;
-        }
-        .message.sent .message-bubble {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-        .message.received {
-            margin-left: auto;
-        }
-        .message.received .message-bubble {
-            background-color: var(--light-color);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
             color: var(--dark-color);
-            border: 1px solid #eee;
-            border-bottom-left-radius: 5px;
         }
-        .chat-input-area {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
+        .chat-messages { height: 400px; overflow-y: auto; padding: 20px; }
+        
+        /* --- تصميم التذييل (Footer) --- */
+        .main-footer {
+            background-color: var(--dark-color); color: #bdc3c7;
+            padding: 60px 0 20px; margin-top: 60px;
         }
-        .chat-input-area input {
-            flex-grow: 1;
-            border-radius: 50px;
+        .footer-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;
         }
-        .chat-input-area button {
-            margin-right: 10px;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .form-confirmation {
-            text-align: center;
-            padding: 40px;
-            background: #e6f9f0;
-            border: 1px solid #b3e6c9;
-            border-radius: var(--border-radius);
-        }
-
-        /* --- التصميم المتجاوب --- */
-        @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
-        }
-        @media (min-width: 769px) {
-            .hamburger-menu { display: none; }
-            .navbar-menu { display: flex; }
-        }
+        .footer-section h3 { color: var(--light-color); margin-bottom: 20px; font-size: 1.4rem; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section ul li a { color: #bdc3c7; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
+        .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
+        .social-icons a { display: inline-block; color: var(--light-color); font-size: 1.5rem; margin-left: 15px; transition: transform 0.3s; }
+        .social-icons a:hover { transform: scale(1.2); color: var(--primary-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
+        
     </style>
 </head>
 <body>
 
-    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="contact.html" class="active">اتصل بنا</a></li>
-                <div id="mobile-navbar-actions"></div>
-            </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu"><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">الخدمات</a></li><li><a href="contact.html" class="active">اتصل بنا</a></li></ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
         </nav>
     </header>
 
     <div class="page-container">
-        <!-- ترويسة الصفحة -->
         <header class="page-header">
             <div class="icon"><i class="fas fa-headset"></i></div>
             <h1>تواصل مع فريق الدعم</h1>
             <p>نحن هنا لمساعدتك. سواء كان لديك استفسار، مشكلة في طلب، أو اقتراح، يرجى ملء النموذج أدناه وسنعاود الاتصال بك في أقرب وقت.</p>
         </header>
 
-        <!-- حاوية التواصل (ستعرض النموذج أو المحادثة) -->
         <div id="contact-container" class="contact-card">
-            <!-- سيتم ملء هذا الجزء بواسطة الجافاسكريبت -->
+            <p style="text-align: center;">جاري تحميل واجهة التواصل...</p>
         </div>
-
     </div>
 
-    <!-- ✅ التذييل الكامل -->
     <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">المكتب الرقمي</h3>
-                    <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
-                </div>
-                <div class="footer-section">
-                    <h3 class="footer-title">روابط مهمة</h3>
-                    <ul>
-                        <li><a href="about.html">من نحن</a></li>
-                        <li><a href="services.html">جميع الخدمات</a></li>
-                        <li><a href="prices.html">قائمة الأسعار</a></li>
-                        <li><a href="payment-methods.html">طرق الدفع</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3 class="footer-title">قانوني</h3>
-                    <ul>
-                        <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
-                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
-                        <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
-            </div>
+        <div class="footer-container">
+            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p><div class="social-icons" style="margin-top: 20px;"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li></ul></div>
+            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="#">سياسة الخصوصية</a></li><li><a href="#">الشروط والأحكام</a></li></ul></div>
         </div>
+        <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="auth.js"></script>
+    <script src="auth.js"></script> 
 
     <script>
-        // =================================================================
-        //          السكريبت الخاص بصفحة اتصل بنا
-        // =================================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- 1. تعريف المتغيرات والعناصر ---
-            const contactContainer = document.getElementById('contact-container');
-            if (typeof firebase === 'undefined') return;
-            const db = firebase.firestore();
-
-            // --- 2. الدوال الرئيسية ---
-
-            /**
-             * دالة لرسم نموذج التواصل بناءً على حالة المستخدم
-             * @param {object|null} user - كائن المستخدم من Firebase أو null
-             */
-            async function renderContactForm(user) {
-                let formHtml = '';
-                if (user) {
-                    // --- واجهة المستخدم المسجل ---
-                    const orders = await getUserOrders(user.uid);
-                    let orderOptions = '<option value="">استفسار عام</option>';
-                    orders.forEach(order => {
-                        orderOptions += `<option value="${order.id}">${order.id} - ${order.data.الخدمة_المطلوبة}</option>`;
-                    });
-
-                    formHtml = `
-                        <form id="contact-form">
-                            <div class="form-group">
-                                <label>الاسم الكامل</label>
-                                <input type="text" id="name" value="${user.displayName || ''}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>البريد الإلكتروني</label>
-                                <input type="email" id="email" value="${user.email || ''}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="order-select">اختر الطلب المتعلق بالاستفسار (اختياري)</label>
-                                <select id="order-select">${orderOptions}</select>
-                            </div>
-                            <div class="form-group">
-                                <label for="message">رسالتك</label>
-                                <textarea id="message" required placeholder="اكتب استفسارك أو تفاصيل مشكلتك هنا..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="attachment">إرفاق ملف (اختياري)</label>
-                                <input type="file" id="attachment">
-                            </div>
-                            <button type="submit" class="submit-btn">بدء المحادثة</button>
-                        </form>
-                    `;
-                } else {
-                    // --- واجهة الزائر ---
-                    formHtml = `
-                        <form id="contact-form">
-                            <div class="form-group">
-                                <label for="name">الاسم الكامل</label>
-                                <input type="text" id="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">البريد الإلكتروني</label>
-                                <input type="email" id="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">رقم الهاتف</label>
-                                <input type="tel" id="phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="order-id">رقم الطلب (إن وجد)</label>
-                                <input type="text" id="order-id" placeholder="مثال: KH-123456">
-                            </div>
-                            <div class="form-group">
-                                <label for="message">رسالتك</label>
-                                <textarea id="message" required placeholder="اكتب استفسارك أو تفاصيل مشكلتك هنا..."></textarea>
-                            </div>
-                            <button type="submit" class="submit-btn">إرسال الرسالة</button>
-                        </form>
-                    `;
-                }
-                contactContainer.innerHTML = formHtml;
-                document.getElementById('contact-form').addEventListener('submit', handleFormSubmit);
+    document.addEventListener('DOMContentLoaded', () => {
+        const contactContainer = document.getElementById('contact-container');
+        const apiBaseUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
+        
+        async function getUserOrders(userId) {
+            if (!userId) return [];
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/orders/${userId}`);
+                if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error("فشل جلب طلبات المستخدم:", error);
+                return [];
             }
+        }
 
-            /**
-             * دالة لجلب طلبات المستخدم من Firestore
-             * @param {string} userId - معرّف المستخدم
-             * @returns {Promise<Array>} - مصفوفة من الطلبات
-             */
-            async function getUserOrders(userId) {
-                try {
-                    const snapshot = await db.collection('orders').where('userId', '==', userId).get();
-                    const orders = [];
-                    snapshot.forEach(doc => orders.push({ id: doc.id, data: doc.data() }));
-                    return orders;
-                } catch (error) {
-                    console.error("Error fetching orders:", error);
-                    return [];
-                }
-            }
-
-            /**
-             * دالة لمعالجة إرسال النموذج
-             * @param {Event} event - حدث الإرسال
-             */
-            async function handleFormSubmit(event) {
-                event.preventDefault();
-                const user = auth.currentUser;
-
-                if (user) {
-                    // منطق المستخدم المسجل (إنشاء محادثة)
-                    // ... هذا الجزء يتطلب منطقاً معقداً في Cloudflare Worker و Firestore
-                    // سنقوم بمحاكاة الواجهة الآن
-                    const messageText = document.getElementById('message').value;
-                    renderChatInterface(user, messageText);
-                } else {
-                    // منطق الزائر (إظهار رسالة تأكيد)
-                    contactContainer.innerHTML = `
-                        <div class="form-confirmation">
-                            <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success-color); margin-bottom: 15px;"></i>
-                            <h2>تم إرسال رسالتك بنجاح!</h2>
-                            <p>شكراً لتواصلك معنا. سيقوم فريق الدعم بمراجعة رسالتك والرد عليك عبر البريد الإلكتروني أو رقم الهاتف في أقرب وقت ممكن.</p>
-                        </div>
-                    `;
-                }
-            }
-            
-            /**
-             * دالة لرسم واجهة المحادثة للمستخدم المسجل
-             * @param {object} user - كائن المستخدم
-             * @param {string} firstMessage - الرسالة الأولى التي أرسلها المستخدم
-             */
-            function renderChatInterface(user, firstMessage) {
-                const chatHtml = `
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chat-messages-area">
-                            <div class="message sent">
-                                <div class="message-bubble">${firstMessage}</div>
-                            </div>
-                            <div class="message received">
-                                <div class="message-bubble">مرحباً ${user.displayName || ''}، شكراً لتواصلك. فريق الدعم سيقوم بالرد قريباً.</div>
-                            </div>
-                        </div>
-                        <div class="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="اكتب رسالتك...">
-                            <button id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
-                        </div>
+        async function renderContactForm(user) {
+            const formHtml = `
+                <form id="contact-form">
+                    <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" required></div>
+                    <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" required></div>
+                    
+                    <div class="form-group">
+                        <label for="inquiry-type">نوع الاستفسار</label>
+                        <select id="inquiry-type">
+                            <option value="general" selected>استفسار عادي</option>
+                            <option value="order_related">استفسار متعلق بطلب</option>
+                            <option value="complaint">شكوى</option>
+                        </select>
                     </div>
-                `;
-                contactContainer.innerHTML = chatHtml;
-                // هنا في تطبيق حقيقي، سنضيف مستمع onSnapshot من Firestore لتحديث المحادثة
+
+                    <div class="form-group" id="orders-group" style="display: none;">
+                        <label for="order-select">اختر الطلب</label>
+                        <select id="order-select" disabled><option>جاري تحميل...</option></select>
+                    </div>
+
+                    <div class="form-group"><label for="message">رسالتك</label><textarea id="message" required placeholder="اكتب استفسارك..."></textarea></div>
+                    <button type="submit" class="submit-btn">بدء المحادثة</button>
+                </form>`;
+            contactContainer.innerHTML = formHtml;
+            
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const inquiryTypeSelect = document.getElementById('inquiry-type');
+            const ordersGroup = document.getElementById('orders-group');
+            const orderSelect = document.getElementById('order-select');
+
+            // --- ✅ آلية التشخيص ---
+            if (user && user.uid) {
+                alert('✅ تم العثور على مستخدم مسجل: ' + (user.email || 'لا يوجد بريد إلكتروني'));
+                nameInput.value = user.displayName || 'مستخدم مسجل';
+                emailInput.value = user.email || '';
+                nameInput.readOnly = true;
+                emailInput.readOnly = true;
+
+                // جلب الطلبات عند الحاجة إليها فقط
+                inquiryTypeSelect.addEventListener('change', async (e) => {
+                    const type = e.target.value;
+                    if (type === 'order_related' || type === 'complaint') {
+                        ordersGroup.style.display = 'block';
+                        const orders = await getUserOrders(user.uid);
+                        let orderOptionsHtml = '';
+                        if (orders.length > 0) {
+                            orderOptionsHtml = orders.map(order => `<option value="${order.id}">${order.serviceName} (#${order.id})</option>`).join('');
+                        } else {
+                            orderOptionsHtml = '<option value="" disabled>لا توجد طلبات سابقة</option>';
+                        }
+                        orderSelect.innerHTML = orderOptionsHtml;
+                        orderSelect.disabled = false;
+                    } else {
+                        ordersGroup.style.display = 'none';
+                    }
+                });
+
+            } else {
+                alert('⚠️ لم يتم العثور على مستخدم مسجل. سيتم عرض نموذج الزائر.');
+                inquiryTypeSelect.addEventListener('change', (e) => {
+                    ordersGroup.style.display = 'none';
+                });
             }
 
-
-            // --- 3. نقطة البداية الرئيسية ---
-            auth.onAuthStateChanged(user => {
-                renderContactForm(user);
-            });
-        });
+            document.getElementById('contact-form').addEventListener('submit', (e) => { e.preventDefault(); alert("تم منع الإرسال مؤقتًا لحين إصلاح مشكلة المصادقة."); });
+        }
+        
+        // --- نقطة البداية الرئيسية ---
+        try {
+            if (typeof auth !== 'undefined' && auth) {
+                auth.onAuthStateChanged(user => {
+                    renderContactForm(user);
+                });
+            } else {
+                console.warn("auth.js not found. Rendering guest form.");
+                renderContactForm(null);
+            }
+        } catch (error) {
+            console.error("An error occurred during auth initialization:", error);
+            renderContactForm(null);
+        }
+        
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    });
     </script>
-
 </body>
 </html>

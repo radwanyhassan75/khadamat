@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- ============== Meta Tags and Links ============== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدماتنا الكاملة - المكتب الرقمي</title>
     
-    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- ============== Internal CSS Styles ============== -->
     <style>
         /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
@@ -33,6 +30,8 @@
             margin: 0;
             background-color: var(--gray-color);
             direction: rtl;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         main { display: block; }
 
@@ -90,7 +89,7 @@
         }
         .page-header p {
             font-size: 1.3rem;
-            color: #bdc3c7;
+            color: #dce1e4;
             max-width: 700px;
             margin: 0 auto;
         }
@@ -108,6 +107,10 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             border: 1px solid #e9ecef;
+            transition: box-shadow 0.3s ease;
+        }
+        .accordion-item:hover {
+             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
         }
         .accordion-header {
             background: transparent;
@@ -122,35 +125,43 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease;
             font-family: 'Cairo', sans-serif;
         }
         .accordion-header:hover { background-color: var(--gray-color); }
-        .accordion-header i:first-child {
+        .accordion-header i:first-of-type {
             color: var(--primary-color);
             margin-left: 15px;
             font-size: 1.8rem;
         }
-        .accordion-header .fa-chevron-down { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+        .accordion-header .fa-chevron-down { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
         .accordion-header.active { background-color: #e7f1ff; }
         .accordion-header.active .fa-chevron-down { transform: rotate(180deg); }
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
+            transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .service-list { padding: 0; }
         
-        /* --- تصميم قائمة الخدمات --- */
+        /* --- تصميم قائمة الخدمات (مع تحسينات) --- */
         .service-entry {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 25px;
             border-top: 1px solid #eee;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .service-entry:hover { background-color: #fdfdfd; }
+        .service-entry:hover { 
+            background-color: #fdfdfd;
+            transform: scale(1.01); /* تأثير رفع بسيط */
+        }
         .service-info h4 {
             margin: 0 0 5px 0;
             font-size: 1.2rem;
@@ -190,7 +201,7 @@
         .btn-order:hover {
             background-color: var(--success-color);
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(25, 135, 84, 0.25);
         }
         
         /* --- التصميم المتجاوب --- */
@@ -200,10 +211,14 @@
             .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
         }
         @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.8rem; }
+            .page-header p { font-size: 1.1rem; }
+            .accordion-header h3 { font-size: 1.2rem; }
+            .accordion-header i:first-of-type { font-size: 1.5rem; }
             .service-entry { flex-direction: column; align-items: flex-start; gap: 15px; }
             .service-price-action { width: 100%; justify-content: space-between; }
         }
-         @media (min-width: 993px) {
+        @media (min-width: 993px) {
             .hamburger-menu { display: none; }
             .navbar-menu { display: flex; }
         }
@@ -211,7 +226,6 @@
 </head>
 <body>
 
-    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo">
@@ -224,8 +238,7 @@
                 <div id="mobile-navbar-actions"></div>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
+                </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
@@ -237,27 +250,28 @@
         </section>
 
         <div class="accordion-container">
-            <!-- Administrative Services -->
             <div class="accordion-item">
                 <button class="accordion-header"><i class="fas fa-file-signature"></i><h3>خدمات إدارية</h3><i class="fas fa-chevron-down"></i></button>
                 <div class="accordion-content">
                     <div class="service-list">
                         <div class="service-entry" data-price="20" data-service="تحرير الطلبات الخطية"><div class="service-info"><h4>تحرير الطلبات الخطية</h4><p>صياغة احترافية لمختلف الطلبات الموجهة للإدارات العمومية والشركات الخاصة.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="15" data-service="التصريحات بالشرف"><div class="service-info"><h4>التصريحات بالشرف</h4><p>إعداد وصياغة التصريحات المطلوبة في المعاملات الرسمية، مثل تصريح عدم العمل أو السكن.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="15" data-service="صياغة التزامات والعقود"><div class="service-info"><h4>صياغة عقود والتزامات</h4><p>صياغة عقود الكراء، التزامات البيع، أو أي اتفاقات قانونية بسيطة بشكل واضح ودقيق.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="10" data-service="السيرة الذاتية (CV)"><div class="service-info"><h4>تصميم سيرة ذاتية (CV)</h4><p>تصميم سيرة ذاتية عصرية باللغة العربية أو الفرنسية تناسب متطلبات سوق الشغل.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="10" data-service="ملء مطبوعات أو استمارات"><div class="service-info"><h4>ملء استمارات ومطبوعات</h4><p>مساعدتك في ملء أي نوع من الاستمارات الإدارية أو المطبوعات الرسمية بدقة.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="15" data-service="صياغة عقود والتزامات"><div class="service-info"><h4>صياغة عقود والتزامات</h4><p>صياغة عقود الكراء، التزامات البيع، أو أي اتفاقات قانونية بسيطة بشكل واضح ودقيق.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="10" data-service="تصميم سيرة ذاتية (CV)"><div class="service-info"><h4>تصميم سيرة ذاتية (CV)</h4><p>تصميم سيرة ذاتية عصرية باللغة العربية أو الفرنسية تناسب متطلبات سوق الشغل.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="10" data-service="ملء استمارات ومطبوعات"><div class="service-info"><h4>ملء استمارات ومطبوعات</h4><p>مساعدتك في ملء أي نوع من الاستمارات الإدارية أو المطبوعات الرسمية بدقة.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="15" data-service="ترجمة بسيطة للوثائق"><div class="service-info"><h4>ترجمة بسيطة للوثائق</h4><p>ترجمة غير محلفة للوثائق البسيطة من الفرنسية إلى العربية والعكس.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="10" data-service="تصحيح الأخطاء اللغوية"><div class="service-info"><h4>تصحيح الأخطاء اللغوية</h4><p>مراجعة وتصحيح النصوص والوثائق لغوياً وإملائياً لضمان خلوها من الأخطاء.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="20" data-service="إنشاء حسابات إلكترونية"><div class="service-info"><h4>إنشاء حسابات إلكترونية</h4><p>إنشاء وتأمين حسابات البريد الإلكتروني (Gmail, Outlook) أو حسابات الخدمات الحكومية.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="15" data-service="تصغير أو تعديل ملفات PDF"><div class="service-info"><h4>تعديل وضغط ملفات PDF</h4><p>دمج، تقسيم، أو ضغط حجم ملفات PDF لتسهيل إرسالها أو رفعها.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="50" data-service="صياغة الفواتير للمقاولات"><div class="service-info"><h4>صياغة فواتير احترافية</h4><p>إعداد فواتير (Factures) للمقاولين الذاتيين والشركات الصغيرة مطابقة للمعايير.</p></div><div class="service-price-action"><span class="price">50 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="30" data-service="إرسال شكايات"><div class="service-info"><h4>صياغة وإرسال الشكايات</h4><p>كتابة الشكايات الإدارية وتوجيهها إلى الجهات المعنية عبر المنصات الرسمية.</p></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="15" data-service="تعديل وضغط ملفات PDF"><div class="service-info"><h4>تعديل وضغط ملفات PDF</h4><p>دمج، تقسيم، أو ضغط حجم ملفات PDF لتسهيل إرسالها أو رفعها.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="تصفح وتحميل وثائق من مواقع رسمية"><div class="service-info"><h4>تصفح وتحميل وثائق</h4><p>تصفح وتحميل وثائق من مواقع رسمية مختلفة حسب طلبك.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="50" data-service="صياغة فواتير احترافية"><div class="service-info"><h4>صياغة فواتير احترافية</h4><p>إعداد فواتير (Factures) للمقاولين الذاتيين والشركات الصغيرة مطابقة للمعايير.</p></div><div class="service-price-action"><span class="price">50 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="30" data-service="صياغة وإرسال الشكايات"><div class="service-info"><h4>صياغة وإرسال الشكايات</h4><p>كتابة الشكايات الإدارية وتوجيهها إلى الجهات المعنية عبر المنصات الرسمية.</p></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="40" data-service="صياغة مراسلات"><div class="service-info"><h4>صياغة مراسلات</h4><p>صياغة مراسلات احترافية موجهة إلى مختلف الجهات المعنية.</p></div><div class="service-price-action"><span class="price">40 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="15" data-service="مقاول ذاتي"><div class="service-info"><h4>خدمات المقاول الذاتي</h4><p>المساعدة في الإجراءات المتعلقة بالمقاول الذاتي.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Education Services -->
             <div class="accordion-item">
                 <button class="accordion-header"><i class="fas fa-user-graduate"></i><h3>خدمات التعليم والتكوين</h3><i class="fas fa-chevron-down"></i></button>
                 <div class="accordion-content">
@@ -265,41 +279,61 @@
                         <div class="service-entry" data-price="20" data-service="التسجيل في منحتي"><div class="service-info"><h4>التسجيل في "منحتي"</h4><p>تقديم طلب الاستفادة من المنحة الجامعية عبر البوابة الوطنية "منحتي".</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="15" data-service="التسجيل في التكوين المهني"><div class="service-info"><h4>التسجيل في التكوين المهني (OFPPT)</h4><p>مساعدتك في عملية التسجيل في مختلف معاهد التكوين المهني بالمغرب.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="20" data-service="التسجيل في المدارس العليا"><div class="service-info"><h4>التسجيل في المدارس العليا</h4><p>تقديم طلبات الترشح للمدارس والمعاهد العليا (EST, FST, ENSA, ...).</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="40" data-service="التسجيل في الجامعات"><div class="service-info"><h4>التسجيل القبلي في الجامعات</h4><p>إتمام عملية التسجيل القبلي في مختلف الجامعات المغربية عبر منصاتها الرقمية.</p></div><div class="service-price-action"><span class="price">40 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="40" data-service="التسجيل القبلي في الجامعات"><div class="service-info"><h4>التسجيل القبلي في الجامعات</h4><p>إتمام عملية التسجيل القبلي في مختلف الجامعات المغربية عبر منصاتها الرقمية.</p></div><div class="service-price-action"><span class="price">40 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                         <div class="service-entry" data-price="25" data-service="طلب السكن الجامعي"><div class="service-info"><h4>طلب الاستفادة من السكن الجامعي</h4><p>تقديم طلب الاستفادة من السكن في الأحياء الجامعية عبر المنصة المخصصة.</p></div><div class="service-price-action"><span class="price">25 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Employment Services -->
             <div class="accordion-item">
                 <button class="accordion-header"><i class="fas fa-briefcase"></i><h3>خدمات التوظيف والمباريات</h3><i class="fas fa-chevron-down"></i></button>
                 <div class="accordion-content">
                     <div class="service-list">
-                        <div class="service-entry" data-price="80" data-service="تسجيل في مباريات عمومية"><div class="service-info"><h4>تسجيل في مباريات عمومية</h4><p>التسجيل في مباريات الوظيفة العمومية (الأمن الوطني، التعليم، الصحة، ...).</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="80" data-service="إعداد ملفات الترشح"><div class="service-info"><h4>إعداد ملفات الترشح</h4><p>تجهيز وتجميع كل الوثائق المطلوبة في ملف الترشح (CV، طلب خطي، نسخ...).</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="80" data-service="المساعدة في التسجيل في ANAPEC"><div class="service-info"><h4>المساعدة في التسجيل في ANAPEC</h4><p>إنشاء أو تحديث ملفك الشخصي على بوابة الوكالة الوطنية لإنعاش التشغيل والكفاءات.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="80" data-service="نموذج رسالة تحفيزية"><div class="service-info"><h4>كتابة رسالة تحفيزية (Lettre de motivation)</h4><p>صياغة رسالة تحفيزية مخصصة ومقنعة للوظيفة أو التدريب الذي تتقدم إليه.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="تسجيل في مباريات عمومية"><div class="service-info"><h4>تسجيل في مباريات عمومية</h4><p>التسجيل في مباريات (الأمن، الوقاية المدنية، الجمارك، التعليم، الصحة...).</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="إعداد ملفات الترشح"><div class="service-info"><h4>إعداد ملفات الترشح</h4><p>تجهيز وتجميع كل الوثائق المطلوبة (CV، طلب خطي، نسخ، التزام، تصريح...).</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="ملء الطلبات الخاصة بالمباريات"><div class="service-info"><h4>ملء الطلبات الخاصة بالمباريات</h4><p>تعبئة استمارات وملفات التقديم للمباريات المختلفة بدقة واحترافية.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="تتبع النتائج وطبع اللوائح"><div class="service-info"><h4>تتبع النتائج وطبع اللوائح</h4><p>متابعة نتائج المباريات وطباعة لوائح الناجحين والمقبولين.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="المساعدة في التسجيل في ANAPEC"><div class="service-info"><h4>المساعدة في التسجيل في ANAPEC</h4><p>إنشاء أو تحديث ملفك الشخصي على بوابة الوكالة الوطنية لإنعاش التشغيل.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="سيرة ذاتية احترافية للتوظيف"><div class="service-info"><h4>سيرة ذاتية احترافية (CV)</h4><p>تصميم سيرة ذاتية مخصصة وموجهة لفرص العمل والتوظيف.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="كتابة رسالة تحفيزية"><div class="service-info"><h4>كتابة رسالة تحفيزية (Lettre de motivation)</h4><p>صياغة رسالة تحفيزية مخصصة ومقنعة للوظيفة أو التدريب الذي تتقدم إليه.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="80" data-service="طلب للموارد البشرية"><div class="service-info"><h4>طلبات للموارد البشرية</h4><p>صياغة طلبات (شكاية، زيادة راتب، إجازة استثنائية...) للرئيس المباشر أو قسم الموارد البشرية.</p></div><div class="service-price-action"><span class="price">80 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header"><i class="fas fa-heartbeat"></i><h3>خدمات اجتماعية وصحية</h3><i class="fas fa-chevron-down"></i></button>
+                <div class="accordion-content">
+                    <div class="service-list">
+                        <div class="service-entry" data-price="20" data-service="التسجيل في السجل الوطني للسكان (RNP)"><div class="service-info"><h4>التسجيل في السجل الوطني للسكان (RNP)</h4><p>المساعدة في عملية التسجيل للحصول على المعرف الرقمي المدني والاجتماعي.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="التسجيل في السجل الاجتماعي الموحد (RSU)"><div class="service-info"><h4>التسجيل في السجل الاجتماعي الموحد (RSU)</h4><p>تسجيل الأسرة للاستفادة من برامج الدعم الاجتماعي.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="تسجيل في الدعم الاجتماعي المباشر"><div class="service-info"><h4>تسجيل في الدعم الاجتماعي المباشر</h4><p>تقديم طلب الاستفادة من الدعم الاجتماعي المباشر للأسر المؤهلة.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="تعديل المعطيات"><div class="service-info"><h4>المساعدة في إدخال أو تعديل المعطيات</h4><p>تحديث أو تصحيح المعلومات الخاصة بالأسرة في السجلات الاجتماعية.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="استخراج وصل التسجيل أو شهادة"><div class="service-info"><h4>استخراج وصل التسجيل أو شهادة</h4><p>استخراج الوثائق التي تثبت التسجيل أو الاستفادة من برامج الدعم.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="استفسار وحل مشاكل CNSS و AMO"><div class="service-info"><h4>استفسار وحل مشاكل CNSS و AMO</h4><p>المساعدة في فهم وحل الإشكاليات المتعلقة بالضمان الاجتماعي والتأمين الإجباري عن المرض.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                     </div>
                 </div>
             </div>
             
-            <!-- Digital & Tech Services -->
             <div class="accordion-item">
                 <button class="accordion-header"><i class="fas fa-laptop-code"></i><h3>خدمات رقمية وتقنية</h3><i class="fas fa-chevron-down"></i></button>
                 <div class="accordion-content">
                     <div class="service-list">
                         <div class="service-entry" data-price="200" data-service="إنشاء مواقع إلكترونية بسيطة"><div class="service-info"><h4>إنشاء مواقع إلكترونية بسيطة</h4><p>تصميم وبرمجة مواقع تعريفية بسيطة (صفحة واحدة) لعرض معلوماتك أو خدماتك.</p></div><div class="service-price-action"><span class="price">200 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="60" data-service="تصميم لوغوهات وبطاقات عمل"><div class="service-info"><h4>تصميم هوية بصرية</h4><p>تصميم شعار (Logo) احترافي وبطاقات عمل (Cartes de visite) تعكس هوية نشاطك.</p></div><div class="service-price-action"><span class="price">60 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="30" data-service="تصاميم السوشيال ميديا"><div class="service-info"><h4>تصاميم لمنصات التواصل</h4><p>إعداد تصاميم جذابة لمنشوراتك على فيسبوك، انستغرام، وغيرها.</p></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
-                        <div class="service-entry" data-price="15" data-service="إنشاء QR Code"><div class="service-info"><h4>إنشاء رمز الاستجابة السريعة (QR Code)</h4><p>إنشاء QR Code مخصص لبطاقة عملك، قائمة طعام، أو رابط موقعك.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="60" data-service="تصميم هوية بصرية"><div class="service-info"><h4>تصميم هوية بصرية</h4><p>تصميم شعار (Logo) احترافي وبطاقات عمل (Cartes de visite) تعكس هوية نشاطك.</p></div><div class="service-price-action"><span class="price">60 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="30" data-service="تصاميم لمنصات التواصل"><div class="service-info"><h4>تصاميم لمنصات التواصل</h4><p>إعداد تصاميم جذابة لمنشوراتك على فيسبوك، انستغرام، وغيرها.</p></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="15" data-service="تعديل الصور والوثائق"><div class="service-info"><h4>تعديل الصور والوثائق</h4><p>تحسين جودة الصور، إزالة الخلفيات، أو تعديل الوثائق الممسوحة ضوئياً.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="10" data-service="إنشاء QR Code"><div class="service-info"><h4>إنشاء رمز الاستجابة السريعة (QR Code)</h4><p>إنشاء QR Code مخصص لبطاقة عملك، قائمة طعام، أو رابط موقعك.</p></div><div class="service-price-action"><span class="price">10 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="20" data-service="فواتير Word/Excel"><div class="service-info"><h4>تصميم فواتير Word/Excel</h4><p>إنشاء قوالب فواتير قابلة للتعديل على برامج Word أو Excel.</p></div><div class="service-price-action"><span class="price">20 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="30" data-service="إدخال البيانات في Excel"><div class="service-info"><h4>إدخال البيانات في Excel</h4><p>تنظيم وإدخال البيانات في جداول إلكترونية مع إمكانية عمل رسوم بيانية.</p></div><div class="service-price-action"><span class="price">30 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="15" data-service="تحويل الملفات (PDF إلى Word)"><div class="service-info"><h4>تحويل الملفات (PDF إلى Word...)</h4><p>تحويل الملفات بين الصيغ المختلفة مع الحفاظ على التنسيق قدر الإمكان.</p></div><div class="service-price-action"><span class="price">15 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
+                        <div class="service-entry" data-price="25" data-service="تعبئة استبيانات إلكترونية"><div class="service-info"><h4>تعبئة استبيانات إلكترونية</h4><p>المساعدة في تعبئة الاستبيانات أو الاستمارات الإلكترونية الطويلة والمعقدة.</p></div><div class="service-price-action"><span class="price">25 درهم</span><button class="btn-order">اطلب الآن</button></div></div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
     
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
@@ -307,21 +341,29 @@
     <script>
         // --- هذا الكود خاص فقط بصفحة الخدمات ---
         document.addEventListener('DOMContentLoaded', () => {
-            // منطق الأكورديون
+            
+            // منطق الأكورديون المحسّن
             const accordionHeaders = document.querySelectorAll('.accordion-header');
             accordionHeaders.forEach(header => {
                 header.addEventListener('click', () => {
-                    const activeAccordion = document.querySelector('.accordion-header.active');
-                    if(activeAccordion && activeAccordion !== header) {
-                        activeAccordion.classList.remove('active');
-                        activeAccordion.nextElementSibling.style.maxHeight = null;
-                    }
-
-                    header.classList.toggle('active');
                     const content = header.nextElementSibling;
-                    if (content.style.maxHeight) {
+                    const isActive = header.classList.contains('active');
+
+                    // إغلاق جميع الأقسام الأخرى قبل فتح القسم الحالي
+                    document.querySelectorAll('.accordion-header.active').forEach(activeHeader => {
+                        if (activeHeader !== header) {
+                            activeHeader.classList.remove('active');
+                            activeHeader.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+
+                    // فتح أو إغلاق القسم الحالي
+                    if (isActive) {
+                        header.classList.remove('active');
                         content.style.maxHeight = null;
                     } else {
+                        header.classList.add('active');
+                        // نستخدم scrollHeight لتحديد الارتفاع الكامل للمحتوى
                         content.style.maxHeight = content.scrollHeight + "px";
                     }
                 });
@@ -331,16 +373,30 @@
             const orderButtons = document.querySelectorAll('.btn-order');
             orderButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
+                    // منع تأثير النقر على الزر من فتح/إغلاق الأكورديون
                     e.stopPropagation(); 
                     
+                    // البحث عن أقرب عنصر رئيسي يحتوي على بيانات الخدمة
                     const serviceEntry = e.target.closest('.service-entry');
                     const serviceName = serviceEntry.getAttribute('data-service');
                     const servicePrice = serviceEntry.getAttribute('data-price');
                     
-                    // توجيه المستخدم لصفحة الدفع مع تمرير معلومات الخدمة في الرابط
-                    const url = `./payment.html?service=${encodeURIComponent(serviceName)}&price=${encodeURIComponent(servicePrice)}`;
-                    
-                    window.location.href = url;
+                    // التأكد من أن البيانات موجودة قبل التوجيه
+                    if (serviceName && servicePrice) {
+                        // تشفير البيانات لضمان عدم حدوث مشاكل في الرابط
+                        const encodedService = encodeURIComponent(serviceName);
+                        const encodedPrice = encodeURIComponent(servicePrice);
+                        
+                        // بناء الرابط لصفحة الدفع
+                        const url = `./payment-gateway.html?service=${encodedService}&price=${encodedPrice}`;
+                        
+                        // توجيه المستخدم إلى صفحة الدفع
+                        console.log(`توجيه إلى: ${url}`); // لغرض التجريب في الكونسول
+                        window.location.href = url;
+                    } else {
+                        console.error('Service name or price not found.');
+                        alert('حدث خطأ. لا يمكن العثور على معلومات الخدمة.');
+                    }
                 });
             });
         });
