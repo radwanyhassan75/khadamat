@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ============== Meta Tags, Fonts, and Icons ============== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سياسة الاسترجاع - المكتب الرقمي</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- ============== Internal CSS Styles ============== -->
+    <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --success-color: #198754;
+            --danger-color: #dc3545;
+        }
+
+        /* --- إعدادات الجسم العامة --- */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
+        .user-menu-button:hover { background-color: var(--gray-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
+        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dropdown-menu a:hover { background-color: var(--gray-color); }
+        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
+        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
+        .btn-header.primary { background-color: var(--primary-color); color: white; }
+        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
+        .btn-header:hover { transform: translateY(-2px); }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- تصميم حاوية الصفحة والترويسة --- */
+        .page-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .page-header .icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 10px 0;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- تصميم أقسام السياسة --- */
+        .policy-section {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-color);
+        }
+        .policy-section h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .policy-section h2 i {
+            color: var(--secondary-color);
+        }
+        .policy-section p, .policy-section ul {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        .policy-section ul {
+            padding-right: 20px;
+        }
+        .policy-section li {
+            margin-bottom: 10px;
+        }
+        .policy-section strong {
+            color: var(--dark-color);
+        }
+        .policy-section .highlight {
+            background-color: #e9f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid var(--secondary-color);
+        }
+
+        /* --- قسم الدعم --- */
+        .support-footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+        .support-footer p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        .support-footer a {
+            color: var(--primary-color);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        
+        /* --- التصميم المتجاوب --- */
+        @media (max-width: 768px) {
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+        }
+        @media (min-width: 769px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ الشريط العلوي الموحد -->
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <div class="page-container">
+        <!-- ترويسة الصفحة -->
+        <header class="page-header">
+            <div class="icon"><i class="fas fa-shield-alt"></i></div>
+            <h1>سياسة الاسترجاع واسترداد الأموال</h1>
+            <p>نلتزم في "المكتب الرقمي" بتقديم خدمات عالية الجودة وضمان رضا عملائنا. نرجو منكم قراءة سياستنا بتمعن لفهم حقوقكم وواجباتكم.</p>
+        </header>
+
+        <!-- قسم المبدأ العام -->
+        <section class="policy-section">
+            <h2><i class="fas fa-gavel"></i> المبدأ العام</h2>
+            <p>
+                نظراً لطبيعة خدماتنا الرقمية التي تتطلب وقتاً وجهداً فور استلام الطلب، فإن سياستنا مبنية على مبدأ **الدفع المسبق قبل بدء تنفيذ الخدمة**. بمجرد تأكيد الدفع والبدء في العمل، لا يمكن استرجاع المبلغ المدفوع إلا في الحالات المحددة المذكورة أدناه.
+            </p>
+        </section>
+
+        <!-- قسم الحالات القابلة للاسترجاع -->
+        <section class="policy-section">
+            <h2><i class="fas fa-check-circle" style="color: var(--success-color);"></i> الحالات القابلة للاسترجاع</h2>
+            <p>يحق للعميل طلب استرجاع جزئي أو كامل للمبلغ في الحالات التالية حصراً:</p>
+            <ul>
+                <li><strong>عدم تطابق الخدمة:</strong> إذا كانت الخدمة المنفذة مختلفة بشكل جوهري عن الخدمة التي تم الاتفاق عليها في تفاصيل الطلب.</li>
+                <li><strong>خطأ فادح من طرفنا:</strong> في حال وجود خطأ كبير من طرفنا أدى إلى عدم صلاحية الخدمة المقدمة (مثال: معلومات خاطئة في وثيقة رسمية تم إعدادها من طرفنا).</li>
+                <li><strong>عدم الالتزام بالمتطلبات:</strong> إذا لم نقم بتنفيذ شرط أساسي ومحدد تم الاتفاق عليه بوضوح قبل بدء العمل.</li>
+            </ul>
+        </section>
+
+        <!-- قسم الحالات غير القابلة للاسترجاع -->
+        <section class="policy-section">
+            <h2><i class="fas fa-times-circle" style="color: var(--danger-color);"></i> الحالات غير القابلة للاسترجاع</h2>
+            <p>لا يمكن استرجاع المبلغ المدفوع في الحالات التالية:</p>
+            <ul>
+                <li><strong>تغيير رأي العميل:</strong> إذا غير العميل رأيه بعد بدء تنفيذ الخدمة.</li>
+                <li><strong>الخدمة مطابقة للطلب:</strong> إذا تم تنفيذ الخدمة وتسليمها كما هو متفق عليه في تفاصيل الطلب.</li>
+                <li><strong>معلومات خاطئة من العميل:</strong> إذا كان الخطأ في الخدمة النهائية ناتجاً عن معلومات غير صحيحة أو غير كاملة قدمها العميل.</li>
+                <li><strong>بعد تسليم الخدمة:</strong> بمجرد تسليم الخدمة النهائية للعميل وقبوله بها، يعتبر الطلب مكتملاً.</li>
+            </ul>
+        </section>
+
+        <!-- قسم آلية طلب الاسترجاع -->
+        <section class="policy-section">
+            <h2><i class="fas fa-tasks"></i> آلية طلب الاسترجاع</h2>
+            <p>لطلب استرجاع، يجب على العميل اتباع الخطوات التالية بدقة خلال مدة لا تتجاوز **24 ساعة** من وقت تسليم الخدمة:</p>
+            <div class="highlight">
+                <p>يجب إرسال بريد إلكتروني إلى خدمة العملاء لدينا يحتوي على المعلومات التالية:</p>
+                <ul>
+                    <li><strong>رقم الطلب:</strong> (مهم جداً لتحديد طلبك)</li>
+                    <li><strong>البريد الإلكتروني ورقم الهاتف:</strong> المستخدمان في الطلب.</li>
+                    <li><strong>سبب طلب الاسترجاع:</strong> شرح مفصل وواضح للمشكلة مع إرفاق أي إثباتات (مثل لقطات شاشة).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- قسم معالجة الطلب -->
+        <section class="policy-section">
+            <h2><i class="fas fa-cogs"></i> معالجة طلب الاسترجاع</h2>
+            <p>
+                بعد استلام طلب الاسترجاع، سيقوم فريقنا بمراجعته خلال 48 ساعة عمل. إذا تم قبول الطلب، سيتم تحديد قيمة المبلغ المسترجع (جزئي أو كامل) بناءً على الحالة، وسيتم إعادة المبلغ بنفس وسيلة الدفع التي استخدمها العميل خلال 5-7 أيام عمل.
+            </p>
+        </section>
+
+        <!-- قسم الدعم -->
+        <footer class="support-footer">
+            <p>إذا كانت لديك أي أسئلة أخرى حول سياستنا، لا تتردد في <a href="contact.html">التواصل معنا</a>.</p>
+        </footer>
+    </div>
+
+    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+
+</body>
+</html>

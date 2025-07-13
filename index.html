@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- =================================================================
+         META TAGS, FONTS, AND ICONS
+         This section contains essential metadata for SEO, social sharing, 
+         and links to Google Fonts and Font Awesome for a professional look.
+    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO & Social Sharing Tags -->
     <title>المكتب الرقمي | بوابتك الأولى للخدمات المتكاملة</title>
-    <meta name="description" content="أول منصة رقمية في المغرب تجمع كل خدماتك المكتبية، الإدارية، والتقنية في مكان واحد.">
+    <meta name="description" content="أول منصة رقمية في المغرب تجمع كل خدماتك المكتبية، الإدارية، والتقنية في مكان واحد. جودة، سرعة، وأسعار تنافسية.">
     <meta property="og:title" content="المكتب الرقمي | جميع خدماتك في مكان واحد">
     <meta property="og:description" content="خدمات مكتبية، إدارية، تعليمية ورقمية باحترافية وبأسعار مناسبة.">
     <meta property="og:image" content="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png">
@@ -18,50 +23,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- =================================================================
+         INTERNAL CSS STYLES
+         This extensive style block defines the entire look and feel of the page,
+         from colors and fonts to layout, animations, and responsiveness.
+    ================================================================== -->
     <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
-            --primary-color: #0056b3; --secondary-color: #4a90e2; --dark-color: #2c3e50;
-            --light-color: #ffffff; --gray-color: #f4f7f9; --text-color: #555;
-            --border-radius: 8px; --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
+
+        /* --- إعدادات الجسم العامة --- */
         html { scroll-behavior: smooth; }
         body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--light-color); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; }
+        .btn { padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; }
         .btn-primary { background-color: var(--primary-color); color: var(--light-color); border-color: var(--primary-color); }
-        .btn-light { background-color: rgba(255, 255, 255, 0.9); color: var(--dark-color); font-style: normal; }
-        .main-header.scrolled .btn-light { background-color: #e7f1ff; color: var(--primary-color); border-color: transparent; }
+        .btn-primary:hover { background-color: #00458e; border-color: #00458e; transform: translateY(-2px); }
+        .btn-light { background-color: rgba(255, 255, 255, 0.9); color: var(--dark-color); }
+        .main-header.scrolled .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
         .btn-lg { padding: 15px 40px; font-size: 1.1rem; }
 
-        /* Header */
-        .main-header { position: absolute; width: 100%; top: 0; left: 0; z-index: 1000; transition: background-color 0.3s ease; box-sizing: border-box;}
-        .main-header.scrolled { position: sticky; background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* --- تصميم الشريط العلوي الاحترافي --- */
+        .main-header { position: absolute; width: 100%; top: 0; left: 0; z-index: 1000; transition: background-color 0.4s ease, box-shadow 0.4s ease; box-sizing: border-box; }
+        .main-header.scrolled { position: sticky; background-color: var(--light-color); box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; }
-        .navbar-logo img { height: 80px; }
-        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-logo img { height: 80px; transition: transform 0.3s ease; }
+        .navbar-logo:hover img { transform: scale(1.05); }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
         .main-header.transparent .navbar-menu a { color: var(--light-color); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .main-header.scrolled .navbar-menu a { color: var(--dark-color); }
         .navbar-menu a { text-decoration: none; font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; position: relative; }
-        .navbar-menu a.active { color: var(--primary-color); }
-        .main-header.scrolled .navbar-menu a.active { border-bottom: 3px solid var(--primary-color); }
+        .navbar-menu a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .navbar-menu a:hover::after, .navbar-menu a.active::after { width: 100%; }
         .navbar-actions { display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end; }
-        .user-nav-link { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; color: var(--dark-color); }
-        .main-header.transparent .user-nav-link { color: var(--light-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--light-color); }
-        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; z-index: 1002; }
         .main-header.scrolled .hamburger-menu { color: var(--dark-color); }
         .main-header.transparent .hamburger-menu { color: var(--light-color); }
 
-        /* Hero Section */
-        .hero-fiverr { position: relative; height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
+        /* --- تصميم قسم الهيرو (Hero Section) --- */
+        .hero-section { position: relative; height: 90vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
         .hero-video-background { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); z-index: 1; }
         .hero-video-background video { min-width: 100%; min-height: 100%; object-fit: cover; }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000000; opacity: 0.6; z-index: 2; }
-        .hero-content { position: relative; z-index: 3; color: var(--light-color); width: 100%; max-width: 750px; }
-        .hero-title { font-size: 3.5rem; font-weight: 900; margin-bottom: 20px; line-height: 1.3; }
-        .hero-subtitle { font-size: 1.3rem; color: #e0e0e0; max-width: 700px; margin: 0 auto 40px; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); z-index: 2; }
+        .hero-content { position: relative; z-index: 3; color: var(--light-color); width: 100%; max-width: 800px; }
+        .hero-title { font-size: 3.8rem; font-weight: 900; margin-bottom: 20px; line-height: 1.3; }
+        .hero-subtitle { font-size: 1.4rem; color: #e0e0e0; max-width: 700px; margin: 0 auto 40px; }
         
-        /* Features Section */
+        /* --- تصميم شريط البحث التفاعلي --- */
+        .search-container { max-width: 600px; margin: 40px auto 0; position: relative; }
+        .search-box { display: flex; background: rgba(255,255,255,0.95); border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        #hero-search-input { flex-grow: 1; border: none; background: transparent; padding: 15px 25px; font-size: 1.1rem; font-family: 'Cairo', sans-serif; outline: none; }
+        .search-box button { background: var(--primary-color); color: white; border: none; padding: 0 30px; border-radius: 50px 0 0 50px; cursor: pointer; font-size: 1.2rem; }
+        #search-suggestions { position: absolute; top: 110%; left: 0; right: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; z-index: 4; max-height: 250px; overflow-y: auto; display: none; }
+        #search-suggestions li a { display: block; padding: 12px 20px; color: var(--dark-color); text-decoration: none; }
+        #search-suggestions li a:hover { background-color: var(--gray-color); }
+
+        /* --- تصميم قسم الميزات --- */
         .features-section { padding: 80px 0; }
         .section-title { font-size: 2.8rem; font-weight: 800; color: var(--dark-color); text-align: center; margin-bottom: 50px; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
@@ -70,7 +97,7 @@
         .feature-card h3 { font-size: 1.5rem; color: var(--dark-color); margin-bottom: 10px; }
         .feature-card p { color: var(--text-color); line-height: 1.7; }
 
-        /* Service Categories Section */
+        /* --- تصميم قسم فئات الخدمات --- */
         .service-categories-section { padding: 80px 0; background-color: var(--gray-color); }
         .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .category-card { background-color: #fff; padding: 30px; border-radius: var(--border-radius); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column; }
@@ -81,99 +108,234 @@
         .btn-outline { background: transparent; color: var(--primary-color); border-color: var(--primary-color); }
         .btn-outline:hover { background: var(--primary-color); color: var(--light-color); }
 
-        /* Footer */
+        /* --- تصميم التذييل (Footer) --- */
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; }
+        .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
         .footer-section ul { list-style: none; padding: 0; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; }
-        .social-links a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: 50%; background-color: #34495e; color: var(--light-color); margin-left: 10px; font-size: 1rem; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--light-color); }
+        .social-links a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: 50%; background-color: #34495e; color: var(--light-color); margin-left: 10px; font-size: 1rem; transition: all 0.3s; }
+        .social-links a:hover { background-color: var(--primary-color); transform: translateY(-3px); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
         .footer-bottom a { color: #777; text-decoration: none; }
 
-        /* Responsive */
+        /* --- التصميم المتجاوب --- */
         @media (max-width: 992px) {
             .navbar-menu { display: none; }
             .hamburger-menu { display: block; }
             .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 0; right: 0; background-color: var(--light-color); width: 100%; height: 100%; padding-top: 100px; text-align: center; gap: 20px; }
             .navbar-menu.mobile-active li { padding: 15px 0; }
             .navbar-menu.mobile-active a { color: var(--dark-color) !important; text-shadow: none; font-size: 1.5rem; }
-            .hero-title { font-size: 2.5rem; }
+            .hero-title { font-size: 2.8rem; }
+        }
+        @media (min-width: 993px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
         }
     </style>
 </head>
 <body>
 
+    <!-- =================================================================
+         HEADER SECTION
+         This header is designed to be transparent initially and become solid
+         on scroll. It includes the logo, navigation, and dynamic user actions.
+    ================================================================== -->
     <header class="main-header transparent">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
             <ul class="navbar-menu">
                 <li><a href="index.html" class="active">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <!-- ✅ سيتم إضافة أزرار الموبايل هنا تلقائيًا -->
+                <li><a href="prices.html">الأسعار</a></li>
+                <li><a href="payment-methods.html">طرق الدفع</a></li>
                 <div id="mobile-navbar-actions"></div>
             </ul>
-            <!-- ✅ سيتم تحديث هذا القسم تلقائيًا -->
             <div id="navbar-actions" class="navbar-actions">
-                <!-- Loading state or default buttons -->
-                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
-                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
             </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
     <main>
-        <section class="hero-fiverr">
+        <!-- =================================================================
+             HERO SECTION
+             Features a video background, an overlay for readability, and a
+             powerful headline with a call-to-action and an interactive search bar.
+        ================================================================== -->
+        <section class="hero-section">
             <div class="hero-video-background"><video autoplay muted loop playsinline><source src="https://cdn-useast1.kapwing.com/teams/661dac01f37c22ab30faf438/jobs/686d4716e76b66eb02a14ee9/final_686d47098bb8135ca0d6c282_68715.mp4" type="video/mp4"></video></div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
-                <h1 class="hero-title">أول منصة رقمية تجمع كل خدماتك في مكان واحد</h1>
-                <p class="hero-subtitle">جودة، سرعة، وأسعار تنافسية لإنجاز جميع معاملاتك الإدارية والتقنية بكل سهولة.</p>
-                <a href="services.html" class="btn btn-primary btn-lg">اكتشف خدماتنا الآن <i class="fas fa-arrow-left"></i></a>
-            </div>
-        </section>
-
-        <section class="features-section">
-            <div class="container">
-                <div class="features-grid">
-                    <div class="feature-card"><i class="fas fa-rocket feature-icon"></i><h3>سرعة في الإنجاز</h3><p>نلتزم بتقديم خدماتنا في أسرع وقت ممكن مع الحفاظ على أعلى معايير الجودة.</p></div>
-                    <div class="feature-card"><i class="fas fa-shield-alt feature-icon"></i><h3>سرية وأمان</h3><p>نتعامل مع جميع معلوماتك وبياناتك بسرية تامة وأمان مطلق.</p></div>
-                    <div class="feature-card"><i class="fas fa-tags feature-icon"></i><h3>أسعار تنافسية</h3><p>نقدم لك أفضل الخدمات بأسعار مدروسة وتنافسية لتناسب جميع احتياجاتك.</p></div>
+                <h1 class="hero-title">المكتب الرقمي: كل خدماتك في مكان واحد</h1>
+                <p class="hero-subtitle">جودة، سرعة، وأسعار تنافسية لإنجاز جميع معاملاتك الإدارية والتقنية بكل سهولة واحترافية.</p>
+                
+                <!-- ✅ شريط البحث التفاعلي الجديد -->
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="hero-search-input" placeholder="ابحث عن خدمة (مثال: سيرة ذاتية، تسجيل...)">
+                        <button type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <ul id="search-suggestions"></ul>
                 </div>
             </div>
         </section>
 
+        <!-- =================================================================
+             FEATURES SECTION
+             Highlights the core values of the service: Speed, Security, and Value.
+        ================================================================== -->
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">لماذا تختار المكتب الرقمي؟</h2>
+                <div class="features-grid">
+                    <div class="feature-card"><i class="fas fa-rocket feature-icon"></i><h3>سرعة في الإنجاز</h3><p>نلتزم بتقديم خدماتنا في أسرع وقت ممكن مع الحفاظ على أعلى معايير الجودة والدقة.</p></div>
+                    <div class="feature-card"><i class="fas fa-shield-alt feature-icon"></i><h3>سرية وأمان</h3><p>نتعامل مع جميع معلوماتك وبياناتك الشخصية بسرية تامة وأمان مطلق وفقاً لأعلى المعايير.</p></div>
+                    <div class="feature-card"><i class="fas fa-tags feature-icon"></i><h3>أسعار تنافسية</h3><p>نقدم لك أفضل الخدمات بأسعار مدروسة وشفافة لتناسب جميع احتياجاتك وميزانيتك.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             SERVICE CATEGORIES SECTION
+             Presents the main service categories with descriptions tailored to the
+             Moroccan context, encouraging users to explore more.
+        ================================================================== -->
         <section class="service-categories-section">
             <div class="container">
                 <h2 class="section-title">فئات خدماتنا</h2>
                 <div class="category-grid">
-                    <div class="category-card"><i class="fas fa-file-signature category-icon"></i><h3 class="category-card-title">خدمات إدارية</h3><p class="category-card-desc">من تحرير الطلبات وصياغة العقود إلى السيرة الذاتية، ننجز جميع معاملاتك الورقية والرسمية بدقة واحترافية.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-user-graduate category-icon"></i><h3 class="category-card-title">خدمات التعليم</h3><p class="category-card-desc">نساعدك في مسارك الدراسي عبر التسجيل في الجامعات، المدارس العليا، وطلبات المنح لضمان مستقبل أكاديمي ناجح.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-briefcase category-icon"></i><h3 class="category-card-title">خدمات التوظيف</h3><p class="category-card-desc">نعزز فرصك الوظيفية عبر التسجيل في المباريات، إعداد ملفات الترشح، وكتابة رسائل تحفيزية مقنعة.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-laptop-code category-icon"></i><h3 class="category-card-title">خدمات رقمية</h3><p class="category-card-desc">نقدم حلولاً تقنية مبتكرة من إنشاء المواقع وتصميم الشعارات إلى إدارة البيانات وتصاميم السوشيال ميديا.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
+                    <div class="category-card"><i class="fas fa-file-signature category-icon"></i><h3 class="category-card-title">خدمات إدارية</h3><p class="category-card-desc">من تحرير الطلبات وصياغة العقود البسيطة إلى إعداد السيرة الذاتية، ننجز جميع معاملاتك الورقية والرسمية بدقة واحترافية لتسهيل علاقتك مع الإدارات المغربية.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
+                    <div class="category-card"><i class="fas fa-user-graduate category-icon"></i><h3 class="category-card-title">خدمات التعليم</h3><p class="category-card-desc">نرافقك في مسارك الدراسي عبر التسجيل في الجامعات، المدارس العليا، والتكوين المهني، بالإضافة إلى طلبات المنح لضمان مستقبل أكاديمي ناجح.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
+                    <div class="category-card"><i class="fas fa-briefcase category-icon"></i><h3 class="category-card-title">خدمات التوظيف</h3><p class="category-card-desc">نعزز فرصك الوظيفية عبر التسجيل في المباريات العمومية، إعداد ملفات ترشح متكاملة، وكتابة رسائل تحفيزية مقنعة باللغتين العربية والفرنسية.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
+                    <div class="category-card"><i class="fas fa-laptop-code category-icon"></i><h3 class="category-card-title">خدمات رقمية</h3><p class="category-card-desc">نقدم حلولاً تقنية مبتكرة من إنشاء مواقع تعريفية وتصميم الشعارات إلى إدارة البيانات وتصاميم احترافية لمنصات التواصل الاجتماعي.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- =================================================================
+         FOOTER SECTION
+         A comprehensive footer with quick links, legal pages, social media,
+         and copyright information.
+    ================================================================== -->
     <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-section"><h3 class="footer-title">المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p></div>
-            <div class="footer-section"><h3 class="footer-title">روابط سريعة</h3><ul><li><a href="about.html">من نحن</a></li><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li></ul></div>
-            <div class="footer-section"><h3 class="footer-title">تواصل معنا</h3><div class="social-links"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">المكتب الرقمي</h3>
+                    <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية، مصممة لتلبية احتياجاتك اليومية.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">روابط مهمة</h3>
+                    <ul>
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="services.html">جميع الخدمات</a></li>
+                        <li><a href="prices.html">قائمة الأسعار</a></li>
+                        <li><a href="payment-methods.html">طرق الدفع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">قانوني</h3>
+                    <ul>
+                        <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
+                        <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <!-- ✅ تم حذف رابط لوحة التحكم من هنا -->
+                <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+            </div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة. | <a href="admin.html">لوحة التحكم</a></p></div>
     </footer>
 
-    <!-- Firebase SDK Scripts -->
+    <!-- =================================================================
+         SCRIPTS
+         Includes Firebase SDKs for authentication and the central auth.js file
+         for managing user state across the site, plus page-specific logic.
+    ================================================================== -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    
-    <!-- ✅ ربط الملف المركزي لإدارة المصادقة -->
     <script src="auth.js"></script>
+    
+    <script>
+        // --- هذا الكود خاص فقط بالصفحة الرئيسية ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. منطق الشريط العلوي الشفاف والمتغير عند التمرير ---
+            const header = document.querySelector('.main-header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        header.classList.remove('transparent');
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.add('transparent');
+                        header.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            // --- 2. منطق شريط البحث التفاعلي ---
+            const searchInput = document.getElementById('hero-search-input');
+            const suggestionsBox = document.getElementById('search-suggestions');
+
+            // قائمة الخدمات للبحث (يجب أن تكون مطابقة للخدمات في موقعك)
+            const servicesData = [
+                'تحرير الطلبات الخطية', 'التصريحات بالشرف', 'صياغة العقود', 'السيرة الذاتية', 'ملء الاستمارات',
+                'ترجمة بسيطة', 'تصحيح لغوي', 'إنشاء حسابات إلكترونية', 'تعديل PDF', 'صياغة فواتير',
+                'إرسال شكايات', 'التسجيل في منحتي', 'التسجيل في التكوين المهني', 'التسجيل في الجامعات',
+                'تسجيل في مباريات عمومية', 'إعداد ملفات الترشح', 'التسجيل في ANAPEC', 'رسالة تحفيزية',
+                'التسجيل في السجل الوطني للسكان', 'التسجيل في السجل الاجتماعي الموحد', 'الدعم الاجتماعي المباشر',
+                'مشاكل CNSS و AMO', 'إنشاء مواقع إلكترونية', 'تصميم الشعارات', 'تصاميم السوشيال ميديا'
+            ];
+
+            // حدث عند الكتابة في حقل البحث
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                suggestionsBox.innerHTML = ''; // إفراغ الاقتراحات القديمة
+
+                if (query.length < 2) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+
+                const filteredServices = servicesData.filter(service => service.toLowerCase().includes(query));
+
+                if (filteredServices.length > 0) {
+                    filteredServices.forEach(service => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = `services.html`; // يوجه إلى صفحة الخدمات
+                        a.textContent = service;
+                        li.appendChild(a);
+                        suggestionsBox.appendChild(li);
+                    });
+                    suggestionsBox.style.display = 'block';
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+
+            // إخفاء الاقتراحات عند الضغط في أي مكان آخر
+            document.addEventListener('click', (e) => {
+                if (e.target !== searchInput) {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

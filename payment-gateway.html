@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- =================================================================
+         META TAGS, FONTS, AND ICONS
+         This section contains essential metadata, links to Google Fonts for typography,
+         and Font Awesome for icons, ensuring a professional and modern look.
+    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إتمام الطلب - المكتب الرقمي</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- =================================================================
+         INTERNAL CSS STYLES
+         This extensive style block defines the entire look and feel of the page,
+         from colors and fonts to layout, animations, and responsiveness.
+    ================================================================== -->
     <style>
         /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
-            --primary-color: #0056b3; --secondary-color: #0d6efd; --dark-color: #2c3e50;
-            --light-color: #ffffff; --gray-color: #f8f9fa; --text-color: #555;
-            --danger-color: #dc3545; --success-color: #198754; --border-radius: 12px; 
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--gray-color);
-            margin: 0;
-            direction: rtl;
+            --success-color: #198754;
+            --warning-color: #ffc107;
         }
 
-        /* --- تصميم الشريط العلوي الاحترافي الجديد --- */
+        /* --- إعدادات الجسم العامة --- */
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+        }
+
+        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky; /* جعله ثابتاً في الأعلى */
+            position: sticky;
             top: 0;
             width: 100%;
             z-index: 1000;
@@ -44,7 +68,7 @@
             margin: 0 auto;
         }
         .navbar-logo img { height: 70px; }
-        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .navbar-actions { position: relative; }
@@ -58,40 +82,213 @@
         .dropdown-menu a:hover { background-color: var(--gray-color); }
         .dropdown-menu a i { width: 20px; color: var(--primary-color); }
         .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; }
+        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
         .btn-header.primary { background-color: var(--primary-color); color: white; }
         .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
+        .btn-header:hover { transform: translateY(-2px); }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- تصميم حاوية الصفحة والترويسة --- */
+        .page-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 10px 0;
+        }
         
-        /* --- تصميم باقي الصفحة --- */
-        .main-container { padding: 20px; padding-top: 40px; }
-        .container { max-width: 800px; margin: auto; }
-        .card { background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 30px; border: 1px solid #e9ecef; }
-        .card-header { display: flex; align-items: center; gap: 15px; color: var(--dark-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--primary-color); }
-        .card-header .step-icon { background-color: var(--primary-color); color: white; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        /* --- تصميم البطاقات والأقسام --- */
+        .card {
+            background: var(--light-color);
+            padding: 30px 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: -30px -40px 25px;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--gray-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .card-header .step-icon {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
         .form-group { margin-bottom: 20px; }
         label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
         .required-star { color: var(--danger-color); }
-        input, textarea, select { width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: var(--border-radius); font-size: 1rem; font-family: 'Cairo', sans-serif; box-sizing: border-box; transition: all 0.3s ease; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
-        input[readonly] { background-color: #e9ecef; cursor: not-allowed; border: none; font-weight: bold; font-size: 1.1rem; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+        input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            border: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
         textarea { resize: vertical; min-height: 120px; }
-        .submit-btn { width: 100%; padding: 15px; font-size: 1.2rem; background: linear-gradient(45deg, var(--success-color), #20c997); border: none; color: white; font-weight: bold; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
-        .submit-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4); }
-        .submit-btn:disabled { background: #a5d6a7; cursor: not-allowed; box-shadow: none; }
-        .payment-info { display: none; background: #e7f1ff; padding: 20px; border: 1px dashed var(--primary-color); border-radius: var(--border-radius); margin-top: 15px; }
-        .payment-info.active { display: block; }
-        .alert { background-color: #fff3cd; border-right: 5px solid #ffc107; color: #664d03; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); }
-        .flag-prefix { display: flex; }
-        .flag-prefix select { width: auto; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; }
-        .flag-prefix input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-        .contact-support { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #6c757d; }
-        .contact-support a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, var(--success-color), #20c997);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        .submit-btn:disabled {
+            background: #a5d6a7;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .contact-support {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .contact-support a {
+            color: var(--primary-color);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* --- تصميم قسم الدفع الجديد --- */
+        .payment-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .payment-option {
+            background: var(--light-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .payment-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+        .payment-option.active {
+            border-color: var(--success-color);
+            background-color: #e6f9f0;
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.3);
+        }
+        .payment-option img {
+            height: 40px;
+            max-width: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        .payment-option.cashplus img, .payment-option.cih img {
+            height: 50px;
+        }
+        .payment-option span {
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: block;
+        }
+        .payment-details-container {
+            display: none;
+            background: #e9f5ff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        .payment-details-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--light-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .detail-row .label { font-weight: 700; color: var(--text-color); margin: 0; }
+        .detail-row .value { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; }
+        .copy-button { background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 1rem; margin-right: 10px; transition: color 0.2s; }
+        .copy-button:hover { color: var(--primary-color); }
+        .instruction-note {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fffbe6;
+            border-radius: 8px;
+            border: 1px solid #ffe58f;
+        }
+
+        /* --- التصميم المتجاوب --- */
+        @media (max-width: 768px) {
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+        }
+        @media (min-width: 769px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- ✅ الإضافة 1: هيكل الهيدر الموحد والجديد -->
+    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo">
@@ -101,20 +298,24 @@
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
                 <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
             </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
-    <div class="main-container">
-        <div class="container">
+    <div class="page-container">
+        <header class="page-header">
+            <h1>إتمام الطلب</h1>
+        </header>
+
+        <form method="POST" action="https://order-processor.radwanyhassan75.workers.dev" enctype="multipart/form-data">
+            
             <div class="card">
-                <h2>إتمام الطلب</h2>
-                <div class="alert">
-                    ⚠️ سيتم مراجعة معلومات الدفع الخاصة بك يدويًا. تأكد من إرسال الأموال قبل إتمام الطلب.
-                </div>
+                <div class="card-header"><span class="step-icon">1</span><h3>ملخص الطلب</h3></div>
                 <div class="form-group">
                     <label>الخدمة المطلوبة:</label>
                     <input type="text" id="display-service-name" readonly>
@@ -125,128 +326,212 @@
                 </div>
             </div>
 
-            <form method="POST" action="https://order-processor.radwanyhassan75.workers.dev" enctype="multipart/form-data">
-                <input type="hidden" name="رقم_الطلب" id="order-id" />
-                <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
-                <input type="hidden" id="form-service-price" name="السعر">
+            <input type="hidden" name="رقم_الطلب" id="order-id" />
+            <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
+            <input type="hidden" id="form-service-price" name="السعر">
 
-                <div class="card">
-                    <div class="card-header"><span class="step-icon">1</span><h3>معلوماتك الشخصية</h3></div>
-                    <div class="form-group">
-                        <label for="name">الاسم الكامل <span class="required-star">*</span></label>
-                        <input type="text" name="الاسم_الكامل" id="name" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                        <input type="email" name="البريد_الإلكتروني" id="email" required />
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                        <div class="flag-prefix">
-                            <select name="رمز_الدولة" required>
-                                <option value="+212" selected>🇲🇦 +212</option>
-                                <option value="+966">🇸🇦 +966</option>
-                                <option value="+20">🇪🇬 +20</option>
-                            </select>
-                            <input type="tel" name="الهاتف" required />
-                        </div>
-                    </div>
+            <div class="card">
+                <div class="card-header"><span class="step-icon">2</span><h3>معلوماتك الشخصية</h3></div>
+                <div class="form-group">
+                    <label for="name">الاسم الكامل <span class="required-star">*</span></label>
+                    <input type="text" name="الاسم_الكامل" id="name" required />
                 </div>
-
-                <div class="card">
-                    <div class="card-header"><span class="step-icon">2</span><h3>تفاصيل إضافية</h3></div>
-                    <div class="form-group">
-                        <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                        <textarea name="تفاصيل_الخدمة" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="service-link">رابط (اختياري)</label>
-                        <input type="url" name="رابط_الخدمة" id="service-link" placeholder="https://example.com" />
-                    </div>
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+                    <input type="email" name="البريد_الإلكتروني" id="email" required />
                 </div>
-
-                <div class="card">
-                    <div class="card-header"><span class="step-icon">3</span><h3>الدفع وتأكيد الطلب</h3></div>
-                    <div class="form-group">
-                        <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
-                        <select name="طريقة_الدفع" id="payment-method" required onchange="showPaymentInfo(this.value)">
-                            <option value="" disabled selected>-- اختر --</option>
-                            <option value="cashplus">Cash Plus</option>
-                            <option value="orange">Orange Money</option>
-                            <option value="bmce">BMCE Bank</option>
-                            <option value="attijari">Attijariwafa</option>
-                            <option value="cih">CIH Bank</option>
-                            <option value="soge">Société Générale</option>
+                <div class="form-group">
+                    <label>رقم الهاتف / واتساب <span class="required-star">*</span></label>
+                    <div class="flag-prefix">
+                        <select name="رمز_الدولة" required>
+                            <option value="+212" selected>🇲🇦 +212</option>
+                            <option value="+966">🇸� +966</option>
+                            <option value="+20">🇪🇬 +20</option>
                         </select>
+                        <input type="tel" name="الهاتف" required />
                     </div>
-                    <div id="payment-info" class="payment-info"></div>
-                    <div class="form-group">
-                        <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
-                        <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
-                    </div>
-                    <button type="submit" class="submit-btn" id="submit-btn" disabled>
-                        <i class="fas fa-check-circle"></i> إرسال الطلب الآن
-                    </button>
-                    <!-- ✅ الإضافة 2: رابط الدعم -->
-                    <p class="contact-support">
-                        هل تواجه مشكلة؟ <a href="contact.html">اتصل بنا</a>
-                    </p>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="step-icon">3</span><h3>تفاصيل إضافية</h3></div>
+                <div class="form-group">
+                    <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
+                    <textarea name="تفاصيل_الخدمة" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="service-link">رابط (اختياري)</label>
+                    <input type="url" name="رابط_الخدمة" id="service-link" placeholder="https://example.com" />
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="step-icon">4</span><h3>الدفع وتأكيد الطلب</h3></div>
+                
+                <div class="form-group">
+                    <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
+                    <div class="payment-options-grid" id="payment-options">
+                        <!-- سيتم ملء هذا الجزء بواسطة الجافاسكريبت -->
+                    </div>
+                    <input type="hidden" name="طريقة_الدفع" id="payment-method-input" required>
+                </div>
+
+                <div id="payment-details-container" class="payment-details-container">
+                    <!-- سيتم عرض تفاصيل الدفع هنا -->
+                </div>
+                
+                <div class="form-group">
+                    <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
+                    <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
+                </div>
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>
+                    <i class="fas fa-check-circle"></i> إرسال الطلب الآن
+                </button>
+                <p class="contact-support">
+                    هل تواجه مشكلة؟ <a href="contact.html">اتصل بنا</a>
+                </p>
+            </div>
+        </form>
     </div>
 
-    <!-- ✅ الإضافة 3: السكريبتات بالترتيب الصحيح لحل كل المشاكل -->
+    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
 
     <script>
-    // --- هذا الكود خاص فقط بصفحة الدفع ---
+    // =================================================================
+    //          السكريبت الخاص بصفحة بوابة الدفع
+    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. تعريف عناصر الواجهة ---
         const form = document.querySelector('form');
         const submitBtn = document.getElementById('submit-btn');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
+        const paymentOptionsContainer = document.getElementById('payment-options');
+        const paymentDetailsContainer = document.getElementById('payment-details-container');
+        const paymentMethodInput = document.getElementById('payment-method-input');
 
-        const orderId = 'KH-' + Date.now().toString().slice(-6);
-        document.getElementById('order-id').value = orderId;
+        // --- 2. بيانات طرق الدفع ---
+        const paymentMethods = [
+            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png', class: 'cashplus' },
+            { id: 'orange', name: 'Orange Money', logo: 'https://yop.l-frii.com/wp-content/uploads/2022/12/Orange-Money-recrute-pour-ce-poste-28-Decembre-2022-1024x683.png' },
+            { id: 'bmce', name: 'BMCE Bank', logo: 'https://play-lh.googleusercontent.com/JMn_wqx90dAczqCEQayt2UeY3xQF6IWVCJcQlI090oqOU0LdP_ArMdjLPI9WDqGI6-6z' },
+            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/2560px-Logo_AWB.svg.png' },
+            { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png', class: 'cih' },
+            { id: 'soge', name: 'Société Générale', logo: 'https://cdn.snrtnews.com/sites/default/files/2025/06/18/whatsapp-image-2025-06-18-at-13-1750248285.jpeg' }
+        ];
 
-        const params = new URLSearchParams(window.location.search);
-        const serviceName = params.get('service') || "خدمة غير محددة";
-        const servicePrice = params.get('price') || "0";
-        document.getElementById('display-service-name').value = serviceName;
-        document.getElementById('display-service-price').value = servicePrice + " درهم";
-        document.getElementById('form-service-name').value = serviceName;
-        document.getElementById('form-service-price').value = servicePrice;
+        // --- 3. الدوال الرئيسية ---
 
-        // الملء التلقائي لمعلومات المستخدم
-        // نحن نستخدم 'auth' الذي تم تعريفه مسبقاً في ملف auth.js
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                if (user.displayName) nameInput.value = user.displayName;
-                if (user.email) emailInput.value = user.email;
-                validateForm(); // إعادة التحقق بعد ملء البيانات
-            }
-        });
-        
-        function showPaymentInfo(method) {
-            const box = document.getElementById('payment-info');
-            let info = '';
-            const name = 'HASSAN ER-RADOUANY';
-            switch (method) {
-                case 'cashplus': info = `<strong>📍 Cash Plus</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-                case 'orange': info = `<strong>📱 Orange Money</strong><br><strong>رقم الهاتف:</strong> 0621638488<br><strong>الاسم:</strong> ${name}`; break;
-                case 'bmce': info = `🏦 BMCE Bank<br><strong>رقم الحساب:</strong> 96 0000162000010401 810 011<br><strong>الاسم:</strong> ${name}`; break;
-                case 'attijari': info = `🏦 Attijariwafa Bank<br><strong>رقم الحساب:</strong> 007810000457430040232577<br><strong>الاسم:</strong> ${name}`; break;
-                case 'cih': info = `🏦 CIH Bank<br><strong>رقم الحساب:</strong> 230810624745521100540088<br><strong>الاسم:</strong> ${name}`; break;
-                case 'soge': info = `🏦 Société Générale<br><strong>رقم الحساب:</strong> 022780000760004157217174<br><strong>الاسم:</strong> ${name}`; break;
-            }
-            box.innerHTML = info;
-            box.classList.toggle('active', !!method);
+        /**
+         * دالة لإنشاء وعرض خيارات الدفع
+         */
+        function renderPaymentOptions() {
+            paymentMethods.forEach(method => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'payment-option';
+                optionDiv.dataset.method = method.id;
+                optionDiv.innerHTML = `
+                    <img src="${method.logo}" alt="شعار ${method.name}" class="${method.class || ''}">
+                    <span>${method.name}</span>
+                `;
+                optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
+                paymentOptionsContainer.appendChild(optionDiv);
+            });
         }
-        window.showPaymentInfo = showPaymentInfo;
 
+        /**
+         * دالة لاختيار طريقة الدفع وعرض تفاصيلها
+         * @param {string} selectedMethodId - معرف طريقة الدفع المختارة
+         */
+        function selectPaymentMethod(selectedMethodId) {
+            // تحديث الواجهة البصرية للأزرار
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
+            });
+
+            // تحديث قيمة الحقل المخفي
+            paymentMethodInput.value = selectedMethodId;
+
+            // عرض تفاصيل الدفع
+            renderPaymentDetails(selectedMethodId);
+            
+            // إعادة التحقق من النموذج
+            validateForm();
+        }
+
+        /**
+         * دالة لعرض تفاصيل الدفع بناءً على الاختيار
+         * @param {string} methodId - معرف طريقة الدفع
+         */
+        function renderPaymentDetails(methodId) {
+            let detailsHtml = '';
+            const beneficiaryName = 'HASSAN ER-RADOUANY';
+
+            switch (methodId) {
+                case 'cashplus':
+                    detailsHtml = `
+                        <h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنكي (حوالة)</h4>
+                        <div class="detail-row">
+                            <span class="label">رقم الحساب (IBAN):</span>
+                            <span class="value" id="cashplus-iban">835780030017346031053226</span>
+                            <button type="button" class="copy-button" onclick="copyToClipboard('cashplus-iban')"><i class="far fa-copy"></i></button>
+                        </div>
+                        <p class="instruction-note">استخدم هذا الرقم للتحويل من أي تطبيق بنكي في المغرب. ننصح بنسخ الرقم لتجنب الأخطاء.</p>
+                        <hr style="border: 1px dashed #ccc; margin: 20px 0;">
+                        <h4><i class="fas fa-mobile-alt"></i> عبر وكالة أو تطبيق Cash Plus</h4>
+                        <div class="detail-row">
+                            <span class="label">رقم الهاتف:</span>
+                            <span class="value" id="cashplus-phone">0621638488</span>
+                            <button type="button" class="copy-button" onclick="copyToClipboard('cashplus-phone')"><i class="far fa-copy"></i></button>
+                        </div>
+                    `;
+                    break;
+                // يمكنك إضافة باقي الحالات هنا بنفس الطريقة
+                case 'bmce':
+                    detailsHtml = `
+                        <h4><i class="fas fa-landmark"></i> التحويل البنكي المباشر</h4>
+                        <div class="detail-row">
+                            <span class="label">رقم الحساب (RIB):</span>
+                            <span class="value" id="bmce-rib">96 0000162000010401 810 011</span>
+                            <button type="button" class="copy-button" onclick="copyToClipboard('bmce-rib')"><i class="far fa-copy"></i></button>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">اسم المستفيد:</span>
+                            <span class="value" style="direction:rtl;">${beneficiaryName}</span>
+                        </div>
+                    `;
+                    break;
+                default:
+                    detailsHtml = `<p>يرجى اختيار وسيلة دفع لعرض التفاصيل.</p>`;
+            }
+
+            paymentDetailsContainer.innerHTML = detailsHtml;
+            paymentDetailsContainer.classList.toggle('active', !!methodId);
+        }
+
+        /**
+         * دالة لنسخ النص إلى الحافظة
+         * @param {string} elementId - معرف العنصر الذي يحتوي على النص
+         */
+        window.copyToClipboard = function(elementId) {
+            const textElement = document.getElementById(elementId);
+            if (!textElement) return;
+            navigator.clipboard.writeText(textElement.innerText.trim()).then(() => {
+                const button = textElement.nextElementSibling;
+                if (button) {
+                    const originalIcon = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
+                    setTimeout(() => { button.innerHTML = originalIcon; }, 2000);
+                }
+            }).catch(err => console.error('Copy failed', err));
+        }
+        
+        /**
+         * دالة للتحقق من أن كل الحقول المطلوبة مملوءة
+         */
         function validateForm() {
             const requiredInputs = form.querySelectorAll('[required]');
             let isValid = true;
@@ -258,14 +543,39 @@
             submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
         }
 
+        // --- 4. منطق تشغيل الصفحة ---
+
+        // عرض خيارات الدفع
+        renderPaymentOptions();
+        
+        // قراءة معلومات الخدمة والسعر من الرابط
+        const params = new URLSearchParams(window.location.search);
+        const serviceName = params.get('service') || "خدمة غير محددة";
+        const servicePrice = params.get('price') || "0";
+        document.getElementById('display-service-name').value = serviceName;
+        document.getElementById('display-service-price').value = servicePrice + " درهم";
+        document.getElementById('form-service-name').value = serviceName;
+        document.getElementById('form-service-price').value = servicePrice;
+
+        // الملء التلقائي لمعلومات المستخدم
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                if (user.displayName) nameInput.value = user.displayName;
+                if (user.email) emailInput.value = user.email;
+                validateForm();
+            }
+        });
+
+        // ربط دالة التحقق بالحقول
         form.querySelectorAll('[required]').forEach(input => {
             input.addEventListener('input', validateForm);
             if (input.type === 'file' || input.tagName === 'SELECT') {
                 input.addEventListener('change', validateForm);
             }
         });
-        validateForm();
+        validateForm(); // التحقق عند تحميل الصفحة
     });
     </script>
 </body>
 </html>
+�

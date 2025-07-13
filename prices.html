@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <!-- ============== Meta Tags, Fonts, and Icons ============== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسعار - المكتب الرقمي</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- ============== Internal CSS Styles ============== -->
+    <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --success-color: #198754;
+        }
+
+        /* --- إعدادات الجسم العامة --- */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+        }
+
+        /* --- تصميم الشريط العلوي الاحترافي --- */
+        /* هذا الكود يضمن تناسق الشريط العلوي مع باقي صفحات الموقع */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
+        .user-menu-button:hover { background-color: var(--gray-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
+        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dropdown-menu a:hover { background-color: var(--gray-color); }
+        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
+        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
+        .btn-header.primary { background-color: var(--primary-color); color: white; }
+        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
+        .btn-header:hover { transform: translateY(-2px); }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- تصميم حاوية الصفحة والترويسة --- */
+        .page-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 10px 0;
+        }
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- تصميم قسم الفلترة والبحث --- */
+        .filters-container {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .filter-btn {
+            background: var(--gray-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn:hover {
+            background-color: #e2e6ea;
+            border-color: #dae0e5;
+        }
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 86, 179, 0.3);
+        }
+        .search-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+        .search-wrapper i {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        #search-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+        }
+
+        /* --- تصميم جدول الأسعار --- */
+        .prices-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        .prices-table thead th {
+            text-align: right;
+            padding: 15px 20px;
+            color: var(--text-color);
+            font-size: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .prices-table tbody tr {
+            background: var(--light-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .prices-table tbody tr:hover {
+            transform: scale(1.02);
+            box-shadow: var(--box-shadow);
+        }
+        .prices-table td {
+            padding: 20px;
+            vertical-align: middle;
+        }
+        .prices-table tr td:first-child { border-radius: 0 8px 8px 0; }
+        .prices-table tr td:last-child { border-radius: 8px 0 0 8px; }
+        .service-name {
+            font-weight: 700;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        .service-category {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+        .service-price {
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            white-space: nowrap;
+        }
+        .btn-order {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn-order:hover {
+            background-color: #157347;
+            transform: translateY(-2px);
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* --- التصميم المتجاوب --- */
+        @media (max-width: 768px) {
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+            .filters-container { flex-direction: column; align-items: stretch; }
+        }
+        @media (min-width: 769px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ✅ الشريط العلوي الموحد -->
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <div class="page-container">
+        <!-- ترويسة الصفحة -->
+        <header class="page-header">
+            <h1>قائمة الأسعار</h1>
+            <p>نقدم لكم أسعاراً تنافسية وشفافة لجميع خدماتنا. استخدم الفلاتر للعثور على الخدمة التي تبحث عنها بسهولة.</p>
+        </header>
+
+        <!-- قسم الفلترة والبحث -->
+        <div class="filters-container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="خدمات إدارية">خدمات إدارية</button>
+                <button class="filter-btn" data-filter="خدمات التعليم">خدمات التعليم</button>
+                <button class="filter-btn" data-filter="خدمات التوظيف والمباريات">التوظيف والمباريات</button>
+                <button class="filter-btn" data-filter="خدمات الاجتماعي والصحة">اجتماعي وصحي</button>
+                <button class="filter-btn" data-filter="خدمات رقمية وتقنية">رقمي وتقني</button>
+            </div>
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="ابحث عن خدمة...">
+            </div>
+        </div>
+
+        <!-- جدول الأسعار -->
+        <table class="prices-table">
+            <thead>
+                <tr>
+                    <th>الخدمة</th>
+                    <th>الفئة</th>
+                    <th>السعر</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="prices-tbody">
+                <!-- سيتم ملء هذا الجزء بواسطة الجافاسكريبت -->
+            </tbody>
+        </table>
+        <div id="no-results-message" class="no-results" style="display: none;">
+            لا توجد خدمات تطابق بحثك.
+        </div>
+
+    </div>
+
+    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        // =================================================================
+        //          السكريبت الخاص بصفحة الأسعار
+        // =================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. بيانات الخدمات ---
+            // هنا قمنا بوضع كل بيانات الخدمات في مصفوفة جافاسكريبت لتسهيل التعامل معها
+            const servicesData = [
+                { category: 'خدمات إدارية', name: 'تحرير الطلبات الخطية', price: 20 },
+                { category: 'خدمات إدارية', name: 'التصريحات بالشرف', price: 15 },
+                { category: 'خدمات إدارية', name: 'صياغة التزامات والعقود', price: 15 },
+                { category: 'خدمات إدارية', name: 'السيرة الذاتية (CV)', price: 10 },
+                { category: 'خدمات إدارية', name: 'ملء مطبوعات أو استمارات', price: 10 },
+                { category: 'خدمات إدارية', name: 'ترجمة بسيطة للوثائق', price: 15 },
+                { category: 'خدمات إدارية', name: 'تصحيح الأخطاء اللغوية', price: 10 },
+                { category: 'خدمات إدارية', name: 'إنشاء حسابات إلكترونية (Gmail، outlook…)', price: 20 },
+                { category: 'خدمات إدارية', name: 'تصغير أو تعديل ملفات PDF', price: 15 },
+                { category: 'خدمات إدارية', name: 'تصفح وتحميل وثائق من مواقع رسمية', price: 20 },
+                { category: 'خدمات إدارية', name: 'صياغة الفواتير للمقاولات صغرى والشركات', price: 50 },
+                { category: 'خدمات إدارية', name: 'إرسال شكايات', price: 30 },
+                { category: 'خدمات إدارية', name: 'صياغة مراسلات الى جهات المعنية', price: 40 },
+                { category: 'خدمات إدارية', name: 'مقاول ذاتي', price: 15 },
+                { category: 'خدمات التعليم', name: 'التسجيل في منحتي', price: 20 },
+                { category: 'خدمات التعليم', name: 'التسجيل في التكوين المهني', price: 15 },
+                { category: 'خدمات التعليم', name: 'التسجيل في المدارس العليا', price: 20 },
+                { category: 'خدمات التعليم', name: 'التسجيل في الجامعات', price: 40 },
+                { category: 'خدمات التعليم', name: 'طلب السكن الجامعي', price: 25 },
+                { category: 'خدمات التوظيف والمباريات', name: 'تسجيل في مباريات الأمن الوطني، الوقاية المدنية، الجمارك، القوات المساعدة…', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'إعداد ملفات الترشح (CV، طلب خطي، نسخ الدبلومات، الالتزام، تصريح بالشرف...)', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'ملء الطلبات الخاصة بالمباريات', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'تتبع النتائج وطبع لوائح الناجحين', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'المساعدة في التسجيل في ANAPEC', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'السيرة الذاتية (CV) للتوظيف', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'نموذج رسالة تحفيزية Lettre de motivation لعمل او وظيفة', price: 80 },
+                { category: 'خدمات التوظيف والمباريات', name: 'طلب الموارد البشرية او الرئيس العمل', price: 80 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'التسجيل في السجل الوطني للسكان (RNP)', price: 20 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'التسجيل في السجل الاجتماعي الموحد (RSU)', price: 20 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'تسجيل في الدعم الاجتماعي المباشر', price: 20 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'المساعدة في إدخال أو تعديل المعطيات', price: 20 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'استخراج وصل التسجيل أو شهادة الاستفادة', price: 20 },
+                { category: 'خدمات الاجتماعي والصحة', name: 'استفسار وحل جميع المشاكل CNSS و AMO', price: 20 },
+                { category: 'خدمات رقمية وتقنية', name: 'إنشاء مواقع إلكترونية بسيطة', price: 200 },
+                { category: 'خدمات رقمية وتقنية', name: 'تصميم لوغوهات، بطاقات عمل، إعلانات', price: 60 },
+                { category: 'خدمات رقمية وتقنية', name: 'تصاميم السوشيال ميديا', price: 30 },
+                { category: 'خدمات رقمية وتقنية', name: 'تعديل الصور والوثائق', price: 15 },
+                { category: 'خدمات رقمية وتقنية', name: 'إنشاء QR Code', price: 10 },
+                { category: 'خدمات رقمية وتقنية', name: 'فواتير Word/Excel', price: 20 },
+                { category: 'خدمات رقمية وتقنية', name: 'إدخال البيانات في ملفات Excel', price: 30 },
+                { category: 'خدمات رقمية وتقنية', name: 'تحويل الملفات (PDF إلى Word...)', price: 15 },
+                { category: 'خدمات رقمية وتقنية', name: 'تعبئة استبيانات أو استمارات إلكترونية', price: 25 }
+            ];
+
+            // --- 2. تعريف عناصر الواجهة ---
+            const pricesTbody = document.getElementById('prices-tbody');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const searchInput = document.getElementById('search-input');
+            const noResultsMessage = document.getElementById('no-results-message');
+
+            // --- 3. الدوال الرئيسية ---
+
+            /**
+             * دالة لعرض الخدمات في الجدول بناءً على البيانات المفلترة
+             * @param {Array} services - مصفوفة الخدمات التي سيتم عرضها
+             */
+            function renderServices(services) {
+                pricesTbody.innerHTML = ''; // إفراغ الجدول قبل إضافة البيانات الجديدة
+                if (services.length === 0) {
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                    services.forEach(service => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div class="service-name">${service.name}</div>
+                            </td>
+                            <td>
+                                <div class="service-category">${service.category}</div>
+                            </td>
+                            <td>
+                                <div class="service-price">${service.price} درهم</div>
+                            </td>
+                            <td>
+                                <button class="btn-order" data-service="${service.name}" data-price="${service.price}">اطلب الآن</button>
+                            </td>
+                        `;
+                        pricesTbody.appendChild(row);
+                    });
+                }
+                addOrderButtonListeners(); // إعادة ربط الأحداث بالأزرار الجديدة
+            }
+
+            /**
+             * دالة لربط حدث النقر بأزرار "اطلب الآن"
+             */
+            function addOrderButtonListeners() {
+                const orderButtons = document.querySelectorAll('.btn-order');
+                orderButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const serviceName = e.target.getAttribute('data-service');
+                        const servicePrice = e.target.getAttribute('data-price');
+                        const url = `./payment.html?service=${encodeURIComponent(serviceName)}&price=${encodeURIComponent(servicePrice)}`;
+                        window.location.href = url;
+                    });
+                });
+            }
+
+            /**
+             * دالة لتصفية وعرض الخدمات بناءً على الفئة والنص المدخل
+             */
+            function filterAndRender() {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                const searchTerm = searchInput.value.toLowerCase();
+
+                const filteredServices = servicesData.filter(service => {
+                    const matchesCategory = (activeFilter === 'all' || service.category === activeFilter);
+                    const matchesSearch = service.name.toLowerCase().includes(searchTerm);
+                    return matchesCategory && matchesSearch;
+                });
+
+                renderServices(filteredServices);
+            }
+
+            // --- 4. ربط الأحداث ---
+
+            // ربط حدث النقر بأزرار الفلترة
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    filterAndRender();
+                });
+            });
+
+            // ربط حدث الكتابة بشريط البحث
+            searchInput.addEventListener('input', filterAndRender);
+
+            // --- 5. العرض الأولي للصفحة ---
+            // عرض كل الخدمات عند تحميل الصفحة لأول مرة
+            renderServices(servicesData);
+        });
+    </script>
+</body>
+</html>

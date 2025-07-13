@@ -1,67 +1,285 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تأكيد بريدك الإلكتروني</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background: #f4f7f9;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      direction: rtl;
-    }
-    .box {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-      text-align: center;
-      max-width: 480px;
-      width: 100%;
-    }
-    h1 {
-      color: #0056b3;
-      margin-bottom: 15px;
-    }
-    p {
-      color: #444;
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
-    .highlight {
-      color: #d35400;
-      font-weight: bold;
-    }
-    a.button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: #0056b3;
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    a.button:hover {
-      background: #003f7d;
-    }
-  </style>
+    <!-- =================================================================
+         META TAGS, FONTS, AND ICONS
+         This section contains essential metadata, links to Google Fonts for typography,
+         and Font Awesome for icons, ensuring a professional and modern look.
+    ================================================================== -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تأكيد بريدك الإلكتروني - المكتب الرقمي</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- =================================================================
+         INTERNAL CSS STYLES
+         This extensive style block defines the entire look and feel of the page,
+         from colors and fonts to layout, animations, and responsiveness.
+    ================================================================== -->
+    <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --success-color: #198754;
+            --danger-color: #dc3545;
+        }
+
+        /* --- إعدادات الجسم العامة --- */
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
+        .user-menu-button:hover { background-color: var(--gray-color); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
+        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dropdown-menu a:hover { background-color: var(--gray-color); }
+        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
+        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
+        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
+        .btn-header.primary { background-color: var(--primary-color); color: white; }
+        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
+        .btn-header:hover { transform: translateY(-2px); }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- تصميم حاوية المحتوى الرئيسية --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .verification-card {
+            background: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border-top: 5px solid var(--primary-color);
+        }
+        .icon-wrapper {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .verification-card h1 {
+            color: var(--dark-color);
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        .verification-card p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        .spam-notice {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-weight: 700;
+        }
+        .spam-notice .highlight {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        .button-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .button-link:hover {
+            background: #003f7d;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- التذييل (Footer) --- */
+        .main-footer {
+            background-color: var(--dark-color);
+            color: #bdc3c7;
+            padding: 60px 5% 20px;
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-title {
+            color: var(--light-color);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--light-color); }
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid #34495e;
+            padding-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* --- التصميم المتجاوب --- */
+        @media (max-width: 768px) {
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
+        }
+        @media (min-width: 769px) {
+            .hamburger-menu { display: none; }
+            .navbar-menu { display: flex; }
+        }
+    </style>
 </head>
 <body>
-  <div class="box">
-    <h1>تم إرسال رابط التفعيل ✅</h1>
-    <p>لقد أرسلنا لك رسالة إلكترونية لتأكيد حسابك.</p>
-    <p>يرجى التحقق من بريدك الإلكتروني الآن والضغط على رابط التفعيل.</p>
-    <p>إذا لم تجد الرسالة في صندوق الوارد 📥، يرجى التحقق من صندوق <span class="highlight">الرسائل المزعجة (Spam أو Junk)</span>.</p>
-    <a href="login.html" class="button">العودة إلى تسجيل الدخول</a>
-  </div>
+
+    <!-- ✅ الشريط العلوي الموحد -->
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <!-- المحتوى الرئيسي للصفحة -->
+    <main class="main-content">
+        <div class="verification-card">
+            <div class="icon-wrapper">
+                <i class="fas fa-paper-plane"></i>
+            </div>
+            <h1>تم إرسال رابط التفعيل بنجاح</h1>
+            <p>لقد أرسلنا رسالة إلكترونية إلى بريدك المسجل. يرجى فتحها والضغط على رابط التفعيل لإتمام عملية إنشاء حسابك.</p>
+            
+            <!-- ✅ التنبيه الخاص بالرسائل المزعجة -->
+            <div class="spam-notice">
+                <p style="margin:0; color: #842029;">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    إذا لم تجد الرسالة في صندوق الوارد، يرجى التحقق من مجلد 
+                    <span class="highlight">الرسائل المزعجة (Spam)</span> 
+                    أو 
+                    <span class="highlight">البريد غير الهام (Junk)</span>.
+                </p>
+            </div>
+            
+            <a href="login.html" class="button-link">العودة إلى صفحة تسجيل الدخول</a>
+        </div>
+    </main>
+
+    <!-- ✅ التذييل الكامل -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">المكتب الرقمي</h3>
+                    <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">روابط مهمة</h3>
+                    <ul>
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="services.html">جميع الخدمات</a></li>
+                        <li><a href="prices.html">قائمة الأسعار</a></li>
+                        <li><a href="payment-methods.html">طرق الدفع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">قانوني</h3>
+                    <ul>
+                        <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
+                        <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+
 </body>
 </html>

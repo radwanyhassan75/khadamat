@@ -260,15 +260,15 @@
 
         // ✅ [تم الإصلاح] دالة لجلب وعرض الطلبات
         async function fetchMyOrders(user) {
-            if (!user) {
+            if (!user || !user.email) {
                 ordersContainer.innerHTML = '<p>خطأ: لا يمكن تحديد المستخدم.</p>';
                 return;
             }
 
             try {
-                // الطريقة الصحيحة: البحث باستخدام معرّف المستخدم الفريد (userId)
-                // هذا لا يتطلب فهرساً معقداً وهو أكثر أماناً
-                const ordersQuery = db.collection('orders').where('userId', '==', user.uid);
+                // الطريقة الصحيحة: البحث باستخدام البريد الإلكتروني للمستخدم
+                // هذا يضمن جلب كل الطلبات التي تم تقديمها بنفس البريد الإلكتروني
+                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
                 const querySnapshot = await ordersQuery.get();
                 
                 if (querySnapshot.empty) {
@@ -337,11 +337,12 @@
 
             } catch (error) {
                 console.error("خطأ في جلب الطلبات:", error);
+                const firestoreErrorLink = "https://console.firebase.google.com/project/" + firebase.app().options.projectId + "/firestore/indexes";
                 ordersContainer.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i>
                         <h3>حدث خطأ أثناء تحميل الطلبات</h3>
-                        <p>الرجاء المحاولة مرة أخرى لاحقاً. إذا استمرت المشكلة، قد تحتاج إلى إضافة حقل 'userId' لطلباتك عند إنشائها.</p>
+                        <p>قد تحتاج إلى إنشاء فهرس في Firestore. <a href="${firestoreErrorLink}" target="_blank">اضغط هنا لإعداد الفهرس</a>.</p>
                     </div>
                 `;
             }

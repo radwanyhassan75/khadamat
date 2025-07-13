@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- ============== Meta Tags and Links ============== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - المكتب الرقمي</title>
     
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- ============== Internal CSS Styles ============== -->
     <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #0d6efd;
@@ -24,6 +30,8 @@
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
+
+        /* --- إعدادات الجسم العامة --- */
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
@@ -54,7 +62,7 @@
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         
-        /* --- تصميم لوحة التحكم --- */
+        /* --- تصميم حاوية لوحة التحكم --- */
         .dashboard-wrapper {
             max-width: 1200px;
             margin: 40px auto;
@@ -67,14 +75,14 @@
             align-items: flex-start;
         }
 
-        /* --- الشريط الجانبي (Sidebar) --- */
+        /* --- تصميم الشريط الجانبي (Sidebar) --- */
         .sidebar {
             background-color: var(--light-color);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 25px;
             position: sticky;
-            top: 120px; /* Adjusted for sticky header */
+            top: 120px; /* مساحة للهيدر الثابت */
             transition: all 0.3s ease;
         }
         .sidebar-header {
@@ -149,7 +157,7 @@
             color: white;
         }
 
-        /* --- المحتوى الرئيسي --- */
+        /* --- تصميم المحتوى الرئيسي والبطاقات --- */
         .main-content .content-pane { display: none; }
         .main-content .content-pane.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -194,27 +202,7 @@
             border-radius: 8px;
         }
 
-        /* --- جدول الطلبات --- */
-        .orders-table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: right; }
-        th, td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
-        th { background-color: var(--gray-color); font-size: 1rem; color: var(--dark-color); }
-        tbody tr:nth-child(even) { background-color: var(--gray-color); }
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: white;
-            min-width: 90px;
-            text-align: center;
-        }
-        .status-pending { background-color: var(--warning-color); color: var(--dark-color); }
-        .status-completed { background-color: var(--success-color); }
-        .status-cancelled { background-color: var(--danger-color); }
-        .loading-spinner { text-align: center; padding: 40px; font-size: 1.5rem; color: var(--primary-color); }
-
-        /* --- قسم تعديل الملف الشخصي --- */
+        /* --- تصميم قسم تعديل الملف الشخصي --- */
         .edit-form .form-group { margin-bottom: 20px; }
         .edit-form input {
             width: 100%; padding: 12px 15px; border: 1px solid #ced4da;
@@ -228,7 +216,7 @@
         }
         .form-message {
             padding: 10px; border-radius: 8px; margin-top: 15px; text-align: center; font-weight: 700;
-            display: none; /* Hidden by default */
+            display: none;
         }
         .form-message.success { background-color: #d1e7dd; color: #0f5132; }
         .form-message.error { background-color: #f8d7da; color: #842029; }
@@ -268,7 +256,8 @@
                     <ul>
                         <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
                         <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل الملف الشخصي</a></li>
-                        <li><a data-target="orders"><i class="fas fa-tasks"></i> طلباتي</a></li>
+                        <!-- ✅ [تم الإصلاح] هذا الرابط الآن يوجه إلى صفحة طلباتي الجديدة -->
+                        <li><a href="my-orders.html"><i class="fas fa-tasks"></i> طلباتي</a></li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
@@ -276,6 +265,7 @@
                 </div>
             </aside>
             <div class="main-content">
+                <!-- قسم الملف الشخصي -->
                 <div id="profile" class="content-pane active">
                     <div class="card">
                         <h2><i class="fas fa-id-card"></i> معلوماتي الشخصية</h2>
@@ -287,6 +277,7 @@
                     </div>
                 </div>
                 
+                <!-- قسم تعديل الملف الشخصي -->
                 <div id="edit-profile" class="content-pane">
                     <div class="card">
                         <h2><i class="fas fa-user-edit"></i> تعديل معلوماتي</h2>
@@ -305,21 +296,7 @@
                     </div>
                 </div>
 
-                <div id="orders" class="content-pane">
-                    <div class="card">
-                        <h2><i class="fas fa-history"></i> سجل طلباتي</h2>
-                        <div class="orders-table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr><th>رقم الطلب</th><th>الخدمة</th><th>تاريخ الطلب</th><th>الحالة</th></tr>
-                                </thead>
-                                <tbody id="orders-tbody">
-                                    <!-- سيتم ملء الطلبات هنا عبر الجافاسكريبت -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <!-- ✅ [تم الحذف] تم حذف قسم عرض الطلبات من هنا لأنه أصبح في صفحة منفصلة -->
             </div>
         </div>
     </main>
@@ -330,8 +307,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     
     <script>
+    // =================================================================
+    //          السكريبت الخاص بصفحة لوحة التحكم
+    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         // --- تهيئة Firebase ---
+        // هذا الجزء ضروري لضمان عمل الصفحة حتى لو لم يتم تحميل auth.js
         const firebaseConfig = {
             apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
             authDomain: "khadamatukdigital.firebaseapp.com",
@@ -340,11 +321,14 @@
             messagingSenderId: "690661888019",
             appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
         };
-        firebase.initializeApp(firebaseConfig);
+        // التأكد من عدم تهيئة Firebase مرتين
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // --- دوال الواجهة ---
+        // --- تعريف عناصر الواجهة ---
         const sidebarUserName = document.getElementById("sidebar-user-name");
         const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
         const displayNameP = document.getElementById("display-name");
@@ -355,14 +339,18 @@
         const editForm = document.getElementById("edit-profile-form");
         const editFormMessage = document.getElementById("edit-form-message");
 
+        // --- الدوال المساعدة ---
+
+        // دالة لعرض رسائل للمستخدم (مثل "تم الحفظ بنجاح")
         function showMessage(element, message, isSuccess) {
             element.textContent = message;
-            element.className = 'form-message';
+            element.className = 'form-message'; // إعادة تعيين الكلاسات
             element.classList.add(isSuccess ? 'success' : 'error');
             element.style.display = 'block';
             setTimeout(() => { element.style.display = 'none'; }, 4000);
         }
 
+        // دالة لجلب وعرض بيانات المستخدم في كل الأماكن المخصصة
         async function loadUserData(user) {
             sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
             sidebarUserName.textContent = user.displayName || 'مستخدم';
@@ -376,10 +364,11 @@
                     sidebarUserName.textContent = finalDisplayName;
                     displayNameP.textContent = finalDisplayName;
                     displayEmailP.textContent = userData.email || user.email;
-                    displayPhoneP.textContent = userData.phoneNumber || "غير متوفر";
+                    displayPhoneP.textContent = userData.phoneNumber || "يرجى تحديث رقم هاتفك";
                     editNameInput.value = finalDisplayName;
                     editPhoneInput.value = userData.phoneNumber || "";
                 } else {
+                    // في حالة عدم وجود مستند للمستخدم، يتم عرض البيانات من حساب جوجل
                     displayNameP.textContent = user.displayName || "لا يوجد اسم";
                     displayEmailP.textContent = user.email;
                     displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
@@ -390,67 +379,8 @@
                 displayNameP.textContent = "خطأ في تحميل البيانات";
             }
         }
-
-        // ✅ [تم الإصلاح] دالة لجلب وعرض الطلبات
-        async function fetchAndDisplayOrders(user) {
-            const ordersTbody = document.getElementById('orders-tbody');
-            if (!ordersTbody) return;
-            ordersTbody.innerHTML = `<tr><td colspan="4"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div></td></tr>`;
-            
-            try {
-                // البحث باستخدام البريد الإلكتروني للمستخدم لضمان جلب كل الطلبات
-                const ordersQuery = db.collection('orders').where('البريد_الإلكتروني', '==', user.email);
-                const ordersSnapshot = await ordersQuery.get();
-                
-                if (ordersSnapshot.empty) {
-                    ordersTbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 20px;">لا يوجد طلبات سابقة.</td></tr>';
-                    return;
-                }
-                
-                // تحويل النتائج إلى مصفوفة للفرز في المتصفح
-                const ordersList = [];
-                ordersSnapshot.forEach(doc => {
-                    ordersList.push(doc.data());
-                });
-
-                // فرز الطلبات حسب التاريخ (الأحدث أولاً)
-                ordersList.sort((a, b) => {
-                    const dateA = a.createdAt?.seconds || 0;
-                    const dateB = b.createdAt?.seconds || 0;
-                    return dateB - dateA;
-                });
-
-                let ordersHtml = '';
-                ordersList.forEach(order => {
-                    const orderDateRaw = order.createdAt || (order.data ? order.data.createdAt : null);
-                    let orderDate = 'غير محدد';
-                    if (orderDateRaw) {
-                        const dateObj = orderDateRaw.seconds ? new Date(orderDateRaw.seconds * 1000) : new Date(orderDateRaw);
-                        orderDate = dateObj.toLocaleDateString('ar-EG');
-                    }
-                    
-                    let statusClass = 'status-pending';
-                    let statusText = order.status || 'قيد المراجعة';
-                    if (statusText.includes('مكتمل')) statusClass = 'status-completed';
-                    if (statusText.includes('ملغي')) statusClass = 'status-cancelled';
-
-                    ordersHtml += `
-                        <tr>
-                            <td><strong>${order.رقم_الطلب || (order.data ? order.data.رقم_الطلب : '') || 'N/A'}</strong></td>
-                            <td>${order.الخدمة_المطلوبة || (order.data ? order.data.الخدمة_المطلوبة : '') || 'غير محدد'}</td>
-                            <td>${orderDate}</td>
-                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-                        </tr>
-                    `;
-                });
-                ordersTbody.innerHTML = ordersHtml;
-
-            } catch (error) {
-                console.error("خطأ في جلب الطلبات:", error);
-                ordersTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">حدث خطأ أثناء تحميل الطلبات. الرجاء المحاولة مرة أخرى.</td></tr>`;
-            }
-        }
         
+        // دالة لحفظ تعديلات الملف الشخصي في قاعدة البيانات
         async function saveProfileChanges(event) {
             event.preventDefault();
             const user = auth.currentUser;
@@ -466,46 +396,61 @@
 
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
+                // استخدام set مع merge:true يضمن تحديث أو إنشاء المستند دون حذف البيانات القديمة
                 await userDocRef.set({
                     displayName: newName,
                     phoneNumber: newPhone,
-                    email: user.email // حفظ الإيميل أيضاً
+                    email: user.email 
                 }, { merge: true });
 
+                // تحديث اسم المستخدم في نظام المصادقة نفسه أيضاً
                 await user.updateProfile({ displayName: newName });
                 
                 showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
-                loadUserData(user); // إعادة تحميل البيانات لعرضها محدثة
+                loadUserData(user); // إعادة تحميل البيانات لعرضها محدثة في كل مكان
             } catch (error) {
                 console.error("خطأ في حفظ التغييرات:", error);
                 showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
             }
         }
+        // ربط دالة الحفظ بنموذج التعديل
         editForm.addEventListener('submit', saveProfileChanges);
 
+        // --- منطق التنقل بين التبويبات داخل الصفحة ---
         const navLinks = document.querySelectorAll('.sidebar-nav a');
         const contentPanes = document.querySelectorAll('.main-content .content-pane');
         navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                navLinks.forEach(item => item.classList.remove('active'));
-                contentPanes.forEach(pane => pane.classList.remove('active'));
-                link.classList.add('active');
-                const targetId = link.getAttribute('data-target');
-                document.getElementById(targetId)?.classList.add('active');
-            });
+            // التحقق من أن الرابط ليس رابطاً خارجياً
+            if (link.hasAttribute('data-target')) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    contentPanes.forEach(pane => pane.classList.remove('active'));
+                    link.classList.add('active');
+                    const targetId = link.getAttribute('data-target');
+                    const targetPane = document.getElementById(targetId);
+                    if (targetPane) {
+                        targetPane.classList.add('active');
+                    }
+                });
+            }
         });
 
+        // --- دوال المصادقة العامة ---
         function logoutUser() {
             auth.signOut().then(() => { window.location.href = "index.html"; });
         }
+        // جعل دالة تسجيل الخروج متاحة للزر في HTML
         window.logoutUser = logoutUser;
 
+        // --- نقطة البداية الرئيسية ---
+        // عند تغير حالة المستخدم (تسجيل دخول أو خروج)
         auth.onAuthStateChanged(user => {
             if (user) {
+                // إذا كان المستخدم مسجلاً دخوله، قم بتحميل بياناته
                 loadUserData(user);
-                fetchAndDisplayOrders(user);
             } else {
+                // إذا لم يكن مسجلاً، قم بتوجيهه لصفحة الدخول
                 window.location.href = "login.html";
             }
         });
