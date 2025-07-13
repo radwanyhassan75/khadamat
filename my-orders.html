@@ -23,17 +23,28 @@
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); direction: rtl; }
         
-        .main-header { /* ... styles for your header ... */ }
-        .main-footer { /* ... styles for your footer ... */ }
-
-        .page-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .page-header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
+        /* --- ✅ تصميم الشريط العلوي الاحترافي --- */
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky; top: 0; width: 100%; z-index: 1000;
         }
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+
+        /* --- تصميم صفحة طلباتي --- */
+        .page-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .page-header { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
         .page-header h1 {
             font-size: 2.5rem; color: var(--dark-color); font-weight: 900;
             display: flex; align-items: center; gap: 15px;
@@ -42,23 +53,19 @@
         
         .orders-grid { display: grid; gap: 25px; }
         .order-card {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--border-color);
+            background: var(--light-color); border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow); border: 1px solid var(--border-color);
             transition: transform 0.3s, box-shadow 0.3s;
         }
         .order-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
         .order-card-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 20px 25px; border-bottom: 1px solid var(--border-color);
             display: flex; justify-content: space-between; align-items: center;
         }
         .order-card-header h3 { margin: 0; font-size: 1.3rem; color: var(--dark-color); }
         .order-id { font-size: 0.9rem; font-weight: 700; color: #777; background: var(--gray-color); padding: 5px 10px; border-radius: 50px; }
         .order-card-body {
-            padding: 25px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px;
+            padding: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px;
         }
         .info-item .label { font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; }
         .info-item .value { font-size: 1.1rem; font-weight: bold; color: var(--dark-color); }
@@ -71,22 +78,58 @@
         .status-badge.red { background-color: #fdecea; color: var(--danger-color); }
         
         .reason-note {
-            grid-column: 1 / -1;
-            background-color: #fff5f5; border: 1px solid #fed7d7; color: #9b2c2c;
-            padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 0.95rem;
+            grid-column: 1 / -1; background-color: #fff5f5; border: 1px solid #fed7d7;
+            color: #9b2c2c; padding: 15px; border-radius: 8px; margin-top: 10px; font-size: 0.95rem;
         }
         .reason-note strong { display: block; margin-bottom: 5px; }
         .loading-container, .empty-state { text-align: center; padding: 60px 20px; }
         .loading-container i { font-size: 3rem; color: var(--primary-color); animation: spin 1.5s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- ✅ تصميم التذييل --- */
+        .main-footer {
+            background-color: var(--dark-color); color: #bdc3c7;
+            padding: 60px 0 20px; margin-top: 60px;
+        }
+        .footer-container {
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;
+        }
+        .footer-section h3 { color: var(--light-color); margin-bottom: 20px; font-size: 1.4rem; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section ul li a { color: #bdc3c7; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
+        .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
+        .social-icons a { display: inline-block; color: var(--light-color); font-size: 1.5rem; margin-left: 15px; transition: transform 0.3s; }
+        .social-icons a:hover { transform: scale(1.2); color: var(--primary-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
+        
+        @media (max-width: 992px) { .navbar-menu { display: none; } .hamburger-menu { display: block; } }
+        @media (min-width: 993px) { .navbar-menu { display: flex; } .hamburger-menu { display: none; } }
     </style>
 </head>
 <body>
 
-    <header class="main-header">...</header>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
 
     <main class="page-wrapper">
-        <div class="page-header"><h1><i class="fas fa-receipt"></i> طلباتي</h1></div>
+        <div class="page-header">
+            <h1><i class="fas fa-receipt"></i> طلباتي</h1>
+        </div>
+
         <div id="orders-container">
             <div class="loading-container" id="loading-state">
                 <i class="fas fa-spinner"></i>
@@ -98,7 +141,14 @@
         </div>
     </main>
     
-    <footer class="main-footer">...</footer>
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p><div class="social-icons" style="margin-top: 20px;"><a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a><a href="#" title="Twitter"><i class="fab fa-twitter"></i></a><a href="#" title="Instagram"><i class="fab fa-instagram"></i></a></div></div>
+            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li></ul></div>
+            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="#">سياسة الخصوصية</a></li><li><a href="#">الشروط والأحكام</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+    </footer>
     
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
@@ -113,7 +163,6 @@
 
         async function fetchOrders(userId) {
             try {
-                // ✅ استدعاء الرابط الجديد الذي يقرأ من Google Sheet
                 const response = await fetch(`${apiBaseUrl}/api/my-orders/${userId}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 return await response.json();
@@ -125,14 +174,9 @@
 
         function createOrderCard(order) {
             const statusMap = {
-                'تم الإنجاز': 'green',
-                'جاري المعالجة': 'orange',
-                'لم يتم الإنجاز': 'red',
-                'تم الدفع': 'green',
-                'جاري التحقق': 'orange',
-                'مشكلة في الدفع': 'red'
+                'تم الإنجاز': 'green', 'جاري المعالجة': 'orange', 'لم يتم الإنجاز': 'red',
+                'تم الدفع': 'green', 'جاري التحقق': 'orange', 'مشكلة في الدفع': 'red'
             };
-            
             const orderStatus = order.orderStatus || 'جاري المعالجة';
             const paymentStatus = order.paymentStatus || 'جاري التحقق';
 
@@ -144,22 +188,10 @@
                     <span class="order-id">#${order.id || 'N/A'}</span>
                 </div>
                 <div class="order-card-body">
-                    <div class="info-item">
-                        <span class="label">مبلغ الدفع</span>
-                        <span class="value">${order.paymentAmount || 'N/A'} د.م</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">طريقة الدفع</span>
-                        <span class="value">${order.paymentMethod || 'N/A'}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">حالة الدفع</span>
-                        <span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span>
-                    </div>
-                    <div class="info-item">
-                        <span class="label">حالة الطلب</span>
-                        <span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span>
-                    </div>
+                    <div class="info-item"><span class="label">مبلغ الدفع</span><span class="value">${order.paymentAmount || 'N/A'} د.م</span></div>
+                    <div class="info-item"><span class="label">طريقة الدفع</span><span class="value">${order.paymentMethod || 'N/A'}</span></div>
+                    <div class="info-item"><span class="label">حالة الدفع</span><span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span></div>
+                    <div class="info-item"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span></div>
                     ${(orderStatus === 'لم يتم الإنجاز' && order.reason) ? 
                         `<div class="reason-note"><strong>سبب عدم الإنجاز:</strong> ${order.reason}</div>` : ''}
                     ${(paymentStatus === 'مشكلة في الدفع' && order.paymentReason) ? 
@@ -168,6 +200,7 @@
             return card;
         }
 
+        // الكود الوظيفي (لا تغيير هنا)
         auth.onAuthStateChanged(async (user) => {
             if (user && user.uid) {
                 const orders = await fetchOrders(user.uid);
@@ -175,6 +208,8 @@
                 if (orders && orders.length > 0) {
                     const grid = document.createElement('div');
                     grid.className = 'orders-grid';
+                    // فرز الطلبات (إذا كان هناك تاريخ)
+                    orders.sort((a,b) => (b.id > a.id) ? 1 : ((a.id > b.id) ? -1 : 0));
                     orders.forEach(order => grid.appendChild(createOrderCard(order)));
                     ordersContainer.appendChild(grid);
                 } else {
@@ -186,6 +221,10 @@
                 emptyState.style.display = 'block';
             }
         });
+
+        // لتحديث السنة في الفوتر
+        const currentYearEl = document.getElementById('current-year');
+        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
     });
     </script>
 </body>
