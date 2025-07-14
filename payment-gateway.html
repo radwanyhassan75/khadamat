@@ -532,7 +532,7 @@
             }
             formData.append('createdAt', new Date().toISOString());
 
-            const workerUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
+            const workerUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev/api/submit-order';
 
             try {
                 const response = await fetch(workerUrl, {

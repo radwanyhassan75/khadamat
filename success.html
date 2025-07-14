@@ -214,7 +214,12 @@
             
             // قراءة رقم الطلب من الرابط
             const params = new URLSearchParams(window.location.search);
+document.getElementById("order-id").innerText = params.get("orderId") || "غير معروف";
             const orderId = params.get('orderId');
+            // ✅ تعديل: إذا كان رقم الطلب موجودًا، نعرضه في العنصر
+            // ✅ تعديل: إذا لم يكن موجودًا، نعرض "غير متوفر" ونعطل زر النسخ
+            // ✅ تعديل: الزر "عرض كل طلباتي" يوجه الآن إلى صفحة طلباتي العامة
+            // ✅ تعديل: لا حاجة لتغيير الرابط لأنه يوجه دائمًا إلى نفس الصفحة
 
             if (orderId) {
                 display.textContent = orderId;
