@@ -61,20 +61,6 @@
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .navbar-actions { position: relative; }
-        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
-        .user-menu-button:hover { background-color: var(--gray-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
-        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
-        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
-        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
-        .dropdown-menu a:hover { background-color: var(--gray-color); }
-        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
-        .btn-header.primary { background-color: var(--primary-color); color: white; }
-        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-header:hover { transform: translateY(-2px); }
         .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
 
         /* --- تصميم حاوية الصفحة والترويسة --- */
@@ -323,7 +309,7 @@
             <h1>إتمام الطلب</h1>
         </header>
 
-        <form method="POST" action="https://order-processor.radwanyhassan75.workers.dev" enctype="multipart/form-data">
+        <form enctype="multipart/form-data">
             
             <div class="card">
                 <div class="card-header"><span class="step-icon">1</span><h3>ملخص الطلب</h3></div>
@@ -337,23 +323,26 @@
                 </div>
             </div>
 
-            <!-- حقول مخفية لإرسال البيانات مع النموذج -->
-            <input type="hidden" id="form-service-name" name="الخدمة_المطلوبة">
-            <input type="hidden" id="form-service-price" name="السعر">
+            <!-- ✅ تعديل: تغيير أسماء الحقول المخفية إلى الإنجليزية -->
+            <input type="hidden" id="form-service-name" name="serviceName">
+            <input type="hidden" id="form-service-price" name="price">
 
             <div class="card">
                 <div class="card-header"><span class="step-icon">2</span><h3>معلوماتك الشخصية</h3></div>
                 <div class="form-group">
                     <label for="name">الاسم الكامل <span class="required-star">*</span></label>
-                    <input type="text" name="الاسم_الكامل" id="name" required />
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="text" name="customerName" id="name" required />
                 </div>
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                    <input type="email" name="البريد_الإلكتروني" id="email" required />
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="email" name="email" id="email" required />
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                    <input type="tel" name="الهاتف" id="phone" required placeholder="مثال: 0612345678" />
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="tel" name="phone" id="phone" required placeholder="مثال: 0612345678" />
                 </div>
             </div>
 
@@ -361,11 +350,13 @@
                 <div class="card-header"><span class="step-icon">3</span><h3>تفاصيل إضافية</h3></div>
                 <div class="form-group">
                     <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                    <textarea name="تفاصيل_الخدمة" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <textarea name="serviceDetails" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service-link">رابط (اختياري)</label>
-                    <input type="url" name="رابط_الخدمة" id="service-link" placeholder="https://example.com" />
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="url" name="serviceLink" id="service-link" placeholder="https://example.com" />
                 </div>
             </div>
 
@@ -376,7 +367,8 @@
                     <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
                     <div class="payment-options-grid" id="payment-options">
                         </div>
-                    <input type="hidden" name="طريقة_الدفع" id="payment-method-input" required>
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="hidden" name="paymentMethod" id="payment-method-input" required>
                 </div>
 
                 <div id="payment-details-container" class="payment-details-container">
@@ -384,7 +376,8 @@
                 
                 <div class="form-group">
                     <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
-                    <input type="file" name="وصل_الدفع" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
+                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    <input type="file" name="receiptFile" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
                 </div>
                 <button type="submit" class="submit-btn" id="submit-btn" disabled>
                     <i class="fas fa-check-circle"></i> إرسال الطلب الآن
@@ -402,7 +395,6 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. تعريف عناصر الواجهة ---
         const form = document.querySelector('form');
         const submitBtn = document.getElementById('submit-btn');
         const nameInput = document.getElementById('name');
@@ -411,21 +403,19 @@
         const paymentDetailsContainer = document.getElementById('payment-details-container');
         const paymentMethodInput = document.getElementById('payment-method-input');
 
-        // --- 2. بيانات طرق الدفع ---
         const paymentMethods = [
-            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png', class: 'cashplus' },
+            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png' },
             { id: 'orange', name: 'Orange Money', logo: 'https://yop.l-frii.com/wp-content/uploads/2022/12/Orange-Money-recrute-pour-ce-poste-28-Decembre-2022-1024x683.png' },
             { id: 'bmce', name: 'بنك أفريقيا', logo: 'https://www.ir-bankofafrica.ma/sites/default/files/styles/actualite/public/default_images/imgpsh_fullsize_anim.png?itok=UUjnntlS' },
             { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
-            { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png', class: 'cih' },
+            { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png' },
             { id: 'soge', name: 'الشركة العامة (سهام)', logo: 'https://cdn.snrtnews.com/sites/default/files/2025/06/18/whatsapp-image-2025-06-18-at-13-1750248285.jpeg' }
         ];
 
-        // --- 3. الدوال الرئيسية ---
         function renderPaymentOptions() {
             paymentMethods.forEach(method => {
                 const optionDiv = document.createElement('div');
-                optionDiv.className = `payment-option ${method.class || ''}`;
+                optionDiv.className = `payment-option`;
                 optionDiv.dataset.method = method.id;
                 optionDiv.innerHTML = `<img src="${method.logo}" alt="شعار ${method.name}"><span>${method.name}</span>`;
                 optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
@@ -495,15 +485,14 @@
             submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
         }
 
-        // --- 4. منطق تشغيل الصفحة ---
         renderPaymentOptions();
         
         const params = new URLSearchParams(window.location.search);
         const serviceName = params.get('service') || "خدمة غير محددة";
         const servicePrice = params.get('price') || "0";
         document.getElementById('display-service-name').value = serviceName;
-        document.getElementById('display-service-price').value = servicePrice + " درهم";
         document.getElementById('form-service-name').value = serviceName;
+        document.getElementById('display-service-price').value = servicePrice + " درهم";
         document.getElementById('form-service-price').value = servicePrice;
 
         auth.onAuthStateChanged(user => {
@@ -522,33 +511,28 @@
         });
         validateForm();
 
-        // ✅✅✅ --- الإضافة الجديدة: منطق إرسال النموذج وتوليد رقم الطلب --- ✅✅✅
+        // ✅✅✅ --- الكود المُصحَّح لإرسال النموذج --- ✅✅✅
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // منع الإرسال التلقائي
-
+            e.preventDefault(); 
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب...';
 
-            // 1. إنشاء رقم طلب فريد
+            // ✅ تعديل: إنشاء رقم طلب فريد بأحرف لاتينية
             const date = new Date();
-            const orderId = `${serviceName.substring(0,2).toUpperCase()}-${date.getFullYear()}${date.getMonth()+1}${date.getDate()}-${Math.floor(1000 + Math.random() * 9000)}`;
+            const orderId = `KH-${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
             
-            // 2. إضافة رقم الطلب إلى بيانات النموذج قبل إرسالها
             const formData = new FormData(form);
-            // ملاحظة: لقد أزلنا الحقل المخفي لرقم الطلب لأننا ننشئه هنا
-            formData.append('رقم_الطلب', orderId); 
+            // ✅ تعديل: إضافة رقم الطلب إلى بيانات النموذج
+            formData.append('orderId', orderId);
             
-            // إضافة معرّف المستخدم إذا كان مسجلاً
             if (typeof auth !== 'undefined' && auth.currentUser) {
                 formData.append('userId', auth.currentUser.uid);
             } else {
                 formData.append('userId', 'guest');
             }
-            
             formData.append('createdAt', new Date().toISOString());
 
-            // 3. إرسال البيانات إلى Google Sheet عبر Worker
-            const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev';
+            const workerUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev/api/submit-order';
 
             try {
                 const response = await fetch(workerUrl, {
@@ -556,13 +540,17 @@
                     body: formData,
                 });
 
-                if (response.ok) {
-                    // 4. إعادة التوجيه إلى صفحة النجاح مع إرفاق رقم الطلب
-                    console.log('Order submitted successfully!');
-                    window.location.href = `success.html?orderId=${orderId}`;
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    const successParams = new URLSearchParams({
+                        orderId: orderId,
+                        serviceName: serviceName,
+                        paymentAmount: servicePrice
+                    });
+                    window.location.href = `success.html?${successParams.toString()}`;
                 } else {
-                    const errorText = await response.text();
-                    throw new Error(`فشل الخادم في معالجة الطلب: ${errorText}`);
+                    throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
                 }
             } catch (error) {
                 console.error('Submit Error:', error);

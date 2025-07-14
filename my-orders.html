@@ -25,7 +25,7 @@
         }
         body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); direction: rtl; }
         
-        /* --- ✅ تصميم الشريط العلوي الاحترافي --- */
+        /* --- تصميم الشريط العلوي الاحترافي --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -86,7 +86,7 @@
         .loading-container i { font-size: 3rem; color: var(--primary-color); animation: spin 1.5s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- ✅ تصميم التذييل --- */
+        /* --- تصميم التذييل --- */
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
             padding: 60px 0 20px; margin-top: 60px;
@@ -130,7 +130,7 @@
             <h1><i class="fas fa-receipt"></i> طلباتي</h1>
         </div>
 
-        <div id="orders-container">
+        <div id="orders-container" class="orders-grid">
             <div class="loading-container" id="loading-state">
                 <i class="fas fa-spinner"></i>
                 <p>جاري تحميل طلباتك...</p>
@@ -175,8 +175,10 @@
         function createOrderCard(order) {
             const statusMap = {
                 'تم الإنجاز': 'green', 'جاري المعالجة': 'orange', 'لم يتم الإنجاز': 'red',
-                'تم الدفع': 'green', 'جاري التحقق': 'orange', 'مشكلة في الدفع': 'red'
+                'تم الدفع': 'green', 'جاري التحقق': 'orange', 'مشكلة في الدفع': 'red',
+                'جاري المزامنة...': 'orange' // حالة الطلب الجديد
             };
+            
             const orderStatus = order.orderStatus || 'جاري المعالجة';
             const paymentStatus = order.paymentStatus || 'جاري التحقق';
 
@@ -185,7 +187,7 @@
             card.innerHTML = `
                 <div class="order-card-header">
                     <h3>${order.serviceName || 'خدمة غير محددة'}</h3>
-                    <span class="order-id">#${order.id || 'N/A'}</span>
+                    <span class="order-id">#${order.id || order.orderId}</span>
                 </div>
                 <div class="order-card-body">
                     <div class="info-item"><span class="label">مبلغ الدفع</span><span class="value">${order.paymentAmount || 'N/A'} د.م</span></div>
@@ -193,7 +195,6 @@
                     <div class="info-item"><span class="label">حالة الدفع</span><span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span></div>
                     <div class="info-item"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span></div>
                     ${(orderStatus === 'لم يتم الإنجاز' && order.reason) ? 
-                    
                         `<div class="reason-note"><strong>سبب عدم الإنجاز:</strong> ${order.reason}</div>` : ''}
                     ${(paymentStatus === 'مشكلة في الدفع' && order.paymentReason) ? 
                         `<div class="reason-note"><strong>مشكلة الدفع:</strong> ${order.paymentReason}</div>` : ''}
@@ -201,30 +202,47 @@
             return card;
         }
 
-        // الكود الوظيفي (لا تغيير هنا)
         auth.onAuthStateChanged(async (user) => {
             if (user && user.uid) {
-                const orders = await fetchOrders(user.uid);
+                const params = new URLSearchParams(window.location.search);
+                let newOrderData = params.has('orderId') ? {
+                    orderId: params.get('orderId'),
+                    serviceName: params.get('serviceName'),
+                    paymentAmount: params.get('paymentAmount'),
+                    orderStatus: 'جاري المزامنة...'
+                } : null;
+
+                // جلب الطلبات الحقيقية من الخادم
+                const existingOrders = await fetchOrders(user.uid);
+                
                 loadingState.style.display = 'none';
-                if (orders && orders.length > 0) {
+                ordersContainer.innerHTML = ''; // إفراغ الحاوية
+
+                let allOrdersToDisplay = [...existingOrders];
+
+                // التحقق إذا كان الطلب الجديد غير موجود بالفعل في القائمة
+                if (newOrderData && !existingOrders.some(o => o.id === newOrderData.orderId)) {
+                    allOrdersToDisplay.unshift(newOrderData); // إضافة الطلب الجديد في بداية القائمة
+                }
+
+                if (allOrdersToDisplay.length > 0) {
                     const grid = document.createElement('div');
                     grid.className = 'orders-grid';
-                    // فرز الطلبات (إذا كان هناك تاريخ)
-                    orders.sort((a,b) => (b.id > a.id) ? 1 : ((a.id > b.id) ? -1 : 0));
-                    orders.forEach(order => grid.appendChild(createOrderCard(order)));
+                    // فرز الطلبات (يمكنك تعديل هذا المنطق حسب الحاجة)
+                    allOrdersToDisplay.sort((a,b) => (b.id > a.id) ? 1 : -1);
+                    allOrdersToDisplay.forEach(order => grid.appendChild(createOrderCard(order)));
                     ordersContainer.appendChild(grid);
                 } else {
                     emptyState.style.display = 'block';
                 }
+
             } else {
                 loadingState.style.display = 'none';
                 emptyState.innerHTML = '<h3>يرجى تسجيل الدخول لعرض طلباتك.</h3>';
                 emptyState.style.display = 'block';
-
             }
         });
 
-        // لتحديث السنة في الفوتر
         const currentYearEl = document.getElementById('current-year');
         if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
     });
