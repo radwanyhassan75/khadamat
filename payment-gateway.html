@@ -533,7 +533,8 @@
             formData.append('createdAt', new Date().toISOString());
 
             const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev';
-
+// ...
+const response = await fetch(`${workerUrl}/api/submit-order`, { /* ... */ }); // ✅ تم إضافة المسار الصحيح
             try {
     const response = await fetch(workerUrl, {
         method: 'POST',
