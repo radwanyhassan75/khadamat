@@ -10,12 +10,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* نفس كود الـ CSS من الرد السابق - لا تغيير هنا */
         :root {
             --bg-main: #f7f9fc; --bg-sidebar: #ffffff; --bg-header: #ffffff;
             --bg-card: #ffffff; --color-primary: #007bff; --color-text-main: #212529;
             --color-text-muted: #6c757d; --color-border: #dee2e6;
-            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05); --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
             --border-radius: 12px; --sidebar-width: 280px; --sidebar-width-collapsed: 90px;
             --header-height: 70px;
         }
@@ -58,6 +57,10 @@
         .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
         .panel { background-color: var(--bg-card); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
         .panel-title { font-size: 1.2rem; font-weight: 700; margin-top: 0; margin-bottom: 20px; }
+        
+        /* لإخفاء المحتوى قبل إدخال كلمة المرور */
+        .admin-panel, .auth-fail-message { display: none; }
+
     </style>
 </head>
 <body>
@@ -65,8 +68,7 @@
     <div class="admin-panel" id="admin-panel">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="fas fa-digital-tachograph logo-icon"></i>
-                <span class="logo-text">المكتب الرقمي</span>
+                <i class="fas fa-digital-tachograph logo-icon"></i><span class="logo-text">المكتب الرقمي</span>
             </div>
             <nav class="sidebar-nav">
                 <ul>
@@ -78,7 +80,6 @@
                 </ul>
             </nav>
         </aside>
-
         <div class="content-wrapper">
             <header class="header">
                 <div class="header-left"><button class="toggle-sidebar-btn" id="toggle-sidebar-btn"><i class="fas fa-bars"></i></button></div>
@@ -87,10 +88,8 @@
                     <div class="user-profile"><img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="صورة المستخدم"></div>
                 </div>
             </header>
-
             <main class="main-content">
                 <div class="page-header"><h1 class="page-title">مرحباً بعودتك 👋</h1></div>
-
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="card-header"><p class="card-title">إجمالي الإيرادات</p><i class="fas fa-coins card-icon icon-revenue"></i></div>
@@ -109,11 +108,9 @@
                         <p class="card-value" id="users-value">...</p>
                     </div>
                 </div>
-
                 <div class="main-grid">
                     <div class="panel">
-                        <h3 class="panel-title">تحليلات الإيرادات</h3>
-                        <canvas id="revenueChart"></canvas>
+                        <h3 class="panel-title">تحليلات الإيرادات</h3><canvas id="revenueChart"></canvas>
                     </div>
                     <div class="panel"><h3 class="panel-title">الطلبات الأخيرة</h3></div>
                 </div>
@@ -121,76 +118,87 @@
         </div>
     </div>
     
+    <div id="auth-fail-message" style="text-align: center; padding-top: 50px; font-size: 1.5rem; color: #e74c3c;">
+        فشل التحقق، لا يمكنك الدخول.
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- كود تصغير وتكبير القائمة الجانبية (لا تغيير هنا) ---
-            const toggleBtn = document.getElementById('toggle-sidebar-btn');
-            const adminPanel = document.getElementById('admin-panel');
-            const sidebar = document.getElementById('sidebar');
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('collapsed');
-                adminPanel.classList.toggle('collapsed');
-            });
+            // --- 1. قسم التحقق من كلمة المرور ---
+            function authenticate() {
+                const requiredUser = "hassan";
+                const requiredPass = "12345678";
 
-            // --- الكود الجديد لجلب البيانات الديناميكية ---
-            const revenueChartElement = document.getElementById('revenueChart').getContext('2d');
-            let chartInstance; // متغير للاحتفاظ بالمبيان
+                const user = prompt("الرجاء إدخال اسم المستخدم:");
+                const pass = prompt("الرجاء إدخال كلمة المرور:");
 
-            // دالة لرسم أو تحديث المبيان
-            function renderOrUpdateChart(labels, data) {
-                if (chartInstance) {
-                    chartInstance.destroy(); // تدمير المبيان القديم قبل رسم الجديد
+                if (user === requiredUser && pass === requiredPass) {
+                    // إذا كانت المعلومات صحيحة، أظهر لوحة التحكم وابدأ التطبيق
+                    document.getElementById('admin-panel').style.display = 'flex';
+                    initializeApp();
+                } else {
+                    // إذا كانت المعلومات خاطئة، أظهر رسالة الفشل
+                    document.getElementById('auth-fail-message').style.display = 'block';
+                    alert("اسم المستخدم أو كلمة المرور غير صحيحة!");
                 }
-                chartInstance = new Chart(revenueChartElement, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'الإيرادات الشهرية',
-                            data: data,
-                            borderColor: 'rgba(0, 123, 255, 1)',
-                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        scales: { y: { beginAtZero: true } },
-                        plugins: { legend: { display: false } }
-                    }
-                });
             }
             
-            // دالة رئيسية لجلب وتحديث كل بيانات لوحة التحكم
-            async function loadDashboardData() {
-                try {
-                    // استبدل '/api/dashboard-stats' بالرابط الكامل لـ worker الخاص بك إذا لزم الأمر
-                    const response = await fetch('/api/dashboard-stats');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
+            // --- 2. قسم تشغيل التطبيق (بعد التحقق الناجح) ---
+            function initializeApp() {
+                const toggleBtn = document.getElementById('toggle-sidebar-btn');
+                const adminPanel = document.getElementById('admin-panel');
+                const sidebar = document.getElementById('sidebar');
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                    adminPanel.classList.toggle('collapsed');
+                });
 
-                    // تحديث بطاقات الإحصائيات
-                    document.getElementById('revenue-value').textContent = `${data.totalRevenue.toLocaleString()} د.م.`;
-                    document.getElementById('orders-value').textContent = data.totalOrders.toLocaleString();
-                    document.getElementById('tickets-value').textContent = data.openTickets.toLocaleString();
-                    document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
+                const revenueChartElement = document.getElementById('revenueChart').getContext('2d');
+                let chartInstance;
 
-                    // تحديث المبيان بالبيانات الحقيقية
-                    renderOrUpdateChart(data.chart.labels, data.chart.data);
-
-                } catch (error) {
-                    console.error("Fetch error:", error);
-                    // عرض رسالة خطأ للمستخدم في حال فشل جلب البيانات
-                    document.getElementById('revenue-value').textContent = "خطأ";
-                    document.getElementById('orders-value').textContent = "خطأ";
+                function renderOrUpdateChart(labels, data) {
+                    if (chartInstance) { chartInstance.destroy(); }
+                    chartInstance = new Chart(revenueChartElement, {
+                        type: 'line', data: { labels: labels, datasets: [{
+                            label: 'الإيرادات الشهرية', data: data, borderColor: 'rgba(0, 123, 255, 1)',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)', fill: true, tension: 0.4
+                        }] },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+                    });
                 }
+                
+                async function loadDashboardData() {
+                    try {
+                        // استخدام الرابط الكامل لضمان الوصول الصحيح
+                        const response = await fetch('https://khadamat.pages.dev/api/dashboard-stats');
+                        
+                        // التحقق من أن الخادم أرجع بيانات JSON وليس HTML
+                        const contentType = response.headers.get("content-type");
+                        if (!response.ok || !contentType || !contentType.includes("application/json")) {
+                            throw new Error(`استجابة غير صالحة من الخادم. Status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+
+                        document.getElementById('revenue-value').textContent = `${data.totalRevenue.toLocaleString()} د.م.`;
+                        document.getElementById('orders-value').textContent = data.totalOrders.toLocaleString();
+                        document.getElementById('tickets-value').textContent = data.openTickets.toLocaleString();
+                        document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
+
+                        renderOrUpdateChart(data.chart.labels, data.chart.data);
+                    } catch (error) {
+                        console.error("Fetch error:", error);
+                        alert("حدث خطأ أثناء جلب البيانات من الخادم. تأكد من أن مسار API صحيح ويعمل.");
+                        document.getElementById('revenue-value').textContent = "خطأ";
+                        document.getElementById('orders-value').textContent = "خطأ";
+                    }
+                }
+
+                loadDashboardData();
             }
 
-            // استدعاء الدالة الرئيسية عند تحميل الصفحة
-            loadDashboardData();
+            // --- 3. ابدأ عملية التحقق أولاً ---
+            authenticate();
         });
     </script>
 </body>
