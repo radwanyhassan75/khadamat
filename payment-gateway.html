@@ -535,29 +535,38 @@
             const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev';
 
             try {
-                const response = await fetch(workerUrl, {
-                    method: 'POST',
-                    body: formData,
-                });
+    const response = await fetch(workerUrl, {
+        method: 'POST',
+        body: formData,
+    });
 
-                const result = await response.json();
+    // لا يهم ما هو الرد، سنقوم بتحويله إلى JSON لنقرأ المحتوى
+    const result = await response.json();
 
-                if (response.ok && result.success) {
-                    const successParams = new URLSearchParams({
-                        orderId: orderId,
-                        serviceName: serviceName,
-                        paymentAmount: servicePrice
-                    });
-                    window.location.href = `success.html?${successParams.toString()}`;
-                } else {
-                    throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
-                }
-            } catch (error) {
-                console.error('Submit Error:', error);
-                alert('حدث خطأ أثناء إرسال طلبك. يرجى المحاولة مرة أخرى.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إرسال الطلب الآن';
-            }
+    // الآن نتحقق من المحتوى: هل العملية ناجحة وهل أرسل الخادم رابط التوجيه؟
+    if (result.success && result.redirectUrl) {
+        // هذا هو السطر الأهم: نقوم بتوجيه المستخدم إلى الرابط الذي أرسله الخادم
+        window.location.href = result.redirectUrl;
+    } else {
+        // إذا لم تكن ناجحة، نعرض الخطأ الذي أرسله الخادم
+        throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
+    }
+} catch (error) {
+    // هذا الجزء يبقى كما هو للتعامل مع أي أخطاء
+    console.error('Submit Error:', error);
+    // استخدم رسالة مخصصة بدلاً من alert
+    const errorDiv = document.getElementById('form-error'); // افترض وجود عنصر بهذا الـ ID
+    if(errorDiv) {
+        errorDiv.textContent = 'حدث خطأ أثناء إرسال طلبك: ' + error.message;
+        errorDiv.style.display = 'block';
+    } else {
+        alert('حدث خطأ أثناء إرسال طلبك. يرجى المحاولة مرة أخرى.');
+    }
+    
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إرسال الطلب الآن';
+}
+
         });
     });
     </script>
