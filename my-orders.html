@@ -56,6 +56,12 @@
             background: var(--light-color); border-radius: var(--border-radius);
             box-shadow: var(--box-shadow); border: 1px solid var(--border-color);
             transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0; /* للتحريك */
+            transform: translateY(20px); /* للتحريك */
+            animation: fadeIn 0.5s forwards; /* للتحريك */
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
         }
         .order-card:hover { transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0,0,0,0.1); }
         .order-card-header {
@@ -155,94 +161,110 @@
     <script src="auth.js"></script>
 
     <script>
+    // =================================================================
+    //         السكريبت المُصحَّح والنهائي لصفحة "طلباتي"
+    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         const ordersContainer = document.getElementById('orders-container');
         const loadingState = document.getElementById('loading-state');
         const emptyState = document.getElementById('empty-state');
-        const apiBaseUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
+        
+        // ✅ تعديل: استخدام رابط الخادم الصحيح والمسار الصحيح
+        const workerApiUrl = 'https://order-processor.radwanyhassan75.workers.dev/api/get-my-orders';
 
+        /**
+         * دالة لجلب الطلبات من الخادم باستخدام userId
+         */
         async function fetchOrders(userId) {
             try {
-                const response = await fetch(`${apiBaseUrl}/api/my-orders/${userId}`);
+                // ✅ تعديل: إرسال userId كـ query parameter
+                const response = await fetch(`${workerApiUrl}?userId=${userId}`);
                 if (!response.ok) throw new Error('Network response was not ok');
-                return await response.json();
+                
+                const data = await response.json();
+                if (data.success) {
+                    return data.orders; // إرجاع مصفوفة الطلبات
+                } else {
+                    console.error('API Error:', data.error);
+                    return [];
+                }
             } catch (error) {
                 console.error('Failed to fetch orders:', error);
-                return [];
+                return []; // إرجاع مصفوفة فارغة في حالة الفشل
             }
         }
 
+        /**
+         * دالة لإنشاء بطاقة طلب واحدة
+         */
         function createOrderCard(order) {
             const statusMap = {
-                'تم الإنجاز': 'green', 'جاري المعالجة': 'orange', 'لم يتم الإنجاز': 'red',
-                'تم الدفع': 'green', 'جاري التحقق': 'orange', 'مشكلة في الدفع': 'red',
-                'جاري المزامنة...': 'orange' // حالة الطلب الجديد
+                'جاري المعالجة': 'orange',
+                'مكتمل': 'green',
+                'ملغي': 'red'
             };
             
-            const orderStatus = order.orderStatus || 'جاري المعالجة';
-            const paymentStatus = order.paymentStatus || 'جاري التحقق';
+            const status = order.status || 'جاري المعالجة';
+            const statusColor = statusMap[status] || 'orange';
 
             const card = document.createElement('div');
             card.className = 'order-card';
+            // ✅ تعديل: استخدام الحقول الصحيحة من الخادم (id, serviceName, price, createdAt, status)
             card.innerHTML = `
                 <div class="order-card-header">
                     <h3>${order.serviceName || 'خدمة غير محددة'}</h3>
-                    <span class="order-id">#${order.id || order.orderId}</span>
+                    <span class="order-id">#${order.id}</span>
                 </div>
                 <div class="order-card-body">
-                    <div class="info-item"><span class="label">مبلغ الدفع</span><span class="value">${order.paymentAmount || 'N/A'} د.م</span></div>
-                    <div class="info-item"><span class="label">طريقة الدفع</span><span class="value">${order.paymentMethod || 'N/A'}</span></div>
-                    <div class="info-item"><span class="label">حالة الدفع</span><span class="value"><span class="status-badge ${statusMap[paymentStatus]}">${paymentStatus}</span></span></div>
-                    <div class="info-item"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusMap[orderStatus]}">${orderStatus}</span></span></div>
-                    ${(orderStatus === 'لم يتم الإنجاز' && order.reason) ? 
-                        `<div class="reason-note"><strong>سبب عدم الإنجاز:</strong> ${order.reason}</div>` : ''}
-                    ${(paymentStatus === 'مشكلة في الدفع' && order.paymentReason) ? 
-                        `<div class="reason-note"><strong>مشكلة الدفع:</strong> ${order.paymentReason}</div>` : ''}
+                    <div class="info-item">
+                        <span class="label">تاريخ الطلب</span>
+                        <span class="value">${new Date(order.createdAt).toLocaleDateString('ar-EG')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">المبلغ</span>
+                        <span class="value">${order.price || 'N/A'} د.م</span>
+                    </div>
+                    <div class="info-item" style="grid-column: 1 / -1;">
+                        <span class="label">حالة الطلب</span>
+                        <span class="value"><span class="status-badge ${statusColor}">${status}</span></span>
+                    </div>
                 </div>`;
             return card;
         }
 
+        /**
+         * دالة رئيسية لتشغيل الصفحة
+         */
         auth.onAuthStateChanged(async (user) => {
             if (user && user.uid) {
-                const params = new URLSearchParams(window.location.search);
-                let newOrderData = params.has('orderId') ? {
-                    orderId: params.get('orderId'),
-                    serviceName: params.get('serviceName'),
-                    paymentAmount: params.get('paymentAmount'),
-                    orderStatus: 'جاري المزامنة...'
-                } : null;
-
-                // جلب الطلبات الحقيقية من الخادم
-                const existingOrders = await fetchOrders(user.uid);
+                const userOrders = await fetchOrders(user.uid);
                 
-                loadingState.style.display = 'none';
-                ordersContainer.innerHTML = ''; // إفراغ الحاوية
+                loadingState.style.display = 'none'; // إخفاء التحميل
+                ordersContainer.innerHTML = ''; // إفراغ الحاوية من رسالة التحميل
 
-                let allOrdersToDisplay = [...existingOrders];
-
-                // التحقق إذا كان الطلب الجديد غير موجود بالفعل في القائمة
-                if (newOrderData && !existingOrders.some(o => o.id === newOrderData.orderId)) {
-                    allOrdersToDisplay.unshift(newOrderData); // إضافة الطلب الجديد في بداية القائمة
-                }
-
-                if (allOrdersToDisplay.length > 0) {
-                    const grid = document.createElement('div');
-                    grid.className = 'orders-grid';
-                    // فرز الطلبات (يمكنك تعديل هذا المنطق حسب الحاجة)
-                    allOrdersToDisplay.sort((a,b) => (b.id > a.id) ? 1 : -1);
-                    allOrdersToDisplay.forEach(order => grid.appendChild(createOrderCard(order)));
-                    ordersContainer.appendChild(grid);
+                if (userOrders.length > 0) {
+                    userOrders.forEach((order, index) => {
+                        const card = createOrderCard(order);
+                        // إضافة تأخير بسيط في التحريك لكل بطاقة
+                        card.style.animationDelay = `${index * 0.1}s`;
+                        ordersContainer.appendChild(card);
+                    });
                 } else {
+                    ordersContainer.appendChild(emptyState);
                     emptyState.style.display = 'block';
                 }
 
             } else {
+                // في حالة عدم تسجيل دخول المستخدم
                 loadingState.style.display = 'none';
                 emptyState.innerHTML = '<h3>يرجى تسجيل الدخول لعرض طلباتك.</h3>';
                 emptyState.style.display = 'block';
+                ordersContainer.appendChild(emptyState);
+                
             }
         });
 
+        // تحديث السنة في التذييل
         const currentYearEl = document.getElementById('current-year');
         if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
     });
