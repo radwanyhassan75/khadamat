@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تذكرة الدعم - المكتب الرقمي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
+            --gray-color: #f8f9fa; --border-color: #e9ecef; --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); }
+        .page-wrapper { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        
+        /* --- تصميم الشريط العلوي الكامل --- */
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { position: relative; }
+        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        @media (min-width: 993px) { .navbar-menu { display: flex; } .hamburger-menu { display: none; } }
+
+
+        /* --- تصميم واجهة الدردشة العصرية --- */
+        .chat-card {
+            background: var(--light-color); border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow); border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; height: 80vh; max-height: 700px;
+        }
+        .chat-header {
+            padding: 15px 25px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+            background-color: var(--gray-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .chat-header h2 { margin: 0; font-size: 1.3rem; color: var(--dark-color); }
+        .chat-header .ticket-id { font-size: 0.9rem; color: #6c757d; font-weight: bold; }
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; }
+        .message-bubble {
+            display: flex; margin-bottom: 15px; max-width: 80%;
+            opacity: 0; transform: translateY(10px); animation: popIn 0.4s forwards;
+        }
+        @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
+        .message-bubble.user { margin-right: auto; flex-direction: row-reverse; }
+        .message-bubble.support { margin-left: auto; }
+        .message-content {
+            padding: 12px 18px; border-radius: 18px;
+            line-height: 1.6;
+        }
+        .message-bubble.user .message-content {
+            background: linear-gradient(45deg, var(--primary-color), #007bff); color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .message-bubble.support .message-content {
+            background-color: #e9ecef; color: var(--dark-color);
+            border-bottom-left-radius: 4px;
+        }
+        .message-meta { font-size: 0.8rem; color: #999; margin-top: 5px; padding: 0 5px; }
+        .message-bubble.user .message-meta { text-align: left; }
+        .message-bubble.support .message-meta { text-align: right; }
+        
+        .typing-indicator { display: flex; align-items: center; padding: 10px; }
+        .typing-indicator span {
+            height: 8px; width: 8px; background-color: #ccc; border-radius: 50%;
+            display: inline-block; margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+        .chat-input-area {
+            padding: 20px; border-top: 1px solid var(--border-color); flex-shrink: 0;
+            background-color: var(--gray-color);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+        .chat-input-form { display: flex; gap: 10px; }
+        #message-input {
+            flex-grow: 1; padding: 12px 18px; border: 1px solid var(--border-color);
+            border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        #message-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
+        #send-btn {
+            background-color: var(--primary-color); color: white; border: none;
+            border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        #send-btn:hover { background-color: #00458e; transform: scale(1.1); }
+        #send-btn:disabled { background-color: #a0a0a0; cursor: not-allowed; transform: scale(1); }
+
+        /* --- تصميم التذييل الكامل --- */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 0 20px; margin-top: 60px; }
+        .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .footer-section h3 { color: var(--light-color); margin-bottom: 20px; font-size: 1.4rem; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section ul li a { color: #bdc3c7; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
+        .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
+        .social-icons a { display: inline-block; color: var(--light-color); font-size: 1.5rem; margin-left: 15px; transition: transform 0.3s; }
+        .social-icons a:hover { transform: scale(1.2); color: var(--primary-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <div id="mobile-navbar-actions"></div>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
+        </nav>
+    </header>
+
+    <main class="page-wrapper">
+        <div class="chat-card">
+            <div class="chat-header">
+                <h2 id="ticket-subject">جاري تحميل التذكرة...</h2>
+                <span class="ticket-id" id="ticket-id-display"></span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- الرسائل ستظهر هنا -->
+            </div>
+            <div class="chat-input-area">
+                <form id="chat-input-form" class="chat-input-form">
+                    <input type="text" id="message-input" placeholder="اكتب رسالتك هنا..." autocomplete="off" required>
+                    <button type="submit" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p><div class="social-icons" style="margin-top: 20px;"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li><li><a href="my-orders.html">طلباتي</a></li></ul></div>
+            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="#">سياسة الخصوصية</a></li><li><a href="#">الشروط والأحكام</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+    </footer>
+
+    <!-- ملفات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+
+    <!-- الأصوات -->
+    <audio id="sound-send" src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3" preload="auto"></audio>
+    <audio id="sound-receive" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" preload="auto"></audio>
+    <audio id="sound-typing" src="https://assets.mixkit.co/sfx/preview/mixkit-single-key-type-2533.mp3" preload="auto" loop></audio>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatForm = document.getElementById('chat-input-form');
+        const ticketSubjectEl = document.getElementById('ticket-subject');
+        const ticketIdDisplayEl = document.getElementById('ticket-id-display');
+        const soundSend = document.getElementById('sound-send');
+        const soundReceive = document.getElementById('sound-receive');
+        const soundTyping = document.getElementById('sound-typing');
+        
+        const workerBaseUrl = 'https://order-processor.radwanyhassan75.workers.dev';
+        const params = new URLSearchParams(window.location.search);
+        const ticketId = params.get('ticketId');
+
+        let currentUser = null;
+        let chatHistory = [];
+
+        function addMessage(sender, text, time) {
+            const messageBubble = document.createElement('div');
+            messageBubble.className = `message-bubble ${sender.toLowerCase()}`;
+            const timeString = new Date(time).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            messageBubble.innerHTML = `
+                <div class="message-content">${text.replace(/\n/g, '<br>')}</div>
+                <div class="message-meta">${sender === 'User' ? 'أنت' : 'الدعم الذكي'} • ${timeString}</div>
+            `;
+            chatMessages.appendChild(messageBubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatHistory.push({ sender, message: text });
+        }
+
+        function showTypingIndicator() {
+            const typingBubble = document.createElement('div');
+            typingBubble.id = 'typing-indicator';
+            typingBubble.className = 'message-bubble support';
+            typingBubble.innerHTML = `<div class="message-content typing-indicator"><span></span><span></span><span></span></div>`;
+            chatMessages.appendChild(typingBubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            soundTyping.play();
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+            soundTyping.pause();
+            soundTyping.currentTime = 0;
+        }
+
+        async function loadTicket() {
+            if (!ticketId) {
+                ticketSubjectEl.textContent = "خطأ: رقم التذكرة غير موجود";
+                return;
+            }
+            ticketIdDisplayEl.textContent = `#${ticketId}`;
+            try {
+                const response = await fetch(`${workerBaseUrl}/api/get-ticket-details?ticketId=${ticketId}`);
+                const data = await response.json();
+                if (data.success) {
+                    const { ticket, messages } = data;
+                    ticketSubjectEl.textContent = ticket.subject;
+                    addMessage('User', ticket.message, ticket.createdAt);
+                    messages.forEach(msg => addMessage(msg.sender, msg.message, msg.createdAt));
+                } else {
+                    ticketSubjectEl.textContent = "خطأ: لم يتم العثور على التذكرة";
+                }
+            } catch (error) {
+                console.error("Failed to load ticket:", error);
+                ticketSubjectEl.textContent = "خطأ في الاتصال بالخادم";
+            }
+        }
+
+        async function getAIResponse(userMessage) {
+            showTypingIndicator();
+            try {
+                const response = await fetch(`${workerBaseUrl}/api/post-chat-message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ticketId: ticketId,
+                        sender: 'User',
+                        message: userMessage,
+                        chatHistory: chatHistory
+                    })
+                });
+                const result = await response.json();
+                hideTypingIndicator();
+                if (result.success && result.aiResponse) {
+                    addMessage('Support', result.aiResponse.message, result.aiResponse.createdAt);
+                    soundReceive.play();
+                    showNotification('رسالة جديدة من الدعم', result.aiResponse.message);
+                } else {
+                    throw new Error(result.error || "فشل في الحصول على رد.");
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('Support', 'عذراً، حدث خطأ فني. سأقوم بتحويلك للدعم البشري.', new Date().toISOString());
+                console.error("Error getting AI response:", error);
+            }
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageText = messageInput.value.trim();
+            if (!messageText || !currentUser) return;
+            addMessage('User', messageText, new Date().toISOString());
+            soundSend.play();
+            messageInput.value = '';
+            await getAIResponse(messageText);
+        });
+
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                Notification.requestPermission();
+            }
+        }
+
+        function showNotification(title, body) {
+            // إظهار الإشعار فقط إذا كانت الصفحة غير نشطة
+            if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, {
+                    body: body,
+                    icon: 'https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png' // رابط الشعار
+                });
+            }
+        }
+        
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    loadTicket();
+                    requestNotificationPermission(); // طلب الإذن عند تحميل الصفحة للمستخدم المسجل
+                } else {
+                    ticketSubjectEl.textContent = "يرجى تسجيل الدخول لعرض هذه التذكرة";
+                }
+            });
+        }
+        
+        const currentYearEl = document.getElementById('current-year');
+        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+    });
+    </script>
+</body>
+</html>
