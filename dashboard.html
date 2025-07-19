@@ -27,6 +27,7 @@
             --success-color: #198754;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
+            --info-color: #0dcaf0;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
@@ -220,6 +221,28 @@
         }
         .form-message.success { background-color: #d1e7dd; color: #0f5132; }
         .form-message.error { background-color: #f8d7da; color: #842029; }
+        
+        /* --- ✅ تصميم جديد: جدول تذاكر الدعم --- */
+        .table-responsive { overflow-x: auto; }
+        .tickets-table { width: 100%; border-collapse: collapse; }
+        .tickets-table th, .tickets-table td { padding: 15px; text-align: right; border-bottom: 1px solid #e9ecef; }
+        .tickets-table thead { background-color: var(--gray-color); }
+        .tickets-table th { font-weight: 900; color: var(--dark-color); }
+        .tickets-table tbody tr:hover { background-color: #f1f3f5; }
+        .status-badge {
+            padding: 5px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold;
+            text-align: center; display: inline-block;
+        }
+        .status-open { background-color: #fff8e1; color: #f59e0b; }
+        .status-escalated { background-color: #fdecea; color: var(--danger-color); }
+        .status-closed { background-color: #e8f5e9; color: var(--success-color); }
+        .btn-view {
+            background-color: var(--secondary-color); color: white; text-decoration: none;
+            padding: 6px 15px; border-radius: 8px; font-weight: 700; font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-view:hover { background-color: var(--primary-color); }
+        .loading-container, .empty-state { text-align: center; padding: 40px; }
 
         /* --- التصميم المتجاوب --- */
         @media (max-width: 992px) {
@@ -256,8 +279,9 @@
                     <ul>
                         <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
                         <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل الملف الشخصي</a></li>
-                        <!-- ✅ [تم الإصلاح] هذا الرابط الآن يوجه إلى صفحة طلباتي الجديدة -->
                         <li><a href="my-orders.html"><i class="fas fa-tasks"></i> طلباتي</a></li>
+                        <!-- ✅ إضافة: رابط جديد لقسم تذاكر الدعم -->
+                        <li><a data-target="support-tickets"><i class="fas fa-headset"></i> تذاكر الدعم</a></li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
@@ -296,7 +320,17 @@
                     </div>
                 </div>
 
-                <!-- ✅ [تم الحذف] تم حذف قسم عرض الطلبات من هنا لأنه أصبح في صفحة منفصلة -->
+                <!-- ✅ إضافة: قسم جديد لعرض تذاكر الدعم -->
+                <div id="support-tickets" class="content-pane">
+                    <div class="card">
+                        <h2><i class="fas fa-ticket-alt"></i> تذاكر الدعم الخاصة بي</h2>
+                        <div id="tickets-container">
+                            <div class="loading-container">
+                                <p>جاري تحميل تذاكر الدعم...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -308,11 +342,10 @@
     
     <script>
     // =================================================================
-    //          السكريبت الخاص بصفحة لوحة التحكم
+    //         السكريبت الخاص بصفحة لوحة التحكم (مع قسم التذاكر)
     // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         // --- تهيئة Firebase ---
-        // هذا الجزء ضروري لضمان عمل الصفحة حتى لو لم يتم تحميل auth.js
         const firebaseConfig = {
             apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
             authDomain: "khadamatukdigital.firebaseapp.com",
@@ -321,7 +354,6 @@
             messagingSenderId: "690661888019",
             appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
         };
-        // التأكد من عدم تهيئة Firebase مرتين
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -338,26 +370,26 @@
         const editPhoneInput = document.getElementById("edit-phone");
         const editForm = document.getElementById("edit-profile-form");
         const editFormMessage = document.getElementById("edit-form-message");
+        const ticketsContainer = document.getElementById("tickets-container");
+
+        const workerApiUrl = 'https://order-processor.radwanyhassan75.workers.dev';
 
         // --- الدوال المساعدة ---
 
-        // دالة لعرض رسائل للمستخدم (مثل "تم الحفظ بنجاح")
         function showMessage(element, message, isSuccess) {
             element.textContent = message;
-            element.className = 'form-message'; // إعادة تعيين الكلاسات
+            element.className = 'form-message';
             element.classList.add(isSuccess ? 'success' : 'error');
             element.style.display = 'block';
             setTimeout(() => { element.style.display = 'none'; }, 4000);
         }
 
-        // دالة لجلب وعرض بيانات المستخدم في كل الأماكن المخصصة
         async function loadUserData(user) {
             sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
             sidebarUserName.textContent = user.displayName || 'مستخدم';
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
                 const userDoc = await userDocRef.get();
-
                 if (userDoc.exists) {
                     const userData = userDoc.data();
                     const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
@@ -368,7 +400,6 @@
                     editNameInput.value = finalDisplayName;
                     editPhoneInput.value = userData.phoneNumber || "";
                 } else {
-                    // في حالة عدم وجود مستند للمستخدم، يتم عرض البيانات من حساب جوجل
                     displayNameP.textContent = user.displayName || "لا يوجد اسم";
                     displayEmailP.textContent = user.email;
                     displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
@@ -380,47 +411,86 @@
             }
         }
         
-        // دالة لحفظ تعديلات الملف الشخصي في قاعدة البيانات
         async function saveProfileChanges(event) {
             event.preventDefault();
             const user = auth.currentUser;
             if (!user) return;
-
             const newName = editNameInput.value.trim();
             const newPhone = editPhoneInput.value.trim();
-
             if (!newName || !newPhone) {
                 showMessage(editFormMessage, "يرجى ملء جميع الحقول.", false);
                 return;
             }
-
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
-                // استخدام set مع merge:true يضمن تحديث أو إنشاء المستند دون حذف البيانات القديمة
                 await userDocRef.set({
                     displayName: newName,
                     phoneNumber: newPhone,
                     email: user.email 
                 }, { merge: true });
-
-                // تحديث اسم المستخدم في نظام المصادقة نفسه أيضاً
                 await user.updateProfile({ displayName: newName });
-                
                 showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
-                loadUserData(user); // إعادة تحميل البيانات لعرضها محدثة في كل مكان
+                loadUserData(user);
             } catch (error) {
                 console.error("خطأ في حفظ التغييرات:", error);
                 showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
             }
         }
-        // ربط دالة الحفظ بنموذج التعديل
         editForm.addEventListener('submit', saveProfileChanges);
 
-        // --- منطق التنقل بين التبويبات داخل الصفحة ---
+        // ✅ إضافة: دالة لجلب وعرض تذاكر الدعم
+        async function loadUserTickets(userId) {
+            try {
+                const response = await fetch(`${workerApiUrl}/api/get-my-tickets?userId=${userId}`);
+                const data = await response.json();
+
+                if (data.success && data.tickets.length > 0) {
+                    const statusClasses = {
+                        'مفتوحة': 'status-open',
+                        'تحتاج تدخل بشري': 'status-escalated',
+                        'مغلقة': 'status-closed'
+                    };
+                    let tableHtml = `
+                        <div class="table-responsive">
+                            <table class="tickets-table">
+                                <thead>
+                                    <tr>
+                                        <th>رقم التذكرة</th>
+                                        <th>الموضوع</th>
+                                        <th>تاريخ الإنشاء</th>
+                                        <th>الحالة</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    data.tickets.forEach(ticket => {
+                        const statusClass = statusClasses[ticket.status] || 'status-open';
+                        tableHtml += `
+                            <tr>
+                                <td>${ticket.id}</td>
+                                <td>${ticket.subject}</td>
+                                <td>${new Date(ticket.createdAt).toLocaleDateString('ar-EG')}</td>
+                                <td><span class="status-badge ${statusClass}">${ticket.status}</span></td>
+                                <td><a href="support-ticket.html?ticketId=${ticket.id}" class="btn-view">عرض المحادثة</a></td>
+                            </tr>
+                        `;
+                    });
+                    tableHtml += `</tbody></table></div>`;
+                    ticketsContainer.innerHTML = tableHtml;
+                } else {
+                    ticketsContainer.innerHTML = `<div class="empty-state"><p>لا يوجد لديك تذاكر دعم حالياً.</p></div>`;
+                }
+            } catch (error) {
+                console.error("Failed to fetch tickets:", error);
+                ticketsContainer.innerHTML = `<div class="empty-state"><p>حدث خطأ أثناء تحميل تذاكر الدعم.</p></div>`;
+            }
+        }
+
+        // --- منطق التنقل بين التبويبات ---
         const navLinks = document.querySelectorAll('.sidebar-nav a');
         const contentPanes = document.querySelectorAll('.main-content .content-pane');
         navLinks.forEach(link => {
-            // التحقق من أن الرابط ليس رابطاً خارجياً
             if (link.hasAttribute('data-target')) {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -440,17 +510,15 @@
         function logoutUser() {
             auth.signOut().then(() => { window.location.href = "index.html"; });
         }
-        // جعل دالة تسجيل الخروج متاحة للزر في HTML
         window.logoutUser = logoutUser;
 
         // --- نقطة البداية الرئيسية ---
-        // عند تغير حالة المستخدم (تسجيل دخول أو خروج)
         auth.onAuthStateChanged(user => {
             if (user) {
-                // إذا كان المستخدم مسجلاً دخوله، قم بتحميل بياناته
                 loadUserData(user);
+                // ✅ إضافة: تحميل تذاكر الدعم للمستخدم المسجل دخوله
+                loadUserTickets(user.uid);
             } else {
-                // إذا لم يكن مسجلاً، قم بتوجيهه لصفحة الدخول
                 window.location.href = "login.html";
             }
         });

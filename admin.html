@@ -3,279 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم الإدارية - المكتب الرقمي</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <title>لوحة التحكم - المكتب الرقمي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- متغيرات التصميم الأساسي --- */
-        :root {
-            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
-            --gray-color: #f8f9fa; --border-color: #e9ecef; --text-color: #555;
-            --success-color: #198754; --danger-color: #dc3545; --warning-color: #ffc107;
-            --admin-message-bg: #dcf8c6; --body-bg: var(--gray-color); --component-bg: var(--light-color);
-            --text-primary: var(--dark-color); --text-secondary: var(--text-color);
-            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); --border-radius: 12px;
-        }
-        body.dark-mode {
-            --primary-color: #0d6efd; --body-bg: #121212; --component-bg: #1e1e1e;
-            --text-primary: #e0e0e0; --text-secondary: #a0a0a0; --border-color: #2d2d2d;
-            --admin-message-bg: #075e54; --box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
-        }
-        html { box-sizing: border-box; }
-        *, *:before, *:after { box-sizing: inherit; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--body-bg); color: var(--text-secondary); overflow: hidden; transition: background-color 0.3s, color 0.3s; }
-        
-        /* --- واجهة تسجيل الدخول --- */
-        #login-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--body-bg); display: flex; justify-content: center; align-items: center; z-index: 2000; transition: opacity 0.5s; }
-        .login-box { width: 100%; max-width: 400px; padding: 40px; background: var(--component-bg); border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; border: 1px solid var(--border-color); }
-        .login-box h1 { color: var(--text-primary); margin-bottom: 30px; }
-        .login-box .input-group { margin-bottom: 20px; text-align: right; }
-        .login-box input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--body-bg); color: var(--text-primary); }
-        .login-box button { width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; }
-        #error-message { color: var(--danger-color); margin-top: 15px; min-height: 20px; }
-
-        /* --- تصميم الهيكل الرئيسي للوحة التحكم --- */
-        #dashboard-container { opacity: 0; transition: opacity 0.5s ease-in-out; }
-        #dashboard-container.visible { opacity: 1; }
-        .admin-layout { display: flex; height: 100vh; }
-
-        /* --- القائمة الجانبية الرئيسية --- */
-        .main-sidebar {
-            width: 260px; background-color: var(--dark-color); color: #e0e0e0;
-            display: flex; flex-direction: column; padding: 20px 0;
-        }
-        .main-sidebar .logo { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #34495e; }
-        .main-sidebar .logo img { height: 60px; }
-        .main-sidebar nav { flex-grow: 1; margin-top: 20px; }
-        .main-sidebar nav a {
-            display: flex; align-items: center; gap: 15px;
-            padding: 15px 25px; text-decoration: none; color: #bdc3c7;
-            font-weight: 700; transition: background-color 0.2s, color 0.2s;
-        }
-        .main-sidebar nav a:hover { background-color: #34495e; color: white; }
-        .main-sidebar nav a.active { background-color: var(--primary-color); color: white; }
-        .main-sidebar .sidebar-footer { padding: 20px; border-top: 1px solid #34495e; }
-
-        /* --- المحتوى الرئيسي --- */
-        .content-wrapper { flex-grow: 1; display: flex; flex-direction: column; }
-        .content-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 25px; background-color: var(--component-bg);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .content-header h1 { margin: 0; font-size: 1.8rem; color: var(--text-primary); }
-        .theme-switcher { cursor: pointer; font-size: 1.5rem; color: var(--text-secondary); }
-        .main-content { flex-grow: 1; overflow-y: auto; padding: 30px; }
-
-        /* --- تصميم قسم إدارة الطلبات --- */
-        #orders-view .table-wrapper { background-color: var(--component-bg); border-radius: 8px; box-shadow: var(--box-shadow); overflow-x: auto; }
-        #orders-view table { width: 100%; border-collapse: collapse; }
-        #orders-view th, #orders-view td { padding: 15px; border-bottom: 1px solid var(--border-color); text-align: right; }
-        #orders-view th { background-color: var(--gray-color); }
-        #orders-view select, #orders-view input { padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--component-bg); color: var(--text-primary); }
-        #orders-view .btn-save { background: var(--success-color); color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
-
-        /* --- تصميم قسم الدعم الفني --- */
-        .support-layout { display: flex; height: calc(100vh - 71px); }
-        .conversation-list { width: 350px; background-color: var(--component-bg); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .conversation-list-header { padding: 20px; border-bottom: 1px solid var(--border-color); }
-        .conversation-list-body { flex-grow: 1; overflow-y: auto; }
-        .conversation-item { display: flex; padding: 15px; cursor: pointer; border-bottom: 1px solid var(--border-color); }
-        .conversation-item.active { background-color: var(--primary-color); color: white; }
-        .conversation-item.active h4, .conversation-item.active p { color: white; }
-        .chat-area { flex-grow: 1; display: flex; flex-direction: column; }
-        .chat-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background-color: var(--component-bg); border-bottom: 1px solid var(--border-color); }
-        .chat-header h3 { cursor: pointer; text-decoration: underline; color: var(--text-primary); }
-        .chat-window { flex-grow: 1; overflow-y: auto; padding: 30px; }
-        .message-bubble { max-width: 70%; padding: 10px 15px; border-radius: var(--border-radius); line-height: 1.6; }
-        .message.customer .message-bubble { background-color: var(--component-bg); }
-        .message.admin .message-bubble { background-color: var(--admin-message-bg); }
-        .message-bubble a { color: var(--primary-color); text-decoration: underline; }
-        .message-bubble img { max-width: 100%; border-radius: 8px; margin-top: 10px; cursor: pointer; }
-        .chat-input-area { display: flex; padding: 15px; background-color: var(--component-bg); }
-        .chat-header .social-links a { color: white; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; text-decoration: none; margin: 0 5px; }
-        .chat-header .social-links .whatsapp { background-color: #25D366; }
-        .chat-header .social-links .facebook { background-color: #1877F2; }
-        .chat-header .social-links .instagram { background-color: #E4405F; }
-        
-        /* --- تصميم النافذة المنبثقة (Modal) --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 3000; }
-        .modal-content { background: var(--component-bg); padding: 30px; border-radius: var(--border-radius); width: 90%; max-width: 700px; position: relative; }
-        .modal-close { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .sidebar-link.active { background-color: #4338ca; color: white; }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+        .content-pane { display: none; }
+        .content-pane.active { display: block; }
+        .chat-message-admin { background-color: #e0f2fe; border-radius: 0.75rem 0 0.75rem 0.75rem; }
+        .chat-message-user { background-color: #f0fdf4; border-radius: 0 0.75rem 0.75rem 0.75rem; }
     </style>
 </head>
-<body>
-
-    <!-- واجهة تسجيل الدخول -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h1><i class="fas fa-shield-alt"></i> لوحة التحكم الإدارية</h1>
-            <form id="login-form">
-                <div class="input-group"><input type="text" id="username" placeholder="اسم المستخدم" required></div>
-                <div class="input-group"><input type="password" id="password" placeholder="كلمة المرور" required></div>
-                <div id="error-message"></div>
-                <button type="submit">تسجيل الدخول</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- لوحة التحكم الرئيسية (مخفية) -->
-    <div id="dashboard-container" style="display: none;">
-        <div class="admin-layout">
-            <!-- القائمة الجانبية الرئيسية -->
-            <aside class="main-sidebar">
-                <div class="logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></div>
-                <nav>
-                    <a href="#" id="nav-orders" class="active"><i class="fas fa-tasks fa-fw"></i> إدارة الطلبات</a>
-                    <a href="#" id="nav-support"><i class="fas fa-headset fa-fw"></i> مركز الدعم</a>
-                </nav>
-                <div class="sidebar-footer">
-                    <a href="#" onclick="event.preventDefault(); window.location.reload();"><i class="fas fa-sign-out-alt fa-fw"></i> تسجيل الخروج</a>
-                </div>
-            </aside>
-
-            <!-- المحتوى المتغير -->
-            <div class="content-wrapper">
-                <header class="content-header">
-                    <h1 id="view-title">إدارة الطلبات</h1>
-                    <i class="fas fa-moon theme-switcher" id="theme-switcher" title="تغيير المظهر"></i>
-                </header>
-                <main class="main-content">
-                    <!-- قسم إدارة الطلبات -->
-                    <div id="orders-view">
-                        <div class="table-wrapper">
-                            <table id="orders-table">
-                                <thead><tr><th>رقم الطلب</th><th>اسم العميل</th><th>الخدمة</th><th>حالة الدفع</th><th>حالة الطلب</th><th>حفظ</th></tr></thead>
-                                <tbody id="orders-tbody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- قسم الدعم الفني (مخفي) -->
-                    <div id="support-view" style="display: none;">
-                        <div class="support-layout">
-                            <div class="conversation-list">
-                                <div class="conversation-list-header"><h3>المحادثات</h3></div>
-                                <div class="conversation-list-body" id="conversation-list-body"></div>
-                            </div>
-                            <div class="chat-area" id="chat-area"><div class="no-chat-selected"><h3>اختر محادثة</h3></div></div>
-                        </div>
-                    </div>
-                </main>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 bg-gray-800 text-white flex-col hidden md:flex">
+            <div class="h-16 flex items-center justify-center text-2xl font-bold border-b border-gray-700">
+                <span>المكتب الرقمي</span>
             </div>
+            <nav class="flex-1 px-4 py-6 space-y-2" id="admin-nav">
+                <a href="#" data-target="dashboard" class="sidebar-link active flex items-center px-4 py-3 rounded-lg">
+                    <i class="fas fa-tachometer-alt w-6 text-center"></i><span class="mr-3">الرئيسية</span>
+                </a>
+                <a href="#" data-target="orders" class="sidebar-link flex items-center px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-receipt w-6 text-center"></i><span class="mr-3">الطلبات</span>
+                </a>
+                <a href="#" data-target="tickets" class="sidebar-link flex items-center px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-headset w-6 text-center"></i><span class="mr-3">تذاكر الدعم</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-md z-10">
+                <div class="flex items-center justify-between h-16 px-6">
+                    <div class="relative w-full max-w-xs">
+                        <input type="text" placeholder="بحث..." class="w-full bg-gray-100 border border-gray-200 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fas fa-search text-gray-400"></i></div>
+                    </div>
+                    <div class="flex items-center space-x-4 space-x-reverse">
+                        <div class="relative" id="notifications-dropdown">
+                            <button id="notifications-btn" class="p-2 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none">
+                                <i class="fas fa-bell text-gray-600"></i>
+                                <span id="notification-badge" class="hidden absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500 border-2 border-white"></span>
+                            </button>
+                            <div id="notifications-menu" class="hidden absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden">
+                                <div class="py-2 px-4 font-bold border-b">الإشعارات</div>
+                                <div id="notifications-list" class="divide-y max-h-80 overflow-y-auto"></div>
+                            </div>
+                        </div>
+                        <div class="relative" id="profile-dropdown">
+                            <button id="profile-btn" class="flex items-center space-x-2 space-x-reverse focus:outline-none">
+                                <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/100x100/2c3e50/FFF?text=A" alt="Admin">
+                            </button>
+                            <div id="profile-menu" class="hidden absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">تسجيل الخروج</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div id="dashboard" class="content-pane active">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-6" id="stats-container"></div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
+                            <h3 class="font-bold mb-4">توزيع الطلبات</h3>
+                            <div class="h-80"><canvas id="ordersChart"></canvas></div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="font-bold mb-4">آخر المحادثات</h3>
+                            <div id="recent-tickets-container" class="space-y-4"></div>
+                        </div>
+                    </div>
+                     <div class="mt-6 bg-white rounded-lg shadow overflow-hidden">
+                         <div class="px-6 py-4 border-b"><h3 class="text-lg font-medium text-gray-900">آخر الطلبات</h3></div>
+                         <div id="recent-orders-container" class="divide-y divide-gray-200"></div>
+                    </div>
+                </div>
+                <div id="orders" class="content-pane">
+                     <!-- Orders page content will be generated by JS -->
+                </div>
+                <div id="tickets" class="content-pane">
+                     <!-- Tickets page content will be generated by JS -->
+                </div>
+            </main>
         </div>
     </div>
 
-    <!-- نافذة الملف الشخصي للعميل -->
-    <div class="modal-overlay" id="customer-profile-modal">
-        <div class="modal-content" id="customer-profile-content"></div>
+    <!-- Modals -->
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50 modal" id="order-modal">
+        <div class="flex items-center justify-center min-h-screen"><div id="modal-content" class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform sm:max-w-4xl sm:w-full"></div></div>
+    </div>
+    <div class="fixed bottom-6 left-6 z-50 modal" id="chat-modal">
+        <div id="chat-modal-content" class="bg-white w-96 rounded-lg shadow-2xl flex flex-col h-[60vh]"></div>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // --- نظام تسجيل الدخول ---
-    const loginForm = document.getElementById('login-form');
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (document.getElementById('username').value === 'admin-pro' && document.getElementById('password').value === 'Pro@2025') {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('dashboard-container').style.display = 'block';
-            setTimeout(() => document.getElementById('dashboard-container').classList.add('visible'), 50);
-            initializeDashboard();
-        } else {
-            document.getElementById('error-message').textContent = 'بيانات الدخول غير صحيحة.';
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const workerApiUrl = 'https://order-processor.radwanyhassan75.workers.dev';
+        let allOrders = [], allTickets = [];
+        let activeTicketId = null;
+
+        // --- DOM Elements ---
+        const navLinks = document.querySelectorAll('#admin-nav a');
+        const contentPanes = document.querySelectorAll('.content-pane');
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsMenu = document.getElementById('notifications-menu');
+        const profileBtn = document.getElementById('profile-btn');
+        const profileMenu = document.getElementById('profile-menu');
+        const modal = document.getElementById('order-modal');
+        const modalContent = document.getElementById('modal-content');
+        const chatModal = document.getElementById('chat-modal');
+        const chatModalContent = document.getElementById('chat-modal-content');
+
+        // --- API Fetching ---
+        async function fetchData() {
+            try {
+                const [ordersRes, ticketsRes] = await Promise.all([
+                    fetch(`${workerApiUrl}/api/admin/get-all-orders`),
+                    fetch(`${workerApiUrl}/api/admin/get-all-tickets`)
+                ]);
+                if (!ordersRes.ok || !ticketsRes.ok) throw new Error('Failed to fetch data');
+                const ordersData = await ordersRes.json();
+                const ticketsData = await ticketsRes.json();
+                allOrders = ordersData.success ? ordersData.orders : [];
+                allTickets = ticketsData.success ? ticketsData.tickets : [];
+                
+                renderDashboard();
+                renderOrdersPage();
+                renderTicketsPage();
+
+            } catch (error) {
+                console.error("Failed to fetch initial data:", error);
+                document.getElementById('dashboard').innerHTML = `<p class="text-red-500 text-center p-8">فشل تحميل البيانات من الخادم. تأكد من أن الخادم يعمل بشكل صحيح وأن المسارات الإدارية (/api/admin/...) موجودة ومفعلة.</p>`;
+            }
         }
-    });
 
-    function initializeDashboard() {
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzWemEMoqLzQ0USWjxTSMMzplqKTzRRmdBz6T6Q6CedNbMuTegpKFSxiwQadBSCapU6A/exec";
-        const workerUrl = 'wss://technical-support-dashboard.radwanyhassan75.workers.dev';
-        let allOrders = [];
-        let currentSocket = null;
-        
-        const navOrders = document.getElementById('nav-orders');
-        const navSupport = document.getElementById('nav-support');
-        const ordersView = document.getElementById('orders-view');
-        const supportView = document.getElementById('support-view');
-        const viewTitle = document.getElementById('view-title');
-
-        // --- التنقل بين الأقسام ---
-        navOrders.addEventListener('click', () => switchView('orders'));
-        navSupport.addEventListener('click', () => switchView('support'));
-        function switchView(viewName) {
-            navOrders.classList.toggle('active', viewName === 'orders');
-            navSupport.classList.toggle('active', viewName === 'support');
-            ordersView.style.display = viewName === 'orders' ? 'block' : 'none';
-            supportView.style.display = viewName === 'support' ? 'block' : 'none';
-            viewTitle.textContent = viewName === 'orders' ? 'إدارة الطلبات' : 'مركز الدعم';
+        // --- Rendering Functions ---
+        function renderDashboard() {
+            renderStats();
+            renderOrdersChart(allOrders);
+            renderRecentTickets();
+            renderRecentOrders();
+            renderNotifications();
         }
 
-        // --- منطق إدارة الطلبات ---
-        const ordersTbody = document.getElementById('orders-tbody');
-        async function fetchAndDisplayOrders() { /* ... (نفس الكود السابق) ... */ }
-        function displayOrders(orders) { /* ... (نفس الكود السابق) ... */ }
-        ordersTbody.addEventListener('click', async e => { /* ... (نفس الكود السابق) ... */ });
-        fetchAndDisplayOrders();
-
-        // --- منطق الدعم الفني ---
-        const conversationListBody = document.getElementById('conversation-list-body');
-        const chatArea = document.getElementById('chat-area');
-        const conversationsForList = [ /* ... بيانات وهمية للمحادثات ... */ ];
+        function renderStats() {
+            const stats = {
+                totalOrders: allOrders.length,
+                totalRevenue: allOrders.reduce((sum, order) => sum + (parseFloat(order.price) || 0), 0),
+                openTickets: allTickets.filter(t => t.status !== 'مغلقة').length,
+                processingOrders: allOrders.filter(o => o.status === 'جاري المعالجة').length,
+                cancelledOrders: allOrders.filter(o => o.status === 'ملغي').length,
+            };
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = `
+                <div class="stat-card cursor-pointer bg-white rounded-lg shadow p-4" data-filter="all"><div class="flex items-center"><div class="p-3 rounded-full bg-blue-100 text-blue-600"><i class="fas fa-receipt text-xl"></i></div><div class="mr-4"><h3 class="text-sm font-medium text-gray-500">إجمالي الطلبات</h3><p class="text-2xl font-semibold">${stats.totalOrders}</p></div></div></div>
+                <div class="stat-card bg-white rounded-lg shadow p-4"><div class="flex items-center"><div class="p-3 rounded-full bg-purple-100 text-purple-600"><i class="fas fa-money-bill-wave text-xl"></i></div><div class="mr-4"><h3 class="text-sm font-medium text-gray-500">الإيرادات</h3><p class="text-2xl font-semibold">${stats.totalRevenue.toFixed(2)}</p></div></div></div>
+                <div class="stat-card cursor-pointer bg-white rounded-lg shadow p-4" data-filter="open-tickets"><div class="flex items-center"><div class="p-3 rounded-full bg-yellow-100 text-yellow-600"><i class="fas fa-headset text-xl"></i></div><div class="mr-4"><h3 class="text-sm font-medium text-gray-500">تذاكر مفتوحة</h3><p class="text-2xl font-semibold">${stats.openTickets}</p></div></div></div>
+                <div class="stat-card cursor-pointer bg-white rounded-lg shadow p-4" data-filter="جاري المعالجة"><div class="flex items-center"><div class="p-3 rounded-full bg-amber-100 text-amber-600"><i class="fas fa-spinner text-xl"></i></div><div class="mr-4"><h3 class="text-sm font-medium text-gray-500">قيد المعالجة</h3><p class="text-2xl font-semibold">${stats.processingOrders}</p></div></div></div>
+                <div class="stat-card cursor-pointer bg-white rounded-lg shadow p-4" data-filter="ملغي"><div class="flex items-center"><div class="p-3 rounded-full bg-red-100 text-red-600"><i class="fas fa-times-circle text-xl"></i></div><div class="mr-4"><h3 class="text-sm font-medium text-gray-500">طلبات ملغاة</h3><p class="text-2xl font-semibold">${stats.cancelledOrders}</p></div></div></div>
+            `;
+        }
         
-        function renderConversationList() { /* ... (نفس الكود السابق) ... */ }
-        function displayConversation(convo) {
-            if (currentSocket) currentSocket.close();
-            chatArea.innerHTML = `<h3>جاري الاتصال...</h3>`;
-            currentSocket = new WebSocket(`${workerUrl}/chat/${convo.id}`);
-            currentSocket.onopen = () => {
-                chatArea.innerHTML = `
-                    <div class="chat-header">
-                        <h3 onclick="showCustomerProfile('${convo.id}')">${convo.customerName}</h3>
-                        <div class="social-links">
-                            <a href="https://wa.me/${convo.phone}" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-                            <a href="${convo.facebook}" target="_blank" class="facebook"><i class="fab fa-facebook-f"></i></a>
+        function renderOrdersChart(orders) {
+            const ctx = document.getElementById('ordersChart').getContext('2d');
+            if (window.myOrdersChart) window.myOrdersChart.destroy();
+            
+            const statusCounts = { 'جاري المعالجة': 0, 'مكتمل': 0, 'ملغي': 0 };
+            orders.forEach(order => {
+                if (statusCounts[order.status] !== undefined) statusCounts[order.status]++;
+            });
+
+            window.myOrdersChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['قيد المعالجة', 'مكتمل', 'ملغي'],
+                    datasets: [{
+                        data: [statusCounts['جاري المعالجة'], statusCounts['مكتمل'], statusCounts['ملغي']],
+                        backgroundColor: ['#f59e0b', '#10b981', '#ef4444'],
+                        hoverOffset: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+        
+        function renderRecentTickets() {
+            const container = document.getElementById('recent-tickets-container');
+            container.innerHTML = '';
+            allTickets.slice(0, 4).forEach(ticket => {
+                const ticketEl = document.createElement('div');
+                ticketEl.className = 'flex items-center p-2 rounded-lg hover:bg-gray-100 cursor-pointer';
+                ticketEl.dataset.ticketId = ticket.id;
+                ticketEl.innerHTML = `
+                    <div class="mr-4 flex-shrink-0"><div class="h-10 w-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold">${ticket.customerName.charAt(0)}</div></div>
+                    <div><p class="font-bold text-sm text-gray-800">${ticket.subject}</p><p class="text-xs text-gray-500">${ticket.customerName} - ${ticket.status}</p></div>`;
+                container.appendChild(ticketEl);
+            });
+        }
+
+        function renderRecentOrders() {
+            const container = document.getElementById('recent-orders-container');
+            renderOrdersList(allOrders.slice(0, 5), container);
+        }
+
+        function renderNotifications() { /* ... */ }
+
+        async function showOrderModal(orderId) {
+            const order = allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            modalContent.innerHTML = `
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <div class="flex justify-between items-center pb-3 border-b">
+                        <h3 class="text-lg font-medium text-gray-900">تفاصيل الطلب ${order.id}</h3>
+                        <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-medium border-b pb-2">معلومات العميل</h4>
+                            <div class="mt-2 space-y-2 text-sm"><p><strong>الاسم:</strong> ${order.customerName}</p><p><strong>البريد:</strong> ${order.email}</p><p><strong>الهاتف:</strong> ${order.phone}</p></div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium border-b pb-2">معلومات الدفع</h4>
+                             <div class="mt-2 space-y-2 text-sm"><p><strong>المبلغ:</strong> ${order.price} د.م</p><p><strong>الطريقة:</strong> ${order.paymentMethod}</p><p><strong>الوصل:</strong> <a href="${order.receiptUrl}" target="_blank" class="text-blue-600">عرض</a></p></div>
+                        </div>
+                        <div class="md:col-span-2">
+                             <h4 class="font-medium border-b pb-2">تفاصيل الخدمة</h4>
+                             <p class="mt-2 text-sm">${order.serviceDetails}</p>
                         </div>
                     </div>
-                    <div class="chat-window" id="chat-window"></div>
-                    <div class="chat-input-area">
-                        <input id="chat-input-field" placeholder="اكتب ردك...">
-                        <button class="icon-btn close-chat-btn" onclick="closeConversation()"><i class="fas fa-times"></i></button>
-                        <button id="send-message-btn" class="icon-btn"><i class="fas fa-paper-plane"></i></button>
-                    </div>`;
-                document.getElementById('send-message-btn').addEventListener('click', () => sendMessage(convo.id));
-            };
-            currentSocket.onmessage = (event) => {
-                const messageData = JSON.parse(event.data);
-                if (messageData.type === 'message') {
-                    appendMessage(messageData.data, document.getElementById('chat-window'));
-                }
-            };
-        }
-        function appendMessage(msg, chatWindow) {
-            const messageEl = document.createElement('div');
-            messageEl.className = `message ${msg.sender}`;
-            let content = msg.text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-            if (msg.fileName) {
-                content += `<p>مرفق: ${msg.fileName}</p>`;
-            }
-            messageEl.innerHTML = `<div class="message-bubble">${content}</div>`;
-            chatWindow.appendChild(messageEl);
-        }
-        window.closeConversation = function() {
-            if (currentSocket) currentSocket.close();
-            chatArea.innerHTML = `<div class="no-chat-selected"><h3>تم إغلاق المحادثة</h3></div>`;
-        }
-        renderConversationList();
+                    <div class="mt-6 border-t pt-4">
+                        <h4 class="font-medium">تحديث الحالة</h4>
+                        <div class="mt-2 flex items-center gap-4">
+                            <select id="status-select" class="flex-1 border-gray-300 rounded-lg"><option value="جاري المعالجة" ${order.status === 'جاري المعالجة' ? 'selected' : ''}>قيد المعالجة</option><option value="مكتمل" ${order.status === 'مكتمل' ? 'selected' : ''}>مكتمل</option><option value="ملغي" ${order.status === 'ملغي' ? 'selected' : ''}>ملغي</option></select>
+                            <button id="save-status-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg">حفظ</button>
+                        </div>
+                        <textarea id="reason-input" class="mt-2 w-full border-gray-300 rounded-lg" placeholder="سبب الإلغاء (اختياري)...">${order.reason || ''}</textarea>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
 
-        // --- منطق نافذة الملف الشخصي ---
-        window.showCustomerProfile = function(orderId) { /* ... (نفس الكود السابق) ... */ }
-        window.closeModal = function(modalId) { document.getElementById(modalId).style.display = 'none'; }
-    }
-});
-</script>
+            document.getElementById('save-status-btn').addEventListener('click', async () => {
+                const newStatus = document.getElementById('status-select').value;
+                const reason = document.getElementById('reason-input').value;
+                await fetch(`${workerApiUrl}/api/admin/update-order-status`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ orderId, newStatus, reason })
+                });
+                alert(`تم تحديث حالة الطلب إلى: ${newStatus}`);
+                modal.classList.remove('active');
+                fetchData(); // Refresh data
+            });
+        }
 
+        async function showChatModal(ticketId) {
+            const ticketRes = await fetch(`${workerApiUrl}/api/get-ticket-details?ticketId=${ticketId}`);
+            const ticketData = await ticketRes.json();
+            if(!ticketData.success) return;
+            const { ticket, messages } = ticketData;
+
+            chatModalContent.innerHTML = `
+                <div class="px-6 py-4 border-b flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold">${ticket.subject}</h3>
+                        <p class="text-sm text-gray-500">${ticket.customerName}</p>
+                    </div>
+                    <button id="close-chat-modal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+                <div id="mini-chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
+                <div class="p-4 border-t">
+                    <form id="mini-chat-form" class="flex items-center"><input type="text" placeholder="اكتب ردك..." class="flex-1 border rounded-full px-4 py-2"><button class="mr-2 px-4 py-2 bg-blue-600 text-white rounded-full">إرسال</button></form>
+                </div>
+            `;
+            
+            const chatContainer = document.getElementById('mini-chat-messages');
+            addMessageToChat(chatContainer, 'User', ticket.message);
+            messages.forEach(msg => addMessageToChat(chatContainer, msg.sender, msg.message));
+            
+            chatModal.classList.add('active');
+
+            document.getElementById('mini-chat-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const input = e.target.querySelector('input');
+                const message = input.value.trim();
+                if(!message) return;
+
+                await fetch(`${workerApiUrl}/api/admin/reply-to-ticket`, {
+                    method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ ticketId, message })
+                });
+                addMessageToChat(chatContainer, 'Support', message);
+                input.value = '';
+            });
+        }
+        
+        function addMessageToChat(container, sender, text) {
+            const bubble = document.createElement('div');
+            bubble.className = `flex ${sender === 'User' ? 'justify-end' : 'justify-start'}`;
+            bubble.innerHTML = `<div class="p-3 max-w-md ${sender === 'User' ? 'chat-message-user' : 'chat-message-admin'}"><p class="text-sm">${text}</p></div>`;
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // --- Page Building Functions ---
+        function renderOrdersPage() { /* ... */ }
+        function renderTicketsPage() { /* ... */ }
+
+        // --- Event Listeners ---
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                contentPanes.forEach(p => p.classList.add('hidden'));
+                document.getElementById(link.dataset.target).classList.remove('active');
+                const targetPane = document.getElementById(link.dataset.target);
+                targetPane.classList.remove('hidden');
+                targetPane.classList.add('active');
+            });
+        });
+
+        document.body.addEventListener('click', e => {
+            if (e.target.closest('[data-order-id]')) showOrderModal(e.target.closest('[data-order-id]').dataset.orderId);
+            if (e.target.closest('[data-ticket-id]')) showChatModal(e.target.closest('[data-ticket-id]').dataset.ticketId);
+            if (e.target.id === 'close-modal-btn' || e.target === modal) modal.classList.remove('active');
+            if (e.target.id === 'close-chat-modal' || e.target === chatModal) chatModal.classList.remove('active');
+        });
+        
+        function setupDropdown(btn, menu) {
+            btn.addEventListener('click', (e) => { e.stopPropagation(); menu.classList.toggle('hidden'); });
+        }
+        setupDropdown(notificationsBtn, notificationsMenu);
+        setupDropdown(profileBtn, profileMenu);
+        
+        window.addEventListener('click', () => {
+            if (!notificationsMenu.classList.contains('hidden')) notificationsMenu.classList.add('hidden');
+            if (!profileMenu.classList.contains('hidden')) profileMenu.classList.add('hidden');
+        });
+
+        // --- Initial Load ---
+        fetchData();
+    });
+    </script>
 </body>
 </html>
