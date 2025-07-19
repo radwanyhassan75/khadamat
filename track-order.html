@@ -2,10 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
     <!-- =================================================================
-         META TAGS, FONTS, AND ICONS
-         This section contains essential metadata, links to Google Fonts for typography,
-         and Font Awesome for icons, ensuring a professional and modern look.
-    ================================================================== -->
+            META TAGS, FONTS, AND ICONS
+            This section contains essential metadata, links to Google Fonts for typography,
+            and Font Awesome for icons, ensuring a professional and modern look.
+        ================================================================== -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>تتبع طلبك - المكتب الرقمي</title>
@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <!-- =================================================================
-         INTERNAL CSS STYLES
-         This extensive style block defines the entire look and feel of the page,
-         from colors and fonts to layout, animations, and responsiveness.
-    ================================================================== -->
+            INTERNAL CSS STYLES
+            This extensive style block defines the entire look and feel of the page,
+            from colors and fonts to layout, animations, and responsiveness.
+        ================================================================== -->
     <style>
         /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
@@ -221,7 +221,7 @@
             border-radius: 50px;
             font-weight: 700;
             font-size: 1rem;
-            color: rgb(19, 2, 2);
+            color: white; /* اللون الافتراضي للنص أبيض */
         }
         /* ألوان الحالات */
         .status-paid { background-color: var(--success-color); }
@@ -385,7 +385,7 @@
 
     <script>
     // =================================================================
-    //          السكريبت الخاص بصفحة تتبع الطلب
+    //         السكريبت الخاص بصفحة تتبع الطلب (متوافق مع Cloudflare Worker)
     // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
         // --- 1. تعريف عناصر الواجهة ---
@@ -395,9 +395,8 @@
         const notFoundMessage = document.getElementById('not-found-message');
         const loadingMessage = document.getElementById('loading-message');
 
-        // --- 2. رابط Google Apps Script ---
-        // هذا هو الرابط الذي يتصل بـ Google Sheets لجلب بيانات الطلب
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzUm98Nrt1WUDbLsKLgvSQyoczzFCOtaxHhdfOHOVfmNrf2NZGNR5ZNna3J4qRhehZopQ/exec';
+        // --- 2. رابط Cloudflare Worker API ---
+        const WORKER_URL = 'https://order-processor.radwanyhassan75.workers.dev/api/get-order';
 
         // --- 3. الدوال الرئيسية ---
 
@@ -416,20 +415,20 @@
 
         /**
          * دالة لتحديد كلاس CSS بناءً على حالة النص
-         * @param {string} statusText - نص الحالة القادم من Google Sheets
+         * @param {string} statusText - نص الحالة القادم من قاعدة البيانات
          * @param {boolean} isPaymentStatus - لتحديد إذا كانت الحالة خاصة بالدفع أو الطلب
          * @returns {string} - اسم كلاس الـ CSS المناسب
          */
         function getStatusClass(statusText, isPaymentStatus) {
+            if (!statusText) return '';
             const text = statusText.toLowerCase();
             if (isPaymentStatus) {
-                if (text.includes('تم الدفع')) return 'status-paid';
-                if (text.includes('جاري')) return 'status-pending-payment';
-                if (text.includes('لم يتم')) return 'status-unpaid';
+                // يفترض أن طريقة الدفع تعني أنه تم الدفع
+                return 'status-paid';
             } else {
-                if (text.includes('مكتمل') || text.includes('تم الإنجاز')) return 'status-completed';
-                if (text.includes('معالجة')) return 'status-in-progress';
-                if (text.includes('لم يتم')) return 'status-not-completed';
+                if (text.includes('مكتمل')) return 'status-completed';
+                if (text.includes('جاري المعالجة')) return 'status-in-progress';
+                if (text.includes('ملغي')) return 'status-not-completed';
             }
             return ''; // حالة افتراضية
         }
@@ -444,32 +443,31 @@
             showMessage(loadingMessage); // إظهار مؤشر التحميل
 
             try {
-                const response = await fetch(`${SCRIPT_URL}?orderId=${encodeURIComponent(orderId)}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                const response = await fetch(`${WORKER_URL}?orderId=${encodeURIComponent(orderId)}`);
+                
                 const data = await response.json();
                 
-                if (data.error) {
-                    showMessage(notFoundMessage);
-                } else {
+                if (data.success && data.order) {
+                    const order = data.order;
                     // ملء البيانات في بطاقة النتائج
-                    document.getElementById('result-service-name').textContent = data.الخدمة_المطلوبة || 'خدمة غير محددة';
-                    document.getElementById('result-order-id').textContent = data.رقم_الطلب || '';
-                    document.getElementById('result-name').textContent = data.الاسم_الكامل || '';
-                    document.getElementById('result-email').textContent = data.البريد_الإلكتروني || '';
+                    document.getElementById('result-service-name').textContent = order.serviceName || 'خدمة غير محددة';
+                    document.getElementById('result-order-id').textContent = order.id || '';
+                    document.getElementById('result-name').textContent = order.customerName || '';
+                    document.getElementById('result-email').textContent = order.email || '';
                     
                     // عرض حالة الدفع مع اللون المناسب
                     const paymentStatusEl = document.getElementById('result-payment');
-                    const paymentStatusText = data.حالة_الدفع || 'غير محددة';
+                    const paymentStatusText = order.paymentMethod || 'لم يتم التحديد';
                     paymentStatusEl.innerHTML = `<span class="status-badge ${getStatusClass(paymentStatusText, true)}">${paymentStatusText}</span>`;
 
                     // عرض حالة الطلب مع اللون المناسب
                     const orderStatusEl = document.getElementById('result-status');
-                    const orderStatusText = data.حالة_الطلب || 'قيد المراجعة';
+                    const orderStatusText = order.status || 'قيد المراجعة';
                     orderStatusEl.innerHTML = `<span class="status-badge ${getStatusClass(orderStatusText, false)}">${orderStatusText}</span>`;
                     
                     showMessage(resultArea); // إظهار بطاقة النتائج
+                } else {
+                    showMessage(notFoundMessage);
                 }
             } catch (error) {
                 console.error('Fetch Error:', error);
@@ -492,7 +490,7 @@
         const urlOrderId = params.get('orderId');
         if (urlOrderId) {
             orderIdInput.value = urlOrderId; // ملء حقل البحث
-            searchForOrder(urlOrderId);     // البدء في البحث تلقائياً
+            searchForOrder(urlOrderId);      // البدء في البحث تلقائياً
         }
     });
     </script>
