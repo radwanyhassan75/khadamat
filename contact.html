@@ -20,6 +20,7 @@
             --border-color: #dee2e6;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --danger-color: #dc3545;
         }
 
         html { scroll-behavior: smooth; }
@@ -85,6 +86,7 @@
         }
         .form-group { margin-bottom: 25px; }
         label { font-weight: 700; margin-bottom: 10px; display: block; color: var(--dark-color); }
+        .required-star { color: var(--danger-color); }
         input, textarea, select {
             width: 100%; padding: 14px 18px; border: 1px solid #ced4da;
             border-radius: 8px; font-size: 1rem; font-family: 'Cairo', sans-serif;
@@ -95,24 +97,18 @@
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
         }
         input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
+        textarea { resize: vertical; min-height: 150px; }
         .submit-btn {
             width: 100%; padding: 15px; font-size: 1.2rem; background: var(--primary-color);
             border: none; color: white; font-weight: bold; border-radius: 8px;
             cursor: pointer; transition: all 0.3s ease;
         }
-        .submit-btn:hover { background-color: #00458e; transform: translateY(-3px); }
-        
-        /* --- تصميم واجهة المحادثة --- */
-        .chat-container { border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; }
-        .chat-header {
-            padding: 15px 20px;
-            background-color: var(--gray-color);
-            border-bottom: 1px solid var(--border-color);
-            font-weight: bold;
-            color: var(--dark-color);
-        }
-        .chat-messages { height: 400px; overflow-y: auto; padding: 20px; }
-        
+        .submit-btn:hover:not(:disabled) { background-color: #00458e; transform: translateY(-3px); }
+        .submit-btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+
+        #related-order-group { display: none; }
+        #form-error { display: none; color: var(--danger-color); font-weight: 700; margin-top: 15px; text-align: center; }
+
         /* --- تصميم التذييل (Footer) --- */
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
@@ -130,6 +126,14 @@
         .social-icons a:hover { transform: scale(1.2); color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
         
+        @media (max-width: 768px) {
+            .navbar-menu { display: none; }
+            .hamburger-menu { display: block; }
+        }
+        @media (min-width: 769px) {
+            .navbar-menu { display: flex; }
+            .hamburger-menu { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -149,8 +153,58 @@
             <p>نحن هنا لمساعدتك. سواء كان لديك استفسار، مشكلة في طلب، أو اقتراح، يرجى ملء النموذج أدناه وسنعاود الاتصال بك في أقرب وقت.</p>
         </header>
 
-        <div id="contact-container" class="contact-card">
-            <p style="text-align: center;">جاري تحميل واجهة التواصل...</p>
+        <div class="contact-card">
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="full-name">الاسم الكامل <span class="required-star">*</span></label>
+                    <input type="text" id="full-name" name="fullName" required>
+                </div>
+    
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف <span class="required-star">*</span></label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
+                    <select id="inquiry-type" name="inquiryType" required>
+                        <option value="" disabled selected>-- اختر نوع الاستفسار --</option>
+                        <option value="استفسار عام">استفسار عام</option>
+                        <option value="مشكلة في الطلب">مشكلة في الطلب</option>
+                        <option value="شكوى">شكوى</option>
+                    </select>
+                </div>
+    
+                <div id="related-order-group" class="form-group" style="display: none;">
+                    <label for="related-order">اختر الطلب المتعلق بالمشكلة <span class="required-star">*</span></label>
+                    <select id="related-order" name="relatedOrder" required>
+                        <option value="">جاري تحميل طلباتك...</option>
+                    </select>
+                </div>
+    
+                <div class="form-group">
+                    <label for="subject">الموضوع <span class="required-star">*</span></label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+    
+                <div class="form-group">
+                    <label for="message">رسالتك <span class="required-star">*</span></label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+    
+                <div class="form-group">
+                    <label for="attachment">إرفاق ملف (اختياري)</label>
+                    <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+                </div>
+    
+                <button type="submit" id="submit-btn" class="submit-btn">إرسال التذكرة</button>
+                <p id="form-error"></p>
+            </form>
         </div>
     </div>
 
@@ -162,102 +216,138 @@
         </div>
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+
+    <!-- ملفات Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-
     <script src="auth.js"></script>
+    
+    <!-- صوت الإشعار -->
+    <audio id="notification-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
+
     <script>
+    // =================================================================
+    //         السكريبت المُصحَّح والنهائي لصفحة "اتصل بنا"
+    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        const contactContainer = document.getElementById('contact-container');
-        const apiBaseUrl = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
-        
-        async function getUserOrders(userId) {
-            if (!userId) return [];
+        // --- 1. تعريف عناصر الواجهة ---
+        const form = document.getElementById('contact-form');
+        const inquiryTypeSelect = document.getElementById('inquiry-type');
+        const relatedOrderGroup = document.getElementById('related-order-group');
+        const relatedOrderSelect = document.getElementById('related-order');
+        const fullNameInput = document.getElementById('full-name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorP = document.getElementById('form-error');
+        const notificationSound = document.getElementById('notification-sound');
+
+        // --- 2. روابط الخادم ---
+        const workerBaseUrl = 'https://order-processor.radwanyhassan75.workers.dev';
+
+        /**
+         * دالة لجلب طلبات المستخدم
+         */
+        async function fetchUserOrders(userId) {
             try {
-                const response = await fetch(`${apiBaseUrl}/api/orders/${userId}`);
-                if (!response.ok) throw new Error(`Server error`);
-                return await response.json();
+                const response = await fetch(`${workerBaseUrl}/api/get-my-orders?userId=${userId}`);
+                const data = await response.json();
+                if (data.success && data.orders.length > 0) {
+                    relatedOrderSelect.innerHTML = '<option value="" disabled selected>-- اختر الطلب --</option>';
+                    data.orders.forEach(order => {
+                        const option = document.createElement('option');
+                        option.value = order.id;
+                        option.textContent = `(${order.id}) - ${order.serviceName}`;
+                        relatedOrderSelect.appendChild(option);
+                    });
+                } else {
+                    relatedOrderSelect.innerHTML = '<option value="" disabled selected>لا يوجد لديك طلبات سابقة</option>';
+                }
             } catch (error) {
-                console.error("فشل جلب طلبات المستخدم:", error);
-                return [];
+                console.error('Failed to fetch orders:', error);
+                relatedOrderSelect.innerHTML = '<option value="" disabled selected>خطأ في تحميل الطلبات</option>';
             }
         }
 
-        async function renderContactForm(user) {
-            const formHtml = `
-                <form id="contact-form">
-                    <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" required></div>
-                    <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" required></div>
-                    <div class="form-group">
-                        <label for="inquiry-type">نوع الاستفسار</label>
-                        <select id="inquiry-type">
-                            <option value="general" selected>استفسار عادي</option>
-                            <option value="order_related">استفسار متعلق بطلب</option>
-                            <option value="complaint">شكوى</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="orders-group" style="display: none;">
-                        <label for="order-select">اختر الطلب</label>
-                        <select id="order-select" disabled><option>اختر نوع الاستفسار أولاً</option></select>
-                    </div>
-                    <div class="form-group"><label for="message">رسالتك</label><textarea id="message" required placeholder="اكتب استفسارك..."></textarea></div>
-                    <button type="submit" class="submit-btn">بدء المحادثة</button>
-                </form>`;
-            contactContainer.innerHTML = formHtml;
+        // --- 3. منطق عمل الصفحة ---
 
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const inquiryTypeSelect = document.getElementById('inquiry-type');
-            const ordersGroup = document.getElementById('orders-group');
-            const orderSelect = document.getElementById('order-select');
-
-            if (user && user.uid) {
-                nameInput.value = user.displayName || 'مستخدم مسجل';
-                emailInput.value = user.email || '';
-                nameInput.readOnly = true;
-                emailInput.readOnly = true;
-
-                inquiryTypeSelect.addEventListener('change', async (e) => {
-                    const type = e.target.value;
-                    if (type === 'order_related' || type === 'complaint') {
-                        ordersGroup.style.display = 'block';
-                        orderSelect.innerHTML = '<option>جاري تحميل طلباتك...</option>';
-                        const orders = await getUserOrders(user.uid);
-                        let orderOptionsHtml = '';
-                        if (orders && orders.length > 0) {
-                            orderOptionsHtml = orders.map(order => `<option value="${order.id}">${order.serviceName} (#${order.id})</option>`).join('');
-                        } else {
-                            orderOptionsHtml = '<option value="" disabled>لا توجد طلبات سابقة</option>';
-                        }
-                        orderSelect.innerHTML = orderOptionsHtml;
-                        orderSelect.disabled = false;
-                    } else {
-                        ordersGroup.style.display = 'none';
-                    }
-                });
-            } else {
-                inquiryTypeSelect.addEventListener('change', () => {
-                    ordersGroup.style.display = 'none';
-                });
-            }
-        }
-        
-        // --- ✅ تعديل: نقطة البداية النهائية والأكثر أمانًا ---
-        // هذا الكود يتحقق أولاً إذا كان 'auth' موجودًا قبل محاولة استخدامه
-        if (typeof auth !== 'undefined' && auth) {
-            // إذا كان موجودًا، نستمع لتغيرات حالة الدخول
+        // مراقبة حالة تسجيل الدخول
+        if (typeof auth !== 'undefined') {
             auth.onAuthStateChanged(user => {
-                renderContactForm(user);
+                if (user) {
+                    // المستخدم مسجل دخوله
+                    if (user.displayName) fullNameInput.value = user.displayName;
+                    if (user.email) emailInput.value = user.email;
+                    // جعل الحقول للقراءة فقط للمستخدم المسجل
+                    fullNameInput.readOnly = true;
+                    emailInput.readOnly = true;
+                    // جلب طلبات المستخدم
+                    fetchUserOrders(user.uid);
+                } else {
+                    // المستخدم زائر
+                    relatedOrderGroup.style.display = 'none';
+                    relatedOrderSelect.required = false;
+                }
             });
         } else {
-            // إذا لم يكن موجودًا (لأن الملف غير موجود أو به خطأ)،
-            // نعرض رسالة تحذير في الكونسول ونرسم نموذج الزائر مباشرة
-            console.warn("auth.js failed to load or 'auth' object is missing. Rendering guest form as a fallback.");
-            renderContactForm(null); // عرض نموذج الزائر كخطة بديلة
+            console.warn("auth.js not loaded. Displaying form for guest users.");
         }
-        
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // إظهار/إخفاء قائمة الطلبات بناءً على نوع الاستفسار
+        inquiryTypeSelect.addEventListener('change', (e) => {
+            const selectedType = e.target.value;
+            // التحقق إذا كان المستخدم مسجل دخوله قبل إظهار القائمة
+            if (typeof auth !== 'undefined' && auth.currentUser && (selectedType === 'مشكلة في الطلب' || selectedType === 'شكوى')) {
+                relatedOrderGroup.style.display = 'block';
+                relatedOrderSelect.required = true;
+            } else {
+                relatedOrderGroup.style.display = 'none';
+                relatedOrderSelect.required = false;
+            }
+        });
+
+        // عند إرسال النموذج
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            errorP.style.display = 'none';
+
+            const formData = new FormData(form);
+            const ticketId = `TICKET-${Date.now()}`;
+            formData.append('ticketId', ticketId);
+            formData.append('createdAt', new Date().toISOString());
+            if (typeof auth !== 'undefined' && auth.currentUser) {
+                formData.append('userId', auth.currentUser.uid);
+            }
+
+            try {
+                const response = await fetch(`${workerBaseUrl}/api/create-ticket`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+                if (result.success && result.redirectUrl) {
+                    notificationSound.play(); // تشغيل صوت الإشعار
+                    // الانتظار قليلاً قبل التوجيه لإعطاء فرصة لسماع الصوت
+                    setTimeout(() => {
+                        window.location.href = result.redirectUrl;
+                    }, 500);
+                } else {
+                    throw new Error(result.error || 'فشل الخادم في إنشاء التذكرة.');
+                }
+            } catch (error) {
+                console.error('Submit Error:', error);
+                errorP.textContent = `خطأ: ${error.message}`;
+                errorP.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'إرسال التذكرة';
+            }
+        });
+
+        // تحديث السنة في التذييل
+        const currentYearEl = document.getElementById('current-year');
+        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
     });
     </script>
 </body>
