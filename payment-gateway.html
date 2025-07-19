@@ -269,6 +269,16 @@
         .payment-details-container h4 i {
             color: var(--primary-color);
         }
+        #form-error {
+            display: none;
+            background-color: #f8d7da;
+            color: #842029;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            font-weight: 700;
+            border: 1px solid #f5c2c7;
+        }
 
         /* --- التصميم المتجاوب --- */
         @media (max-width: 768px) {
@@ -299,7 +309,7 @@
                 <div id="mobile-navbar-actions"></div>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
-                </div>
+            </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
@@ -309,7 +319,7 @@
             <h1>إتمام الطلب</h1>
         </header>
 
-        <form enctype="multipart/form-data">
+        <form id="payment-form" enctype="multipart/form-data">
             
             <div class="card">
                 <div class="card-header"><span class="step-icon">1</span><h3>ملخص الطلب</h3></div>
@@ -323,7 +333,6 @@
                 </div>
             </div>
 
-            <!-- ✅ تعديل: تغيير أسماء الحقول المخفية إلى الإنجليزية -->
             <input type="hidden" id="form-service-name" name="serviceName">
             <input type="hidden" id="form-service-price" name="price">
 
@@ -331,17 +340,14 @@
                 <div class="card-header"><span class="step-icon">2</span><h3>معلوماتك الشخصية</h3></div>
                 <div class="form-group">
                     <label for="name">الاسم الكامل <span class="required-star">*</span></label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <input type="text" name="customerName" id="name" required />
                 </div>
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <input type="email" name="email" id="email" required />
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <input type="tel" name="phone" id="phone" required placeholder="مثال: 0612345678" />
                 </div>
             </div>
@@ -350,12 +356,10 @@
                 <div class="card-header"><span class="step-icon">3</span><h3>تفاصيل إضافية</h3></div>
                 <div class="form-group">
                     <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <textarea name="serviceDetails" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service-link">رابط (اختياري)</label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <input type="url" name="serviceLink" id="service-link" placeholder="https://example.com" />
                 </div>
             </div>
@@ -366,22 +370,21 @@
                 <div class="form-group">
                     <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
                     <div class="payment-options-grid" id="payment-options">
-                        </div>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
+                    </div>
                     <input type="hidden" name="paymentMethod" id="payment-method-input" required>
                 </div>
 
                 <div id="payment-details-container" class="payment-details-container">
-                    </div>
+                </div>
                 
                 <div class="form-group">
                     <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
-                    <!-- ✅ تعديل: تغيير اسم الحقل -->
                     <input type="file" name="receiptFile" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
                 </div>
                 <button type="submit" class="submit-btn" id="submit-btn" disabled>
                     <i class="fas fa-check-circle"></i> إرسال الطلب الآن
                 </button>
+                <div id="form-error"></div>
                 <p class="contact-support">
                     هل تواجه مشكلة؟ <a href="contact.html">اتصل بنا</a>
                 </p>
@@ -395,13 +398,14 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form');
+        const form = document.getElementById('payment-form');
         const submitBtn = document.getElementById('submit-btn');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const paymentOptionsContainer = document.getElementById('payment-options');
         const paymentDetailsContainer = document.getElementById('payment-details-container');
         const paymentMethodInput = document.getElementById('payment-method-input');
+        const errorDiv = document.getElementById('form-error');
 
         const paymentMethods = [
             { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png' },
@@ -495,13 +499,16 @@
         document.getElementById('display-service-price').value = servicePrice + " درهم";
         document.getElementById('form-service-price').value = servicePrice;
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                if (user.displayName) nameInput.value = user.displayName;
-                if (user.email) emailInput.value = user.email;
-                validateForm();
-            }
-        });
+        // Check if auth is defined before using it
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    if (user.displayName) nameInput.value = user.displayName;
+                    if (user.email) emailInput.value = user.email;
+                    validateForm();
+                }
+            });
+        }
 
         form.querySelectorAll('[required]').forEach(input => {
             input.addEventListener('input', validateForm);
@@ -511,20 +518,23 @@
         });
         validateForm();
 
-        // ✅✅✅ --- الكود المُصحَّح لإرسال النموذج --- ✅✅✅
+        // ✅✅✅ --- الكود المُصحَّح والنهائي لإرسال النموذج --- ✅✅✅
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب...';
+            errorDiv.style.display = 'none'; // إخفاء أي أخطاء سابقة
 
-            // ✅ تعديل: إنشاء رقم طلب فريد بأحرف لاتينية
-            const date = new Date();
-            const orderId = `KH-${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+            // الرابط الكامل والصحيح للـ Worker
+            const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev/api/submit-order';
             
             const formData = new FormData(form);
-            // ✅ تعديل: إضافة رقم الطلب إلى بيانات النموذج
+            
+            // إنشاء رقم طلب فريد
+            const orderId = `KH-${Date.now()}`;
             formData.append('orderId', orderId);
             
+            // إضافة معلومات المستخدم والتاريخ
             if (typeof auth !== 'undefined' && auth.currentUser) {
                 formData.append('userId', auth.currentUser.uid);
             } else {
@@ -532,42 +542,31 @@
             }
             formData.append('createdAt', new Date().toISOString());
 
-            const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev';
-// ...
-const response = await fetch(`${workerUrl}/api/submit-order`, { /* ... */ }); // ✅ تم إضافة المسار الصحيح
             try {
-    const response = await fetch(workerUrl, {
-        method: 'POST',
-        body: formData,
-    });
+                // استخدام الرابط الكامل والصحيح
+                const response = await fetch(workerUrl, {
+                    method: 'POST',
+                    body: formData,
+                });
 
-    // لا يهم ما هو الرد، سنقوم بتحويله إلى JSON لنقرأ المحتوى
-    const result = await response.json();
+                const result = await response.json();
 
-    // الآن نتحقق من المحتوى: هل العملية ناجحة وهل أرسل الخادم رابط التوجيه؟
-    if (result.success && result.redirectUrl) {
-        // هذا هو السطر الأهم: نقوم بتوجيه المستخدم إلى الرابط الذي أرسله الخادم
-        window.location.href = result.redirectUrl;
-    } else {
-        // إذا لم تكن ناجحة، نعرض الخطأ الذي أرسله الخادم
-        throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
-    }
-} catch (error) {
-    // هذا الجزء يبقى كما هو للتعامل مع أي أخطاء
-    console.error('Submit Error:', error);
-    // استخدم رسالة مخصصة بدلاً من alert
-    const errorDiv = document.getElementById('form-error'); // افترض وجود عنصر بهذا الـ ID
-    if(errorDiv) {
-        errorDiv.textContent = 'حدث خطأ أثناء إرسال طلبك: ' + error.message;
-        errorDiv.style.display = 'block';
-    } else {
-        alert('حدث خطأ أثناء إرسال طلبك. يرجى المحاولة مرة أخرى.');
-    }
-    
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إرسال الطلب الآن';
-}
-
+                if (result.success && result.redirectUrl) {
+                    // توجيه إلى صفحة النجاح
+                    window.location.href = result.redirectUrl;
+                } else {
+                    // عرض الخطأ الذي يرسله الخادم
+                    throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
+                }
+            } catch (error) {
+                console.error('Submit Error:', error);
+                errorDiv.textContent = 'حدث خطأ أثناء إرسال طلبك: ' + error.message;
+                errorDiv.style.display = 'block';
+                
+                // إعادة تفعيل الزر
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إرسال الطلب الآن';
+            }
         });
     });
     </script>
