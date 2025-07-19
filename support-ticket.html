@@ -11,6 +11,7 @@
             --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
             --gray-color: #f8f9fa; --border-color: #e9ecef; --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --danger-color: #dc3545;
         }
         body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); }
         .page-wrapper { max-width: 800px; margin: 40px auto; padding: 0 20px; }
@@ -47,11 +48,12 @@
             opacity: 0; transform: translateY(10px); animation: popIn 0.4s forwards;
         }
         @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
-        .message-bubble.user { margin-right: auto; flex-direction: row-reverse; }
-        .message-bubble.support { margin-left: auto; }
+        .message-bubble.user { margin-left: auto; flex-direction: row-reverse; }
+        .message-bubble.support { margin-right: auto; }
         .message-content {
             padding: 12px 18px; border-radius: 18px;
             line-height: 1.6;
+            word-break: break-word;
         }
         .message-bubble.user .message-content {
             background: linear-gradient(45deg, var(--primary-color), #007bff); color: white;
@@ -62,8 +64,8 @@
             border-bottom-left-radius: 4px;
         }
         .message-meta { font-size: 0.8rem; color: #999; margin-top: 5px; padding: 0 5px; }
-        .message-bubble.user .message-meta { text-align: left; }
-        .message-bubble.support .message-meta { text-align: right; }
+        .message-bubble.user .message-meta { text-align: right; }
+        .message-bubble.support .message-meta { text-align: left; }
         
         .typing-indicator { display: flex; align-items: center; padding: 10px; }
         .typing-indicator span {
@@ -76,24 +78,50 @@
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
 
         .chat-input-area {
-            padding: 20px; border-top: 1px solid var(--border-color); flex-shrink: 0;
+            padding: 15px 20px; border-top: 1px solid var(--border-color); flex-shrink: 0;
             background-color: var(--gray-color);
             border-radius: 0 0 var(--border-radius) var(--border-radius);
         }
-        .chat-input-form { display: flex; gap: 10px; }
+        .chat-input-form { display: flex; gap: 10px; align-items: center; }
         #message-input {
             flex-grow: 1; padding: 12px 18px; border: 1px solid var(--border-color);
             border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 1rem;
             transition: all 0.3s ease;
         }
         #message-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
+        
+        #attach-btn {
+            background-color: transparent; color: #6c757d; border: none;
+            border-radius: 50%; width: 44px; height: 44px; font-size: 1.2rem;
+            cursor: pointer; transition: all 0.3s ease; flex-shrink: 0;
+        }
+        #attach-btn:hover { background-color: #e2e6ea; }
+
         #send-btn {
             background-color: var(--primary-color); color: white; border: none;
-            border-radius: 50%; width: 50px; height: 50px; font-size: 1.2rem;
-            cursor: pointer; transition: all 0.3s ease;
+            border-radius: 50%; width: 44px; height: 44px; font-size: 1.1rem;
+            cursor: pointer; transition: all 0.3s ease; flex-shrink: 0;
         }
         #send-btn:hover { background-color: #00458e; transform: scale(1.1); }
         #send-btn:disabled { background-color: #a0a0a0; cursor: not-allowed; transform: scale(1); }
+        
+        #attachment-preview {
+            padding: 0 20px 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        #attachment-preview-content {
+            background: #e9ecef;
+            padding: 5px 12px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #attachment-preview button {
+            background: none; border: none; color: var(--danger-color); cursor: pointer;
+            font-size: 1rem; padding: 0; line-height: 1;
+        }
 
         /* --- تصميم التذييل الكامل --- */
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 0 20px; margin-top: 60px; }
@@ -132,8 +160,11 @@
                 <!-- الرسائل ستظهر هنا -->
             </div>
             <div class="chat-input-area">
+                <div id="attachment-preview" style="display: none;"></div>
                 <form id="chat-input-form" class="chat-input-form">
-                    <input type="text" id="message-input" placeholder="اكتب رسالتك هنا..." autocomplete="off" required>
+                    <button type="button" id="attach-btn" title="إرفاق ملف"><i class="fas fa-paperclip"></i></button>
+                    <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" hidden>
+                    <input type="text" id="message-input" placeholder="اكتب رسالتك هنا..." autocomplete="off">
                     <button type="submit" id="send-btn"><i class="fas fa-paper-plane"></i></button>
                 </form>
             </div>
@@ -157,7 +188,7 @@
     <!-- الأصوات -->
     <audio id="sound-send" src="https://assets.mixkit.co/sfx/preview/mixkit-message-pop-alert-2354.mp3" preload="auto"></audio>
     <audio id="sound-receive" src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" preload="auto"></audio>
-    <audio id="sound-typing" src="https://assets.mixkit.co/sfx/preview/mixkit-single-key-type-2533.mp3" preload="auto" loop></audio>
+    <audio id="sound-typing" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.mp3" preload="auto"></audio>
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -167,6 +198,10 @@
         const chatForm = document.getElementById('chat-input-form');
         const ticketSubjectEl = document.getElementById('ticket-subject');
         const ticketIdDisplayEl = document.getElementById('ticket-id-display');
+        const attachBtn = document.getElementById('attach-btn');
+        const fileInput = document.getElementById('file-input');
+        const attachmentPreview = document.getElementById('attachment-preview');
+        
         const soundSend = document.getElementById('sound-send');
         const soundReceive = document.getElementById('sound-receive');
         const soundTyping = document.getElementById('sound-typing');
@@ -177,6 +212,15 @@
 
         let currentUser = null;
         let chatHistory = [];
+        let selectedFile = null;
+
+        // ✅ دالة جديدة لتشغيل الصوت بأمان
+        function playSound(soundElement) {
+            // التحقق إذا كان الصوت جاهزاً للتشغيل
+            if (soundElement.readyState >= 2) {
+                soundElement.play().catch(e => console.warn("Audio playback was interrupted:", e));
+            }
+        }
 
         function addMessage(sender, text, time) {
             const messageBubble = document.createElement('div');
@@ -188,7 +232,9 @@
             `;
             chatMessages.appendChild(messageBubble);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            chatHistory.push({ sender, message: text });
+            if (text) {
+                 chatHistory.push({ role: sender === 'User' ? 'user' : 'model', parts: [{ text }] });
+            }
         }
 
         function showTypingIndicator() {
@@ -198,17 +244,15 @@
             typingBubble.innerHTML = `<div class="message-content typing-indicator"><span></span><span></span><span></span></div>`;
             chatMessages.appendChild(typingBubble);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            soundTyping.play();
+            playSound(soundTyping);
         }
 
         function hideTypingIndicator() {
             const indicator = document.getElementById('typing-indicator');
             if (indicator) indicator.remove();
-            soundTyping.pause();
-            soundTyping.currentTime = 0;
         }
 
-        async function loadTicket() {
+        async function loadTicket(retries = 3) {
             if (!ticketId) {
                 ticketSubjectEl.textContent = "خطأ: رقم التذكرة غير موجود";
                 return;
@@ -216,6 +260,7 @@
             ticketIdDisplayEl.textContent = `#${ticketId}`;
             try {
                 const response = await fetch(`${workerBaseUrl}/api/get-ticket-details?ticketId=${ticketId}`);
+                if (!response.ok) throw new Error(`Server responded with status ${response.status}`);
                 const data = await response.json();
                 if (data.success) {
                     const { ticket, messages } = data;
@@ -223,32 +268,77 @@
                     addMessage('User', ticket.message, ticket.createdAt);
                     messages.forEach(msg => addMessage(msg.sender, msg.message, msg.createdAt));
                 } else {
-                    ticketSubjectEl.textContent = "خطأ: لم يتم العثور على التذكرة";
+                    throw new Error(data.error || "Ticket not found");
                 }
             } catch (error) {
-                console.error("Failed to load ticket:", error);
-                ticketSubjectEl.textContent = "خطأ في الاتصال بالخادم";
+                console.error(`Failed to load ticket (attempt ${4 - retries}):`, error);
+                if (retries > 0) {
+                    setTimeout(() => loadTicket(retries - 1), 1000);
+                } else {
+                    ticketSubjectEl.textContent = "خطأ: لم نتمكن من تحميل التذكرة.";
+                }
             }
         }
 
-        async function getAIResponse(userMessage) {
+        attachBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                selectedFile = fileInput.files[0];
+                attachmentPreview.innerHTML = `
+                    <span id="attachment-preview-content">
+                        <i class="fas fa-file-alt"></i> ${selectedFile.name}
+                        <button type="button" id="remove-attachment-btn">&times;</button>
+                    </span>`;
+                attachmentPreview.style.display = 'block';
+                document.getElementById('remove-attachment-btn').addEventListener('click', () => {
+                    selectedFile = null;
+                    fileInput.value = '';
+                    attachmentPreview.style.display = 'none';
+                });
+            }
+        });
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageText = messageInput.value.trim();
+            if (!currentUser || (!messageText && !selectedFile)) return;
+
+            const tempTime = new Date().toISOString();
+            if (messageText) {
+                addMessage('User', messageText, tempTime);
+            }
+            if (selectedFile) {
+                addMessage('User', `تم إرفاق ملف: ${selectedFile.name}`, tempTime);
+            }
+            
+            playSound(soundSend);
+            messageInput.value = '';
+            sendBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('ticketId', ticketId);
+            formData.append('sender', 'User');
+            formData.append('message', messageText);
+            formData.append('chatHistory', JSON.stringify(chatHistory));
+            if (selectedFile) {
+                formData.append('attachment', selectedFile);
+            }
+
+            selectedFile = null;
+            fileInput.value = '';
+            attachmentPreview.style.display = 'none';
+
             showTypingIndicator();
             try {
                 const response = await fetch(`${workerBaseUrl}/api/post-chat-message`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        ticketId: ticketId,
-                        sender: 'User',
-                        message: userMessage,
-                        chatHistory: chatHistory
-                    })
+                    body: formData
                 });
                 const result = await response.json();
                 hideTypingIndicator();
                 if (result.success && result.aiResponse) {
                     addMessage('Support', result.aiResponse.message, result.aiResponse.createdAt);
-                    soundReceive.play();
+                    playSound(soundReceive);
                     showNotification('رسالة جديدة من الدعم', result.aiResponse.message);
                 } else {
                     throw new Error(result.error || "فشل في الحصول على رد.");
@@ -257,17 +347,9 @@
                 hideTypingIndicator();
                 addMessage('Support', 'عذراً، حدث خطأ فني. سأقوم بتحويلك للدعم البشري.', new Date().toISOString());
                 console.error("Error getting AI response:", error);
+            } finally {
+                sendBtn.disabled = false;
             }
-        }
-
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const messageText = messageInput.value.trim();
-            if (!messageText || !currentUser) return;
-            addMessage('User', messageText, new Date().toISOString());
-            soundSend.play();
-            messageInput.value = '';
-            await getAIResponse(messageText);
         });
 
         function requestNotificationPermission() {
@@ -277,11 +359,10 @@
         }
 
         function showNotification(title, body) {
-            // إظهار الإشعار فقط إذا كانت الصفحة غير نشطة
             if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
                 new Notification(title, {
                     body: body,
-                    icon: 'https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png' // رابط الشعار
+                    icon: 'https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png'
                 });
             }
         }
@@ -291,7 +372,7 @@
                 if (user) {
                     currentUser = user;
                     loadTicket();
-                    requestNotificationPermission(); // طلب الإذن عند تحميل الصفحة للمستخدم المسجل
+                    requestNotificationPermission();
                 } else {
                     ticketSubjectEl.textContent = "يرجى تسجيل الدخول لعرض هذه التذكرة";
                 }

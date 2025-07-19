@@ -97,7 +97,6 @@
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
         }
         input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
-        textarea { resize: vertical; min-height: 150px; }
         .submit-btn {
             width: 100%; padding: 15px; font-size: 1.2rem; background: var(--primary-color);
             border: none; color: white; font-weight: bold; border-radius: 8px;
@@ -105,10 +104,8 @@
         }
         .submit-btn:hover:not(:disabled) { background-color: #00458e; transform: translateY(-3px); }
         .submit-btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-
-        #related-order-group { display: none; }
         #form-error { display: none; color: var(--danger-color); font-weight: 700; margin-top: 15px; text-align: center; }
-
+        
         /* --- تصميم التذييل (Footer) --- */
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
@@ -153,58 +150,9 @@
             <p>نحن هنا لمساعدتك. سواء كان لديك استفسار، مشكلة في طلب، أو اقتراح، يرجى ملء النموذج أدناه وسنعاود الاتصال بك في أقرب وقت.</p>
         </header>
 
-        <div class="contact-card">
-            <form id="contact-form">
-                <div class="form-group">
-                    <label for="full-name">الاسم الكامل <span class="required-star">*</span></label>
-                    <input type="text" id="full-name" name="fullName" required>
-                </div>
-    
-                <div class="form-group">
-                    <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">رقم الهاتف <span class="required-star">*</span></label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
-                    <select id="inquiry-type" name="inquiryType" required>
-                        <option value="" disabled selected>-- اختر نوع الاستفسار --</option>
-                        <option value="استفسار عام">استفسار عام</option>
-                        <option value="مشكلة في الطلب">مشكلة في الطلب</option>
-                        <option value="شكوى">شكوى</option>
-                    </select>
-                </div>
-    
-                <div id="related-order-group" class="form-group" style="display: none;">
-                    <label for="related-order">اختر الطلب المتعلق بالمشكلة <span class="required-star">*</span></label>
-                    <select id="related-order" name="relatedOrder" required>
-                        <option value="">جاري تحميل طلباتك...</option>
-                    </select>
-                </div>
-    
-                <div class="form-group">
-                    <label for="subject">الموضوع <span class="required-star">*</span></label>
-                    <input type="text" id="subject" name="subject" required>
-                </div>
-    
-                <div class="form-group">
-                    <label for="message">رسالتك <span class="required-star">*</span></label>
-                    <textarea id="message" name="message" required></textarea>
-                </div>
-    
-                <div class="form-group">
-                    <label for="attachment">إرفاق ملف (اختياري)</label>
-                    <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
-                </div>
-    
-                <button type="submit" id="submit-btn" class="submit-btn">إرسال التذكرة</button>
-                <p id="form-error"></p>
-            </form>
+        <div id="contact-container" class="contact-card">
+            <!-- سيتم بناء النموذج هنا بواسطة الجافاسكريبت -->
+            <p style="text-align: center;">جاري تحميل النموذج...</p>
         </div>
     </div>
 
@@ -217,12 +165,9 @@
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
-    <!-- ملفات Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
-    
-    <!-- صوت الإشعار -->
     <audio id="notification-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
 
     <script>
@@ -230,27 +175,136 @@
     //         السكريبت المُصحَّح والنهائي لصفحة "اتصل بنا"
     // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. تعريف عناصر الواجهة ---
-        const form = document.getElementById('contact-form');
-        const inquiryTypeSelect = document.getElementById('inquiry-type');
-        const relatedOrderGroup = document.getElementById('related-order-group');
-        const relatedOrderSelect = document.getElementById('related-order');
-        const fullNameInput = document.getElementById('full-name');
-        const emailInput = document.getElementById('email');
-        const phoneInput = document.getElementById('phone');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorP = document.getElementById('form-error');
-        const notificationSound = document.getElementById('notification-sound');
-
-        // --- 2. روابط الخادم ---
+        const contactContainer = document.getElementById('contact-container');
         const workerBaseUrl = 'https://order-processor.radwanyhassan75.workers.dev';
 
         /**
-         * دالة لجلب طلبات المستخدم
+         * دالة لرسم النموذج الديناميكي
          */
-        async function fetchUserOrders(userId) {
+        function renderForm() {
+            contactContainer.innerHTML = `
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="full-name">الاسم الكامل <span class="required-star">*</span></label>
+                        <input type="text" id="full-name" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف <span class="required-star">*</span></label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
+                        <select id="inquiry-type" name="inquiryType" required>
+                            <option value="" disabled selected>-- اختر نوع الاستفسار --</option>
+                            <option value="استفسار عام">استفسار عام</option>
+                            <option value="مشكلة في الطلب">مشكلة في الطلب</option>
+                            <option value="شكوى">شكوى</option>
+                        </select>
+                    </div>
+                    <div id="related-order-group" class="form-group" style="display: none;">
+                        <label for="related-order">اختر الطلب المتعلق بالمشكلة <span class="required-star">*</span></label>
+                        <select id="related-order" name="relatedOrder" required>
+                            <option value="">جاري تحميل طلباتك...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">الموضوع <span class="required-star">*</span></label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">رسالتك <span class="required-star">*</span></label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="attachment">إرفاق ملف (اختياري)</label>
+                        <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+                    </div>
+                    <button type="submit" id="submit-btn" class="submit-btn">إرسال التذكرة</button>
+                    <p id="form-error" style="display: none; color: var(--danger-color); font-weight: 700; margin-top: 15px; text-align: center;"></p>
+                </form>
+            `;
+            // بعد رسم النموذج، نقوم بربط الأحداث
+            setupEventListeners();
+        }
+
+        /**
+         * دالة لربط الأحداث بالنموذج بعد رسمه
+         */
+        function setupEventListeners() {
+            const form = document.getElementById('contact-form');
+            const inquiryTypeSelect = document.getElementById('inquiry-type');
+            const relatedOrderGroup = document.getElementById('related-order-group');
+            const relatedOrderSelect = document.getElementById('related-order');
+            const submitBtn = document.getElementById('submit-btn');
+            const errorP = document.getElementById('form-error');
+            const notificationSound = document.getElementById('notification-sound');
+
+            // إظهار/إخفاء قائمة الطلبات
+            inquiryTypeSelect.addEventListener('change', (e) => {
+                const selectedType = e.target.value;
+                if (auth.currentUser && (selectedType === 'مشكلة في الطلب' || selectedType === 'شكوى')) {
+                    relatedOrderGroup.style.display = 'block';
+                    relatedOrderSelect.required = true;
+                } else {
+                    relatedOrderGroup.style.display = 'none';
+                    relatedOrderSelect.required = false;
+                }
+            });
+
+            // عند إرسال النموذج
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+                errorP.style.display = 'none';
+
+                const formData = new FormData(form);
+                const ticketId = `TICKET-${Date.now()}`;
+                formData.append('ticketId', ticketId);
+                formData.append('createdAt', new Date().toISOString());
+                if (auth.currentUser) {
+                    formData.append('userId', auth.currentUser.uid);
+                }
+
+                try {
+                    const response = await fetch(`${workerBaseUrl}/api/create-ticket`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    const result = await response.json();
+                    if (result.success && result.redirectUrl) {
+                        notificationSound.play();
+                        setTimeout(() => { window.location.href = result.redirectUrl; }, 500);
+                    } else {
+                        throw new Error(result.error || 'فشل الخادم في إنشاء التذكرة.');
+                    }
+                } catch (error) {
+                    console.error('Submit Error:', error);
+                    errorP.textContent = `خطأ: ${error.message}`;
+                    errorP.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'إرسال التذكرة';
+                }
+            });
+        }
+
+        /**
+         * دالة لجلب طلبات المستخدم وملء بياناته
+         */
+        async function initializeFormForUser(user) {
+            const fullNameInput = document.getElementById('full-name');
+            const emailInput = document.getElementById('email');
+            const relatedOrderSelect = document.getElementById('related-order');
+
+            if (user.displayName) fullNameInput.value = user.displayName;
+            if (user.email) emailInput.value = user.email;
+            
             try {
-                const response = await fetch(`${workerBaseUrl}/api/get-my-orders?userId=${userId}`);
+                const response = await fetch(`${workerBaseUrl}/api/get-my-orders?userId=${user.uid}`);
                 const data = await response.json();
                 if (data.success && data.orders.length > 0) {
                     relatedOrderSelect.innerHTML = '<option value="" disabled selected>-- اختر الطلب --</option>';
@@ -269,85 +323,17 @@
             }
         }
 
-        // --- 3. منطق عمل الصفحة ---
-
-        // مراقبة حالة تسجيل الدخول
+        // --- نقطة البداية ---
+        renderForm(); // نرسم النموذج أولاً
         if (typeof auth !== 'undefined') {
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    // المستخدم مسجل دخوله
-                    if (user.displayName) fullNameInput.value = user.displayName;
-                    if (user.email) emailInput.value = user.email;
-                    // جعل الحقول للقراءة فقط للمستخدم المسجل
-                    fullNameInput.readOnly = true;
-                    emailInput.readOnly = true;
-                    // جلب طلبات المستخدم
-                    fetchUserOrders(user.uid);
-                } else {
-                    // المستخدم زائر
-                    relatedOrderGroup.style.display = 'none';
-                    relatedOrderSelect.required = false;
+                    initializeFormForUser(user);
                 }
             });
-        } else {
-            console.warn("auth.js not loaded. Displaying form for guest users.");
         }
-
-        // إظهار/إخفاء قائمة الطلبات بناءً على نوع الاستفسار
-        inquiryTypeSelect.addEventListener('change', (e) => {
-            const selectedType = e.target.value;
-            // التحقق إذا كان المستخدم مسجل دخوله قبل إظهار القائمة
-            if (typeof auth !== 'undefined' && auth.currentUser && (selectedType === 'مشكلة في الطلب' || selectedType === 'شكوى')) {
-                relatedOrderGroup.style.display = 'block';
-                relatedOrderSelect.required = true;
-            } else {
-                relatedOrderGroup.style.display = 'none';
-                relatedOrderSelect.required = false;
-            }
-        });
-
-        // عند إرسال النموذج
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-            errorP.style.display = 'none';
-
-            const formData = new FormData(form);
-            const ticketId = `TICKET-${Date.now()}`;
-            formData.append('ticketId', ticketId);
-            formData.append('createdAt', new Date().toISOString());
-            if (typeof auth !== 'undefined' && auth.currentUser) {
-                formData.append('userId', auth.currentUser.uid);
-            }
-
-            try {
-                const response = await fetch(`${workerBaseUrl}/api/create-ticket`, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const result = await response.json();
-                if (result.success && result.redirectUrl) {
-                    notificationSound.play(); // تشغيل صوت الإشعار
-                    // الانتظار قليلاً قبل التوجيه لإعطاء فرصة لسماع الصوت
-                    setTimeout(() => {
-                        window.location.href = result.redirectUrl;
-                    }, 500);
-                } else {
-                    throw new Error(result.error || 'فشل الخادم في إنشاء التذكرة.');
-                }
-            } catch (error) {
-                console.error('Submit Error:', error);
-                errorP.textContent = `خطأ: ${error.message}`;
-                errorP.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'إرسال التذكرة';
-            }
-        });
-
-        // تحديث السنة في التذييل
-        const currentYearEl = document.getElementById('current-year');
-        if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+        
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     });
     </script>
 </body>
