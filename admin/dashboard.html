@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* CSS remains the same */
         :root {
             --bg-main: #f7f9fc; --bg-sidebar: #ffffff; --bg-header: #ffffff;
             --bg-card: #ffffff; --color-primary: #007bff; --color-text-main: #212529;
@@ -20,6 +21,7 @@
         }
         *, *::before, *::after { box-sizing: border-box; }
         body { margin: 0; font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--color-text-main); font-size: 16px; }
+        .admin-panel, .auth-fail-message { display: none; }
         .admin-panel { display: flex; }
         .sidebar { width: var(--sidebar-width); background-color: var(--bg-sidebar); height: 100vh; position: sticky; top: 0; padding: 20px; display: flex; flex-direction: column; border-left: 1px solid var(--color-border); transition: width 0.3s ease; overflow: hidden; }
         .sidebar-header { display: flex; align-items: center; justify-content: center; gap: 15px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--color-border); }
@@ -57,19 +59,12 @@
         .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
         .panel { background-color: var(--bg-card); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
         .panel-title { font-size: 1.2rem; font-weight: 700; margin-top: 0; margin-bottom: 20px; }
-        
-        /* لإخفاء المحتوى قبل إدخال كلمة المرور */
-        .admin-panel, .auth-fail-message { display: none; }
-
     </style>
 </head>
 <body>
-
     <div class="admin-panel" id="admin-panel">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-digital-tachograph logo-icon"></i><span class="logo-text">المكتب الرقمي</span>
-            </div>
+            <div class="sidebar-header"><i class="fas fa-digital-tachograph logo-icon"></i><span class="logo-text">المكتب الرقمي</span></div>
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="dashboard.html" class="active"><i class="fas fa-home icon"></i><span class="nav-text">الرئيسية</span></a></li>
@@ -117,33 +112,22 @@
             </main>
         </div>
     </div>
-    
-    <div id="auth-fail-message" style="text-align: center; padding-top: 50px; font-size: 1.5rem; color: #e74c3c;">
-        فشل التحقق، لا يمكنك الدخول.
-    </div>
-
+    <div id="auth-fail-message" style="text-align: center; padding-top: 50px; font-size: 1.5rem; color: #e74c3c;">فشل التحقق، لا يمكنك الدخول.</div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- 1. قسم التحقق من كلمة المرور ---
             function authenticate() {
                 const requiredUser = "hassan";
                 const requiredPass = "12345678";
-
                 const user = prompt("الرجاء إدخال اسم المستخدم:");
                 const pass = prompt("الرجاء إدخال كلمة المرور:");
-
                 if (user === requiredUser && pass === requiredPass) {
-                    // إذا كانت المعلومات صحيحة، أظهر لوحة التحكم وابدأ التطبيق
                     document.getElementById('admin-panel').style.display = 'flex';
                     initializeApp();
                 } else {
-                    // إذا كانت المعلومات خاطئة، أظهر رسالة الفشل
                     document.getElementById('auth-fail-message').style.display = 'block';
                     alert("اسم المستخدم أو كلمة المرور غير صحيحة!");
                 }
             }
-            
-            // --- 2. قسم تشغيل التطبيق (بعد التحقق الناجح) ---
             function initializeApp() {
                 const toggleBtn = document.getElementById('toggle-sidebar-btn');
                 const adminPanel = document.getElementById('admin-panel');
@@ -168,36 +152,33 @@
                 }
                 
                 async function loadDashboardData() {
+                    // --- التعديل الأخير والمهم ---
+                    // استبدل هذا الرابط بالرابط الحقيقي للـ Worker الخاص بك
+                    const WORKER_URL = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
+
                     try {
-                        // استخدام الرابط الكامل لضمان الوصول الصحيح
-                        const response = await fetch('https://khadamat.pages.dev/api/dashboard-stats');
+                        const response = await fetch(`${WORKER_URL}/api/dashboard-stats`);
                         
-                        // التحقق من أن الخادم أرجع بيانات JSON وليس HTML
                         const contentType = response.headers.get("content-type");
                         if (!response.ok || !contentType || !contentType.includes("application/json")) {
                             throw new Error(`استجابة غير صالحة من الخادم. Status: ${response.status}`);
                         }
                         
                         const data = await response.json();
-
                         document.getElementById('revenue-value').textContent = `${data.totalRevenue.toLocaleString()} د.م.`;
                         document.getElementById('orders-value').textContent = data.totalOrders.toLocaleString();
                         document.getElementById('tickets-value').textContent = data.openTickets.toLocaleString();
                         document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
-
                         renderOrUpdateChart(data.chart.labels, data.chart.data);
                     } catch (error) {
                         console.error("Fetch error:", error);
-                        alert("حدث خطأ أثناء جلب البيانات من الخادم. تأكد من أن مسار API صحيح ويعمل.");
+                        alert("حدث خطأ أثناء جلب البيانات من الخادم. تأكد من أن رابط Worker صحيح ويعمل.");
                         document.getElementById('revenue-value').textContent = "خطأ";
                         document.getElementById('orders-value').textContent = "خطأ";
                     }
                 }
-
                 loadDashboardData();
             }
-
-            // --- 3. ابدأ عملية التحقق أولاً ---
             authenticate();
         });
     </script>
