@@ -3,187 +3,250 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>نموذج الطلبات</title>
+  <title>لوحة تحكم المدير - طلبات العملاء</title>
   <style>
     body {
       font-family: "Tajawal", sans-serif;
-      background: #f9f9f9;
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 10px;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
       direction: rtl;
+      color: #333;
     }
     h1 {
       text-align: center;
       margin-bottom: 20px;
+      color: #007bff;
     }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input, textarea, select {
+    table {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
       font-size: 14px;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 13px;
     }
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
+      padding: 6px 12px;
+      margin: 2px;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 13px;
       transition: background-color 0.3s ease;
     }
-    button:hover {
-      background: #0056b3;
+    button.update-btn {
+      background-color: #28a745;
+      color: white;
     }
-    #orders-list {
-      margin-top: 40px;
-      min-height: 100px;
+    button.update-btn:hover {
+      background-color: #218838;
     }
-    #orders-list li {
-      background: white;
-      margin-bottom: 10px;
+    button.delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+    button.delete-btn:hover {
+      background-color: #c82333;
+    }
+    #message {
+      margin: 15px 0;
       padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 0 6px #ddd;
-      font-size: 14px;
-      word-break: break-word;
+      border-radius: 5px;
+      display: none;
+      font-weight: bold;
+    }
+    #message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    #message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
     }
   </style>
 </head>
 <body>
 
-<h1>نموذج إرسال طلب جديد</h1>
+  <h1>لوحة تحكم المدير - إدارة الطلبات</h1>
 
-<form id="order-form">
-  <label for="customerName">اسم الزبون</label>
-  <input type="text" id="customerName" name="customerName" required />
+  <div id="message"></div>
 
-  <label for="email">البريد الإلكتروني</label>
-  <input type="email" id="email" name="email" required />
+  <table id="orders-table">
+    <thead>
+      <tr>
+        <th>رقم الطلب</th>
+        <th>اسم الزبون</th>
+        <th>البريد الإلكتروني</th>
+        <th>الخدمة</th>
+        <th>الحالة</th>
+        <th>طريقة الدفع</th>
+        <th>المبلغ المدفوع</th>
+        <th>رقم الهاتف</th>
+        <th>تفاصيل الخدمة</th>
+        <th>رابط الخدمة</th>
+        <th>تاريخ الإنشاء</th>
+        <th>تحديث</th>
+        <th>حذف</th>
+      </tr>
+    </thead>
+    <tbody id="orders-body">
+      <tr><td colspan="13">جارٍ تحميل الطلبات...</td></tr>
+    </tbody>
+  </table>
 
-  <label for="phone">رقم الهاتف</label>
-  <input type="tel" id="phone" name="phone" required />
+  <script>
+    const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/orders";
 
-  <label for="serviceName">اسم الخدمة</label>
-  <input type="text" id="serviceName" name="serviceName" required />
+    const ordersBody = document.getElementById('orders-body');
+    const messageDiv = document.getElementById('message');
 
-  <label for="paymentAmount">المبلغ المدفوع</label>
-  <input type="number" id="paymentAmount" name="paymentAmount" required min="0" />
+    // عرض رسالة (نجاح أو خطأ)
+    function showMessage(text, type='success') {
+      messageDiv.textContent = text;
+      messageDiv.className = type === 'success' ? 'success' : 'error';
+      messageDiv.style.display = 'block';
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, 4000);
+    }
 
-  <label for="paymentMethod">طريقة الدفع</label>
-  <select id="paymentMethod" name="paymentMethod" required>
-    <option value="">اختر طريقة الدفع</option>
-    <option value="CashPlus">كاش بلس</option>
-    <option value="Orange Money">أورانج موني</option>
-    <option value="BMCE">BMCE</option>
-    <option value="CIH">CIH</option>
-    <option value="Attijariwafa">التجاري وفا</option>
-    <option value="SOGE">SOGE</option>
-  </select>
+    // جلب وعرض الطلبات في الجدول
+    async function fetchOrders() {
+      ordersBody.innerHTML = '<tr><td colspan="13">جارٍ تحميل الطلبات...</td></tr>';
+      try {
+        const response = await fetch(API_URL, { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(`فشل جلب الطلبات (رمز: ${response.status})`);
 
-  <label for="serviceDetails">تفاصيل الخدمة</label>
-  <textarea id="serviceDetails" name="serviceDetails" rows="3"></textarea>
-
-  <label for="serviceLink">رابط الخدمة (اختياري)</label>
-  <input type="url" id="serviceLink" name="serviceLink" />
-
-  <button type="submit">إرسال الطلب</button>
-</form>
-
-<h2>قائمة الطلبات الحالية</h2>
-<ul id="orders-list">
-  <li>جارٍ تحميل الطلبات...</li>
-</ul>
-
-<script>
-  // رابط API يجب أن ينتهي بـ /orders حسب كود Worker
-  const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/orders";
-
-  // دالة لجلب الطلبات وعرضها
-  async function fetchOrders() {
-    const list = document.getElementById('orders-list');
-    list.innerHTML = '<li>جارٍ تحميل الطلبات...</li>';
-    try {
-      const response = await fetch(API_URL, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json'
+        const orders = await response.json();
+        if (!Array.isArray(orders) || orders.length === 0) {
+          ordersBody.innerHTML = '<tr><td colspan="13">لا توجد طلبات حتى الآن.</td></tr>';
+          return;
         }
-      });
 
-      if (!response.ok) throw new Error(`فشل جلب الطلبات (رمز الخطأ: ${response.status})`);
+        // بناء الصفوف مع الحقول والقوائم المنسدلة للتعديل
+        ordersBody.innerHTML = '';
+        orders.forEach(order => {
+          const tr = document.createElement('tr');
 
-      const orders = await response.json();
+          tr.innerHTML = `
+            <td>${order.id || '---'}</td>
+            <td>${order.customerName || ''}</td>
+            <td>${order.email || ''}</td>
+            <td>${order.serviceName || ''}</td>
+            <td>
+              <select data-id="${order.id}" class="status-select">
+                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>قيد الانتظار</option>
+                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>قيد المعالجة</option>
+                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>تمت المعالجة</option>
+                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
+              </select>
+            </td>
+            <td>
+              <select data-id="${order.id}" class="payment-method-select">
+                <option value="" ${!order.paymentMethod ? 'selected' : ''}>غير محدد</option>
+                <option value="CashPlus" ${order.paymentMethod === 'CashPlus' ? 'selected' : ''}>كاش بلس</option>
+                <option value="Orange Money" ${order.paymentMethod === 'Orange Money' ? 'selected' : ''}>أورانج موني</option>
+                <option value="BMCE" ${order.paymentMethod === 'BMCE' ? 'selected' : ''}>BMCE</option>
+                <option value="CIH" ${order.paymentMethod === 'CIH' ? 'selected' : ''}>CIH</option>
+                <option value="Attijariwafa" ${order.paymentMethod === 'Attijariwafa' ? 'selected' : ''}>التجاري وفا</option>
+                <option value="SOGE" ${order.paymentMethod === 'SOGE' ? 'selected' : ''}>SOGE</option>
+              </select>
+            </td>
+            <td>${order.paymentAmount || order.price || 0}</td>
+            <td>${order.phone || ''}</td>
+            <td><textarea readonly rows="2" style="width:100%;font-size:12px;">${order.serviceDetails || ''}</textarea></td>
+            <td>${order.serviceLink ? `<a href="${order.serviceLink}" target="_blank">رابط الخدمة</a>` : ''}</td>
+            <td>${new Date(order.createdAt || order.created_at).toLocaleString('ar-MA')}</td>
+            <td><button class="update-btn" data-id="${order.id}">تحديث</button></td>
+            <td><button class="delete-btn" data-id="${order.id}">حذف</button></td>
+          `;
+          ordersBody.appendChild(tr);
+        });
 
-      if (!Array.isArray(orders) || orders.length === 0) {
-        list.innerHTML = '<li>لا توجد طلبات بعد.</li>';
-        return;
+        // إضافة الأحداث للأزرار والقوائم المنسدلة
+        document.querySelectorAll('.update-btn').forEach(btn => {
+          btn.addEventListener('click', updateOrder);
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', deleteOrder);
+        });
+
+      } catch (error) {
+        ordersBody.innerHTML = `<tr><td colspan="13">خطأ: ${error.message}</td></tr>`;
       }
-
-      list.innerHTML = "";
-      orders.forEach(order => {
-        const li = document.createElement('li');
-        li.textContent = `#${order.id || order.orderId || "غير معروف"} - ${order.customerName} - ${order.serviceName} - الحالة: ${order.status}`;
-        list.appendChild(li);
-      });
-    } catch (error) {
-      list.innerHTML = `<li>خطأ: ${error.message}</li>`;
     }
-  }
 
-  // دالة إرسال بيانات الطلب للـ API
-  document.getElementById('order-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
+    // تحديث طلب معين (PUT)
+    async function updateOrder(event) {
+      const id = event.target.dataset.id;
+      const status = document.querySelector(`.status-select[data-id="${id}"]`).value;
+      const paymentMethod = document.querySelector(`.payment-method-select[data-id="${id}"]`).value;
 
-    const formData = new FormData(e.target);
-    const data = {};
-    formData.forEach((value, key) => {
-      // تحويل القيم الرقمية بشكل مناسب
-      if (key === 'paymentAmount') data['paymentAmount'] = Number(value);
-      else data[key] = value.trim();
-    });
+      try {
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status, payment_method: paymentMethod }),
+        });
 
-    // إعداد بيانات إضافية مطلوبة حسب API
-    data.status = "pending";
-    data.price = data.paymentAmount || 0;
-    data.receiptUrl = "";
-
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        alert(`حدث خطأ: ${errorData.error || 'خطأ غير معروف'}`);
-        return;
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || 'خطأ في تحديث الطلب');
+        }
+        showMessage(`تم تحديث الطلب رقم #${id} بنجاح.`, 'success');
+        fetchOrders(); // تحديث الجدول
+      } catch (error) {
+        showMessage(`خطأ: ${error.message}`, 'error');
       }
-
-      const result = await response.json();
-      alert(`تم إرسال الطلب بنجاح! رقم الطلب: ${result.orderId || "غير معروف"}`);
-
-      e.target.reset();  // إعادة تعيين النموذج
-      fetchOrders();     // إعادة تحميل الطلبات لعرض الطلب الجديد
-    } catch (error) {
-      alert(`فشل الإرسال: ${error.message}`);
     }
-  });
 
-  // تحميل الطلبات عند فتح الصفحة
-  fetchOrders();
-</script>
+    // حذف طلب (DELETE)
+    async function deleteOrder(event) {
+      const id = event.target.dataset.id;
+      if (!confirm(`هل أنت متأكد من حذف الطلب رقم #${id}؟`)) return;
 
+      try {
+        const response = await fetch(`${API_URL}/${id}`, {
+          method: "DELETE"
+        });
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          throw new Error(err.error || 'خطأ في حذف الطلب');
+        }
+        showMessage(`تم حذف الطلب رقم #${id} بنجاح.`, 'success');
+        fetchOrders(); // تحديث الجدول
+      } catch (error) {
+        showMessage(`خطأ: ${error.message}`, 'error');
+      }
+    }
+
+    // تحميل الطلبات عند فتح الصفحة
+    fetchOrders();
+  </script>
 </body>
 </html>
