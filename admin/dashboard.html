@@ -152,12 +152,9 @@
                 }
                 
                 async function loadDashboardData() {
-                    // --- التعديل الأخير والمهم ---
-                    // استبدل هذا الرابط بالرابط الحقيقي للـ Worker الخاص بك
-                    const WORKER_URL = 'https://technical-support-dashboard.radwanyhassan75.workers.dev';
-
                     try {
-                        const response = await fetch(`${WORKER_URL}/api/dashboard-stats`);
+                        // --- تم إرجاع هذا السطر إلى المسار الصحيح ---
+                        const response = await fetch('/api/dashboard-stats');
                         
                         const contentType = response.headers.get("content-type");
                         if (!response.ok || !contentType || !contentType.includes("application/json")) {
@@ -172,7 +169,7 @@
                         renderOrUpdateChart(data.chart.labels, data.chart.data);
                     } catch (error) {
                         console.error("Fetch error:", error);
-                        alert("حدث خطأ أثناء جلب البيانات من الخادم. تأكد من أن رابط Worker صحيح ويعمل.");
+                        alert("حدث خطأ أثناء جلب البيانات من الخادم.");
                         document.getElementById('revenue-value').textContent = "خطأ";
                         document.getElementById('orders-value').textContent = "خطأ";
                     }
