@@ -160,13 +160,39 @@
                         if (!response.ok || !contentType || !contentType.includes("application/json")) {
                             throw new Error(`استجابة غير صالحة من الخادم. Status: ${response.status}`);
                         }
-                        
-                        const data = await response.json();
-                        document.getElementById('revenue-value').textContent = `${data.totalRevenue.toLocaleString()} د.م.`;
-                        document.getElementById('orders-value').textContent = data.totalOrders.toLocaleString();
-                        document.getElementById('tickets-value').textContent = data.openTickets.toLocaleString();
-                        document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
-                        renderOrUpdateChart(data.chart.labels, data.chart.data);
+       const data = await response.json();
+
+// تعيين القيم الأساسية مع حماية من القيم غير المعرفة
+const safeNumber = (n) => (typeof n === "number" ? n.toLocaleString() : "0");
+
+// الإيرادات — لو موجودة، وإلا "غير متوفر"
+if (typeof data.totalRevenue === "number") {
+  document.getElementById('revenue-value').textContent = data.totalRevenue.toLocaleString() + " د.م.";
+} else {
+  document.getElementById('revenue-value').textContent = "غير متوفر";
+}
+
+// إجمالي الطلبات
+document.getElementById('orders-value').textContent = safeNumber(data.totalOrders);
+
+// التذاكر المفتوحة (أو الحالة المعلقة)
+document.getElementById('tickets-value').textContent = safeNumber(data.pendingOrders);
+
+// المستخدمين — لو موجودين، وإلا "غير متوفر"
+if (typeof data.totalUsers === "number") {
+  document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
+} else {
+  document.getElementById('users-value').textContent = "غير متوفر";
+}
+
+// تحديث الرسم البياني فقط إذا موجودة البيانات
+if (data.chart && Array.isArray(data.chart.labels) && Array.isArray(data.chart.data)) {
+  renderOrUpdateChart(data.chart.labels, data.chart.data);
+} else {
+  // يمكن تضع هنا رسم بياني فارغ أو رسالة أو تجاهل
+  console.warn("بيانات الرسم البياني غير متوفرة");
+}
+
                     } catch (error) {
                         console.error("Fetch error:", error);
                         alert("حدث خطأ أثناء جلب البيانات من الخادم.");
