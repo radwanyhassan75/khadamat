@@ -1,10 +1,10 @@
 name = "khadamat"
 compatibility_date = "2025-07-20"
 
-# هذا يخبر Cloudflare أن ملفات الواجهة الأمامية موجودة في مجلد public
+# يخبر Cloudflare أن ملفات الواجهة الأمامية موجودة في مجلد public
 pages_build_output_dir = "public"
 
-# هذا يربط قاعدة البيانات بالخادم الخلفي _worker.js
+# يربط قاعدة البيانات بالخادم الخلفي
 [[d1_databases]]
 binding = "DB"
 database_name = "main_database"

@@ -8,7 +8,7 @@ export default {
         status: 204,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
         },
       });
@@ -19,66 +19,55 @@ export default {
       return handleOptions();
     }
 
-    // توجيه الطلبات إلى /api/orders
-    if (url.pathname === '/api/orders') {
-      // جلب كل الطلبات
+    // توجيه الطلب إلى الرابط الصحيح الذي تطلبه لوحة التحكم
+    if (url.pathname === '/api/dashboard-stats') {
       if (request.method === 'GET') {
-        const { results } = await env.DB
-          .prepare(`SELECT * FROM orders ORDER BY createdAt DESC`)
-          .all();
-        return new Response(JSON.stringify(results), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
-      }
-
-      // إضافة طلب جديد بكل الحقول
-      if (request.method === 'POST') {
         try {
-          const newOrder = await request.json();
+          const db = env.DB;
           
-          // إنشاء قيم جديدة للطلب
-          const id = crypto.randomUUID();
-          const createdAt = new Date().toISOString();
-          const status = 'جاري المعالجة'; // حالة افتراضية
+          // استعلامات SQL لجمع البيانات
+          const statsQuery = `
+            SELECT
+              (SELECT COUNT(*) FROM orders) as totalOrders,
+              (SELECT SUM(price) FROM orders WHERE status = 'completed') as totalRevenue,
+              (SELECT COUNT(*) FROM tickets WHERE status = 'open') as openTickets,
+              (SELECT COUNT(*) FROM users) as totalUsers;
+          `;
+          const statsResult = await db.prepare(statsQuery).first();
 
-          // ** تم تحديث استعلام SQL ليشمل كل الحقول **
-          await env.DB
-            .prepare(`
-              INSERT INTO orders (id, userId, customerName, email, phone, serviceName, price, serviceDetails, serviceLink, paymentMethod, receiptUrl, status, createdAt) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `)
-            .bind(
-              id,
-              newOrder.userId || null,
-              newOrder.customerName,
-              newOrder.email,
-              newOrder.phone,
-              newOrder.serviceName,
-              newOrder.price,
-              newOrder.serviceDetails || '',
-              newOrder.serviceLink || '',
-              newOrder.paymentMethod,
-              newOrder.receiptUrl || '',
-              status,
-              createdAt
-            )
-            .run();
+          const chartQuery = `
+            SELECT
+              strftime('%Y-%m', createdAt) as month,
+              SUM(price) as monthlyRevenue
+            FROM orders
+            WHERE createdAt >= strftime('%Y-%m-%d %H:%M:%S', date('now', '-6 months')) AND status = 'completed'
+            GROUP BY month ORDER BY month ASC;
+          `;
+          const chartResult = await db.prepare(chartQuery).all();
+          
+          const chartData = {
+              labels: chartResult.results.map(row => row.month),
+              data: chartResult.results.map(row => row.monthlyRevenue)
+          };
+          
+          // تجميع كل البيانات في رد واحد
+          const dashboardData = {
+              totalOrders: statsResult.totalOrders || 0,
+              totalRevenue: statsResult.totalRevenue || 0,
+              openTickets: statsResult.openTickets || 0,
+              totalUsers: statsResult.totalUsers || 0,
+              chart: chartData
+          };
 
-          return new Response(JSON.stringify({ status: 'success', orderId: id }), {
-            status: 201,
+          return new Response(JSON.stringify(dashboardData), {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
           });
+
         } catch (e) {
-          console.error(e); // لطباعة الخطأ في لوحة التحكم
-          return new Response(JSON.stringify({ error: 'فشل في إدخال الطلب', details: e.message }), {
-            status: 400,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-          });
+          console.error("Database Error:", e);
+          return new Response(JSON.stringify({ error: "Failed to fetch statistics", details: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } });
         }
       }
-
-      return new Response('Method not allowed', { status: 405 });
     }
 
     // إذا لم يتم العثور على المسار
