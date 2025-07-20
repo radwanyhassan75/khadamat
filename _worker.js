@@ -2,8 +2,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // دالة للتعامل مع CORS
-    function handleOptions() {
+    if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
         headers: {
@@ -14,63 +13,63 @@ export default {
       });
     }
 
-    // التعامل مع طلبات OPTIONS أولاً
-    if (request.method === 'OPTIONS') {
-      return handleOptions();
-    }
+    if (url.pathname === '/api/dashboard-stats' && request.method === 'GET') {
+      try {
+        const db = env.DB;
 
-    // توجيه الطلب إلى الرابط الصحيح الذي تطلبه لوحة التحكم
-    if (url.pathname === '/api/dashboard-stats') {
-      if (request.method === 'GET') {
-        try {
-          const db = env.DB;
-          
-          // استعلامات SQL لجمع البيانات
-          const statsQuery = `
-            SELECT
-              (SELECT COUNT(*) FROM orders) as totalOrders,
-              (SELECT SUM(price) FROM orders WHERE status = 'completed') as totalRevenue,
-              (SELECT COUNT(*) FROM tickets WHERE status = 'open') as openTickets,
-              (SELECT COUNT(*) FROM users) as totalUsers;
-          `;
-          const statsResult = await db.prepare(statsQuery).first();
+        // مثال استعلام إحصائيات
+        const statsQuery = `
+          SELECT
+            (SELECT COUNT(*) FROM orders) AS totalOrders,
+            (SELECT IFNULL(SUM(price),0) FROM orders WHERE status = 'completed') AS totalRevenue,
+            (SELECT COUNT(*) FROM tickets WHERE status = 'open') AS openTickets,
+            (SELECT COUNT(*) FROM users) AS totalUsers;
+        `;
+        const statsResult = await db.prepare(statsQuery).first();
 
-          const chartQuery = `
-            SELECT
-              strftime('%Y-%m', createdAt) as month,
-              SUM(price) as monthlyRevenue
-            FROM orders
-            WHERE createdAt >= strftime('%Y-%m-%d %H:%M:%S', date('now', '-6 months')) AND status = 'completed'
-            GROUP BY month ORDER BY month ASC;
-          `;
-          const chartResult = await db.prepare(chartQuery).all();
-          
-          const chartData = {
-              labels: chartResult.results.map(row => row.month),
-              data: chartResult.results.map(row => row.monthlyRevenue)
-          };
-          
-          // تجميع كل البيانات في رد واحد
-          const dashboardData = {
-              totalOrders: statsResult.totalOrders || 0,
-              totalRevenue: statsResult.totalRevenue || 0,
-              openTickets: statsResult.openTickets || 0,
-              totalUsers: statsResult.totalUsers || 0,
-              chart: chartData
-          };
+        // استعلام بيانات الرسم البياني
+        const chartQuery = `
+          SELECT
+            strftime('%Y-%m', createdAt) AS month,
+            IFNULL(SUM(price), 0) AS monthlyRevenue
+          FROM orders
+          WHERE createdAt >= date('now', '-6 months') AND status = 'completed'
+          GROUP BY month ORDER BY month ASC;
+        `;
+        const chartResult = await db.prepare(chartQuery).all();
 
-          return new Response(JSON.stringify(dashboardData), {
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-          });
+        const chartData = {
+          labels: chartResult.results.map(r => r.month),
+          data: chartResult.results.map(r => r.monthlyRevenue),
+        };
 
-        } catch (e) {
-          console.error("Database Error:", e);
-          return new Response(JSON.stringify({ error: "Failed to fetch statistics", details: e.message }), { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } });
-        }
+        const dashboardData = {
+          totalOrders: statsResult.totalOrders || 0,
+          totalRevenue: statsResult.totalRevenue || 0,
+          openTickets: statsResult.openTickets || 0,
+          totalUsers: statsResult.totalUsers || 0,
+          chart: chartData,
+        };
+
+        return new Response(JSON.stringify(dashboardData), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
       }
     }
 
-    // إذا لم يتم العثور على المسار
     return new Response('Not Found', { status: 404 });
   },
 };

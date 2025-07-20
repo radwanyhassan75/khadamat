@@ -1,121 +1,189 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - البيانات الحية</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-main: #f7f9fc; --bg-sidebar: #ffffff; --bg-header: #ffffff;
-            --bg-card: #ffffff; --color-primary: #007bff; --color-text-main: #212529;
-            --color-text-muted: #6c757d; --color-border: #dee2e6;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05); --shadow-md: 0 5px 15px rgba(0,0,0,0.08);
-            --border-radius: 12px; --sidebar-width: 280px; --sidebar-width-collapsed: 90px;
-            --header-height: 70px;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--color-text-main); font-size: 16px; }
-        .admin-panel, .auth-fail-message { display: none; }
-        .admin-panel { display: flex; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نموذج الطلبات</title>
+  <style>
+    body {
+      font-family: "Tajawal", sans-serif;
+      background: #f9f9f9;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 10px;
+      direction: rtl;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #orders-list {
+      margin-top: 40px;
+      min-height: 100px;
+    }
+    #orders-list li {
+      background: white;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 6px #ddd;
+      font-size: 14px;
+      word-break: break-word;
+    }
+  </style>
 </head>
 <body>
-    <div class="admin-panel" id="admin-panel">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><i class="fas fa-digital-tachograph logo-icon"></i><span class="logo-text">المكتب الرقمي</span></div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="dashboard.html" class="active"><i class="fas fa-home icon"></i><span class="nav-text">الرئيسية</span></a></li>
-                    <li><a href="orders.html"><i class="fas fa-box-open icon"></i><span class="nav-text">قائمة الطلبات</span></a></li>
-                    <li><a href="users.html"><i class="fas fa-users icon"></i><span class="nav-text">المستخدمين</span></a></li>
-                    <li><a href="support-log.html"><i class="fas fa-headset icon"></i><span class="nav-text">تذاكر الدعم</span></a></li>
-                    <li><a href="settings.html"><i class="fas fa-cog icon"></i><span class="nav-text">الإعدادات</span></a></li>
-                </ul>
-            </nav>
-        </aside>
-        <div class="content-wrapper">
-             <main class="main-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="card-header"><p class="card-title">إجمالي الإيرادات</p><i class="fas fa-coins card-icon icon-revenue"></i></div>
-                        <p class="card-value" id="revenue-value">...</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-header"><p class="card-title">إجمالي الطلبات</p><i class="fas fa-shopping-cart card-icon icon-orders"></i></div>
-                        <p class="card-value" id="orders-value">...</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-header"><p class="card-title">التذاكر المفتوحة</p><i class="fas fa-life-ring card-icon icon-tickets"></i></div>
-                        <p class="card-value" id="tickets-value">...</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="card-header"><p class="card-title">إجمالي المستخدمين</p><i class="fas fa-user-plus card-icon icon-users"></i></div>
-                        <p class="card-value" id="users-value">...</p>
-                    </div>
-                </div>
-                <div class="main-grid">
-                    <div class="panel"><canvas id="revenueChart"></canvas></div>
-                </div>
-            </main>
-        </div>
-    </div>
-    <div id="auth-fail-message" style="text-align: center; padding-top: 50px;">فشل التحقق.</div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            function authenticate() {
-                const requiredUser = "hassan";
-                const requiredPass = "12345678";
-                const user = prompt("اسم المستخدم:");
-                const pass = prompt("كلمة المرور:");
-                if (user === requiredUser && pass === requiredPass) {
-                    document.getElementById('admin-panel').style.display = 'flex';
-                    loadDashboardData();
-                } else {
-                    document.getElementById('auth-fail-message').style.display = 'block';
-                }
-            }
 
-            async function loadDashboardData() {
-                try {
-                    // --- هذا هو الرابط الصحيح الذي سيعمل الآن ---
-                    const response = await fetch('/api/dashboard-stats');
+<h1>نموذج إرسال طلب جديد</h1>
 
-                    if (!response.ok) {
-                        throw new Error(`Server error: ${response.status}`);
-                    }
-                    const data = await response.json();
+<form id="order-form">
+  <label for="customerName">اسم الزبون</label>
+  <input type="text" id="customerName" name="customerName" required />
 
-                    document.getElementById('revenue-value').textContent = `${data.totalRevenue.toLocaleString()} د.م.`;
-                    document.getElementById('orders-value').textContent = data.totalOrders.toLocaleString();
-                    document.getElementById('tickets-value').textContent = data.openTickets.toLocaleString();
-                    document.getElementById('users-value').textContent = data.totalUsers.toLocaleString();
+  <label for="email">البريد الإلكتروني</label>
+  <input type="email" id="email" name="email" required />
 
-                    const revenueChartElement = document.getElementById('revenueChart').getContext('2d');
-                    new Chart(revenueChartElement, {
-                        type: 'line',
-                        data: {
-                            labels: data.chart.labels,
-                            datasets: [{
-                                label: 'الإيرادات',
-                                data: data.chart.data,
-                                borderColor: '#007bff',
-                                fill: false
-                            }]
-                        }
-                    });
-                } catch (error) {
-                    console.error("Fetch error:", error);
-                    alert("فشل تحميل البيانات من الخادم.");
-                }
-            }
+  <label for="phone">رقم الهاتف</label>
+  <input type="tel" id="phone" name="phone" required />
 
-            authenticate();
-        });
-    </script>
+  <label for="serviceName">اسم الخدمة</label>
+  <input type="text" id="serviceName" name="serviceName" required />
+
+  <label for="paymentAmount">المبلغ المدفوع</label>
+  <input type="number" id="paymentAmount" name="paymentAmount" required min="0" />
+
+  <label for="paymentMethod">طريقة الدفع</label>
+  <select id="paymentMethod" name="paymentMethod" required>
+    <option value="">اختر طريقة الدفع</option>
+    <option value="CashPlus">كاش بلس</option>
+    <option value="Orange Money">أورانج موني</option>
+    <option value="BMCE">BMCE</option>
+    <option value="CIH">CIH</option>
+    <option value="Attijariwafa">التجاري وفا</option>
+    <option value="SOGE">SOGE</option>
+  </select>
+
+  <label for="serviceDetails">تفاصيل الخدمة</label>
+  <textarea id="serviceDetails" name="serviceDetails" rows="3"></textarea>
+
+  <label for="serviceLink">رابط الخدمة (اختياري)</label>
+  <input type="url" id="serviceLink" name="serviceLink" />
+
+  <button type="submit">إرسال الطلب</button>
+</form>
+
+<h2>قائمة الطلبات الحالية</h2>
+<ul id="orders-list">
+  <li>جارٍ تحميل الطلبات...</li>
+</ul>
+
+<script>
+  // رابط API يجب أن ينتهي بـ /orders حسب كود Worker
+  const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/orders";
+
+  // دالة لجلب الطلبات وعرضها
+  async function fetchOrders() {
+    const list = document.getElementById('orders-list');
+    list.innerHTML = '<li>جارٍ تحميل الطلبات...</li>';
+    try {
+      const response = await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) throw new Error(`فشل جلب الطلبات (رمز الخطأ: ${response.status})`);
+
+      const orders = await response.json();
+
+      if (!Array.isArray(orders) || orders.length === 0) {
+        list.innerHTML = '<li>لا توجد طلبات بعد.</li>';
+        return;
+      }
+
+      list.innerHTML = "";
+      orders.forEach(order => {
+        const li = document.createElement('li');
+        li.textContent = `#${order.id || order.orderId || "غير معروف"} - ${order.customerName} - ${order.serviceName} - الحالة: ${order.status}`;
+        list.appendChild(li);
+      });
+    } catch (error) {
+      list.innerHTML = `<li>خطأ: ${error.message}</li>`;
+    }
+  }
+
+  // دالة إرسال بيانات الطلب للـ API
+  document.getElementById('order-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = {};
+    formData.forEach((value, key) => {
+      // تحويل القيم الرقمية بشكل مناسب
+      if (key === 'paymentAmount') data['paymentAmount'] = Number(value);
+      else data[key] = value.trim();
+    });
+
+    // إعداد بيانات إضافية مطلوبة حسب API
+    data.status = "pending";
+    data.price = data.paymentAmount || 0;
+    data.receiptUrl = "";
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        alert(`حدث خطأ: ${errorData.error || 'خطأ غير معروف'}`);
+        return;
+      }
+
+      const result = await response.json();
+      alert(`تم إرسال الطلب بنجاح! رقم الطلب: ${result.orderId || "غير معروف"}`);
+
+      e.target.reset();  // إعادة تعيين النموذج
+      fetchOrders();     // إعادة تحميل الطلبات لعرض الطلب الجديد
+    } catch (error) {
+      alert(`فشل الإرسال: ${error.message}`);
+    }
+  });
+
+  // تحميل الطلبات عند فتح الصفحة
+  fetchOrders();
+</script>
+
 </body>
 </html>
