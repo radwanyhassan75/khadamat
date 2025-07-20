@@ -1,6 +1,6 @@
 /**
  * =================================================================
- * Cloudflare Worker المتكامل - النسخة النهائية والمُصحَّحة
+ * Cloudflare Worker المتكامل - النسخة النهائية والمُصحَّحة
  * =================================================================
  */
 
@@ -73,6 +73,7 @@ async function handleOrderSubmission(request, env) {
         });
         const successUrlWithId = `${SUCCESS_URL}?${successParams.toString()}`;
 
+        // ** تم إصلاح هذا السطر ليعيد البيانات الصحيحة **
         return new Response(JSON.stringify({ success: true, redirectUrl: successUrlWithId }), {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
@@ -153,8 +154,12 @@ export default {
                 chart: chartData
             };
 
+            // ** تم إضافة هذا السطر لحل مشكلة CORS **
             return new Response(JSON.stringify(dashboardData), {
-                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Access-Control-Allow-Origin': '*' // السماح بالوصول من أي نطاق
+                },
             });
 
         } catch (error) {

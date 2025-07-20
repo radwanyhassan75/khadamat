@@ -1,28 +1,10 @@
-name = "khadamat-final"
-main = "src/index.js"
-compatibility_date = "2025-07-19"
+name = "khadamat"
+compatibility_date = "2025-07-20"
 
-[pages_build]
-# بما أن مجلد admin في المستوى الرئيسي، نستخدم "."
-upload_dir = "."
+# هذا هو الحقل المطلوب الذي سيصلح التحذير
+pages_build_output_dir = "."
 
 [[d1_databases]]
 binding = "DB"
 database_name = "main_database"
 database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
-
-[[r2_buckets]]
-binding = "RECEIPTS_BUCKET"
-bucket_name = "khadamatuk-receipts"
-
-[[durable_objects.bindings]]
-name = "CHAT_ROOM"
-class_name = "ChatRoom"
-
-[migrations]
-tag = "v1"
-new_classes = ["ChatRoom"]
-
-[[pages.functions.routes]]
-include = ["/api/*"]
-exclude = []
