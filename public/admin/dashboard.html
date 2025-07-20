@@ -153,8 +153,7 @@
                 
                 async function loadDashboardData() {
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbx1aw4fSnaCW7NLsRvo4LePSgJpx394lXGvPgNhTfwH0FCLx8JnmwRNeWUj828xoZy1TQ/exec'); // ← غيّر هذا إلى رابط API الصحيح
-
+        const response = await fetch('/api/dashboard');
         // التأكد من أن الاستجابة صالحة وبتنسيق JSON
         const contentType = response.headers.get("content-type");
         if (!response.ok || !contentType || !contentType.includes("application/json")) {

@@ -1,10 +1,11 @@
-name = "khadamat-worker"
-main = "src/index.ts"
+name = "khadamat"
 compatibility_date = "2025-07-20"
 
-# ربط KV Namespace - لازم تغير id برقم KV الخاص بك من Cloudflare
-kv_namespaces = [
-  { binding = "KV", id = "35f8849f386b48028940a5e54df76258" }
-]
+# هذا يخبر Cloudflare أن ملفات الواجهة الأمامية موجودة في مجلد public
+pages_build_output_dir = "public"
 
-# لو تبي تضيف إعدادات إضافية مثل بيئة التطوير أو صفحاة البناء تقدر تضيفها هنا
+# هذا يربط قاعدة البيانات بالخادم الخلفي _worker.js
+[[d1_databases]]
+binding = "DB"
+database_name = "main_database"
+database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
