@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تذاكر الدعم - لوحة التحكم</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Password Protection Gate -->
+    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">الرجاء إدخال كلمة المرور</h2>
+            <form id="password-form">
+                <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********">
+                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
+                <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">دخول</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
+        <!-- Sidebar -->
+        <aside class="flex flex-col w-64 bg-white shadow-lg">
+            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
+            <nav class="flex-1 px-4 py-8 space-y-2">
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>نظرة عامة</a>
+                <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
+                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمين</a>
+                <a href="support-log.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>تذاكر الدعم</a>
+                <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
+            </nav>
+        </aside>
+
+        <!-- Main content area -->
+        <div class="flex flex-col flex-1">
+            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0"><h2 class="text-xl font-semibold text-gray-800">تذاكر الدعم الفني</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
+            
+            <main class="flex-1 flex overflow-hidden">
+                <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-l border-gray-200">
+                    <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث عن تذكرة..." class="w-full px-4 py-2 border rounded-lg"></div>
+                    <div id="filter-buttons" class="p-2 flex justify-center gap-2 border-b">
+                        <button data-status="all" class="filter-btn bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">الكل</button>
+                        <button data-status="open" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مفتوحة</button>
+                        <button data-status="closed" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مغلقة</button>
+                    </div>
+                    <div id="ticket-list" class="flex-1 overflow-y-auto"></div>
+                </div>
+
+                <div id="chat-panel" class="hidden flex-1 flex flex-col bg-gray-50">
+                    <div class="p-4 border-b bg-white flex justify-between items-center">
+                        <div>
+                            <h3 id="chat-header-name" class="font-bold text-lg text-gray-800"></h3>
+                            <p id="chat-header-subject" class="text-sm text-gray-500"></p>
+                        </div>
+                        <button id="close-ticket-btn" class="text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition"></button>
+                    </div>
+                    <div id="message-list" class="flex-1 p-6 overflow-y-auto space-y-4"></div>
+                    <form id="reply-form" class="p-4 bg-white border-t">
+                        <div class="relative"><input id="message-input" type="text" placeholder="اكتب ردك هنا..." class="w-full pr-24 pl-4 py-3 border rounded-full"><div class="absolute top-1/2 -translate-y-1/2 right-2 flex gap-1"><button type="button" class="text-gray-500 hover:text-indigo-600 w-10 h-10 rounded-full"><i data-lucide="paperclip" class="w-5 h-5 mx-auto"></i></button><button type="submit" class="bg-indigo-600 text-white w-10 h-10 rounded-full hover:bg-indigo-700"><i data-lucide="send" class="w-5 h-5 mx-auto"></i></button></div></div>
+                    </form>
+                </div>
+                <div id="no-chat-selected" class="flex flex-1 flex-col items-center justify-center text-center p-8 bg-gray-50">
+                    <i data-lucide="message-square" class="w-16 h-16 text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد أي تذكرة</h3>
+                    <p class="text-gray-500 mt-2">الرجاء اختيار تذكرة من القائمة لعرض المحادثة.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="admin-auth.js"></script>
+    <script>
+        function initializePage() {
+            lucide.createIcons();
+            
+            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            let allTickets = [];
+            let activeTicket = null;
+
+            const ticketListEl = document.getElementById('ticket-list');
+            const chatPanelEl = document.getElementById('chat-panel');
+            const noChatSelectedEl = document.getElementById('no-chat-selected');
+            const messageListEl = document.getElementById('message-list');
+            const replyForm = document.getElementById('reply-form');
+            const messageInput = document.getElementById('message-input');
+            const closeTicketBtn = document.getElementById('close-ticket-btn');
+            const searchInput = document.getElementById('search-input');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            async function fetchTickets() {
+                ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جارٍ التحميل...</p>';
+                try {
+                    const response = await fetch(`${API_URL}/tickets`);
+                    if (!response.ok) throw new Error('فشل جلب التذاكر');
+                    allTickets = await response.json();
+                    filterAndRender();
+                } catch (error) {
+                    ticketListEl.innerHTML = `<p class="p-4 text-center text-red-500">${error.message}</p>`;
+                }
+            }
+
+            function renderTicketList(tickets) {
+                ticketListEl.innerHTML = '';
+                if (tickets.length === 0) {
+                    ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر.</p>';
+                    return;
+                }
+                tickets.forEach(ticket => {
+                    const item = document.createElement('div');
+                    item.className = 'ticket-item p-4 border-b hover:bg-gray-50 cursor-pointer';
+                    item.dataset.ticketId = ticket.id;
+                    const statusColor = ticket.status === 'open' ? 'text-green-600' : 'text-gray-500';
+                    item.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-gray-800">${ticket.userName}</h4>
+                            <span class="text-xs text-gray-500">${new Date(ticket.updatedAt).toLocaleDateString('ar-MA')}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">${ticket.subject}</p>
+                        <span class="text-xs font-semibold ${statusColor}">${ticket.status === 'open' ? 'مفتوحة' : 'مغلقة'}</span>
+                    `;
+                    item.addEventListener('click', () => selectTicket(ticket));
+                    ticketListEl.appendChild(item);
+                });
+            }
+
+            async function selectTicket(ticket) {
+                activeTicket = ticket;
+                document.querySelectorAll('.ticket-item').forEach(el => {
+                    el.classList.toggle('bg-indigo-50', el.dataset.ticketId === ticket.id);
+                    el.classList.toggle('border-r-4', el.dataset.ticketId === ticket.id);
+                    el.classList.toggle('border-indigo-500', el.dataset.ticketId === ticket.id);
+                });
+
+                chatPanelEl.classList.remove('hidden');
+                chatPanelEl.classList.add('flex');
+                noChatSelectedEl.classList.add('hidden');
+
+                document.getElementById('chat-header-name').textContent = ticket.userName;
+                document.getElementById('chat-header-subject').textContent = ticket.subject;
+                
+                const isClosed = ticket.status === 'closed';
+                closeTicketBtn.innerHTML = isClosed ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح</span>' : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
+                closeTicketBtn.className = `text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${isClosed ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`;
+                lucide.createIcons();
+
+
+                messageListEl.innerHTML = '<p class="text-center p-8 text-gray-500">جارٍ تحميل الرسائل...</p>';
+                try {
+                    const response = await fetch(`${API_URL}/tickets/${ticket.id}`);
+                    const messages = await response.json();
+                    renderMessages(messages);
+                } catch (error) {
+                    messageListEl.innerHTML = '<p class="text-center p-8 text-red-500">فشل تحميل الرسائل.</p>';
+                }
+            }
+            
+            function renderMessages(messages) {
+                messageListEl.innerHTML = '';
+                messages.forEach(msg => {
+                    const isAdmin = msg.sender === 'admin';
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `flex items-start gap-3 ${isAdmin ? 'flex-row-reverse' : ''}`;
+                    messageDiv.innerHTML = `
+                        <div class="w-10 h-10 ${isAdmin ? 'bg-indigo-200' : 'bg-gray-300'} rounded-full flex-shrink-0"></div>
+                        <div>
+                            <div class="${isAdmin ? 'bg-indigo-500 text-white' : 'bg-white'} p-3 rounded-lg shadow-sm">
+                                <p class="text-sm">${msg.message}</p>
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 ${isAdmin ? 'block text-left' : ''}">${isAdmin ? 'أنت' : activeTicket.userName} - ${new Date(msg.createdAt).toLocaleTimeString('ar-MA')}</span>
+                        </div>
+                    `;
+                    messageListEl.appendChild(messageDiv);
+                });
+                messageListEl.scrollTop = messageListEl.scrollHeight;
+            }
+
+            replyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = messageInput.value.trim();
+                if (!message || !activeTicket) return;
+
+                messageInput.disabled = true;
+                try {
+                    await fetch(`${API_URL}/tickets/${activeTicket.id}/messages`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sender: 'admin', message })
+                    });
+                    messageInput.value = '';
+                    selectTicket(activeTicket); // Refresh messages
+                } catch (error) {
+                    alert('فشل إرسال الرسالة');
+                } finally {
+                    messageInput.disabled = false;
+                    messageInput.focus();
+                }
+            });
+            
+            closeTicketBtn.addEventListener('click', async () => {
+                if (!activeTicket) return;
+                const newStatus = activeTicket.status === 'open' ? 'closed' : 'open';
+                try {
+                    await fetch(`${API_URL}/tickets/${activeTicket.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: newStatus })
+                    });
+                    chatPanelEl.classList.add('hidden');
+                    noChatSelectedEl.classList.remove('hidden');
+                    fetchTickets();
+                } catch (error) {
+                    alert('فشل تحديث حالة التذكرة');
+                }
+            });
+
+            function filterAndRender() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const activeFilter = document.querySelector('.filter-btn.bg-indigo-100').dataset.status;
+                let filteredTickets = allTickets;
+
+                if (activeFilter !== 'all') {
+                    filteredTickets = allTickets.filter(t => t.status === activeFilter);
+                }
+
+                if (searchTerm) {
+                    filteredTickets = filteredTickets.filter(t => t.userName.toLowerCase().includes(searchTerm) || t.subject.toLowerCase().includes(searchTerm));
+                }
+                renderTicketList(filteredTickets);
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => {
+                        btn.classList.replace('bg-indigo-100', 'bg-gray-200');
+                        btn.classList.replace('text-indigo-700', 'text-gray-700');
+                    });
+                    button.classList.replace('bg-gray-200', 'bg-indigo-100');
+                    button.classList.replace('text-gray-700', 'text-indigo-700');
+                    filterAndRender();
+                });
+            });
+
+            searchInput.addEventListener('input', filterAndRender);
+            fetchTickets();
+        }
+    </script>
+</body>
+</html>

@@ -1,236 +1,239 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنشاء حساب جديد - المكتب الرقمي</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>إنشاء حساب جديد - المكتب الرقمي</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://www.google.com/recaptcha/api.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 
-  <style>
-    :root {
-      --primary-color: #0056b3;
-      --dark-color: #2c3e50;
-      --light-color: #ffffff;
-      --gray-color: #f4f7f9;
-      --text-color: #555;
-      --border-radius: 10px;
-      --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    }
-    body {
-      font-family: 'Cairo', sans-serif;
-      margin: 0;
-      direction: rtl;
-      background-color: var(--gray-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .register-container {
-      width: 100%;
-      max-width: 500px;
-    }
-    .register-card {
-      background: var(--light-color);
-      padding: 40px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      text-align: center;
-    }
-    .logo-container img { height: 80px; margin-bottom: 20px; }
-    .register-card h1 { font-size: 2.2rem; font-weight: 900; color: var(--dark-color); margin-bottom: 10px; }
-    .register-card p { font-size: 1rem; color: var(--text-color); margin-bottom: 30px; }
-    .form-group { margin-bottom: 20px; text-align: right; }
-    .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
-    .form-group input {
-      width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius);
-      font-size: 1rem; box-sizing: border-box;
-    }
-    .btn {
-      width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--primary-color);
-      border: none; color: white; font-weight: bold; border-radius: var(--border-radius);
-      cursor: pointer; transition: background 0.3s;
-    }
-    .btn-google {
-      background: #fff; color: #444; border: 1px solid #ccc; margin-top: 15px;
-    }
-    .btn-google i { margin-left: 8px; color: #ea4335; }
-    .btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
-    .form-footer { margin-top: 20px; font-size: 0.9rem; }
-    .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
-    #message-box {
-      display: none; padding: 15px; margin-bottom: 20px;
-      border-radius: var(--border-radius); font-weight: 700;
-    }
-    #message-box.success { background-color: #e9f7ef; color: #28a745; }
-    #message-box.error { background-color: #fdecea; color: #dc3545; }
-    .terms-group { display: flex; align-items: center; gap: 10px; }
-    .terms-group input[type='checkbox'] { width: auto; }
-    #recaptcha-container { min-height: 78px; margin-bottom: 15px; text-align: center; }
-  </style>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #0d6efd;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --success-color: #198754;
+            --danger-color: #dc3545;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+        }
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 160px); /* Adjust based on header/footer height */
+            padding: 40px 20px;
+        }
+        .register-container { width: 100%; max-width: 500px; }
+        .register-card {
+            background: var(--light-color);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            border-top: 5px solid var(--primary-color);
+        }
+        .logo-container img { height: 80px; margin-bottom: 20px; }
+        .register-card h1 { font-size: 2.2rem; font-weight: 900; color: var(--dark-color); margin-bottom: 10px; }
+        .register-card p { font-size: 1rem; color: var(--text-color); margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .form-group input {
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius);
+            font-size: 1rem; box-sizing: border-box; transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+        .btn {
+            width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--primary-color);
+            border: none; color: white; font-weight: bold; border-radius: var(--border-radius);
+            cursor: pointer; transition: background 0.3s;
+        }
+        .btn-google { background: #fff; color: #444; border: 1px solid #ccc; margin-top: 15px; }
+        .btn-google i { margin-left: 8px; color: #ea4335; }
+        .btn:disabled { background-color: #a5b4fc; cursor: not-allowed; }
+        .form-footer { margin-top: 20px; font-size: 0.9rem; }
+        .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
+        #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); font-weight: 700; }
+        #message-box.success { background-color: #e9f7ef; color: #28a745; }
+        #message-box.error { background-color: #fdecea; color: #dc3545; }
+        .terms-group { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .terms-group input[type='checkbox'] { width: auto; }
+        #recaptcha-container { min-height: 78px; margin-bottom: 15px; display: flex; justify-content: center; }
+        .main-footer { text-align: center; padding: 20px; background: var(--dark-color); color: var(--light-color); }
+    </style>
 </head>
 <body>
-  <div class="register-container">
-    <div class="register-card">
-      <div class="logo-container">
-        <a href="index.html"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي" /></a>
-      </div>
-      <h1>إنشاء حساب جديد</h1>
-      <p>انضم إلينا وابدأ في إنجاز خدماتك بسهولة.</p>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
+            </a>
+            <!-- Navigation links can be added here if needed -->
+        </nav>
+    </header>
 
-      <div id="message-box"></div>
-
-      <form id="register-form">
-        <div class="form-group">
-          <label for="name">الاسم الكامل</label>
-          <input type="text" id="name" required />
+    <main class="main-content">
+        <div class="register-container">
+            <div class="register-card">
+                <h1>إنشاء حساب جديد</h1>
+                <p>انضم إلينا وابدأ في إنجاز خدماتك بسهولة.</p>
+                <div id="message-box"></div>
+                <form id="register-form">
+                    <div class="form-group"><label for="name">الاسم الكامل</label><input type="text" id="name" required /></div>
+                    <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" required /></div>
+                    <div class="form-group"><label for="password">كلمة المرور</label><input type="password" id="password" required /></div>
+                    <div class="form-group"><label for="confirm-password">تأكيد كلمة المرور</label><input type="password" id="confirm-password" required /></div>
+                    <div class="form-group terms-group"><input type="checkbox" id="terms" required /><label for="terms">أوافق على <a href="terms.html" target="_blank">شروط الاستخدام</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>.</label></div>
+                    <div id="recaptcha-container"></div>
+                    <button type="submit" id="submit-btn" class="btn" disabled><i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA</button>
+                </form>
+                <button id="google-signup" class="btn btn-google"><i class="fab fa-google"></i> التسجيل باستخدام حساب Google</button>
+                <div class="form-footer"><p>لديك حساب بالفعل؟ <a href="login.html">سجل الدخول</a></p></div>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="email">البريد الإلكتروني</label>
-          <input type="email" id="email" required />
-        </div>
-        <div class="form-group">
-          <label for="phone">رقم الهاتف (واتساب)</label>
-          <input type="tel" id="phone" required />
-        </div>
-        <div class="form-group">
-          <label for="password">كلمة المرور</label>
-          <input type="password" id="password" required />
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">تأكيد كلمة المرور</label>
-          <input type="password" id="confirm-password" required />
-        </div>
-        <div class="form-group terms-group">
-          <input type="checkbox" id="terms" required />
-          <label for="terms">أوافق على <a href="terms.html" target="_blank">شروط الاستخدام</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>.</label>
-        </div>
-        <div id="recaptcha-container" class="form-group"></div>
-        <button type="submit" id="submit-btn" class="btn" disabled>
-          <i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA
-        </button>
-      </form>
+    </main>
 
-      <button id="google-signup" class="btn btn-google">
-        <i class="fab fa-google"></i> التسجيل باستخدام حساب Google
-      </button>
+    <footer class="main-footer">
+        <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+    </footer>
 
-      <div class="form-footer">
-        <p>لديك حساب بالفعل؟ <a href="login.html">سجل الدخول</a></p>
-      </div>
-    </div>
-  </div>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script> 
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerForm = document.getElementById('register-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const messageBox = document.getElementById('message-box');
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+            function initRecaptcha() {
+                if(document.getElementById('recaptcha-container').innerHTML !== '') return;
+                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                    'size': 'normal',
+                    'callback': (response) => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
+                    },
+                    'expired-callback': () => {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
+                    }
+                });
+                recaptchaVerifier.render();
+            }
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
-      authDomain: "khadamatukdigital.firebaseapp.com",
-      projectId: "khadamatukdigital",
-      storageBucket: "khadamatukdigital.appspot.com",
-      messagingSenderId: "690661888019",
-      appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-    };
+            // Delay rendering reCAPTCHA to ensure it's visible
+            setTimeout(initRecaptcha, 500);
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById("name").value.trim();
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+                const confirmPassword = document.getElementById("confirm-password").value;
+                const termsChecked = document.getElementById("terms").checked;
 
-    function initRecaptcha() {
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        size: 'normal',
-        callback: (response) => {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
-        },
-        'expired-callback': () => {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
-        }
-      });
-      recaptchaVerifier.render();
-    }
+                if (password !== confirmPassword) {
+                    showMessage("خطأ: كلمتا المرور غير متطابقتين.", "error"); return;
+                }
+                if (!termsChecked) {
+                    showMessage("الرجاء الموافقة على شروط الاستخدام.", "error"); return;
+                }
+                
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                messageBox.style.display = "none";
 
-    window.onload = function () {
-      if (typeof grecaptcha === 'undefined') {
-        const interval = setInterval(() => {
-          if (typeof grecaptcha !== 'undefined') {
-            clearInterval(interval);
-            initRecaptcha();
-          }
-        }, 100);
-      } else {
-        initRecaptcha();
-      }
-    };
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user;
+                        return user.updateProfile({ displayName: name })
+                            .then(() => user); // Pass user object to the next .then()
+                    })
+                    .then((user) => {
+                        // ✅  1. مزامنة المستخدم مع قاعدة البيانات بعد تحديث الاسم
+                        console.log("User created, syncing with backend...");
+                        syncUserWithBackend(user);
+                        
+                        // 2. إرسال إيميل التحقق
+                        return user.sendEmailVerification();
+                    })
+                    .then(() => {
+                        // 3. توجيه المستخدم لصفحة التحقق
+                        window.location.href = "verify-email.html";
+                    })
+                    .catch((error) => {
+                        showMessage(`خطأ: ${error.message}`, "error");
+                        grecaptcha.reset();
+                        submitBtn.disabled = true; // Keep disabled until re-verified
+                        submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
+                    });
+            });
 
-    const registerForm = document.getElementById('register-form');
-    const submitBtn = document.getElementById('submit-btn');
-    const messageBox = document.getElementById('message-box');
+            document.getElementById("google-signup").addEventListener("click", () => {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider)
+                    .then((result) => {
+                        const user = result.user;
+                        const isNewUser = result.additionalUserInfo.isNewUser;
+                        
+                        // ✅ مزامنة المستخدم الجديد فقط عند التسجيل عبر Google
+                        if (isNewUser) {
+                            console.log("New Google user, syncing with backend...");
+                            syncUserWithBackend(user);
+                        }
+                        
+                        window.location.href = "dashboard.html";
+                    })
+                    .catch((error) => {
+                        showMessage("حدث خطأ أثناء التسجيل بواسطة Google: " + error.message, "error");
+                    });
+            });
 
-    registerForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
-      const termsChecked = document.getElementById("terms").checked;
-
-      if (password !== confirmPassword) {
-        messageBox.textContent = "خطأ: كلمتا المرور غير متطابقتين.";
-        messageBox.className = "error";
-        messageBox.style.display = "block";
-        return;
-      }
-      if (!termsChecked) {
-        messageBox.textContent = "الرجاء الموافقة على شروط الاستخدام.";
-        messageBox.className = "error";
-        messageBox.style.display = "block";
-        return;
-      }
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      messageBox.style.display = "none";
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          return user.sendEmailVerification().then(() => user.updateProfile({ displayName: name }));
-        })
-        .then(() => {
-          window.location.href = "verify-email.html";
-        })
-        .catch((error) => {
-          messageBox.textContent = `خطأ: ${error.message}`;
-          messageBox.className = "error";
-          messageBox.style.display = "block";
-          grecaptcha.reset();
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                messageBox.className = type; // 'success' or 'error'
+                messageBox.style.display = "block";
+            }
         });
-    });
-
-    // Google Signup
-    document.getElementById("google-signup").addEventListener("click", () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then((result) => {
-          const user = result.user;
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert("حدث خطأ أثناء التسجيل بواسطة Google: " + error.message);
-        });
-    });
-  </script>
+    </script>
 </body>
 </html>

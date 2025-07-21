@@ -1,12 +1,11 @@
 // =================================================================
-//           ملف المصادقة والتنقل المشترك - auth.js
-//           الإصدار: 2.0 - مع تصميم احترافي وقائمة منسدلة
+//          ملف المصادقة والتنقل المشترك - auth.js
+//          الإصدار: 2.1 - مع مزامنة المستخدمين مع قاعدة البيانات
 // =================================================================
 
 // -----------------------------------------------------------------
 // 1. إعدادات Firebase
 // This object contains your project's unique Firebase configuration keys.
-// It's essential for connecting your website to your Firebase project.
 // -----------------------------------------------------------------
 const firebaseConfig = {
     apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
@@ -19,8 +18,6 @@ const firebaseConfig = {
 
 // -----------------------------------------------------------------
 // 2. تهيئة Firebase
-// We initialize the Firebase app only once to avoid errors.
-// The 'auth' constant will be our main tool for handling user authentication.
 // -----------------------------------------------------------------
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -28,29 +25,87 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 // -----------------------------------------------------------------
-// 3. دالة لتحديث واجهة المستخدم في الشريط العلوي (سطح المكتب والجوال)
-// This is the core function that dynamically changes the header
-// based on whether a user is logged in or not.
+// ✅ 3. [جديد] مزامنة المستخدم الجديد مع قاعدة البيانات (Worker/D1)
+// -----------------------------------------------------------------
+const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev'; // تأكد من أن هذا هو الرابط الصحيح
+
+/**
+ * ترسل بيانات المستخدم المسجل حديثًا إلى الخادم (Worker) لحفظها في قاعدة البيانات D1.
+ * يجب استدعاء هذه الدالة فورًا بعد نجاح عملية إنشاء حساب جديد.
+ * @param {firebase.User} user - كائن المستخدم الذي يتم إرجاعه من Firebase بعد التسجيل.
+ */
+async function syncUserWithBackend(user) {
+    if (!user) {
+        console.error("فشلت المزامنة: لم يتم توفير كائن المستخدم.");
+        return;
+    }
+
+    try {
+        const payload = {
+            id: user.uid,
+            email: user.email,
+            displayName: user.displayName
+        };
+
+        const response = await fetch(`${WORKER_URL}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            console.log("تمت مزامنة المستخدم بنجاح مع قاعدة البيانات الخلفية.");
+        } else {
+            const errorData = await response.json();
+            console.error("فشلت المزامنة مع الخادم:", errorData.error || response.statusText);
+        }
+    } catch (error) {
+        console.error("حدث خطأ أثناء محاولة مزامنة المستخدم:", error);
+    }
+}
+
+/*
+// ------------------ 📝 كيفية الاستخدام 📝 ------------------
+// في ملف الجافاسكريبت الخاص بصفحة التسجيل (register.html)،
+// بعد إنشاء المستخدم بنجاح، قم باستدعاء الدالة هكذا:
+//
+// auth.createUserWithEmailAndPassword(email, password)
+//   .then((userCredential) => {
+//     // تم تسجيل الدخول 
+//     const user = userCredential.user;
+//     
+//     // ✅ استدعاء دالة المزامنة هنا
+//     syncUserWithBackend(user); 
+//
+//     // ... بقية الكود الخاص بك، مثل إعادة توجيه المستخدم ...
+//     window.location.href = 'index.html';
+//   })
+//   .catch((error) => {
+//     // ... معالجة الأخطاء ...
+//   });
+// -------------------------------------------------------------
+*/
+
+
+// -----------------------------------------------------------------
+// 4. دالة لتحديث واجهة المستخدم في الشريط العلوي
 // -----------------------------------------------------------------
 function updateHeaderUI(user) {
     const navbarActions = document.getElementById('navbar-actions');
     const mobileNavbarActions = document.getElementById('mobile-navbar-actions');
-
-    // Exit if the required HTML elements are not on the page
     if (!navbarActions) return;
 
     let desktopNavHtml = '';
     let mobileNavHtml = '';
 
     if (user) {
-        // --- حالة المستخدم مسجل دخوله (تصميم احترافي جديد) ---
         const userName = user.displayName || 'مستخدم';
         const userAvatar = user.photoURL || 'https://placehold.co/40x40/0056b3/ffffff?text=U';
-        
-        // HTML لنسخة سطح المكتب (زر مع قائمة منسدلة)
         desktopNavHtml = `
             <div class="user-menu-container">
-                <button class="user-menu-button" id="user-menu-toggle" aria-haspopup="true" aria-expanded="false">
+                <button class="user-menu-button" id="user-menu-toggle">
                     <img src="${userAvatar}" alt="${userName}" class="user-avatar">
                     <span>${userName}</span>
                     <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -62,44 +117,33 @@ function updateHeaderUI(user) {
                 </ul>
             </div>
         `;
-        
-        // HTML لنسخة الجوال (روابط مباشرة في القائمة)
         mobileNavHtml = `
             <li><a href="dashboard.html">لوحة التحكم</a></li>
             <li><a href="#" onclick="logoutUser()">تسجيل الخروج</a></li>
         `;
-
     } else {
-        // --- حالة المستخدم زائر ---
-        
-        // HTML لنسخة سطح المكتب
         desktopNavHtml = `
             <a href="login.html" class="btn-header light">تسجيل الدخول</a>
             <a href="register.html" class="btn-header primary">إنشاء حساب</a>
         `;
-        
-        // HTML لنسخة الجوال
         mobileNavHtml = `
             <li><a href="login.html">تسجيل الدخول</a></li>
             <li><a href="register.html">إنشاء حساب</a></li>
         `;
     }
 
-    // تحديث الواجهتين
     navbarActions.innerHTML = desktopNavHtml;
     if (mobileNavbarActions) {
         mobileNavbarActions.innerHTML = mobileNavHtml;
     }
 
-    // بعد تحديث الواجهة، نقوم بتفعيل منطق القائمة المنسدلة إذا كان المستخدم مسجلاً
     if (user) {
         setupDropdownMenu();
     }
 }
 
 // -----------------------------------------------------------------
-// 4. دالة تسجيل الخروج
-// This function signs the user out of Firebase and redirects them to the homepage.
+// 5. دالة تسجيل الخروج
 // -----------------------------------------------------------------
 function logoutUser() {
     auth.signOut().then(() => {
@@ -111,47 +155,35 @@ function logoutUser() {
 }
 
 // -----------------------------------------------------------------
-// 5. دالة جديدة لتشغيل القائمة المنسدلة
-// This function adds the necessary event listeners to make the new
-// professional user dropdown menu interactive.
+// 6. دالة جديدة لتشغيل القائمة المنسدلة
 // -----------------------------------------------------------------
 function setupDropdownMenu() {
     const toggleButton = document.getElementById('user-menu-toggle');
     const dropdown = document.getElementById('user-dropdown');
-
     if (toggleButton && dropdown) {
         toggleButton.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevents the window click event from firing immediately
+            event.stopPropagation();
             dropdown.classList.toggle('show');
-            toggleButton.setAttribute('aria-expanded', dropdown.classList.contains('show'));
         });
-
-        // Add a listener to the whole document to close the dropdown
-        // when the user clicks anywhere else on the page.
         document.addEventListener('click', (event) => {
             if (dropdown.classList.contains('show') && !toggleButton.contains(event.target)) {
                 dropdown.classList.remove('show');
-                toggleButton.setAttribute('aria-expanded', 'false');
             }
         });
     }
 }
 
 // -----------------------------------------------------------------
-// 6. الاستماع لتغير حالة تسجيل الدخول
-// This is the main trigger. Firebase will automatically call this function
-// whenever a user logs in or out, updating the UI accordingly.
+// 7. الاستماع لتغير حالة تسجيل الدخول
 // -----------------------------------------------------------------
 auth.onAuthStateChanged(user => {
     updateHeaderUI(user);
 });
 
 // -----------------------------------------------------------------
-// 7. منطق قائمة الهامبرغر للجوال
-// This logic handles the opening and closing of the mobile navigation menu.
+// 8. منطق قائمة الهامبرغر للجوال والتصميم
 // -----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // Inject CSS for the new dropdown menu
     const style = document.createElement('style');
     style.textContent = `
         .user-menu-container { position: relative; }
@@ -174,12 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 
-    // Hamburger menu logic
     const mainHeader = document.querySelector('.main-header');
     if (mainHeader) {
         const hamburger = mainHeader.querySelector('.hamburger-menu');
         const navMenu = mainHeader.querySelector('.navbar-menu');
-        
         if (hamburger && navMenu) {
             hamburger.addEventListener('click', () => {
                 navMenu.classList.toggle('mobile-active');
