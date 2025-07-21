@@ -210,9 +210,6 @@
             object-fit: contain;
             margin-bottom: 10px;
         }
-        .payment-option.cashplus img, .payment-option.cih img {
-            height: 55px;
-        }
         .payment-option span {
             font-weight: 700;
             font-size: 0.9rem;
@@ -248,26 +245,11 @@
         .detail-row .value { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; }
         .copy-button { background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 1rem; margin-right: 10px; padding: 5px; transition: color 0.2s; }
         .copy-button:hover { color: var(--primary-color); }
-        .instruction-note {
-            font-size: 0.9rem;
-            color: var(--text-color);
-            margin-top: 15px;
-            padding: 10px 15px;
-            background-color: #fffbe6;
-            border-radius: 8px;
-            border: 1px solid #ffe58f;
-        }
         .payment-details-container h4 {
             font-size: 1.2rem;
             color: var(--dark-color);
             margin-top: 0;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .payment-details-container h4 i {
-            color: var(--primary-color);
         }
         #form-error {
             display: none;
@@ -284,7 +266,6 @@
         @media (max-width: 768px) {
             .navbar-menu { display: none; }
             .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
             .card { padding: 20px; }
             .card-header { padding: 15px 20px; margin: -20px -20px 20px; }
         }
@@ -306,10 +287,9 @@
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <div id="mobile-navbar-actions"></div>
+                 <div id="mobile-navbar-actions"></div>
             </ul>
-            <div id="navbar-actions" class="navbar-actions">
-            </div>
+            <div id="navbar-actions" class="navbar-actions"></div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
@@ -319,7 +299,7 @@
             <h1>إتمام الطلب</h1>
         </header>
 
-        <form id="payment-form" enctype="multipart/form-data">
+        <form id="payment-form">
             
             <div class="card">
                 <div class="card-header"><span class="step-icon">1</span><h3>ملخص الطلب</h3></div>
@@ -370,19 +350,19 @@
                 <div class="form-group">
                     <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
                     <div class="payment-options-grid" id="payment-options">
-                    </div>
+                        </div>
                     <input type="hidden" name="paymentMethod" id="payment-method-input" required>
                 </div>
 
                 <div id="payment-details-container" class="payment-details-container">
-                </div>
+                    </div>
                 
                 <div class="form-group">
-                    <label for="receipt">أرفق وصل الدفع (صورة أو مستند) <span class="required-star">*</span></label>
-                    <input type="file" name="receiptFile" id="receipt" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx" required />
+                    <label for="receipt">أرفق وصل الدفع (صورة أو PDF) <span class="required-star">*</span></label>
+                    <input type="file" name="receiptFile" id="receipt" accept=".png,.jpg,.jpeg,.pdf" required />
                 </div>
                 <button type="submit" class="submit-btn" id="submit-btn" disabled>
-                    <i class="fas fa-check-circle"></i> إرسال الطلب الآن
+                    <i class="fas fa-lock"></i> أكمل الحقول المطلوبة
                 </button>
                 <div id="form-error"></div>
                 <p class="contact-support">
@@ -398,6 +378,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- عناصر الواجهة الرسومية ---
         const form = document.getElementById('payment-form');
         const submitBtn = document.getElementById('submit-btn');
         const nameInput = document.getElementById('name');
@@ -407,15 +388,22 @@
         const paymentMethodInput = document.getElementById('payment-method-input');
         const errorDiv = document.getElementById('form-error');
 
+        // --- إعدادات الدفع ---
         const paymentMethods = [
-            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png' },
-            { id: 'orange', name: 'Orange Money', logo: 'https://yop.l-frii.com/wp-content/uploads/2022/12/Orange-Money-recrute-pour-ce-poste-28-Decembre-2022-1024x683.png' },
-            { id: 'bmce', name: 'بنك أفريقيا', logo: 'https://www.ir-bankofafrica.ma/sites/default/files/styles/actualite/public/default_images/imgpsh_fullsize_anim.png?itok=UUjnntlS' },
-            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
             { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png' },
-            { id: 'soge', name: 'الشركة العامة (سهام)', logo: 'https://cdn.snrtnews.com/sites/default/files/2025/06/18/whatsapp-image-2025-06-18-at-13-1750248285.jpeg' }
+            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png' },
+            { id: 'bmce', name: 'Bank of Africa', logo: 'https://www.ir-bankofafrica.ma/sites/default/files/styles/actualite/public/default_images/imgpsh_fullsize_anim.png?itok=UUjnntlS' },
+            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
         ];
+        const beneficiaryName = 'HASSAN ER-RADOUANY';
+        const paymentDetails = {
+            cih: { rib: '230810624745521100540088' },
+            cashplus: { rib: '835780030017346031053226', phone: '0621638488' },
+            bmce: { rib: '960000162000010401810011' },
+            attijari: { rib: '007810000457430040232577' },
+        };
 
+        // --- عرض خيارات وتفاصيل الدفع ---
         function renderPaymentOptions() {
             paymentMethods.forEach(method => {
                 const optionDiv = document.createElement('div');
@@ -437,38 +425,31 @@
         }
 
         function renderPaymentDetails(methodId) {
+            const details = paymentDetails[methodId];
             let detailsHtml = '';
-            const beneficiaryName = 'HASSAN ER-RADOUANY';
-            switch (methodId) {
-                case 'cashplus':
-                    detailsHtml = `<h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنك (حوالة)</h4><div class="detail-row"><span class="label">رقم الحساب (IBAN):</span><span class="value" id="cashplus-iban">835780030017346031053226</span><button type="button" class="copy-button" onclick="copyToClipboard('cashplus-iban')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div><hr style="border: 1px dashed #ccc; margin: 20px 0;"><h4><i class="fas fa-store"></i> عبر وكالة أو تطبيق Cash Plus</h4><div class="detail-row"><span class="label">رقم الهاتف:</span><span class="value" id="cashplus-phone">0621638488</span><button type="button" class="copy-button" onclick="copyToClipboard('cashplus-phone')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-                    break;
-                case 'orange':
-                    detailsHtml = `<h4><i class="fas fa-university"></i> عبر وكالة بنكية أو تطبيق بنك</h4><div class="detail-row"><span class="label">رقم الحساب:</span><span class="value" id="orange-rib">857780000000000109572339</span><button type="button" class="copy-button" onclick="copyToClipboard('orange-rib')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div><hr style="border: 1px dashed #ccc; margin: 20px 0;"><h4><i class="fas fa-mobile-alt"></i> عبر وكالة أو تطبيق Orange Money</h4><div class="detail-row"><span class="label">رقم الهاتف:</span><span class="value" id="orange-phone">0621638488</span><button type="button" class="copy-button" onclick="copyToClipboard('orange-phone')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">الاسم الكامل:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div><p class="instruction-note">أرسل المبلغ مباشرة إلى رقم الهاتف عبر تطبيق Orange Money أو الوكالات.</p>`;
-                    break;
-                case 'bmce':
-                    detailsHtml = `<h4><i class="fas fa-landmark"></i> التحويل عبر بنك أفريقيا</h4><div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="bmce-rib">960000162000010401810011</span><button type="button" class="copy-button" onclick="copyToClipboard('bmce-rib')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-                    break;
-                case 'attijari':
-                    detailsHtml = `<h4><i class="fas fa-landmark"></i> التحويل عبر Attijariwafa Bank</h4><div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="attijari-rib">007810000457430040232577</span><button type="button" class="copy-button" onclick="copyToClipboard('attijari-rib')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-                    break;
-                case 'cih':
-                    detailsHtml = `<h4><i class="fas fa-landmark"></i> التحويل عبر CIH Bank</h4><div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="cih-rib">230810624745521100540088</span><button type="button" class="copy-button" onclick="copyToClipboard('cih-rib')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-                    break;
-                case 'soge':
-                    detailsHtml = `<h4><i class="fas fa-landmark"></i> التحويل عبر الشركة العامة (سهام)</h4><div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="soge-rib">022780000760004157217174</span><button type="button" class="copy-button" onclick="copyToClipboard('soge-rib')"><i class="far fa-copy"></i></button></div><div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-                    break;
-                default:
-                    detailsHtml = `<p class="instruction-note">يرجى اختيار وسيلة دفع لعرض التفاصيل.</p>`;
+            if (!details) {
+                paymentDetailsContainer.innerHTML = '';
+                paymentDetailsContainer.classList.remove('active');
+                return;
             }
+
+            detailsHtml += `<h4><i class="fas fa-info-circle"></i> تفاصيل الدفع</h4>`;
+            if (details.rib) {
+                detailsHtml += `<div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="${methodId}-rib">${details.rib}</span><button type="button" class="copy-button" onclick="copyToClipboard('${methodId}-rib')"><i class="far fa-copy"></i></button></div>`;
+            }
+            if (details.phone) {
+                detailsHtml += `<div class="detail-row"><span class="label">الهاتف (Cash Plus):</span><span class="value" id="${methodId}-phone">${details.phone}</span><button type="button" class="copy-button" onclick="copyToClipboard('${methodId}-phone')"><i class="far fa-copy"></i></button></div>`;
+            }
+             detailsHtml += `<div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
+            
             paymentDetailsContainer.innerHTML = detailsHtml;
-            paymentDetailsContainer.classList.toggle('active', !!methodId);
+            paymentDetailsContainer.classList.add('active');
         }
 
         window.copyToClipboard = function(elementId) {
             const textElement = document.getElementById(elementId);
             if (!textElement) return;
-            navigator.clipboard.writeText(textElement.innerText.trim().replace(/\s/g, '')).then(() => {
+            navigator.clipboard.writeText(textElement.innerText.trim()).then(() => {
                 const button = textElement.nextElementSibling;
                 if (button) {
                     const originalIcon = button.innerHTML;
@@ -477,7 +458,8 @@
                 }
             }).catch(err => console.error('Copy failed', err));
         }
-        
+
+        // --- التحقق من صحة النموذج ---
         function validateForm() {
             const requiredInputs = form.querySelectorAll('[required]');
             let isValid = true;
@@ -489,6 +471,7 @@
             submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
         }
 
+        // --- تهيئة الصفحة ---
         renderPaymentOptions();
         
         const params = new URLSearchParams(window.location.search);
@@ -499,7 +482,7 @@
         document.getElementById('display-service-price').value = servicePrice + " درهم";
         document.getElementById('form-service-price').value = servicePrice;
 
-        // Check if auth is defined before using it
+        // تعبئة معلومات المستخدم المسجل إن وجد
         if (typeof auth !== 'undefined') {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -510,40 +493,48 @@
             });
         }
 
-        form.querySelectorAll('[required]').forEach(input => {
+        // ربط أحداث الإدخال للتحقق الفوري
+        form.querySelectorAll('input, textarea').forEach(input => {
             input.addEventListener('input', validateForm);
-            if (input.type === 'file' || input.tagName === 'SELECT') {
-                input.addEventListener('change', validateForm);
-            }
+            input.addEventListener('change', validateForm);
         });
         validateForm();
 
-        // ✅✅✅ --- الكود المُصحَّح والنهائي لإرسال النموذج --- ✅✅✅
+
+        // ✅✅✅ --- منطق إرسال النموذج المدمج والنهائي --- ✅✅✅
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
+            if (submitBtn.disabled) return;
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب...';
-            errorDiv.style.display = 'none'; // إخفاء أي أخطاء سابقة
+            errorDiv.style.display = 'none';
 
-            // الرابط الكامل والصحيح للـ Worker
-            const workerUrl = 'https://order-processor.radwanyhassan75.workers.dev/api/submit-order';
-            
+            // 1. استخدام FormData لتجميع كل بيانات النموذج تلقائياً (بما في ذلك الملف)
             const formData = new FormData(form);
             
-            // إنشاء رقم طلب فريد
+            // 2. إضافة الحقول المطلوبة التي لا توجد في النموذج مباشرة
             const orderId = `KH-${Date.now()}`;
-            formData.append('orderId', orderId);
+            formData.append('id', orderId); // الـ Worker يتوقع 'id'
+            formData.append('createdAt', new Date().toISOString());
+            formData.append('status', 'جاري المعالجة'); // الحالة الأولية
             
-            // إضافة معلومات المستخدم والتاريخ
+            // إضافة معرف المستخدم
             if (typeof auth !== 'undefined' && auth.currentUser) {
                 formData.append('userId', auth.currentUser.uid);
             } else {
-                formData.append('userId', 'guest');
+                formData.append('userId', 'guest-user');
             }
-            formData.append('createdAt', new Date().toISOString());
+            
+            // تأكد من أن سعر الدفع موجود
+            formData.append('paymentAmount', servicePrice);
+
+            // رابط الـ Worker
+            const workerUrl = 'https://orders-worker.radwanyhassan75.workers.dev';
 
             try {
-                // استخدام الرابط الكامل والصحيح
+                // 3. إرسال الطلب باستخدام fetch
+                // لا نحدد 'Content-Type'، المتصفح سيقوم بذلك تلقائياً مع FormData
                 const response = await fetch(workerUrl, {
                     method: 'POST',
                     body: formData,
@@ -552,10 +543,10 @@
                 const result = await response.json();
 
                 if (result.success && result.redirectUrl) {
-                    // توجيه إلى صفحة النجاح
+                    // 4. نجاح! التوجيه إلى صفحة النجاح مع تمرير رقم الطلب
                     window.location.href = result.redirectUrl;
                 } else {
-                    // عرض الخطأ الذي يرسله الخادم
+                    // فشل من جهة الخادم
                     throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
                 }
             } catch (error) {
@@ -563,9 +554,9 @@
                 errorDiv.textContent = 'حدث خطأ أثناء إرسال طلبك: ' + error.message;
                 errorDiv.style.display = 'block';
                 
-                // إعادة تفعيل الزر
+                // إعادة تفعيل الزر للسماح بالمحاولة مرة أخرى
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> إرسال الطلب الآن';
+                validateForm(); // لإعادة النص الصحيح للزر
             }
         });
     });
