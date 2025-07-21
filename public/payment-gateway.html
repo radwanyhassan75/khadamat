@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #0d6efd;
@@ -24,11 +23,8 @@
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
             --success-color: #198754;
-            --warning-color: #ffc107;
             --danger-color: #dc3545;
         }
-
-        /* --- إعدادات الجسم العامة --- */
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
@@ -37,33 +33,6 @@
             direction: rtl;
             color: var(--text-color);
         }
-
-        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
-        .main-header {
-            background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .navbar-actions { position: relative; }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
-
-        /* --- تصميم حاوية الصفحة والترويسة --- */
         .page-container {
             max-width: 800px;
             margin: 40px auto;
@@ -79,8 +48,6 @@
             color: var(--dark-color);
             margin: 10px 0;
         }
-        
-        /* --- تصميم البطاقات والأقسام --- */
         .card {
             background: var(--light-color);
             padding: 30px 40px;
@@ -135,11 +102,7 @@
         input[readonly] {
             background-color: #e9ecef;
             cursor: not-allowed;
-            border: none;
-            font-weight: bold;
-            font-size: 1.1rem;
         }
-        textarea { resize: vertical; min-height: 120px; }
         .submit-btn {
             width: 100%;
             padding: 15px;
@@ -151,105 +114,10 @@
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
         .submit-btn:disabled {
             background: #a5d6a7;
             cursor: not-allowed;
-            box-shadow: none;
-        }
-        .contact-support {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        .contact-support a {
-            color: var(--primary-color);
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        /* --- تصميم قسم الدفع الجديد --- */
-        .payment-options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .payment-option {
-            background: var(--light-color);
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .payment-option:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow);
-        }
-        .payment-option.active {
-            border-color: var(--success-color);
-            background-color: #e6f9f0;
-            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.3);
-        }
-        .payment-option img {
-            height: 40px;
-            max-width: 100px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
-        .payment-option span {
-            font-weight: 700;
-            font-size: 0.9rem;
-            display: block;
-        }
-        .payment-details-container {
-            display: none;
-            background: #e9f5ff;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
-            border: 1px solid #bde0fe;
-        }
-        .payment-details-container.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            background-color: var(--light-color);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #eee;
-        }
-        .detail-row .label { font-weight: 700; color: var(--text-color); margin: 0; }
-        .detail-row .value { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; }
-        .copy-button { background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 1rem; margin-right: 10px; padding: 5px; transition: color 0.2s; }
-        .copy-button:hover { color: var(--primary-color); }
-        .payment-details-container h4 {
-            font-size: 1.2rem;
-            color: var(--dark-color);
-            margin-top: 0;
-            margin-bottom: 15px;
         }
         #form-error {
             display: none;
@@ -260,39 +128,12 @@
             margin-top: 20px;
             font-weight: 700;
             border: 1px solid #f5c2c7;
-        }
-
-        /* --- التصميم المتجاوب --- */
-        @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .hamburger-menu { display: block; }
-            .card { padding: 20px; }
-            .card-header { padding: 15px 20px; margin: -20px -20px 20px; }
-        }
-        @media (min-width: 769px) {
-            .hamburger-menu { display: none; }
-            .navbar-menu { display: flex; }
+            white-space: pre-wrap; /* To show error details correctly */
         }
     </style>
 </head>
 
 <body>
-
-    <header class="main-header">
-        <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                 <div id="mobile-navbar-actions"></div>
-            </ul>
-            <div id="navbar-actions" class="navbar-actions"></div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
-        </nav>
-    </header>
 
     <div class="page-container">
         <header class="page-header">
@@ -300,7 +141,6 @@
         </header>
 
         <form id="payment-form">
-            
             <div class="card">
                 <div class="card-header"><span class="step-icon">1</span><h3>ملخص الطلب</h3></div>
                 <div class="form-group">
@@ -328,35 +168,28 @@
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                    <input type="tel" name="phone" id="phone" required placeholder="مثال: 0612345678" />
+                    <input type="tel" name="phone" id="phone" required />
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header"><span class="step-icon">3</span><h3>تفاصيل إضافية</h3></div>
                 <div class="form-group">
-                    <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                    <textarea name="serviceDetails" id="service-details" maxlength="500" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية، أو ملء استمارة معينة..."></textarea>
+                    <label for="service-details">تفاصيل الخدمة المطلوبة</label>
+                    <textarea name="serviceDetails" id="service-details" placeholder="اختياري..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="service-link">رابط (اختياري)</label>
-                    <input type="url" name="serviceLink" id="service-link" placeholder="https://example.com" />
+                    <input type="url" name="serviceLink" id="service-link" />
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header"><span class="step-icon">4</span><h3>الدفع وتأكيد الطلب</h3></div>
-                
                 <div class="form-group">
                     <label>اختر وسيلة الدفع <span class="required-star">*</span></label>
-                    <div class="payment-options-grid" id="payment-options">
-                        </div>
-                    <input type="hidden" name="paymentMethod" id="payment-method-input" required>
+                    <input type="text" name="paymentMethod" id="payment-method-input" required placeholder="CIH, CashPlus, etc." />
                 </div>
-
-                <div id="payment-details-container" class="payment-details-container">
-                    </div>
-                
                 <div class="form-group">
                     <label for="receipt">أرفق وصل الدفع (صورة أو PDF) <span class="required-star">*</span></label>
                     <input type="file" name="receiptFile" id="receipt" accept=".png,.jpg,.jpeg,.pdf" required />
@@ -365,101 +198,16 @@
                     <i class="fas fa-lock"></i> أكمل الحقول المطلوبة
                 </button>
                 <div id="form-error"></div>
-                <p class="contact-support">
-                    هل تواجه مشكلة؟ <a href="contact.html">اتصل بنا</a>
-                </p>
             </div>
         </form>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="auth.js"></script>
-
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- عناصر الواجهة الرسومية ---
         const form = document.getElementById('payment-form');
         const submitBtn = document.getElementById('submit-btn');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const paymentOptionsContainer = document.getElementById('payment-options');
-        const paymentDetailsContainer = document.getElementById('payment-details-container');
-        const paymentMethodInput = document.getElementById('payment-method-input');
         const errorDiv = document.getElementById('form-error');
 
-        // --- إعدادات الدفع ---
-        const paymentMethods = [
-            { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Cih-bank.png/960px-Cih-bank.png' },
-            { id: 'cashplus', name: 'Cash Plus', logo: 'https://start-up-bucket.s3.eu-west-3.amazonaws.com/wp-content/uploads/2025/04/15173235/Cash-Plus-l-Start-up.ma_-1.png' },
-            { id: 'bmce', name: 'Bank of Africa', logo: 'https://www.ir-bankofafrica.ma/sites/default/files/styles/actualite/public/default_images/imgpsh_fullsize_anim.png?itok=UUjnntlS' },
-            { id: 'attijari', name: 'Attijariwafa', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
-        ];
-        const beneficiaryName = 'HASSAN ER-RADOUANY';
-        const paymentDetails = {
-            cih: { rib: '230810624745521100540088' },
-            cashplus: { rib: '835780030017346031053226', phone: '0621638488' },
-            bmce: { rib: '960000162000010401810011' },
-            attijari: { rib: '007810000457430040232577' },
-        };
-
-        // --- عرض خيارات وتفاصيل الدفع ---
-        function renderPaymentOptions() {
-            paymentMethods.forEach(method => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = `payment-option`;
-                optionDiv.dataset.method = method.id;
-                optionDiv.innerHTML = `<img src="${method.logo}" alt="شعار ${method.name}"><span>${method.name}</span>`;
-                optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
-                paymentOptionsContainer.appendChild(optionDiv);
-            });
-        }
-
-        function selectPaymentMethod(selectedMethodId) {
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
-            });
-            paymentMethodInput.value = paymentMethods.find(m => m.id === selectedMethodId).name;
-            renderPaymentDetails(selectedMethodId);
-            validateForm();
-        }
-
-        function renderPaymentDetails(methodId) {
-            const details = paymentDetails[methodId];
-            let detailsHtml = '';
-            if (!details) {
-                paymentDetailsContainer.innerHTML = '';
-                paymentDetailsContainer.classList.remove('active');
-                return;
-            }
-
-            detailsHtml += `<h4><i class="fas fa-info-circle"></i> تفاصيل الدفع</h4>`;
-            if (details.rib) {
-                detailsHtml += `<div class="detail-row"><span class="label">رقم الحساب (RIB):</span><span class="value" id="${methodId}-rib">${details.rib}</span><button type="button" class="copy-button" onclick="copyToClipboard('${methodId}-rib')"><i class="far fa-copy"></i></button></div>`;
-            }
-            if (details.phone) {
-                detailsHtml += `<div class="detail-row"><span class="label">الهاتف (Cash Plus):</span><span class="value" id="${methodId}-phone">${details.phone}</span><button type="button" class="copy-button" onclick="copyToClipboard('${methodId}-phone')"><i class="far fa-copy"></i></button></div>`;
-            }
-             detailsHtml += `<div class="detail-row"><span class="label">اسم المستفيد:</span><span class="value" style="direction:rtl;">${beneficiaryName}</span></div>`;
-            
-            paymentDetailsContainer.innerHTML = detailsHtml;
-            paymentDetailsContainer.classList.add('active');
-        }
-
-        window.copyToClipboard = function(elementId) {
-            const textElement = document.getElementById(elementId);
-            if (!textElement) return;
-            navigator.clipboard.writeText(textElement.innerText.trim()).then(() => {
-                const button = textElement.nextElementSibling;
-                if (button) {
-                    const originalIcon = button.innerHTML;
-                    button.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
-                    setTimeout(() => { button.innerHTML = originalIcon; }, 2000);
-                }
-            }).catch(err => console.error('Copy failed', err));
-        }
-
-        // --- التحقق من صحة النموذج ---
         function validateForm() {
             const requiredInputs = form.querySelectorAll('[required]');
             let isValid = true;
@@ -468,73 +216,34 @@
                 else if (!input.value.trim()) { isValid = false; }
             });
             submitBtn.disabled = !isValid;
-            submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول لإرسال الطلب';
+            submitBtn.innerHTML = isValid ? '<i class="fas fa-check-circle"></i> إرسال الطلب الآن' : '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
         }
 
-        // --- تهيئة الصفحة ---
-        renderPaymentOptions();
-        
         const params = new URLSearchParams(window.location.search);
-        const serviceName = params.get('service') || "خدمة غير محددة";
-        const servicePrice = params.get('price') || "0";
-        document.getElementById('display-service-name').value = serviceName;
-        document.getElementById('form-service-name').value = serviceName;
-        document.getElementById('display-service-price').value = servicePrice + " درهم";
-        document.getElementById('form-service-price').value = servicePrice;
+        document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
+        document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
+        document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
+        document.getElementById('form-service-price').value = params.get('price') || "0";
 
-        // تعبئة معلومات المستخدم المسجل إن وجد
-        if (typeof auth !== 'undefined') {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    if (user.displayName) nameInput.value = user.displayName;
-                    if (user.email) emailInput.value = user.email;
-                    validateForm();
-                }
-            });
-        }
-
-        // ربط أحداث الإدخال للتحقق الفوري
         form.querySelectorAll('input, textarea').forEach(input => {
             input.addEventListener('input', validateForm);
             input.addEventListener('change', validateForm);
         });
         validateForm();
 
-
-        // ✅✅✅ --- منطق إرسال النموذج المدمج والنهائي --- ✅✅✅
+        // ✅ --- منطق إرسال النموذج مع معالجة أخطاء محسنة --- ✅
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (submitBtn.disabled) return;
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الطلب...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
             errorDiv.style.display = 'none';
 
-            // 1. استخدام FormData لتجميع كل بيانات النموذج تلقائياً (بما في ذلك الملف)
             const formData = new FormData(form);
-            
-            // 2. إضافة الحقول المطلوبة التي لا توجد في النموذج مباشرة
-            const orderId = `KH-${Date.now()}`;
-            formData.append('id', orderId); // الـ Worker يتوقع 'id'
-            formData.append('createdAt', new Date().toISOString());
-            formData.append('status', 'جاري المعالجة'); // الحالة الأولية
-            
-            // إضافة معرف المستخدم
-            if (typeof auth !== 'undefined' && auth.currentUser) {
-                formData.append('userId', auth.currentUser.uid);
-            } else {
-                formData.append('userId', 'guest-user');
-            }
-            
-            // تأكد من أن سعر الدفع موجود
-            formData.append('paymentAmount', servicePrice);
-
-            // رابط الـ Worker
             const workerUrl = 'https://orders-worker.radwanyhassan75.workers.dev/orders';
 
             try {
-                // 3. إرسال الطلب باستخدام fetch
-                // لا نحدد 'Content-Type'، المتصفح سيقوم بذلك تلقائياً مع FormData
                 const response = await fetch(workerUrl, {
                     method: 'POST',
                     body: formData,
@@ -542,21 +251,25 @@
 
                 const result = await response.json();
 
-                if (result.success && result.redirectUrl) {
-                    // 4. نجاح! التوجيه إلى صفحة النجاح مع تمرير رقم الطلب
-                    window.location.href = result.redirectUrl;
+                // التحقق من نجاح العملية من جهة الخادم
+                if (response.ok && result.success) {
+                    window.location.href = result.redirectUrl || 'success.html';
                 } else {
-                    // فشل من جهة الخادم
-                    throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
+                    // بناء رسالة خطأ مفصلة
+                    let detailedError = result.error || 'فشل الخادم في معالجة الطلب.';
+                    if (result.details && result.details.message) {
+                        // هذا سيعرض لنا الخطأ الحقيقي من D1، مثل "no such table: orders"
+                        detailedError += `\n\nالتفاصيل الفنية: ${result.details.message}`;
+                    }
+                    throw new Error(detailedError);
                 }
             } catch (error) {
                 console.error('Submit Error:', error);
-                errorDiv.textContent = 'حدث خطأ أثناء إرسال طلبك: ' + error.message;
+                errorDiv.textContent = 'فشل إرسال الطلب. \n' + error.message;
                 errorDiv.style.display = 'block';
                 
-                // إعادة تفعيل الزر للسماح بالمحاولة مرة أخرى
                 submitBtn.disabled = false;
-                validateForm(); // لإعادة النص الصحيح للزر
+                validateForm();
             }
         });
     });
