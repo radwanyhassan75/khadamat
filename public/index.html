@@ -14,7 +14,7 @@
     <meta name="description" content="أول منصة رقمية في المغرب تجمع كل خدماتك المكتبية، الإدارية، والتقنية في مكان واحد. جودة، سرعة، وأسعار تنافسية.">
     <meta property="og:title" content="المكتب الرقمي | جميع خدماتك في مكان واحد">
     <meta property="og:description" content="خدمات مكتبية، إدارية، تعليمية ورقمية باحترافية وبأسعار مناسبة.">
-    <meta property="og:image" content="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png">
+    <meta property="og:image" content="https://raw.githubusercontent.com/radwanyhassan75/logo.png/refs/heads/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png">
     <meta name="twitter:card" content="summary_large_image">
 
 
@@ -139,11 +139,6 @@
 </head>
 <body>
 
-    <!-- =================================================================
-         HEADER SECTION
-         This header is designed to be transparent initially and become solid
-         on scroll. It includes the logo, navigation, and dynamic user actions.
-    ================================================================== -->
     <header class="main-header transparent">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
@@ -151,48 +146,41 @@
                 <li><a href="index.html" class="active">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="prices.html">الأسعار</a></li>
-                <li><a href="payment-methods.html">طرق الدفع</a></li>
+                <!-- ✅  FIXED: Link updated to payment.html -->
+                <li><a href="payment.html">طرق الدفع</a></li>
                 <div id="mobile-navbar-actions"></div>
                 <li><a href="contact.html">اتصل بنا</a></li>
                 <li><a href="about.html">من نحن</a></li>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
+                <!-- Populated by auth.js -->
             </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
-
         </nav>
     </header>
 
     <main>
-        <!-- =================================================================
-             HERO SECTION
-             Features a video background, an overlay for readability, and a
-             powerful headline with a call-to-action and an interactive search bar.
-        ================================================================== -->
         <section class="hero-section">
-            <div class="hero-video-background"><video autoplay muted loop playsinline><source src="https://cdn-useast1.kapwing.com/teams/661dac01f37c22ab30faf438/jobs/686d4716e76b66eb02a14ee9/final_686d47098bb8135ca0d6c282_68715.mp4" type="video/mp4"></video></div>
+            <div class="hero-video-background">
+                <!-- ✅  UPDATED: Added preload and poster attributes for faster perceived loading -->
+                <video autoplay muted loop playsinline preload="auto" poster="https://placehold.co/1920x1080/2c3e50/ffffff?text=...">
+                    <source src="https://github.com/radwanyhassan75/media/raw/refs/heads/main/%D8%AA%D8%B5%D9%85%D9%8A%D9%85%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%86%D9%88%D8%A7%D9%86.mp4" type="video/mp4">
+                </video>
+            </div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1 class="hero-title">المكتب الرقمي: كل خدماتك في مكان واحد</h1>
                 <p class="hero-subtitle">جودة، سرعة، وأسعار تنافسية لإنجاز جميع معاملاتك الإدارية والتقنية بكل سهولة واحترافية.</p>
-
-                <!-- ✅ شريط البحث التفاعلي الجديد -->
                 <div class="search-container">
                     <div class="search-box">
                         <input type="text" id="hero-search-input" placeholder="ابحث عن خدمة (مثال: سيرة ذاتية، تسجيل...)">
                         <button type="button"><i class="fas fa-search"></i></button>
-                        
                     </div>
                     <ul id="search-suggestions"></ul>
                 </div>
             </div>
         </section>
 
-        <!-- =================================================================
-             FEATURES SECTION
-             Highlights the core values of the service: Speed, Security, and Value.
-        ================================================================== -->
         <section class="features-section">
             <div class="container">
                 <h2 class="section-title">لماذا تختار المكتب الرقمي؟</h2>
@@ -203,16 +191,10 @@
                     <div class="feature-card"><i class="fas fa-users feature-icon"></i><h3>دعم فني متواصل</h3><p>فريقنا جاهز دائماً لمساعدتك والإجابة على استفساراتك عبر الواتساب أو البريد الإلكتروني.</p></div>
                     <div class="feature-card"><i class="fas fa-thumbs-up feature-icon"></i><h3>رضا العملاء</h3><p>نحن ملتزمون بتقديم تجربة مستخدم متميزة وضمان رضاك التام عن خدماتنا.</p></div>
                     <div class="feature-card"><i class="fas fa-globe feature-icon"></i><h3>خدمات متنوعة</h3><p>من الخدمات الإدارية إلى الرقمية، نقدم لك كل ما تحتاجه في مكان واحد لتسهيل حياتك اليومية.</p></div>
-
                 </div>
             </div>
         </section>
 
-        <!-- =================================================================
-             SERVICE CATEGORIES SECTION
-             Presents the main service categories with descriptions tailored to the
-             Moroccan context, encouraging users to explore more.
-        ================================================================== -->
         <section class="service-categories-section">
             <div class="container">
                 <h2 class="section-title">فئات خدماتنا</h2>
@@ -223,17 +205,11 @@
                     <div class="category-card"><i class="fas fa-laptop-code category-icon"></i><h3 class="category-card-title">خدمات رقمية</h3><p class="category-card-desc">نقدم حلولاً تقنية مبتكرة من إنشاء مواقع تعريفية وتصميم الشعارات إلى إدارة البيانات وتصاميم احترافية لمنصات التواصل الاجتماعي.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
                     <div class="category-card"><i class="fas fa-tools category-icon"></i><h3 class="category-card-title">خدمات الدعم التقني</h3><p class="category-card-desc">نساعدك في حل مشاكل CNSS وAMO، التسجيل في السجل الوطني للسكان والسجل الاجتماعي الموحد، بالإضافة إلى الدعم الاجتماعي المباشر.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
                     <div class="category-card"><i class="fas fa-comments category-icon"></i><h3 class="category-card-title">خدمات التواصل</h3><p class="category-card-desc">نقدم خدمات إرسال الشكايات، ملء الاستمارات، وتصحيح النصوص لضمان تواصل فعال مع الإدارات والمواطنين.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- =================================================================
-         FOOTER SECTION
-         A comprehensive footer with quick links, legal pages, social media,
-         and copyright information.
-    ================================================================== -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
@@ -250,18 +226,14 @@
                         <li><a href="payment-methods.html">طرق الدفع</a></li>
                         <li><a href="contact.html">اتصل بنا</a></li>
                         <li><a href="my-orders.html">طلباتي</a></li>
-
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3 class="footer-title">قانوني</h3>
-                
                     <ul>
                         <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
                         <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
                         <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
-
-                    
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -274,26 +246,17 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <!-- ✅ تم حذف رابط لوحة التحكم من هنا -->
                 <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
 
-    <!-- =================================================================
-         SCRIPTS
-         Includes Firebase SDKs for authentication and the central auth.js file
-         for managing user state across the site, plus page-specific logic.
-    ================================================================== -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
     
     <script>
-        // --- هذا الكود خاص فقط بالصفحة الرئيسية ---
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- 1. منطق الشريط العلوي الشفاف والمتغير عند التمرير ---
             const header = document.querySelector('.main-header');
             if (header) {
                 window.addEventListener('scroll', () => {
@@ -307,11 +270,8 @@
                 });
             }
 
-            // --- 2. منطق شريط البحث التفاعلي ---
             const searchInput = document.getElementById('hero-search-input');
             const suggestionsBox = document.getElementById('search-suggestions');
-
-            // قائمة الخدمات للبحث (يجب أن تكون مطابقة للخدمات في موقعك)
             const servicesData = [
                 'تحرير الطلبات الخطية', 'التصريحات بالشرف', 'صياغة العقود', 'السيرة الذاتية', 'ملء الاستمارات',
                 'ترجمة بسيطة', 'تصحيح لغوي', 'إنشاء حسابات إلكترونية', 'تعديل PDF', 'صياغة فواتير',
@@ -319,26 +279,21 @@
                 'تسجيل في مباريات عمومية', 'إعداد ملفات الترشح', 'التسجيل في ANAPEC', 'رسالة تحفيزية',
                 'التسجيل في السجل الوطني للسكان', 'التسجيل في السجل الاجتماعي الموحد', 'الدعم الاجتماعي المباشر',
                 'مشاكل CNSS و AMO', 'إنشاء مواقع إلكترونية', 'تصميم الشعارات', 'تصاميم السوشيال ميديا'
-
             ];
 
-            // حدث عند الكتابة في حقل البحث
             searchInput.addEventListener('input', () => {
                 const query = searchInput.value.toLowerCase();
-                suggestionsBox.innerHTML = ''; // إفراغ الاقتراحات القديمة
-
+                suggestionsBox.innerHTML = '';
                 if (query.length < 2) {
                     suggestionsBox.style.display = 'none';
                     return;
                 }
-
                 const filteredServices = servicesData.filter(service => service.toLowerCase().includes(query));
-
                 if (filteredServices.length > 0) {
                     filteredServices.forEach(service => {
                         const li = document.createElement('li');
                         const a = document.createElement('a');
-                        a.href = `services.html`; // يوجه إلى صفحة الخدمات
+                        a.href = `services.html`;
                         a.textContent = service;
                         li.appendChild(a);
                         suggestionsBox.appendChild(li);
@@ -349,7 +304,6 @@
                 }
             });
 
-            // إخفاء الاقتراحات عند الضغط في أي مكان آخر
             document.addEventListener('click', (e) => {
                 if (e.target !== searchInput) {
                     suggestionsBox.style.display = 'none';
@@ -357,28 +311,19 @@
             });
         });
     </script>
+    
     <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/687f89f29c8c5e191b57569e/1j0p35n91';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/687f89f29c8c5e191b57569e/1j0p35n91';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!--End of Tawk.to Script-->
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
