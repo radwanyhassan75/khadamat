@@ -7,6 +7,8 @@ export default {
       return handleOptions(request);
     }
 
+    // --- ORDERS ---
+
     if (pathname === '/orders' && method === 'GET') {
       try {
         const { results } = await env.DB.prepare("SELECT * FROM orders").all();
@@ -43,6 +45,29 @@ export default {
       }
     }
 
+    // --- TICKETS ---
+
+    if (pathname === '/tickets' && method === 'GET') {
+      try {
+        const query = `
+          SELECT st.id, st.userId, st.subject, st.status, st.updatedAt,
+            COALESCE(
+              u.displayName,
+              (SELECT o.customerName FROM orders o WHERE o.userId = st.userId LIMIT 1),
+              'مستخدم زائر'
+            ) as userName
+          FROM support_tickets st
+          LEFT JOIN users u ON st.userId = u.id
+          ORDER BY st.updatedAt DESC
+        `;
+        const { results } = await env.DB.prepare(query).all();
+        return jsonResponse(results);
+      } catch (err) {
+        return errorResponse("فشل في جلب التذاكر", err);
+      }
+    }
+
+    // غير مدعوم
     return errorResponse("المسار غير مدعوم", null, 404);
   }
 };

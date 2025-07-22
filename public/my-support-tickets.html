@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تذاكر الدعم - لوحة التحكم</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+        }
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; }
+        .dashboard-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .dashboard-layout { display: grid; grid-template-columns: 300px 1fr; gap: 30px; align-items: flex-start; }
+        .sidebar { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 25px; position: sticky; top: 120px; }
+        .sidebar-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 15px; }
+        .avatar-wrapper img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--primary-color); object-fit: cover; }
+        .sidebar-header h3 { margin: 0; font-size: 1.5rem; color: var(--dark-color); font-weight: 900; }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; color: var(--text-color); text-decoration: none; border-radius: var(--border-radius); transition: all 0.3s ease; font-weight: 700; margin-bottom: 8px; }
+        .sidebar-nav a:hover, .sidebar-nav a.active { background-color: var(--primary-color); color: var(--light-color); transform: translateX(-5px); }
+        .sidebar-nav a i { font-size: 1.2rem; width: 20px; text-align: center; }
+        .sidebar-footer { margin-top: 25px; padding-top: 25px; border-top: 1px solid #eee; }
+        .btn-logout { width: 100%; background-color: #fdecea; color: #dc3545; justify-content: center; font-weight: 700; padding: 12px; border: none; transition: all 0.3s ease; border-radius: var(--border-radius); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .btn-logout:hover { background-color: #dc3545; color: white; }
+        .card { background: var(--light-color); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .card-header h2 { font-size: 1.8rem; font-weight: 900; color: var(--dark-color); margin: 0; }
+        .btn-primary { background-color: var(--primary-color); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+        .tickets-table { width: 100%; border-collapse: collapse; }
+        .tickets-table th, .tickets-table td { padding: 15px; text-align: right; border-bottom: 1px solid #e9ecef; }
+        .tickets-table thead { background-color: var(--gray-color); }
+        .tickets-table th { font-weight: 900; color: var(--dark-color); }
+        .btn-view { background-color: #e7f1ff; color: var(--primary-color); padding: 6px 15px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+        @media (max-width: 992px) { .dashboard-layout { grid-template-columns: 1fr; } .sidebar { position: static; top: auto; margin-bottom: 30px; } }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://i.ibb.co/p63VsDyp/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png" alt="شعار المكتب الرقمي"></a>
+            <ul class="navbar-menu"><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li></ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
+        </nav>
+    </header>
+
+    <main class="dashboard-wrapper">
+        <div class="dashboard-layout">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="avatar-wrapper"><img src="https://placehold.co/150x150/e0e0e0/555?text=U" alt="صورة المستخدم" id="sidebar-user-avatar"></div>
+                    <h3 id="sidebar-user-name">...</h3>
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
+                        <li><a href="my-orders.html"><i class="fas fa-tasks"></i> طلباتي</a></li>
+                        <li><a href="my-support-tickets.html" class="active"><i class="fas fa-headset"></i> تذاكر الدعم</a></li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer"><button onclick="logoutUser()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button></div>
+            </aside>
+            <div class="main-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>تذاكر الدعم الخاصة بي</h2>
+                        <a href="contact.html" class="btn-primary"><i class="fas fa-plus-circle"></i> فتح تذكرة جديدة</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="tickets-table">
+                            <thead><tr><th>رقم التذكرة</th><th>الموضوع</th><th>الحالة</th><th>آخر تحديث</th><th>إجراء</th></tr></thead>
+                            <tbody id="tickets-body">
+                                <tr><td colspan="5" class="p-10 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin text-indigo-600 inline-block"></i></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Ticket Details Modal -->
+    <div id="ticket-modal" class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <header class="p-4 border-b flex justify-between items-center"><h3 class="text-xl font-bold text-gray-800">محادثة الدعم: <span id="modal-ticket-id" class="text-indigo-600"></span></h3><button id="modal-close-btn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button></header>
+            <section id="modal-message-list" class="p-6 overflow-y-auto flex-1 space-y-4 bg-gray-50"></section>
+            <footer class="p-4 bg-white border-t">
+                <form id="reply-form">
+                    <div class="relative"><input id="message-input" type="text" placeholder="اكتب ردك هنا..." class="w-full pr-12 pl-4 py-3 border rounded-full"><button type="submit" class="absolute top-1/2 -translate-y-1/2 right-2 bg-indigo-600 text-white w-10 h-10 rounded-full hover:bg-indigo-700"><i data-lucide="send" class="w-5 h-5 mx-auto"></i></button></div>
+                </form>
+                <button id="close-ticket-btn" class="w-full mt-3 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600">إغلاق التذكرة</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
+            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            let currentUser = null;
+            let activeTicket = null;
+
+            const ticketsBody = document.getElementById('tickets-body');
+            const modal = document.getElementById('ticket-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const replyForm = document.getElementById('reply-form');
+            const messageInput = document.getElementById('message-input');
+            const closeTicketBtn = document.getElementById('close-ticket-btn');
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('sidebar-user-name').textContent = user.displayName || 'مستخدم';
+                    fetchUserTickets(user.uid);
+                } else {
+                    window.location.href = "login.html";
+                }
+            });
+
+            async function fetchUserTickets(userId) {
+                try {
+                    const response = await fetch(`${API_URL}/tickets?userId=${userId}`);
+                    if (!response.ok) throw new Error('فشل جلب التذاكر');
+                    const tickets = await response.json();
+                    renderTickets(tickets);
+                } catch (error) {
+                    ticketsBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-500">${error.message}</td></tr>`;
+                }
+            }
+
+            function renderTickets(tickets) {
+                ticketsBody.innerHTML = '';
+                if (tickets.length === 0) {
+                    ticketsBody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-gray-500">لا توجد لديك تذاكر دعم حالياً.</td></tr>`;
+                    return;
+                }
+                tickets.forEach(ticket => {
+                    const row = document.createElement('tr');
+                    const statusColor = ticket.status === 'open' ? 'text-green-600' : 'text-gray-500';
+                    const ticketJson = JSON.stringify(ticket).replace(/"/g, '&quot;');
+                    row.innerHTML = `
+                        <td class="p-4 text-sm font-semibold">${ticket.id}</td>
+                        <td class="p-4 text-sm text-gray-700">${ticket.subject}</td>
+                        <td class="p-4 text-sm font-bold ${statusColor}">${ticket.status === 'open' ? 'مفتوحة' : 'مغلقة'}</td>
+                        <td class="p-4 text-sm text-gray-500">${new Date(ticket.updatedAt).toLocaleString('ar-MA')}</td>
+                        <td class="p-4"><button onclick='showTicketDetails(${ticketJson})' class="btn-view">عرض المحادثة</button></td>
+                    `;
+                    ticketsBody.appendChild(row);
+                });
+            }
+            
+            window.showTicketDetails = async (ticket) => {
+                activeTicket = ticket;
+                document.getElementById('modal-ticket-id').textContent = ticket.id;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                const messageListEl = document.getElementById('modal-message-list');
+                messageListEl.innerHTML = '<p class="text-center p-8 text-gray-500">جارٍ تحميل الرسائل...</p>';
+                try {
+                    const response = await fetch(`${API_URL}/tickets/${ticket.id}`);
+                    const messages = await response.json();
+                    renderMessages(messages);
+                } catch (error) {
+                    messageListEl.innerHTML = '<p class="text-center p-8 text-red-500">فشل تحميل الرسائل.</p>';
+                }
+            };
+
+            function renderMessages(messages) {
+                const messageListEl = document.getElementById('modal-message-list');
+                messageListEl.innerHTML = '';
+                messages.forEach(msg => {
+                    const isUser = msg.sender === 'user';
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `flex items-start gap-3 ${!isUser ? 'flex-row-reverse' : ''}`;
+                    messageDiv.innerHTML = `
+                        <div class="w-10 h-10 ${!isUser ? 'bg-indigo-200' : 'bg-gray-300'} rounded-full flex-shrink-0"></div>
+                        <div>
+                            <div class="${!isUser ? 'bg-indigo-500 text-white' : 'bg-white'} p-3 rounded-lg shadow-sm">
+                                <p class="text-sm">${msg.message}</p>
+                            </div>
+                            <span class="text-xs text-gray-400 mt-1 ${!isUser ? 'block text-left' : ''}">${isUser ? 'أنت' : 'فريق الدعم'} - ${new Date(msg.createdAt).toLocaleTimeString('ar-MA')}</span>
+                        </div>
+                    `;
+                    messageListEl.appendChild(messageDiv);
+                });
+                messageListEl.scrollTop = messageListEl.scrollHeight;
+            }
+
+            replyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = messageInput.value.trim();
+                if (!message || !activeTicket || !currentUser) return;
+                messageInput.disabled = true;
+                try {
+                    await fetch(`${API_URL}/tickets/${activeTicket.id}/messages`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sender: 'user', message })
+                    });
+                    messageInput.value = '';
+                    showTicketDetails(activeTicket); // Refresh messages
+                } catch (error) {
+                    alert('فشل إرسال الرسالة');
+                } finally {
+                    messageInput.disabled = false;
+                }
+            });
+
+            closeTicketBtn.addEventListener('click', async () => {
+                if (!activeTicket) return;
+                try {
+                    await fetch(`${API_URL}/tickets/${activeTicket.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'closed' })
+                    });
+                    modal.classList.add('hidden');
+                    fetchUserTickets(currentUser.uid);
+                } catch (error) {
+                    alert('فشل إغلاق التذكرة');
+                }
+            });
+
+            modalCloseBtn.onclick = () => modal.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

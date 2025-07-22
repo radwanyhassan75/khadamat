@@ -14,7 +14,7 @@
         body { font-family: 'Cairo', sans-serif; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -24,7 +24,7 @@
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
             <h2 class="text-2xl font-bold mb-4 text-gray-800">الرجاء إدخال كلمة المرور</h2>
             <form id="password-form">
-                <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********">
+                <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********" autocomplete="current-password">
                 <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
                 <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">دخول</button>
             </form>
@@ -50,6 +50,7 @@
             <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0"><h2 class="text-xl font-semibold text-gray-800">تذاكر الدعم الفني</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
             
             <main class="flex-1 flex overflow-hidden">
+                <!-- Ticket List Panel -->
                 <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-l border-gray-200">
                     <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث عن تذكرة..." class="w-full px-4 py-2 border rounded-lg"></div>
                     <div id="filter-buttons" class="p-2 flex justify-center gap-2 border-b">
@@ -60,23 +61,15 @@
                     <div id="ticket-list" class="flex-1 overflow-y-auto"></div>
                 </div>
 
-                <div id="chat-panel" class="hidden flex-1 flex flex-col bg-gray-50">
-                    <div class="p-4 border-b bg-white flex justify-between items-center">
-                        <div>
-                            <h3 id="chat-header-name" class="font-bold text-lg text-gray-800"></h3>
-                            <p id="chat-header-subject" class="text-sm text-gray-500"></p>
-                        </div>
-                        <button id="close-ticket-btn" class="text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition"></button>
-                    </div>
-                    <div id="message-list" class="flex-1 p-6 overflow-y-auto space-y-4"></div>
-                    <form id="reply-form" class="p-4 bg-white border-t">
-                        <div class="relative"><input id="message-input" type="text" placeholder="اكتب ردك هنا..." class="w-full pr-24 pl-4 py-3 border rounded-full"><div class="absolute top-1/2 -translate-y-1/2 right-2 flex gap-1"><button type="button" class="text-gray-500 hover:text-indigo-600 w-10 h-10 rounded-full"><i data-lucide="paperclip" class="w-5 h-5 mx-auto"></i></button><button type="submit" class="bg-indigo-600 text-white w-10 h-10 rounded-full hover:bg-indigo-700"><i data-lucide="send" class="w-5 h-5 mx-auto"></i></button></div></div>
-                    </form>
+                <!-- Dossier Panel -->
+                <div id="dossier-panel" class="hidden flex-1 bg-gray-50 p-6 overflow-y-auto">
+                    <!-- Content will be rendered here by JavaScript -->
                 </div>
+
                 <div id="no-chat-selected" class="flex flex-1 flex-col items-center justify-center text-center p-8 bg-gray-50">
-                    <i data-lucide="message-square" class="w-16 h-16 text-gray-300 mb-4"></i>
+                    <i data-lucide="inbox" class="w-16 h-16 text-gray-300 mb-4"></i>
                     <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد أي تذكرة</h3>
-                    <p class="text-gray-500 mt-2">الرجاء اختيار تذكرة من القائمة لعرض المحادثة.</p>
+                    <p class="text-gray-500 mt-2">الرجاء اختيار تذكرة من القائمة لعرض تفاصيلها.</p>
                 </div>
             </main>
         </div>
@@ -93,12 +86,8 @@
             let activeTicket = null;
 
             const ticketListEl = document.getElementById('ticket-list');
-            const chatPanelEl = document.getElementById('chat-panel');
+            const dossierPanelEl = document.getElementById('dossier-panel');
             const noChatSelectedEl = document.getElementById('no-chat-selected');
-            const messageListEl = document.getElementById('message-list');
-            const replyForm = document.getElementById('reply-form');
-            const messageInput = document.getElementById('message-input');
-            const closeTicketBtn = document.getElementById('close-ticket-btn');
             const searchInput = document.getElementById('search-input');
             const filterButtons = document.querySelectorAll('.filter-btn');
 
@@ -142,91 +131,86 @@
                 activeTicket = ticket;
                 document.querySelectorAll('.ticket-item').forEach(el => {
                     el.classList.toggle('bg-indigo-50', el.dataset.ticketId === ticket.id);
-                    el.classList.toggle('border-r-4', el.dataset.ticketId === ticket.id);
-                    el.classList.toggle('border-indigo-500', el.dataset.ticketId === ticket.id);
                 });
 
-                chatPanelEl.classList.remove('hidden');
-                chatPanelEl.classList.add('flex');
+                dossierPanelEl.classList.remove('hidden');
                 noChatSelectedEl.classList.add('hidden');
+                dossierPanelEl.innerHTML = '<p class="text-center p-8 text-gray-500">جارٍ تحميل التفاصيل...</p>';
 
-                document.getElementById('chat-header-name').textContent = ticket.userName;
-                document.getElementById('chat-header-subject').textContent = ticket.subject;
-                
-                const isClosed = ticket.status === 'closed';
-                closeTicketBtn.innerHTML = isClosed ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح</span>' : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
-                closeTicketBtn.className = `text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition ${isClosed ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`;
-                lucide.createIcons();
-
-
-                messageListEl.innerHTML = '<p class="text-center p-8 text-gray-500">جارٍ تحميل الرسائل...</p>';
                 try {
                     const response = await fetch(`${API_URL}/tickets/${ticket.id}`);
                     const messages = await response.json();
-                    renderMessages(messages);
+                    const initialMessage = messages.find(m => m.sender === 'user');
+                    renderDossier(ticket, initialMessage);
                 } catch (error) {
-                    messageListEl.innerHTML = '<p class="text-center p-8 text-red-500">فشل تحميل الرسائل.</p>';
+                    dossierPanelEl.innerHTML = `<p class="text-center p-8 text-red-500">فشل تحميل تفاصيل التذكرة.</p>`;
                 }
             }
             
-            function renderMessages(messages) {
-                messageListEl.innerHTML = '';
-                messages.forEach(msg => {
-                    const isAdmin = msg.sender === 'admin';
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `flex items-start gap-3 ${isAdmin ? 'flex-row-reverse' : ''}`;
-                    messageDiv.innerHTML = `
-                        <div class="w-10 h-10 ${isAdmin ? 'bg-indigo-200' : 'bg-gray-300'} rounded-full flex-shrink-0"></div>
-                        <div>
-                            <div class="${isAdmin ? 'bg-indigo-500 text-white' : 'bg-white'} p-3 rounded-lg shadow-sm">
-                                <p class="text-sm">${msg.message}</p>
-                            </div>
-                            <span class="text-xs text-gray-400 mt-1 ${isAdmin ? 'block text-left' : ''}">${isAdmin ? 'أنت' : activeTicket.userName} - ${new Date(msg.createdAt).toLocaleTimeString('ar-MA')}</span>
+            function renderDossier(ticket, initialMessage) {
+                const isClosed = ticket.status === 'closed';
+                const attachmentHTML = initialMessage && initialMessage.attachmentUrl 
+                    ? `<a href="${initialMessage.attachmentUrl}" target="_blank" class="flex items-center gap-2 text-indigo-600 hover:underline">
+                           <i data-lucide="paperclip" class="w-4 h-4"></i>
+                           <span>عرض الملف المرفق</span>
+                       </a>`
+                    : '<p class="text-gray-500">لا يوجد</p>';
+
+                dossierPanelEl.innerHTML = `
+                    <div class="space-y-6">
+                        <!-- Ticket Info -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h3 class="font-bold text-lg text-gray-800">${ticket.subject}</h3>
+                            <p class="text-sm text-gray-500 mt-1">رقم التذكرة: ${ticket.id}</p>
+                            <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-MA')}</p>
                         </div>
-                    `;
-                    messageListEl.appendChild(messageDiv);
-                });
-                messageListEl.scrollTop = messageListEl.scrollHeight;
+                        
+                        <!-- User Info -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                             <h4 class="font-semibold text-gray-500 text-sm mb-2">معلومات العميل</h4>
+                             <p class="font-bold text-lg text-gray-800">${ticket.userName}</p>
+                             <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض ملف المستخدم الكامل &rarr;</a>
+                        </div>
+
+                        <!-- Initial Message -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-gray-500 text-sm mb-2">الرسالة الأصلية</h4>
+                            <p class="text-gray-700 whitespace-pre-wrap">${initialMessage ? initialMessage.message : 'لا توجد رسالة.'}</p>
+                        </div>
+
+                        <!-- Attachment -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-gray-500 text-sm mb-2">الملف المرفق</h4>
+                            ${attachmentHTML}
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">إجراءات</h4>
+                            <button id="close-ticket-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isClosed ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}"></button>
+                        </div>
+                    </div>
+                `;
+                const closeTicketBtn = document.getElementById('close-ticket-btn');
+                closeTicketBtn.innerHTML = isClosed ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح التذكرة</span>' : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
+                closeTicketBtn.onclick = () => updateTicketStatus(ticket.id, isClosed ? 'open' : 'closed');
+                lucide.createIcons();
             }
-
-            replyForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const message = messageInput.value.trim();
-                if (!message || !activeTicket) return;
-
-                messageInput.disabled = true;
-                try {
-                    await fetch(`${API_URL}/tickets/${activeTicket.id}/messages`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ sender: 'admin', message })
-                    });
-                    messageInput.value = '';
-                    selectTicket(activeTicket); // Refresh messages
-                } catch (error) {
-                    alert('فشل إرسال الرسالة');
-                } finally {
-                    messageInput.disabled = false;
-                    messageInput.focus();
-                }
-            });
             
-            closeTicketBtn.addEventListener('click', async () => {
-                if (!activeTicket) return;
-                const newStatus = activeTicket.status === 'open' ? 'closed' : 'open';
+            async function updateTicketStatus(ticketId, newStatus) {
                 try {
-                    await fetch(`${API_URL}/tickets/${activeTicket.id}`, {
+                    await fetch(`${API_URL}/tickets/${ticketId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ status: newStatus })
                     });
-                    chatPanelEl.classList.add('hidden');
+                    dossierPanelEl.classList.add('hidden');
                     noChatSelectedEl.classList.remove('hidden');
                     fetchTickets();
                 } catch (error) {
                     alert('فشل تحديث حالة التذكرة');
                 }
-            });
+            }
 
             function filterAndRender() {
                 const searchTerm = searchInput.value.toLowerCase();
@@ -238,11 +222,15 @@
                 }
 
                 if (searchTerm) {
-                    filteredTickets = filteredTickets.filter(t => t.userName.toLowerCase().includes(searchTerm) || t.subject.toLowerCase().includes(searchTerm));
+                    filteredTickets = filteredTickets.filter(t => 
+                        (t.userName && t.userName.toLowerCase().includes(searchTerm)) || 
+                        (t.subject && t.subject.toLowerCase().includes(searchTerm))
+                    );
                 }
                 renderTicketList(filteredTickets);
             }
 
+            // Event Listeners
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => {
@@ -254,7 +242,6 @@
                     filterAndRender();
                 });
             });
-
             searchInput.addEventListener('input', filterAndRender);
             fetchTickets();
         }

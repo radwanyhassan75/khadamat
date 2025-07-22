@@ -22,7 +22,6 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             --danger-color: #dc3545;
         }
-
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
@@ -31,8 +30,6 @@
             direction: rtl;
             color: var(--text-color);
         }
-
-        /* --- تصميم الشريط العلوي --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -47,8 +44,6 @@
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; }
-
-        /* --- تصميم حاوية الصفحة وترويستها --- */
         .page-container {
             max-width: 900px;
             margin: 50px auto;
@@ -75,8 +70,6 @@
             max-width: 700px;
             margin: 0 auto;
         }
-
-        /* --- تصميم بطاقة التواصل --- */
         .contact-card {
             background: var(--light-color);
             padding: 40px;
@@ -96,17 +89,22 @@
             outline: none; border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
         }
-        input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
         .submit-btn {
             width: 100%; padding: 15px; font-size: 1.2rem; background: var(--primary-color);
             border: none; color: white; font-weight: bold; border-radius: 8px;
             cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .submit-btn:hover:not(:disabled) { background-color: #00458e; transform: translateY(-3px); }
-        .submit-btn:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-        #form-error { display: none; color: var(--danger-color); font-weight: 700; margin-top: 15px; text-align: center; }
-        
-        /* --- تصميم التذييل (Footer) --- */
+        .submit-btn:disabled { background-color: #a0b3c9; cursor: not-allowed; }
+        .spinner {
+            width: 20px; height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
             padding: 60px 0 20px; margin-top: 60px;
@@ -119,18 +117,10 @@
         .footer-section ul { list-style: none; padding: 0; }
         .footer-section ul li a { color: #bdc3c7; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
         .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
-        .social-icons a { display: inline-block; color: var(--light-color); font-size: 1.5rem; margin-left: 15px; transition: transform 0.3s; }
-        .social-icons a:hover { transform: scale(1.2); color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
         
-        @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .hamburger-menu { display: block; }
-        }
-        @media (min-width: 769px) {
-            .navbar-menu { display: flex; }
-            .hamburger-menu { display: none; }
-        }
+        @media (max-width: 768px) { .navbar-menu { display: none; } .hamburger-menu { display: block; } }
+        @media (min-width: 769px) { .navbar-menu { display: flex; } .hamburger-menu { display: none; } }
     </style>
 </head>
 <body>
@@ -150,165 +140,109 @@
             <p>نحن هنا لمساعدتك. سواء كان لديك استفسار، مشكلة في طلب، أو اقتراح، يرجى ملء النموذج أدناه وسنعاود الاتصال بك في أقرب وقت.</p>
         </header>
 
-        <div id="contact-container" class="contact-card">
-            <!-- سيتم بناء النموذج هنا بواسطة الجافاسكريبت -->
-            <p style="text-align: center;">جاري تحميل النموذج...</p>
+        <div class="contact-card">
+            <div id="message-container" class="mb-6"></div>
+            <form id="contact-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل <span class="required-star">*</span></label>
+                        <input type="text" id="name" name="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
+                        <input type="email" id="email" name="userEmail" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
+                    <select id="inquiry-type" name="inquiryType" required>
+                        <option value="" disabled selected>-- اختر نوع الاستفسار --</option>
+                        <option value="استفسار عام">استفسار عام</option>
+                        <option value="مشكلة في الطلب">مشكلة في الطلب</option>
+                        <option value="شكوى">شكوى</option>
+                    </select>
+                </div>
+                <div id="related-order-group" class="form-group hidden">
+                    <label for="related-order">اختر الطلب المتعلق بالمشكلة <span class="required-star">*</span></label>
+                    <select id="related-order" name="orderId"></select>
+                </div>
+                <div class="form-group">
+                    <label for="subject">الموضوع <span class="required-star">*</span></label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">رسالتك <span class="required-star">*</span></label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="attachment">إرفاق ملف (اختياري)</label>
+                    <input type="file" id="attachment" name="attachment">
+                </div>
+                <button type="submit" id="submit-btn" class="submit-btn">
+                    <span id="btn-text">إرسال التذكرة</span>
+                    <div id="btn-spinner" class="spinner" style="display: none;"></div>
+                </button>
+            </form>
         </div>
     </div>
 
     <footer class="main-footer">
         <div class="footer-container">
-            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p><div class="social-icons" style="margin-top: 20px;"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
             <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li></ul></div>
             <div class="footer-section"><h3>قانوني</h3><ul><li><a href="#">سياسة الخصوصية</a></li><li><a href="#">الشروط والأحكام</a></li></ul></div>
         </div>
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
-
+    
+    <!-- Firebase & Auth Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
-    <audio id="notification-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
 
     <script>
-    // =================================================================
-    //         السكريبت المُصحَّح والنهائي لصفحة "اتصل بنا"
-    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        const contactContainer = document.getElementById('contact-container');
-        const workerBaseUrl = 'https://order-processor.radwanyhassan75.workers.dev';
+        const WORKER_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnSpinner = document.getElementById('btn-spinner');
+        const messageContainer = document.getElementById('message-container');
+        const inquiryTypeSelect = document.getElementById('inquiry-type');
+        const relatedOrderGroup = document.getElementById('related-order-group');
+        const relatedOrderSelect = document.getElementById('related-order');
 
-        /**
-         * دالة لرسم النموذج الديناميكي
-         */
-        function renderForm() {
-            contactContainer.innerHTML = `
-                <form id="contact-form">
-                    <div class="form-group">
-                        <label for="full-name">الاسم الكامل <span class="required-star">*</span></label>
-                        <input type="text" id="full-name" name="fullName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">رقم الهاتف <span class="required-star">*</span></label>
-                        <input type="tel" id="phone" name="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
-                        <select id="inquiry-type" name="inquiryType" required>
-                            <option value="" disabled selected>-- اختر نوع الاستفسار --</option>
-                            <option value="استفسار عام">استفسار عام</option>
-                            <option value="مشكلة في الطلب">مشكلة في الطلب</option>
-                            <option value="شكوى">شكوى</option>
-                        </select>
-                    </div>
-                    <div id="related-order-group" class="form-group" style="display: none;">
-                        <label for="related-order">اختر الطلب المتعلق بالمشكلة <span class="required-star">*</span></label>
-                        <select id="related-order" name="relatedOrder" required>
-                            <option value="">جاري تحميل طلباتك...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">الموضوع <span class="required-star">*</span></label>
-                        <input type="text" id="subject" name="subject" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">رسالتك <span class="required-star">*</span></label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="attachment">إرفاق ملف (اختياري)</label>
-                        <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
-                    </div>
-                    <button type="submit" id="submit-btn" class="submit-btn">إرسال التذكرة</button>
-                    <p id="form-error" style="display: none; color: var(--danger-color); font-weight: 700; margin-top: 15px; text-align: center;"></p>
-                </form>
-            `;
-            // بعد رسم النموذج، نقوم بربط الأحداث
-            setupEventListeners();
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('name').value = user.displayName || '';
+                document.getElementById('email').value = user.email || '';
+                inquiryTypeSelect.addEventListener('change', () => handleInquiryChange(user.uid));
+            } else {
+                inquiryTypeSelect.addEventListener('change', () => handleInquiryChange(null));
+            }
+        });
+
+        async function handleInquiryChange(userId) {
+            const selectedType = inquiryTypeSelect.value;
+            if (userId && (selectedType === 'مشكلة في الطلب' || selectedType === 'شكوى')) {
+                relatedOrderGroup.classList.remove('hidden');
+                relatedOrderSelect.required = true;
+                await fetchUserOrders(userId);
+            } else {
+                relatedOrderGroup.classList.add('hidden');
+                relatedOrderSelect.required = false;
+            }
         }
 
-        /**
-         * دالة لربط الأحداث بالنموذج بعد رسمه
-         */
-        function setupEventListeners() {
-            const form = document.getElementById('contact-form');
-            const inquiryTypeSelect = document.getElementById('inquiry-type');
-            const relatedOrderGroup = document.getElementById('related-order-group');
-            const relatedOrderSelect = document.getElementById('related-order');
-            const submitBtn = document.getElementById('submit-btn');
-            const errorP = document.getElementById('form-error');
-            const notificationSound = document.getElementById('notification-sound');
-
-            // إظهار/إخفاء قائمة الطلبات
-            inquiryTypeSelect.addEventListener('change', (e) => {
-                const selectedType = e.target.value;
-                if (auth.currentUser && (selectedType === 'مشكلة في الطلب' || selectedType === 'شكوى')) {
-                    relatedOrderGroup.style.display = 'block';
-                    relatedOrderSelect.required = true;
-                } else {
-                    relatedOrderGroup.style.display = 'none';
-                    relatedOrderSelect.required = false;
-                }
-            });
-
-            // عند إرسال النموذج
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-                errorP.style.display = 'none';
-
-                const formData = new FormData(form);
-                const ticketId = `TICKET-${Date.now()}`;
-                formData.append('ticketId', ticketId);
-                formData.append('createdAt', new Date().toISOString());
-                if (auth.currentUser) {
-                    formData.append('userId', auth.currentUser.uid);
-                }
-
-                try {
-                    const response = await fetch(`${workerBaseUrl}/api/create-ticket`, {
-                        method: 'POST',
-                        body: formData,
-                    });
-                    const result = await response.json();
-                    if (result.success && result.redirectUrl) {
-                        notificationSound.play();
-                        setTimeout(() => { window.location.href = result.redirectUrl; }, 500);
-                    } else {
-                        throw new Error(result.error || 'فشل الخادم في إنشاء التذكرة.');
-                    }
-                } catch (error) {
-                    console.error('Submit Error:', error);
-                    errorP.textContent = `خطأ: ${error.message}`;
-                    errorP.style.display = 'block';
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'إرسال التذكرة';
-                }
-            });
-        }
-
-        /**
-         * دالة لجلب طلبات المستخدم وملء بياناته
-         */
-        async function initializeFormForUser(user) {
-            const fullNameInput = document.getElementById('full-name');
-            const emailInput = document.getElementById('email');
-            const relatedOrderSelect = document.getElementById('related-order');
-
-            if (user.displayName) fullNameInput.value = user.displayName;
-            if (user.email) emailInput.value = user.email;
-            
+        async function fetchUserOrders(userId) {
+            relatedOrderSelect.innerHTML = '<option value="">جاري تحميل طلباتك...</option>';
             try {
-                const response = await fetch(`${workerBaseUrl}/api/get-my-orders?userId=${user.uid}`);
-                const data = await response.json();
-                if (data.success && data.orders.length > 0) {
+                const response = await fetch(`${WORKER_URL}/orders?userId=${userId}`);
+                if (!response.ok) throw new Error('فشل تحميل الطلبات.');
+                const orders = await response.json();
+                if (orders.length > 0) {
                     relatedOrderSelect.innerHTML = '<option value="" disabled selected>-- اختر الطلب --</option>';
-                    data.orders.forEach(order => {
+                    orders.forEach(order => {
                         const option = document.createElement('option');
                         option.value = order.id;
                         option.textContent = `(${order.id}) - ${order.serviceName}`;
@@ -318,23 +252,58 @@
                     relatedOrderSelect.innerHTML = '<option value="" disabled selected>لا يوجد لديك طلبات سابقة</option>';
                 }
             } catch (error) {
-                console.error('Failed to fetch orders:', error);
                 relatedOrderSelect.innerHTML = '<option value="" disabled selected>خطأ في تحميل الطلبات</option>';
             }
         }
 
-        // --- نقطة البداية ---
-        renderForm(); // نرسم النموذج أولاً
-        if (typeof auth !== 'undefined') {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    initializeFormForUser(user);
-                }
-            });
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'block';
+
+            const formData = new FormData(contactForm);
+            const user = auth.currentUser;
+            if (user) {
+                formData.append('userId', user.uid);
+            }
+
+            try {
+                const response = await fetch(`${WORKER_URL}/tickets`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'فشل إرسال التذكرة.');
+                window.location.href = `contact-success.html?ticketId=${result.ticketId}`;
+            } catch (error) {
+                showMessage(`❌ ${error.message}`, 'error');
+                submitBtn.disabled = false;
+                btnText.style.display = 'block';
+                btnSpinner.style.display = 'none';
+            }
+        });
+
+        function showMessage(message, type = 'success') {
+            const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+            messageContainer.innerHTML = `<div class="border-l-4 p-4 rounded-lg mb-6 ${color}" role="alert"><p>${message}</p></div>`;
         }
         
         document.getElementById('current-year').textContent = new Date().getFullYear();
     });
     </script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/687f89f29c8c5e191b57569e/1j0p35n91';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
