@@ -3,89 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حذف الحساب - المكتب الرقمي</title>
+    <title>سياسة حذف البيانات - المكتب الرقمي</title>
     
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
             --primary-color: #0056b3;
-            --danger-color: #dc3545;
+            --primary-hover-color: #004494;
+            --dark-color: #2c3e50;
             --light-color: #ffffff;
-            --gray-color: #f8f9fa;
+            --gray-color: #f4f7f9;
+            --text-color: #555;
+            --text-light: #a9b4c2;
+            --border-color: #e0e0e0;
             --border-radius: 12px;
-            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
-            background-color: var(--gray-color);
             direction: rtl;
+            background-color: var(--gray-color);
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .container {
-            background: var(--light-color);
-            padding: 30px;
+        
+        /* --- Shared Header --- */
+        .main-header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 90px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary-color); }
+        .hamburger { display: none; cursor: pointer; }
+        .hamburger .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--dark-color);
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            padding: 60px 20px;
+        }
+        .policy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--light-color);
+            padding: 40px 50px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
         }
-        h1 { font-size: 1.8rem; color: var(--dark-color); margin-bottom: 20px; }
-        p { color: #666; margin-bottom: 25px; }
-        .btn-delete { background-color: var(--danger-color); color: var(--light-color); border: none; padding: 12px 30px; font-size: 1.1rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; }
-        .btn-delete:hover { background-color: #b02a37; }
-        .btn-cancel { background-color: #6c757d; color: var(--light-color); border: none; padding: 12px 30px; font-size: 1.1rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; margin-right: 10px; }
-        .btn-cancel:hover { background-color: #5c636a; }
+        .policy-container h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .policy-container .last-updated {
+            text-align: center;
+            color: #777;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+        .policy-section {
+            margin-bottom: 30px;
+        }
+        .policy-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .policy-section p, .policy-section li {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: var(--text-color);
+        }
+        .policy-section ul {
+            padding-right: 20px;
+        }
+        .policy-section a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .policy-section a:hover {
+            text-decoration: underline;
+        }
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--light-color);
+            background-color: #dc3545;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* --- Shared Footer --- */
+        .main-footer {
+            padding: 50px 5%;
+            background: var(--dark-color);
+            color: var(--text-light);
+        }
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #3a4a5b;
+        }
+        .footer-col h3 { color: var(--light-color); font-size: 1.2rem; margin-bottom: 20px; }
+        .footer-col p { line-height: 1.8; }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul a { text-decoration: none; color: var(--text-light); transition: color 0.3s; }
+        .footer-col ul a:hover { color: var(--light-color); }
+        .footer-bottom { text-align: center; padding-top: 30px; font-size: 0.9rem; }
+        .footer-bottom a { color: var(--light-color); text-decoration: none; }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed; top: 90px; right: -100%;
+                background: var(--light-color); width: 100%;
+                height: calc(100vh - 90px); flex-direction: column;
+                align-items: center; padding-top: 50px;
+                transition: right 0.5s ease-in-out;
+            }
+            .nav-links.active { right: 0; }
+            .hamburger { display: block; }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+        @media (max-width: 576px) {
+            .policy-container { padding: 25px 20px; }
+            .policy-container h1 { font-size: 2rem; }
+            .policy-section h2 { font-size: 1.5rem; }
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>حذف الحساب</h1>
-        <p>هل أنت متأكد من رغبتك في حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيؤدي إلى حذف جميع بياناتك.</p>
-        <button class="btn-delete" onclick="deleteAccount()">حذف الحساب</button>
-        <button class="btn-cancel" onclick="window.location.href='dashboard.html'">إلغاء</button>
-    </div>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
-            authDomain: "khadamatukdigital.firebaseapp.com",
-            projectId: "khadamatukdigital",
-            storageBucket: "khadamatukdigital.appspot.com",
-            messagingSenderId: "690661888019",
-            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-        };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const auth = firebase.auth();
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="tracking.html">تتبع الطلب</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
 
-        function deleteAccount() {
-            const user = auth.currentUser;
-            if (user) {
-                user.delete().then(() => {
-                    alert("تم حذف الحساب بنجاح. ستقوم بالتوجيه إلى الصفحة الرئيسية.");
-                    window.location.href = "index.html";
-                }).catch((error) => {
-                    alert("حدث خطأ أثناء حذف الحساب: " + error.message);
-                });
-            } else {
-                alert("يجب تسجيل الدخول أولاً.");
-                window.location.href = "login.html";
-            }
-        }
+    <main class="main-content">
+        <div class="policy-container">
+            <h1>سياسة حذف البيانات</h1>
+            <p class="last-updated">آخر تحديث: 23 يوليو 2025</p>
+
+            <div class="policy-section">
+                <h2>1. التزامنا</h2>
+                <p>في "المكتب الرقمي"، نحن نأخذ خصوصية بياناتك على محمل الجد. تمنحك هذه السياسة الحق في طلب حذف بياناتك الشخصية التي نحتفظ بها في أنظمتنا، ونحن ملتزمون بتسهيل هذه العملية وجعلها شفافة قدر الإمكان.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>2. حقك في الحذف</h2>
+                <p>يحق لك طلب حذف بياناتك الشخصية في أي وقت. عند استلام طلب يمكن التحقق منه، سنقوم بحذف معلوماتك الشخصية من سجلاتنا، وسنوجه أي من مزودي الخدمة لدينا للقيام بالمثل.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>3. كيفية طلب حذف البيانات</h2>
+                <p>لطلب حذف بياناتك، يرجى إرسال طلبك عبر البريد الإلكتروني. يجب أن يتضمن طلبك معلومات كافية تسمح لنا بالتحقق بشكل معقول من أنك الشخص الذي جمعنا معلومات عنه.</p>
+                <p>يمكنك بدء عملية الطلب عن طريق الضغط على الزر أدناه، والذي سيقوم بإنشاء بريد إلكتروني موجه إلى فريق الدعم لدينا.</p>
+                <br>
+                <a href="mailto:radwanyhassan75@gmail.com?subject=طلب%20حذف%20البيانات%20-%20المكتب%20الرقمي" class="btn-delete">
+                    <i class="fas fa-trash-alt"></i>
+                    طلب حذف البيانات الآن
+                </a>
+            </div>
+
+            <div class="policy-section">
+                <h2>4. عملية الحذف</h2>
+                <p>بعد التحقق من هويتك وصحة طلبك، سنقوم بالبدء في عملية الحذف. قد تستغرق هذه العملية ما يصل إلى 30 يوم عمل. سنقوم بإعلامك عبر البريد الإلكتروني بمجرد اكتمال عملية الحذف.</p>
+            </div>
+
+            <div class="policy-section">
+                <h2>5. استثناءات</h2>
+                <p>يرجى ملاحظة أنه قد لا نتمكن من حذف جميع بياناتك في ظروف معينة. قد نحتفظ ببعض البيانات إذا كان ذلك ضروريًا من أجل:</p>
+                <ul>
+                    <li>إتمام المعاملة التي تم من أجلها جمع المعلومات الشخصية.</li>
+                    <li>الامتثال لالتزام قانوني أو تنظيمي.</li>
+                    <li>اكتشاف الحوادث الأمنية والحماية من الأنشطة الخبيثة أو الاحتيالية أو غير القانونية.</li>
+                    <li>للاستخدامات الداخلية الأخرى التي تتماشى بشكل معقول مع توقعاتك كمستخدم.</li>
+                </ul>
+            </div>
+            
+            <div class="policy-section">
+                <h2>6. اتصل بنا</h2>
+                <p>إذا كانت لديك أي أسئلة حول سياسة حذف البيانات هذه، يمكنك الاتصال بنا عبر صفحة <a href="contact.html">اتصل بنا</a> أو مباشرة عبر البريد الإلكتروني <a href="mailto:radwanyhassan75@gmail.com">radwanyhassan75@gmail.com</a>.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+            </div>
+            <div class="footer-col">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">الخدمات</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>قانوني</h3>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms.html">الشروط والاحكام</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+            <p>تم تصميم الموقع بواسطة <a href="#">HASSAN</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Menu ---
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        });
     </script>
 </body>
 </html>
