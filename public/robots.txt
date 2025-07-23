@@ -1,5 +1,30 @@
 User-agent: *
+Disallow: /auth.js
+Disallow: /complete-profile.html
+Disallow: /dashboard.html
+Disallow: /delete-account.html
+Disallow: /login.html
+Disallow: /my-orders.html
+Disallow: /my-support-tickets.html
+Disallow: /payment-gateway.html
+Disallow: /register.html
+Disallow: /script.js
+Disallow: /success.html
+Disallow: /verify-email.html
 Disallow: /admin/
-Allow: /
 
-Sitemap: https://https://khadamat.pages.dev/sitemap.xml
+Allow: /
+Allow: /about.html
+Allow: /contact.html
+Allow: /contact-success.html
+Allow: /index.html
+Allow: /payment.html
+Allow: /prices.html
+Allow: /privacy-policy.html
+Allow: /refund-policy.html
+Allow: /services.html
+Allow: /terms-and-conditions.html
+Allow: /track-order.html
+Allow: /sitemap.xml
+
+Sitemap: https://khadamat.pages.dev/sitemap.xml
