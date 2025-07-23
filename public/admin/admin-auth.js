@@ -1,46 +1,64 @@
-// هذا الملف مسؤول عن التحقق من كلمة المرور وإدارة جلسة الدخول
+// =================================================================
+//          ملف المصادقة للوحة التحكم (النسخة الديناميكية)
+//          هذا الملف يدير جلسة الدخول ويتحقق من كلمة المرور من الخادم
+// =================================================================
 
-function handleLogin(e) {
+const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+
+async function handleLogin(e) {
     e.preventDefault();
     const passwordInput = document.getElementById('password-input');
     const passwordError = document.getElementById('password-error');
     
-    // كلمة المرور الصحيحة
-    if (passwordInput.value === '12345678') {
-        // عند نجاح الدخول، نقوم بتخزين حالة المصادقة في "جلسة المتصفح"
-        // هذه المعلومة ستبقى طالما أن نافذة المتصفح مفتوحة
-        sessionStorage.setItem('isAdminAuthenticated', 'true');
-        passwordError.classList.add('hidden');
+    try {
+        // 1. جلب الإعدادات (بما في ذلك كلمة المرور) من الخادم
+        const response = await fetch(`${API_URL}/settings`);
+        if (!response.ok) throw new Error('فشل في الاتصال بالخادم.');
         
-        // إخفاء شاشة الدخول وإظهار محتوى الصفحة
-        document.getElementById('password-gate').style.display = 'none';
-        document.getElementById('dashboard-content').style.display = 'flex';
-        
-        // استدعاء الدالة الخاصة بتهيئة هذه الصفحة (سيتم تعريفها في كل صفحة)
-        initializePage(); 
-    } else {
+        const settings = await response.json();
+        const correctPassword = settings.admin_password || '12345678'; // Use default if not set
+
+        // 2. مقارنة كلمة المرور المدخلة مع الكلمة الصحيحة
+        if (passwordInput.value === correctPassword) {
+            sessionStorage.setItem('isAdminAuthenticated', 'true');
+            passwordError.classList.add('hidden');
+            
+            document.getElementById('password-gate').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'flex';
+            
+            initializePage(); 
+        } else {
+            passwordError.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error("Login Error:", error);
+        passwordError.textContent = 'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.';
         passwordError.classList.remove('hidden');
     }
 }
 
 function checkAuth() {
-    // عند تحميل أي صفحة، نتحقق أولاً من وجود جلسة دخول نشطة
     const isAuthenticated = sessionStorage.getItem('isAdminAuthenticated') === 'true';
     const passwordGate = document.getElementById('password-gate');
     const dashboardContent = document.getElementById('dashboard-content');
 
     if (isAuthenticated) {
-        // إذا كان المستخدم قد سجل دخوله بالفعل، نظهر محتوى الصفحة مباشرة
         passwordGate.style.display = 'none';
         dashboardContent.style.display = 'flex';
         initializePage();
     } else {
-        // إذا لم يكن هناك جلسة، نظهر شاشة الدخول وننتظر إدخال كلمة المرور
         passwordGate.style.display = 'flex';
         dashboardContent.style.display = 'none';
         document.getElementById('password-form').addEventListener('submit', handleLogin);
     }
 }
 
-// تشغيل دالة التحقق بمجرد أن تكون الصفحة جاهزة
 document.addEventListener('DOMContentLoaded', checkAuth);
+function initializePage() {
+    // هنا يمكنك إضافة أي كود لتحديث الصفحة بعد تسجيل الدخول
+    console.log("تم تسجيل الدخول بنجاح!");
+    // على سبيل المثال، يمكنك تحميل البيانات أو تحديث الواجهة
+}
+// =================================================================
+//          نهاية ملف المصادقة للوحة التحكم
+// =================================================================

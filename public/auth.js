@@ -1,11 +1,10 @@
 // =================================================================
 //          ملف المصادقة والتنقل المشترك - auth.js
-//          الإصدار: 2.1 - مع مزامنة المستخدمين مع قاعدة البيانات
+//          الإصدار: 4.0 - مع مزامنة المستخدمين والإعدادات الديناميكية
 // =================================================================
 
 // -----------------------------------------------------------------
 // 1. إعدادات Firebase
-// This object contains your project's unique Firebase configuration keys.
 // -----------------------------------------------------------------
 const firebaseConfig = {
     apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
@@ -25,36 +24,26 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 // -----------------------------------------------------------------
-// ✅ 3. [جديد] مزامنة المستخدم الجديد مع قاعدة البيانات (Worker/D1)
+// 3. مزامنة المستخدم الجديد مع قاعدة البيانات (Worker/D1)
 // -----------------------------------------------------------------
-const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev'; // تأكد من أن هذا هو الرابط الصحيح
+const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
-/**
- * ترسل بيانات المستخدم المسجل حديثًا إلى الخادم (Worker) لحفظها في قاعدة البيانات D1.
- * يجب استدعاء هذه الدالة فورًا بعد نجاح عملية إنشاء حساب جديد.
- * @param {firebase.User} user - كائن المستخدم الذي يتم إرجاعه من Firebase بعد التسجيل.
- */
 async function syncUserWithBackend(user) {
     if (!user) {
         console.error("فشلت المزامنة: لم يتم توفير كائن المستخدم.");
         return;
     }
-
     try {
         const payload = {
             id: user.uid,
             email: user.email,
             displayName: user.displayName
         };
-
         const response = await fetch(`${WORKER_URL}/users`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-
         if (response.ok) {
             console.log("تمت مزامنة المستخدم بنجاح مع قاعدة البيانات الخلفية.");
         } else {
@@ -65,29 +54,6 @@ async function syncUserWithBackend(user) {
         console.error("حدث خطأ أثناء محاولة مزامنة المستخدم:", error);
     }
 }
-
-/*
-// ------------------ 📝 كيفية الاستخدام 📝 ------------------
-// في ملف الجافاسكريبت الخاص بصفحة التسجيل (register.html)،
-// بعد إنشاء المستخدم بنجاح، قم باستدعاء الدالة هكذا:
-//
-// auth.createUserWithEmailAndPassword(email, password)
-//   .then((userCredential) => {
-//     // تم تسجيل الدخول 
-//     const user = userCredential.user;
-//     
-//     // ✅ استدعاء دالة المزامنة هنا
-//     syncUserWithBackend(user); 
-//
-//     // ... بقية الكود الخاص بك، مثل إعادة توجيه المستخدم ...
-//     window.location.href = 'index.html';
-//   })
-//   .catch((error) => {
-//     // ... معالجة الأخطاء ...
-//   });
-// -------------------------------------------------------------
-*/
-
 
 // -----------------------------------------------------------------
 // 4. دالة لتحديث واجهة المستخدم في الشريط العلوي
@@ -155,7 +121,7 @@ function logoutUser() {
 }
 
 // -----------------------------------------------------------------
-// 6. دالة جديدة لتشغيل القائمة المنسدلة
+// 6. دالة لتشغيل القائمة المنسدلة
 // -----------------------------------------------------------------
 function setupDropdownMenu() {
     const toggleButton = document.getElementById('user-menu-toggle');
@@ -180,10 +146,52 @@ auth.onAuthStateChanged(user => {
     updateHeaderUI(user);
 });
 
+
+// --- ✅ 8. [جديد] دالة مركزية لجلب وتطبيق إعدادات الموقع ---
+async function loadSiteSettings() {
+    const SETTINGS_URL = `${WORKER_URL}/settings`;
+    try {
+        const response = await fetch(SETTINGS_URL);
+        if (!response.ok) return; 
+        const settings = await response.json();
+
+        // Update Title
+        if (settings.site_name) {
+            const pageTitle = document.title.split('|')[1] || document.title;
+            document.title = `${settings.site_name} | ${pageTitle.trim()}`;
+        }
+        
+        // Update Logo
+        const logoElements = document.querySelectorAll('.navbar-logo img'); // Select all logos
+        if (logoElements.length > 0 && settings.logo_url) {
+            logoElements.forEach(logo => {
+                logo.src = settings.logo_url;
+            });
+        }
+
+        // Update Meta tags for SEO (if they exist)
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle && settings.site_name) {
+            ogTitle.content = `${settings.site_name} | جميع خدماتك في مكان واحد`;
+        }
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage && settings.logo_url) {
+            ogImage.content = settings.logo_url;
+        }
+
+    } catch (error) {
+        console.error("Could not load site settings:", error);
+    }
+}
+
+
 // -----------------------------------------------------------------
-// 8. منطق قائمة الهامبرغر للجوال والتصميم
+// 9. منطق قائمة الهامبرغر للجوال والتصميم
 // -----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+    // ✅ Load site settings on every page that includes this script
+    loadSiteSettings();
+
     const style = document.createElement('style');
     style.textContent = `
         .user-menu-container { position: relative; }
