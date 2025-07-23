@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حذف الحساب - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --danger-color: #dc3545;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: var(--light-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 { font-size: 1.8rem; color: var(--dark-color); margin-bottom: 20px; }
+        p { color: #666; margin-bottom: 25px; }
+        .btn-delete { background-color: var(--danger-color); color: var(--light-color); border: none; padding: 12px 30px; font-size: 1.1rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; }
+        .btn-delete:hover { background-color: #b02a37; }
+        .btn-cancel { background-color: #6c757d; color: var(--light-color); border: none; padding: 12px 30px; font-size: 1.1rem; font-weight: 700; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; margin-right: 10px; }
+        .btn-cancel:hover { background-color: #5c636a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>حذف الحساب</h1>
+        <p>هل أنت متأكد من رغبتك في حذف حسابك؟ هذا الإجراء لا يمكن التراجع عنه وسيؤدي إلى حذف جميع بياناتك.</p>
+        <button class="btn-delete" onclick="deleteAccount()">حذف الحساب</button>
+        <button class="btn-cancel" onclick="window.location.href='dashboard.html'">إلغاء</button>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+
+        function deleteAccount() {
+            const user = auth.currentUser;
+            if (user) {
+                user.delete().then(() => {
+                    alert("تم حذف الحساب بنجاح. ستقوم بالتوجيه إلى الصفحة الرئيسية.");
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    alert("حدث خطأ أثناء حذف الحساب: " + error.message);
+                });
+            } else {
+                alert("يجب تسجيل الدخول أولاً.");
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
