@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>الإعدادات - لوحة التحكم</title>
+    <title>الإعدادات - لوحة تحكم خدماتك</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,10 +21,10 @@
 
     <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">الرجاء إدخال كلمة المرور</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">يرجى إدخال كلمة مرور لوحة التحكم</h2>
             <form id="password-form">
                 <input type="password" id="password-input" class="w-full px-4 py-2 border rounded-lg text-center" autocomplete="current-password">
-                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
+                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة. حاول مرة أخرى.</p>
                 <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg">دخول</button>
             </form>
         </div>
@@ -32,18 +32,24 @@
 
     <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
         <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
+            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
             <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>نظرة عامة</a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>الرئيسية</a>
                 <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمين</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>تذاكر الدعم</a>
+                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
+                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>سجل الدعم</a>
                 <a href="settings.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
             </nav>
         </aside>
 
         <div class="flex flex-col flex-1 overflow-y-auto">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md"><h2 class="text-xl font-semibold text-gray-800">الإعدادات</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
+            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md">
+                <h2 class="text-xl font-semibold text-gray-800">الإعدادات</h2>
+                <div class="flex items-center space-x-4">
+                    <span class="font-semibold">مدير النظام</span>
+                    <div class="w-10 h-10 bg-indigo-200 rounded-full"></div>
+                </div>
+            </header>
             
             <main class="p-6 md:p-8">
                 <div id="message-container" class="mb-4"></div>
@@ -76,7 +82,7 @@
                     </div>
                     <div class="lg:col-span-2">
                         <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">معلومات الدفع</h3>
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">معلومات الدفع البنكي</h3>
                             <form id="payment-form" class="space-y-4">
                                 <div>
                                     <label for="beneficiary_name" class="text-sm font-medium text-gray-700">اسم المستفيد</label>
@@ -84,19 +90,43 @@
                                 </div>
                                 <hr>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div><label for="cashplus_iban" class="text-sm font-medium text-gray-700">Cash Plus (IBAN)</label><input type="text" id="cashplus_iban" name="cashplus_iban" class="w-full mt-1" dir="ltr"></div>
-                                    <div><label for="cashplus_phone" class="text-sm font-medium text-gray-700">Cash Plus (Phone)</label><input type="text" id="cashplus_phone" name="cashplus_phone" class="w-full mt-1" dir="ltr"></div>
+                                    <div>
+                                        <label for="cashplus_iban" class="text-sm font-medium text-gray-700">كاش بلوس (IBAN)</label>
+                                        <input type="text" id="cashplus_iban" name="cashplus_iban" class="w-full mt-1" dir="ltr">
+                                    </div>
+                                    <div>
+                                        <label for="cashplus_phone" class="text-sm font-medium text-gray-700">كاش بلوس (رقم الهاتف)</label>
+                                        <input type="text" id="cashplus_phone" name="cashplus_phone" class="w-full mt-1" dir="ltr">
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                     <div><label for="orange_rib" class="text-sm font-medium text-gray-700">Orange Money (RIB)</label><input type="text" id="orange_rib" name="orange_rib" class="w-full mt-1" dir="ltr"></div>
-                                     <div><label for="orange_phone" class="text-sm font-medium text-gray-700">Orange Money (Phone)</label><input type="text" id="orange_phone" name="orange_phone" class="w-full mt-1" dir="ltr"></div>
+                                    <div>
+                                        <label for="orange_rib" class="text-sm font-medium text-gray-700">أورنج موني (RIB)</label>
+                                        <input type="text" id="orange_rib" name="orange_rib" class="w-full mt-1" dir="ltr">
+                                    </div>
+                                    <div>
+                                        <label for="orange_phone" class="text-sm font-medium text-gray-700">أورنج موني (رقم الهاتف)</label>
+                                        <input type="text" id="orange_phone" name="orange_phone" class="w-full mt-1" dir="ltr">
+                                    </div>
                                 </div>
                                 <hr>
-                                <div><label for="cih_rib" class="text-sm font-medium text-gray-700">CIH Bank (RIB)</label><input type="text" id="cih_rib" name="cih_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="bmce_rib" class="text-sm font-medium text-gray-700">BMCE Bank (RIB)</label><input type="text" id="bmce_rib" name="bmce_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="attijari_rib" class="text-sm font-medium text-gray-700">Attijariwafa Bank (RIB)</label><input type="text" id="attijari_rib" name="attijari_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="soge_rib" class="text-sm font-medium text-gray-700">Société Générale (RIB)</label><input type="text" id="soge_rib" name="soge_rib" class="w-full mt-1" dir="ltr"></div>
+                                <div>
+                                    <label for="cih_rib" class="text-sm font-medium text-gray-700">بنك CIH (RIB)</label>
+                                    <input type="text" id="cih_rib" name="cih_rib" class="w-full mt-1" dir="ltr">
+                                </div>
+                                <div>
+                                    <label for="bmce_rib" class="text-sm font-medium text-gray-700">بنك BMCE (RIB)</label>
+                                    <input type="text" id="bmce_rib" name="bmce_rib" class="w-full mt-1" dir="ltr">
+                                </div>
+                                <div>
+                                    <label for="attijari_rib" class="text-sm font-medium text-gray-700">بنك التجاري وفا (RIB)</label>
+                                    <input type="text" id="attijari_rib" name="attijari_rib" class="w-full mt-1" dir="ltr">
+                                </div>
+                                <div>
+                                    <label for="soge_rib" class="text-sm font-medium text-gray-700">Société Générale (RIB)</label>
+                                    <input type="text" id="soge_rib" name="soge_rib" class="w-full mt-1" dir="ltr">
+                                </div>
                                 
                                 <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ معلومات الدفع</button></div>
                             </form>
@@ -119,7 +149,7 @@
             async function loadSettings() {
                 try {
                     const response = await fetch(API_URL);
-                    if (!response.ok) throw new Error('فشل تحميل الإعدادات.');
+                    if (!response.ok) throw new Error('تعذر تحميل الإعدادات.');
                     const settings = await response.json();
                     
                     Object.keys(settings).forEach(key => {
@@ -129,7 +159,7 @@
                         }
                     });
                 } catch (error) {
-                    showMessage(`❌ ${error.message}`, 'error');
+                    showMessage(`خطأ: ${error.message}`, 'error');
                 }
             }
 
@@ -145,10 +175,10 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(settingsToUpdate)
                     });
-                    if (!response.ok) throw new Error('فشل حفظ التغييرات.');
-                    showMessage('✅ تم حفظ التغييرات بنجاح.', 'success');
+                    if (!response.ok) throw new Error('تعذر حفظ التغييرات.');
+                    showMessage('تم حفظ التغييرات بنجاح.', 'success');
                 } catch (error) {
-                    showMessage(`❌ ${error.message}`, 'error');
+                    showMessage(`خطأ: ${error.message}`, 'error');
                 }
             }
 

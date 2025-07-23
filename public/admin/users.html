@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>إدارة المستخدمين - لوحة التحكم</title>
+    <title>إدارة المستخدمين - لوحة تحكم خدماتك</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
     <!-- Password Protection Gate -->
     <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">الرجاء إدخال كلمة المرور</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">يرجى إدخال كلمة المرور للدخول</h2>
             <form id="password-form">
                 <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********">
                 <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
@@ -36,12 +36,12 @@
     <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
         <!-- Sidebar -->
         <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
+            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
             <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>نظرة عامة</a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>الرئيسية</a>
                 <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمين</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>تذاكر الدعم</a>
+                <a href="users.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
+                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>سجل الدعم</a>
                 <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
             </nav>
         </aside>
@@ -54,14 +54,14 @@
                 <div class="bg-white p-4 rounded-lg shadow-md mb-6">
                     <div class="flex items-center justify-between gap-4">
                         <div class="relative w-full md:w-1/3">
-                            <input type="text" id="search-input" placeholder="ابحث بالاسم أو البريد الإلكتروني..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <input type="text" id="search-input" placeholder="ابحث باسم المستخدم أو البريد الإلكتروني..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
                         </div>
                     </div>
                 </div>
                 <div class="bg-white rounded-lg shadow-md">
                     <div class="p-4 border-b flex justify-between items-center"><h3 class="text-lg font-semibold text-gray-800">قائمة المستخدمين</h3><p id="results-count" class="text-sm text-gray-500"></p></div>
-                    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="text-right text-sm font-semibold text-gray-500 bg-gray-50"><th class="p-4">المستخدم</th><th class="p-4">تاريخ الانضمام</th><th class="p-4">إجمالي الطلبات</th><th class="p-4">الحالة</th><th class="p-4">إجراءات</th></tr></thead><tbody id="users-body" class="divide-y"></tbody></table></div>
+                    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="text-right text-sm font-semibold text-gray-500 bg-gray-50"><th class="p-4">المستخدم</th><th class="p-4">تاريخ التسجيل</th><th class="p-4">عدد الطلبات</th><th class="p-4">الحالة</th><th class="p-4">إجراء</th></tr></thead><tbody id="users-body" class="divide-y"></tbody></table></div>
                 </div>
             </main>
         </div>
@@ -74,16 +74,16 @@
             <section class="p-6 overflow-y-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-1 space-y-4">
                     <div class="bg-gray-50 p-4 rounded-lg"><p class="font-semibold text-gray-500 text-sm">البريد الإلكتروني</p><p id="modal-user-email" class="text-gray-800"></p></div>
-                    <div class="bg-gray-50 p-4 rounded-lg"><p class="font-semibold text-gray-500 text-sm">تاريخ الانضمام</p><p id="modal-user-join-date" class="text-gray-800"></p></div>
+                    <div class="bg-gray-50 p-4 rounded-lg"><p class="font-semibold text-gray-500 text-sm">تاريخ التسجيل</p><p id="modal-user-join-date" class="text-gray-800"></p></div>
                     <div class="bg-gray-50 p-4 rounded-lg"><p class="font-semibold text-gray-500 text-sm">الحالة الحالية</p><p id="modal-user-status" class="font-bold"></p></div>
-                    <div class="pt-4 border-t"><h4 class="font-bold text-gray-800 mb-2">إجراءات</h4><button id="modal-ban-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition"></button></div>
+                    <div class="pt-4 border-t"><h4 class="font-bold text-gray-800 mb-2">إجراء</h4><button id="modal-ban-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition"></button></div>
                 </div>
                 <div class="lg:col-span-2">
                     <div class="border-b border-gray-200">
                         <nav id="modal-tabs" class="flex space-x-4 -mb-px" aria-label="Tabs"></nav>
                     </div>
                     <div id="modal-orders-content" class="mt-4"></div>
-                    <div id="modal-tickets-content" class="mt-4 hidden"><p class="text-center text-gray-500 p-8">لا توجد تذاكر دعم لعرضها.</p></div>
+                    <div id="modal-tickets-content" class="mt-4 hidden"><p class="text-center text-gray-500 p-8">لا توجد تذاكر دعم لهذا المستخدم.</p></div>
                 </div>
             </section>
         </div>
@@ -105,9 +105,9 @@
             async function fetchUsers() {
                 try {
                     const response = await fetch(`${API_URL}/users`);
-                    if (!response.ok) throw new Error(`فشل جلب المستخدمين (Status: ${response.status})`);
+                    if (!response.ok) throw new Error(`تعذر جلب المستخدمين (الحالة: ${response.status})`);
                     allUsers = await response.json();
-                    if (!Array.isArray(allUsers)) throw new Error("بيانات المستخدمين غير صالحة.");
+                    if (!Array.isArray(allUsers)) throw new Error("قائمة المستخدمين غير متوفرة.");
                     filterAndRender();
                 } catch (error) {
                     document.getElementById('users-body').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-500">${error.message}</td></tr>`;
@@ -117,10 +117,10 @@
             function renderUsers(usersToRender) {
                 const tbody = document.getElementById('users-body');
                 tbody.innerHTML = '';
-                resultsCount.textContent = `(${usersToRender.length}) مستخدمين`;
+                resultsCount.textContent = `(${usersToRender.length}) مستخدم`;
 
                 if (usersToRender.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-gray-500">لا يوجد مستخدمون يطابقون بحثك.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-gray-500">لا يوجد مستخدمون مطابقون للبحث.</td></tr>`;
                     return;
                 }
 
@@ -134,12 +134,12 @@
                             <button onclick='showUserDetails(${userJson})' class="flex items-center text-right hover:underline">
                                 <div class="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
                                 <div class="mr-4">
-                                    <p class="font-semibold text-gray-800">${user.displayName || 'غير مسجل'}</p>
+                                    <p class="font-semibold text-gray-800">${user.displayName || 'مستخدم بدون اسم'}</p>
                                     <p class="text-sm text-gray-500">${user.email}</p>
                                 </div>
                             </button>
                         </td>
-                        <td class="p-4 text-sm text-gray-500">${new Date(user.createdAt).toLocaleDateString('ar-MA')}</td>
+                        <td class="p-4 text-sm text-gray-500">${new Date(user.createdAt).toLocaleDateString('ar-EG')}</td>
                         <td class="p-4 text-sm text-gray-700 font-medium">${user.totalOrders}</td>
                         <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full ${statusColor}">${user.status === 'active' ? 'نشط' : 'محظور'}</span></td>
                         <td class="p-4 flex items-center gap-2"><button onclick='deleteUser("${user.id}", "${user.displayName}")' title="حذف المستخدم" class="p-2 text-red-500 bg-red-100 rounded-full hover:bg-red-200"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
@@ -159,9 +159,9 @@
             }
 
             window.showUserDetails = async (user) => {
-                document.getElementById('modal-user-name').textContent = user.displayName || 'مستخدم غير مسجل';
+                document.getElementById('modal-user-name').textContent = user.displayName || 'مستخدم بدون اسم';
                 document.getElementById('modal-user-email').textContent = user.email;
-                document.getElementById('modal-user-join-date').textContent = new Date(user.createdAt).toLocaleString('ar-MA');
+                document.getElementById('modal-user-join-date').textContent = new Date(user.createdAt).toLocaleString('ar-EG');
                 
                 const statusP = document.getElementById('modal-user-status');
                 statusP.textContent = user.status === 'active' ? 'نشط' : 'محظور';
@@ -176,7 +176,7 @@
                 const tabsContainer = document.getElementById('modal-tabs');
                 tabsContainer.innerHTML = `
                     <button onclick="window.location.href='orders.html?search=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600">الطلبات (${user.totalOrders})</button>
-                    <button onclick="window.location.href='support-log.html?userId=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">تذاكر الدعم</button>
+                    <button onclick="window.location.href='support-log.html?userId=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">سجل الدعم</button>
                 `;
 
                 modal.classList.remove('hidden');
@@ -184,7 +184,7 @@
                 lucide.createIcons();
                 
                 const ordersContent = document.getElementById('modal-orders-content');
-                ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">جارٍ تحميل الطلبات...</p>`;
+                ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">جاري تحميل الطلبات...</p>`;
                 try {
                     const response = await fetch(`${API_URL}/orders?userId=${user.id}`);
                     const orders = await response.json();
@@ -192,7 +192,7 @@
                         ordersContent.innerHTML = `<ul class="divide-y">${orders.map(o => `
                             <li class="p-2 hover:bg-gray-50">
                                 <a href="orders.html?search=${o.id}" class="block">
-                                    <div class="flex justify-between items-center"><p class="font-semibold">${o.serviceName}</p><p class="text-xs text-gray-500">${new Date(o.createdAt).toLocaleDateString('ar-MA')}</p></div>
+                                    <div class="flex justify-between items-center"><p class="font-semibold">${o.serviceName}</p><p class="text-xs text-gray-500">${new Date(o.createdAt).toLocaleDateString('ar-EG')}</p></div>
                                     <p class="text-sm text-gray-600">${o.status}</p>
                                 </a>
                             </li>`).join('')}</ul>`;
@@ -200,7 +200,7 @@
                         ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">لا توجد طلبات لهذا المستخدم.</p>`;
                     }
                 } catch(e) {
-                    ordersContent.innerHTML = `<p class="text-center p-8 text-red-500">فشل في تحميل الطلبات.</p>`;
+                    ordersContent.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل الطلبات.</p>`;
                 }
             };
 
@@ -211,12 +211,12 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ status: newStatus })
                     });
-                    if (!response.ok) throw new Error('فشل تحديث حالة المستخدم.');
-                    showMessage('✅ تم تحديث حالة المستخدم بنجاح.', 'success');
+                    if (!response.ok) throw new Error('تعذر تحديث حالة المستخدم.');
+                    showMessage('تم تحديث حالة المستخدم بنجاح.', 'success');
                     modal.classList.add('hidden');
                     fetchUsers();
                 } catch (error) {
-                    showMessage(`❌ ${error.message}`, 'error');
+                    showMessage(`خطأ: ${error.message}`, 'error');
                 }
             };
 
@@ -224,11 +224,11 @@
                 if (!await showConfirmationModal(`هل أنت متأكد من حذف المستخدم "${userName}"؟`)) return;
                 try {
                     const response = await fetch(`${API_URL}/users/${userId}`, { method: 'DELETE' });
-                    if (!response.ok) throw new Error('فشل حذف المستخدم.');
-                    showMessage('✅ تم حذف المستخدم بنجاح.', 'success');
+                    if (!response.ok) throw new Error('تعذر حذف المستخدم.');
+                    showMessage('تم حذف المستخدم بنجاح.', 'success');
                     fetchUsers();
                 } catch (error) {
-                    showMessage(`❌ ${error.message}`, 'error');
+                    showMessage(`خطأ: ${error.message}`, 'error');
                 }
             };
 
@@ -244,7 +244,7 @@
 
             function showConfirmationModal(message) {
                 return new Promise(resolve => {
-                    const modalHtml = `<div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto"><h3 class="text-lg font-bold text-gray-800 mb-4">${message}</h3><div class="flex justify-end space-x-2"><button id="confirm-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">إلغاء</button><button id="confirm-ok" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">تأكيد الحذف</button></div></div></div>`;
+                    const modalHtml = `<div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto"><h3 class="text-lg font-bold text-gray-800 mb-4">${message}</h3><div class="flex justify-end space-x-2"><button id="confirm-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">إلغاء</button><button id="confirm-ok" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">حذف</button></div></div></div>`;
                     document.body.insertAdjacentHTML('beforeend', modalHtml);
                     const modalEl = document.getElementById('confirmation-modal');
                     document.getElementById('confirm-ok').onclick = () => { modalEl.remove(); resolve(true); };
@@ -254,6 +254,8 @@
 
             fetchUsers();
         }
+        // Call initializePage on load
+        window.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>

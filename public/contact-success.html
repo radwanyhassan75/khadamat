@@ -1,16 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تم استلام رسالتك - المكتب الرقمي</title>
-    
+    <title>تم إرسال رسالتك بنجاح - خدماتك</title>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
         :root {
             --primary-color: #0056b3;
@@ -24,7 +27,7 @@
         }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Cairo', 'Amiri', 'Noto Naskh Arabic', serif;
             margin: 0;
             background-color: var(--gray-color);
             direction: rtl;
@@ -112,10 +115,12 @@
 
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo">
+                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار خدماتك">
+            </a>
             <ul class="navbar-menu">
                 <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="services.html">خدماتنا</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
             <div id="navbar-actions" class="navbar-actions"></div>
@@ -125,22 +130,24 @@
     <main class="page-container">
         <div class="success-card">
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-            <h1 class="success-title">شكرًا لك، تم استلام رسالتك بنجاح!</h1>
-            <p class="success-subtitle">سيقوم فريقنا بمراجعة رسالتك والرد عليك عبر بريدك الإلكتروني في أجل أقصاه ثلاثة أيام عمل.</p>
+            <h1 class="success-title">تم إرسال رسالتك بنجاح!</h1>
+            <p class="success-subtitle">
+                شكرًا لتواصلك معنا. تم استلام طلبك وسنقوم بالرد عليك في أقرب وقت ممكن. يمكنك متابعة حالة طلبك باستخدام رقم التذكرة أدناه. إذا لم يتم تحويلك تلقائيًا إلى الصفحة الرئيسية خلال ثوانٍ قليلة، اضغط على الزر أدناه.
+            </p>
             <div class="ticket-id-box">
-                <p>رقم تذكرة الدعم الخاصة بك هو:</p>
+                <p>رقم التذكرة الخاص بك هو:</p>
                 <h2 id="ticket-id-display">...</h2>
             </div>
             <a href="index.html" class="btn-home">العودة إلى الصفحة الرئيسية</a>
             <p class="redirect-message">
-                سيتم إعادة توجيهك تلقائيًا خلال <strong id="countdown">15</strong> ثانية...
+                سيتم تحويلك تلقائيًا إلى الصفحة الرئيسية خلال <strong id="countdown">15</strong> ثانية...
             </p>
         </div>
     </main>
 
     <footer class="main-footer">
         <div class="footer-bottom">
-            <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
+            <p>&copy; <span id="current-year"></span> خدماتك. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
@@ -151,30 +158,25 @@
         document.addEventListener('DOMContentLoaded', () => {
             const ticketIdDisplay = document.getElementById('ticket-id-display');
             const countdownDisplay = document.getElementById('countdown');
-            
-            // 1. قراءة رقم التذكرة من الرابط
             const params = new URLSearchParams(window.location.search);
             const ticketId = params.get('ticketId');
 
-            // 2. عرض رقم التذكرة
             if (ticketId) {
                 ticketIdDisplay.textContent = ticketId;
             } else {
                 ticketIdDisplay.textContent = "غير متوفر";
             }
 
-            // 3. بدء العد التنازلي لإعادة التوجيه
             let secondsLeft = 15;
             const countdownInterval = setInterval(() => {
                 secondsLeft--;
                 countdownDisplay.textContent = secondsLeft;
                 if (secondsLeft <= 0) {
                     clearInterval(countdownInterval);
-                    window.location.href = 'index.html'; // توجيه إلى الصفحة الرئيسية
+                    window.location.href = 'index.html';
                 }
             }, 1000);
 
-            // 4. تحديث سنة الحقوق
             document.getElementById('current-year').textContent = new Date().getFullYear();
         });
     </script>

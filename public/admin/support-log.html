@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>تذاكر الدعم - لوحة التحكم</title>
+    <title>سجل الدعم - لوحة تحكم خدماتك</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
     <!-- Password Protection Gate -->
     <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">الرجاء إدخال كلمة المرور</h2>
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">يرجى إدخال كلمة المرور للمتابعة</h2>
             <form id="password-form">
                 <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********" autocomplete="current-password">
                 <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
@@ -35,28 +35,28 @@
     <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
         <!-- Sidebar -->
         <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
+            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
             <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>نظرة عامة</a>
+                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>الرئيسية</a>
                 <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمين</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>تذاكر الدعم</a>
+                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
+                <a href="support-log.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>سجل الدعم</a>
                 <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
             </nav>
         </aside>
 
         <!-- Main content area -->
         <div class="flex flex-col flex-1">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0"><h2 class="text-xl font-semibold text-gray-800">تذاكر الدعم الفني</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
+            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0"><h2 class="text-xl font-semibold text-gray-800">سجل الدعم الفني</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
             
             <main class="flex-1 flex overflow-hidden">
                 <!-- Ticket List Panel -->
                 <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-l border-gray-200">
-                    <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث عن تذكرة..." class="w-full px-4 py-2 border rounded-lg"></div>
+                    <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث في سجل الدعم..." class="w-full px-4 py-2 border rounded-lg"></div>
                     <div id="filter-buttons" class="p-2 flex justify-center gap-2 border-b">
                         <button data-status="all" class="filter-btn bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">الكل</button>
-                        <button data-status="open" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مفتوحة</button>
-                        <button data-status="closed" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مغلقة</button>
+                        <button data-status="open" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مفتوح</button>
+                        <button data-status="closed" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مغلق</button>
                     </div>
                     <div id="ticket-list" class="flex-1 overflow-y-auto"></div>
                 </div>
@@ -68,8 +68,8 @@
 
                 <div id="no-chat-selected" class="flex flex-1 flex-col items-center justify-center text-center p-8 bg-gray-50">
                     <i data-lucide="inbox" class="w-16 h-16 text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد أي تذكرة</h3>
-                    <p class="text-gray-500 mt-2">الرجاء اختيار تذكرة من القائمة لعرض تفاصيلها.</p>
+                    <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد تذكرة دعم</h3>
+                    <p class="text-gray-500 mt-2">يرجى اختيار تذكرة من القائمة لعرض تفاصيلها أو الرد عليها.</p>
                 </div>
             </main>
         </div>
@@ -92,10 +92,10 @@
             const filterButtons = document.querySelectorAll('.filter-btn');
 
             async function fetchTickets() {
-                ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جارٍ التحميل...</p>';
+                ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جاري تحميل التذاكر...</p>';
                 try {
                     const response = await fetch(`${API_URL}/tickets`);
-                    if (!response.ok) throw new Error('فشل جلب التذاكر');
+                    if (!response.ok) throw new Error('تعذر تحميل التذاكر');
                     allTickets = await response.json();
                     filterAndRender();
                 } catch (error) {
@@ -106,7 +106,7 @@
             function renderTicketList(tickets) {
                 ticketListEl.innerHTML = '';
                 if (tickets.length === 0) {
-                    ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر.</p>';
+                    ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر دعم.</p>';
                     return;
                 }
                 tickets.forEach(ticket => {
@@ -117,10 +117,10 @@
                     item.innerHTML = `
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-gray-800">${ticket.userName}</h4>
-                            <span class="text-xs text-gray-500">${new Date(ticket.updatedAt).toLocaleDateString('ar-MA')}</span>
+                            <span class="text-xs text-gray-500">${new Date(ticket.updatedAt).toLocaleDateString('ar-EG')}</span>
                         </div>
                         <p class="text-sm text-gray-600 truncate">${ticket.subject}</p>
-                        <span class="text-xs font-semibold ${statusColor}">${ticket.status === 'open' ? 'مفتوحة' : 'مغلقة'}</span>
+                        <span class="text-xs font-semibold ${statusColor}">${ticket.status === 'open' ? 'مفتوح' : 'مغلق'}</span>
                     `;
                     item.addEventListener('click', () => selectTicket(ticket));
                     ticketListEl.appendChild(item);
@@ -135,7 +135,7 @@
 
                 dossierPanelEl.classList.remove('hidden');
                 noChatSelectedEl.classList.add('hidden');
-                dossierPanelEl.innerHTML = '<p class="text-center p-8 text-gray-500">جارٍ تحميل التفاصيل...</p>';
+                dossierPanelEl.innerHTML = '<p class="text-center p-8 text-gray-500">جاري تحميل التفاصيل...</p>';
 
                 try {
                     const response = await fetch(`${API_URL}/tickets/${ticket.id}`);
@@ -143,7 +143,7 @@
                     const initialMessage = messages.find(m => m.sender === 'user');
                     renderDossier(ticket, initialMessage);
                 } catch (error) {
-                    dossierPanelEl.innerHTML = `<p class="text-center p-8 text-red-500">فشل تحميل تفاصيل التذكرة.</p>`;
+                    dossierPanelEl.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل تفاصيل التذكرة.</p>`;
                 }
             }
             
@@ -152,9 +152,9 @@
                 const attachmentHTML = initialMessage && initialMessage.attachmentUrl 
                     ? `<a href="${initialMessage.attachmentUrl}" target="_blank" class="flex items-center gap-2 text-indigo-600 hover:underline">
                            <i data-lucide="paperclip" class="w-4 h-4"></i>
-                           <span>عرض الملف المرفق</span>
+                           <span>عرض المرفق</span>
                        </a>`
-                    : '<p class="text-gray-500">لا يوجد</p>';
+                    : '<p class="text-gray-500">لا يوجد مرفق</p>';
 
                 dossierPanelEl.innerHTML = `
                     <div class="space-y-6">
@@ -162,31 +162,31 @@
                         <div class="bg-white p-4 rounded-lg shadow-sm">
                             <h3 class="font-bold text-lg text-gray-800">${ticket.subject}</h3>
                             <p class="text-sm text-gray-500 mt-1">رقم التذكرة: ${ticket.id}</p>
-                            <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-MA')}</p>
+                            <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</p>
                         </div>
                         
                         <!-- User Info -->
                         <div class="bg-white p-4 rounded-lg shadow-sm">
-                             <h4 class="font-semibold text-gray-500 text-sm mb-2">معلومات العميل</h4>
+                             <h4 class="font-semibold text-gray-500 text-sm mb-2">بيانات المستخدم</h4>
                              <p class="font-bold text-lg text-gray-800">${ticket.userName}</p>
-                             <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض ملف المستخدم الكامل &rarr;</a>
+                             <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض المستخدم &rarr;</a>
                         </div>
 
                         <!-- Initial Message -->
                         <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-semibold text-gray-500 text-sm mb-2">الرسالة الأصلية</h4>
+                            <h4 class="font-semibold text-gray-500 text-sm mb-2">رسالة المستخدم</h4>
                             <p class="text-gray-700 whitespace-pre-wrap">${initialMessage ? initialMessage.message : 'لا توجد رسالة.'}</p>
                         </div>
 
                         <!-- Attachment -->
                         <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-semibold text-gray-500 text-sm mb-2">الملف المرفق</h4>
+                            <h4 class="font-semibold text-gray-500 text-sm mb-2">المرفق</h4>
                             ${attachmentHTML}
                         </div>
 
                         <!-- Actions -->
                         <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-bold text-gray-800 mb-2">إجراءات</h4>
+                            <h4 class="font-bold text-gray-800 mb-2">إجراء</h4>
                             <button id="close-ticket-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isClosed ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}"></button>
                         </div>
                     </div>
@@ -208,7 +208,7 @@
                     noChatSelectedEl.classList.remove('hidden');
                     fetchTickets();
                 } catch (error) {
-                    alert('فشل تحديث حالة التذكرة');
+                    alert('تعذر تحديث حالة التذكرة');
                 }
             }
 
@@ -245,6 +245,9 @@
             searchInput.addEventListener('input', filterAndRender);
             fetchTickets();
         }
+        // Call initializePage on load
+        window.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>
+

@@ -1,16 +1,20 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من نحن - المكتب الرقمي</title>
-    
+    <title>من نحن - خدماتك | عن الموقع</title>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
         :root {
             --primary-color: #0056b3;
@@ -22,7 +26,7 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Cairo', 'Amiri', 'Noto Naskh Arabic', serif;
             margin: 0;
             background-color: var(--light-color);
             direction: rtl;
@@ -41,7 +45,6 @@
         .navbar-menu { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        
         .page-hero {
             background-color: var(--dark-color);
             color: var(--light-color);
@@ -169,7 +172,7 @@
 
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار خدماتك"></a>
             <ul class="navbar-menu">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
@@ -182,16 +185,18 @@
 
     <main>
         <section class="page-hero">
-            <h1>من نحن؟</h1>
-            <p>بوابتك الموثوقة لإنجاز جميع معاملاتك الإدارية والرقمية بكل سهولة واحترافية.</p>
+            <h1>من نحن</h1>
+            <p>
+                مرحبًا بكم في "خدماتك"، المنصة الرائدة التي تهدف إلى تسهيل الوصول إلى أفضل الخدمات في جميع أنحاء الوطن العربي. نحن نؤمن بأن الجودة والموثوقية هما أساس أي خدمة ناجحة، ونعمل جاهدين لتقديم تجربة فريدة وآمنة لجميع مستخدمينا.
+            </p>
         </section>
 
         <section class="content-section">
-            <h2>قصتنا ورؤيتنا</h2>
+            <h2>رسالتنا</h2>
             <p>
-                تأسس "المكتب الرقمي" انطلاقًا من رؤية واضحة: تبسيط الإجراءات الإدارية والخدمات الرقمية للمواطنين والمقاولات في المغرب. لاحظنا وجود فجوة بين متطلبات الإدارات الحديثة وقدرة الأفراد على مواكبتها، فقررنا أن نكون الجسر الذي يربط بينهما.
+                نسعى في "خدماتك" إلى بناء جسر من الثقة بين مقدمي الخدمات والعملاء من خلال توفير منصة سهلة الاستخدام، تجمع بين التنوع والجودة والشفافية. نؤمن بأن كل فرد يستحق الحصول على خدمة مميزة تلبي احتياجاته وتفوق توقعاته.
                 <br><br>
-                مهمتنا هي توفير منصة متكاملة وموثوقة تقدم حلولاً سريعة وفعالة، بدءًا من تحرير أبسط الطلبات الخطية وصولًا إلى تقديم الدعم التقني في أعقد المنصات الحكومية. نحن نؤمن بأن التكنولوجيا يجب أن تكون في خدمة الجميع، ونسعى جاهدين لجعل كل معاملة تجربة سهلة وناجحة.
+                رؤيتنا هي أن نصبح الخيار الأول لكل من يبحث عن خدمة موثوقة في العالم العربي، من خلال تطوير مستمر وابتكار دائم، مع الالتزام بأعلى معايير الجودة والأمان.
             </p>
         </section>
 
@@ -201,42 +206,61 @@
                 <div class="values-grid">
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-award"></i></div>
-                        <h3>الاحترافية</h3>
-                        <p>نلتزم بأعلى معايير الجودة والدقة في كل خدمة نقدمها.</p>
+                        <h3>الجودة والتميز</h3>
+                        <p>نلتزم بتقديم أفضل الخدمات بمعايير عالية لضمان رضا عملائنا وتحقيق تطلعاتهم.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-shield-alt"></i></div>
-                        <h3>السرية</h3>
-                        <p>نتعامل مع بياناتك ومعلوماتك الشخصية بأمان وسرية تامة.</p>
+                        <h3>الأمان والثقة</h3>
+                        <p>نحرص على حماية بيانات المستخدمين وتوفير بيئة آمنة وموثوقة لجميع الأطراف.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-rocket"></i></div>
-                        <h3>السرعة</h3>
-                        <p>نحرص على إنجاز طلباتك في أسرع وقت ممكن دون المساومة على الجودة.</p>
+                        <h3>الابتكار والتطوير</h3>
+                        <p>نسعى باستمرار لتطوير خدماتنا وتقديم حلول مبتكرة تلبي احتياجات السوق المتغيرة.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
-                        <h3>الابتكار</h3>
-                        <p>نسعى دائمًا لتبني أحدث التقنيات لتقديم حلول مبتكرة وفعالة.</p>
+                        <h3>المصداقية والشفافية</h3>
+                        <p>نؤمن بأهمية الشفافية في التعامل مع العملاء ومقدمي الخدمات، ونعمل على بناء علاقات قائمة على الثقة والاحترام المتبادل.</p>
                     </div>
                 </div>
             </div>
         </section>
         
         <section class="cta-section">
-            <h2>هل أنت جاهز لتبسيط معاملاتك؟</h2>
-            <p>اكتشف مجموعتنا الكاملة من الخدمات أو تواصل مع فريقنا مباشرة لمساعدتك.</p>
-            <a href="services.html" class="btn btn-primary">تصفح جميع الخدمات</a>
+            <h2>انضم إلينا اليوم وكن جزءًا من مجتمع خدماتك</h2>
+            <p>
+                اكتشف مجموعة واسعة من الخدمات المميزة وكن على تواصل مع أفضل مقدمي الخدمات في الوطن العربي. سجل الآن وابدأ رحلتك معنا!
+            </p>
+            <a href="services.html" class="btn btn-primary">استعرض الخدمات</a>
         </section>
     </main>
 
     <footer class="main-footer">
         <div class="footer-container">
-            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
-            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li></ul></div>
-            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="#">سياسة الخصوصية</a></li><li><a href="#">الشروط والأحكام</a></li></ul></div>
+            <div class="footer-section">
+                <h3>خدماتك</h3>
+                <p>منصة متخصصة في ربط العملاء بمقدمي الخدمات الموثوقين في جميع أنحاء الوطن العربي.</p>
+            </div>
+            <div class="footer-section">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="services.html">الخدمات</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>تواصل معنا</h3>
+                <ul>
+                    <li><a href="#">البريد الإلكتروني</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year"></span> خدماتك. جميع الحقوق محفوظة.</p>
+        </div>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>

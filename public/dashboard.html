@@ -1,17 +1,30 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- ============== Meta Tags, Fonts, and Icons ============== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - المكتب الرقمي</title>
     
+    <!-- Favicon links -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" href="/favicon.png">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- ============== Internal CSS Styles ============== -->
     <style>
+        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #0d6efd;
@@ -27,6 +40,7 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
         }
 
+        /* --- إعدادات الجسم العامة --- */
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
@@ -34,6 +48,7 @@
             direction: rtl;
         }
         
+        /* --- تصميم الشريط العلوي --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -56,6 +71,7 @@
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         
+        /* --- تصميم حاوية لوحة التحكم --- */
         .dashboard-wrapper {
             max-width: 1200px;
             margin: 40px auto;
@@ -68,13 +84,14 @@
             align-items: flex-start;
         }
 
+        /* --- تصميم الشريط الجانبي (Sidebar) --- */
         .sidebar {
             background-color: var(--light-color);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             padding: 25px;
             position: sticky;
-            top: 120px;
+            top: 120px; /* مساحة للهيدر الثابت */
             transition: all 0.3s ease;
         }
         .sidebar-header {
@@ -231,6 +248,27 @@
         .form-message.success { background-color: #d1e7dd; color: #0f5132; }
         .form-message.error { background-color: #f8d7da; color: #842029; }
         
+        .table-responsive { overflow-x: auto; }
+        .tickets-table { width: 100%; border-collapse: collapse; }
+        .tickets-table th, .tickets-table td { padding: 15px; text-align: right; border-bottom: 1px solid #e9ecef; }
+        .tickets-table thead { background-color: var(--gray-color); }
+        .tickets-table th { font-weight: 900; color: var(--dark-color); }
+        .tickets-table tbody tr:hover { background-color: #f1f3f5; }
+        .status-badge {
+            padding: 5px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold;
+            text-align: center; display: inline-block;
+        }
+        .status-open { background-color: #fff8e1; color: #f59e0b; }
+        .status-escalated { background-color: #fdecea; color: var(--danger-color); }
+        .status-closed { background-color: #e8f5e9; color: var(--success-color); }
+        .btn-view {
+            background-color: var(--secondary-color); color: white; text-decoration: none;
+            padding: 6px 15px; border-radius: 8px; font-weight: 700; font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        .btn-view:hover { background-color: var(--primary-color); }
+        .loading-container, .empty-state { text-align: center; padding: 40px; }
+
         @media (max-width: 992px) {
             .dashboard-layout { grid-template-columns: 1fr; }
             .sidebar { position: static; top: auto; margin-bottom: 30px; }
@@ -266,12 +304,12 @@
                         <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل الملف الشخصي</a></li>
                         <li><a href="my-orders.html"><i class="fas fa-tasks"></i> طلباتي</a></li>
                         <li><a href="my-support-tickets.html"><i class="fas fa-headset"></i> تذاكر الدعم</a></li>
-                        <li><a href="delete-account.html"><i class="fas fa-trash-alt"></i> حذف الحساب</a></li> <!-- إضافة زر حذف الحساب -->
+                        <li><a href="delete-account.html"><i class="fas fa-trash-alt"></i> حذف الحساب</a></li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
                     <button onclick="logoutUser()" class="btn-logout"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
-                    <button onclick="window.location.href='delete-account.html'" class="btn-delete-account"><i class="fas fa-trash-alt"></i> حذف الحساب</button> <!-- زر إضافي في الفوتر -->
+                    <button onclick="window.location.href='delete-account.html'" class="btn-delete-account"><i class="fas fa-trash-alt"></i> حذف الحساب</button>
                 </div>
             </aside>
             <div class="main-content">
@@ -312,143 +350,136 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const firebaseConfig = {
-                apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
-                authDomain: "khadamatukdigital.firebaseapp.com",
-                projectId: "khadamatukdigital",
-                storageBucket: "khadamatukdigital.appspot.com",
-                messagingSenderId: "690661888019",
-                appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-            };
-            if (!firebase.apps.length) {
-                try {
-                    firebase.initializeApp(firebaseConfig);
-                    console.log("Firebase initialized successfully");
-                } catch (error) {
-                    console.error("Error initializing Firebase:", error);
-                    document.getElementById("sidebar-user-name").textContent = "فشل في الاتصال بـ Firebase";
-                    return;
-                }
+    document.addEventListener('DOMContentLoaded', () => {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+        };
+        if (!firebase.apps.length) {
+            try {
+                firebase.initializeApp(firebaseConfig);
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                document.getElementById("sidebar-user-name").textContent = "فشل في الاتصال بـ Firebase";
+                return;
             }
-            const auth = firebase.auth();
-            const db = firebase.firestore();
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-            const sidebarUserName = document.getElementById("sidebar-user-name");
-            const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
-            const displayNameP = document.getElementById("display-name");
-            const displayEmailP = document.getElementById("display-email");
-            const displayPhoneP = document.getElementById("display-phone");
-            const editNameInput = document.getElementById("edit-name");
-            const editPhoneInput = document.getElementById("edit-phone");
-            const editForm = document.getElementById("edit-profile-form");
-            const editFormMessage = document.getElementById("edit-form-message");
+        const sidebarUserName = document.getElementById("sidebar-user-name");
+        const sidebarUserAvatar = document.getElementById("sidebar-user-avatar");
+        const displayNameP = document.getElementById("display-name");
+        const displayEmailP = document.getElementById("display-email");
+        const displayPhoneP = document.getElementById("display-phone");
+        const editNameInput = document.getElementById("edit-name");
+        const editPhoneInput = document.getElementById("edit-phone");
+        const editForm = document.getElementById("edit-profile-form");
+        const editFormMessage = document.getElementById("edit-form-message");
 
-            function showMessage(element, message, isSuccess) {
-                element.textContent = message;
-                element.className = 'form-message';
-                element.classList.add(isSuccess ? 'success' : 'error');
-                element.style.display = 'block';
-                setTimeout(() => { element.style.display = 'none'; }, 4000);
+        function showMessage(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = 'form-message';
+            element.classList.add(isSuccess ? 'success' : 'error');
+            element.style.display = 'block';
+            setTimeout(() => { element.style.display = 'none'; }, 4000);
+        }
+
+        async function loadUserData(user) {
+            if (!user) {
+                sidebarUserName.textContent = "يرجى تسجيل الدخول";
+                return;
             }
-
-            async function loadUserData(user) {
-                if (!user) {
-                    console.warn("No user logged in");
-                    sidebarUserName.textContent = "يرجى تسجيل الدخول";
-                    displayNameP.textContent = "غير متاح";
-                    displayEmailP.textContent = "غير متاح";
-                    displayPhoneP.textContent = "غير متاح";
-                    return;
-                }
-                sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
-                sidebarUserName.textContent = user.displayName || 'جاري التحميل...';
-                try {
-                    const userDocRef = db.collection('users').doc(user.uid);
-                    const userDoc = await userDocRef.get();
-                    if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
-                        sidebarUserName.textContent = finalDisplayName;
-                        displayNameP.textContent = finalDisplayName;
-                        displayEmailP.textContent = userData.email || user.email || "غير محدد";
-                        displayPhoneP.textContent = userData.phoneNumber || "يرجى تحديث رقم هاتفك";
-                        editNameInput.value = finalDisplayName;
-                        editPhoneInput.value = userData.phoneNumber || "";
-                    } else {
-                        displayNameP.textContent = user.displayName || "لا يوجد اسم";
-                        displayEmailP.textContent = user.email || "غير محدد";
-                        displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
-                        editNameInput.value = user.displayName || "";
-                    }
-                } catch (error) {
-                    console.error("Error fetching user data:", error);
-                    displayNameP.textContent = "فشل في تحميل البيانات";
-                    displayEmailP.textContent = "غير متاح";
-                    displayPhoneP.textContent = "غير متاح";
-                }
-            }
-            
-            async function saveProfileChanges(event) {
-                event.preventDefault();
-                const user = auth.currentUser;
-                if (!user) {
-                    showMessage(editFormMessage, "يجب تسجيل الدخول أولاً.", false);
-                    return;
-                }
-                const newName = editNameInput.value.trim();
-                const newPhone = editPhoneInput.value.trim();
-                if (!newName || !newPhone) {
-                    showMessage(editFormMessage, "يرجى ملء جميع الحقول.", false);
-                    return;
-                }
-                try {
-                    const userDocRef = db.collection('users').doc(user.uid);
-                    await userDocRef.set({
-                        displayName: newName,
-                        phoneNumber: newPhone,
-                        email: user.email 
-                    }, { merge: true });
-                    await user.updateProfile({ displayName: newName });
-                    showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
-                    loadUserData(user);
-                } catch (error) {
-                    console.error("Error saving changes:", error);
-                    showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
-                }
-            }
-            editForm.addEventListener('submit', saveProfileChanges);
-
-            const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
-            const contentPanes = document.querySelectorAll('.main-content .content-pane');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    navLinks.forEach(item => item.classList.remove('active'));
-                    contentPanes.forEach(pane => pane.classList.remove('active'));
-                    link.classList.add('active');
-                    const targetId = link.getAttribute('data-target');
-                    const targetPane = document.getElementById(targetId);
-                    if (targetPane) {
-                        targetPane.classList.add('active');
-                        window.scrollTo({ top: 0, behavior: 'smooth' }); // إضافة تمرير سلس
-                    }
-                });
-            });
-
-            function logoutUser() {
-                auth.signOut().then(() => { window.location.href = "index.html"; }).catch(error => console.error("Error logging out:", error));
-            }
-            window.logoutUser = logoutUser;
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    loadUserData(user).catch(error => console.error("Error in auth state change:", error));
+            sidebarUserAvatar.src = user.photoURL || 'https://placehold.co/150x150/e0e0e0/555?text=U';
+            sidebarUserName.textContent = user.displayName || 'جاري التحميل...';
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const userDoc = await userDocRef.get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    const finalDisplayName = userData.displayName || user.displayName || "لا يوجد اسم";
+                    sidebarUserName.textContent = finalDisplayName;
+                    displayNameP.textContent = finalDisplayName;
+                    displayEmailP.textContent = userData.email || user.email || "غير محدد";
+                    displayPhoneP.textContent = userData.phoneNumber || "يرجى تحديث رقم هاتفك";
+                    editNameInput.value = finalDisplayName;
+                    editPhoneInput.value = userData.phoneNumber || "";
                 } else {
-                    window.location.href = "login.html";
+                    displayNameP.textContent = user.displayName || "لا يوجد اسم";
+                    displayEmailP.textContent = user.email || "غير محدد";
+                    displayPhoneP.textContent = "يرجى إكمال ملفك الشخصي";
+                    editNameInput.value = user.displayName || "";
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                displayNameP.textContent = "فشل في تحميل البيانات";
+            }
+        }
+        
+        async function saveProfileChanges(event) {
+            event.preventDefault();
+            const user = auth.currentUser;
+            if (!user) {
+                showMessage(editFormMessage, "يجب تسجيل الدخول أولاً.", false);
+                return;
+            }
+            const newName = editNameInput.value.trim();
+            const newPhone = editPhoneInput.value.trim();
+            if (!newName || !newPhone) {
+                showMessage(editFormMessage, "يرجى ملء جميع الحقول.", false);
+                return;
+            }
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                await userDocRef.set({
+                    displayName: newName,
+                    phoneNumber: newPhone,
+                    email: user.email 
+                }, { merge: true });
+                await user.updateProfile({ displayName: newName });
+                showMessage(editFormMessage, "تم حفظ التغييرات بنجاح!", true);
+                loadUserData(user);
+            } catch (error) {
+                console.error("Error saving changes:", error);
+                showMessage(editFormMessage, "حدث خطأ أثناء الحفظ.", false);
+            }
+        }
+        editForm.addEventListener('submit', saveProfileChanges);
+
+        const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+        const contentPanes = document.querySelectorAll('.main-content .content-pane');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navLinks.forEach(item => item.classList.remove('active'));
+                contentPanes.forEach(pane => pane.classList.remove('active'));
+                link.classList.add('active');
+                const targetId = link.getAttribute('data-target');
+                const targetPane = document.getElementById(targetId);
+                if (targetPane) {
+                    targetPane.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
         });
+
+        function logoutUser() {
+            auth.signOut().then(() => { window.location.href = "index.html"; }).catch(error => console.error("Error logging out:", error));
+        }
+        window.logoutUser = logoutUser;
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loadUserData(user).catch(error => console.error("Error in auth state change:", error));
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+    });
     </script>
 </body>
-</html>
+</ht

@@ -1,10 +1,10 @@
-// =================================================================
-//          ملف المصادقة والتنقل المشترك - auth.js
-//          الإصدار: 4.0 - مع مزامنة المستخدمين والإعدادات الديناميكية
+﻿// =================================================================
+//          ملف التوثيق - auth.js
+//          الإصدار: 4.0 - جميع الحقوق محفوظة لخدماتك ديجيتال
 // =================================================================
 
 // -----------------------------------------------------------------
-// 1. إعدادات Firebase
+// 1. إعداد Firebase
 // -----------------------------------------------------------------
 const firebaseConfig = {
     apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
@@ -24,13 +24,13 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 // -----------------------------------------------------------------
-// 3. مزامنة المستخدم الجديد مع قاعدة البيانات (Worker/D1)
+// 3. مزامنة المستخدم مع قاعدة البيانات الخلفية (Worker/D1)
 // -----------------------------------------------------------------
 const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
 async function syncUserWithBackend(user) {
     if (!user) {
-        console.error("فشلت المزامنة: لم يتم توفير كائن المستخدم.");
+        console.error("خطأ: لا يوجد مستخدم لتتم مزامنته مع قاعدة البيانات الخلفية.");
         return;
     }
     try {
@@ -45,18 +45,18 @@ async function syncUserWithBackend(user) {
             body: JSON.stringify(payload)
         });
         if (response.ok) {
-            console.log("تمت مزامنة المستخدم بنجاح مع قاعدة البيانات الخلفية.");
+            console.log("تمت مزامنة المستخدم مع قاعدة البيانات الخلفية بنجاح.");
         } else {
             const errorData = await response.json();
-            console.error("فشلت المزامنة مع الخادم:", errorData.error || response.statusText);
+            console.error("خطأ في مزامنة المستخدم مع قاعدة البيانات الخلفية:", errorData.error || response.statusText);
         }
     } catch (error) {
-        console.error("حدث خطأ أثناء محاولة مزامنة المستخدم:", error);
+        console.error("حدث خطأ أثناء محاولة مزامنة المستخدم مع قاعدة البيانات الخلفية:", error);
     }
 }
 
 // -----------------------------------------------------------------
-// 4. دالة لتحديث واجهة المستخدم في الشريط العلوي
+// 4. تحديث واجهة المستخدم في الهيدر بناءً على حالة تسجيل الدخول
 // -----------------------------------------------------------------
 function updateHeaderUI(user) {
     const navbarActions = document.getElementById('navbar-actions');
@@ -109,19 +109,19 @@ function updateHeaderUI(user) {
 }
 
 // -----------------------------------------------------------------
-// 5. دالة تسجيل الخروج
+// 5. تسجيل الخروج
 // -----------------------------------------------------------------
 function logoutUser() {
     auth.signOut().then(() => {
-        console.log("User signed out successfully.");
+        console.log("تم تسجيل الخروج بنجاح.");
         window.location.href = "index.html";
     }).catch((error) => {
-        console.error("Logout Error:", error);
+        console.error("خطأ أثناء تسجيل الخروج:", error);
     });
 }
 
 // -----------------------------------------------------------------
-// 6. دالة لتشغيل القائمة المنسدلة
+// 6. إعداد قائمة المستخدم المنسدلة
 // -----------------------------------------------------------------
 function setupDropdownMenu() {
     const toggleButton = document.getElementById('user-menu-toggle');
@@ -140,14 +140,16 @@ function setupDropdownMenu() {
 }
 
 // -----------------------------------------------------------------
-// 7. الاستماع لتغير حالة تسجيل الدخول
+// 7. مراقبة حالة تسجيل الدخول وتحديث الواجهة
 // -----------------------------------------------------------------
 auth.onAuthStateChanged(user => {
     updateHeaderUI(user);
 });
 
 
-// --- ✅ 8. [جديد] دالة مركزية لجلب وتطبيق إعدادات الموقع ---
+// -----------------------------------------------------------------
+// 8. تحميل إعدادات الموقع من قاعدة البيانات الخلفية
+// -----------------------------------------------------------------
 async function loadSiteSettings() {
     const SETTINGS_URL = `${WORKER_URL}/settings`;
     try {
@@ -155,13 +157,13 @@ async function loadSiteSettings() {
         if (!response.ok) return; 
         const settings = await response.json();
 
-        // Update Title
+        // تحديث العنوان
         if (settings.site_name) {
             const pageTitle = document.title.split('|')[1] || document.title;
             document.title = `${settings.site_name} | ${pageTitle.trim()}`;
         }
         
-        // Update Logo
+        // تحديث الشعار
         const logoElements = document.querySelectorAll('.navbar-logo img'); // Select all logos
         if (logoElements.length > 0 && settings.logo_url) {
             logoElements.forEach(logo => {
@@ -169,10 +171,10 @@ async function loadSiteSettings() {
             });
         }
 
-        // Update Meta tags for SEO (if they exist)
+        // تحديث وسوم الميتا لتحسين محركات البحث (إن وجدت)
         const ogTitle = document.querySelector('meta[property="og:title"]');
         if (ogTitle && settings.site_name) {
-            ogTitle.content = `${settings.site_name} | جميع خدماتك في مكان واحد`;
+            ogTitle.content = `${settings.site_name} | منصة خدماتك الرقمية`;
         }
         const ogImage = document.querySelector('meta[property="og:image"]');
         if (ogImage && settings.logo_url) {
@@ -180,16 +182,14 @@ async function loadSiteSettings() {
         }
 
     } catch (error) {
-        console.error("Could not load site settings:", error);
+        console.error("تعذر تحميل إعدادات الموقع:", error);
     }
 }
-
-
 // -----------------------------------------------------------------
-// 9. منطق قائمة الهامبرغر للجوال والتصميم
+// 9. تحميل إعدادات الموقع وتفعيل قائمة المستخدم عند تحميل الصفحة
 // -----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // ✅ Load site settings on every page that includes this script
+    // تحميل إعدادات الموقع في كل صفحة تحتوي هذا السكربت
     loadSiteSettings();
 
     const style = document.createElement('style');
@@ -213,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     `;
     document.head.appendChild(style);
-
     const mainHeader = document.querySelector('.main-header');
     if (mainHeader) {
         const hamburger = mainHeader.querySelector('.hamburger-menu');
@@ -225,3 +224,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+
