@@ -1,30 +1,33 @@
+# ملف robots.txt لموقع المكتب الرقمي
+# يحدد الصفحات المسموح بزحفها وتلك المحظورة
 User-agent: *
-Disallow: /auth.js
-Disallow: /complete-profile.html
-Disallow: /dashboard.html
-Disallow: /delete-account.html
-Disallow: /login.html
-Disallow: /my-orders.html
-Disallow: /my-support-tickets.html
-Disallow: /payment-gateway.html
-Disallow: /register.html
-Disallow: /script.js
-Disallow: /success.html
-Disallow: /verify-email.html
-Disallow: /admin/
+Disallow: /auth.js           # سكربت مصادقة - حساس
+Disallow: /complete-profile.html  # إكمال الملف - يتطلب تسجيل دخول
+Disallow: /dashboard.html    # لوحة التحكم - حساس
+Disallow: /delete-account.html  # حذف الحساب - حساس
+Disallow: /login.html        # تسجيل الدخول - حساس
+Disallow: /my-orders.html    # طلباتي - يتطلب تسجيل دخول
+Disallow: /my-support-tickets.html  # تذاكر الدعم - يتطلب تسجيل دخول
+Disallow: /payment-gateway.html  # بوابة دفع - حساس
+Disallow: /register.html     # التسجيل - حساس
+Disallow: /script.js         # سكربت قد يحتوي على منطق حساس
+Disallow: /success.html      # نجاح - قد يكون مرتبطًا ببيانات حساسة
+Disallow: /verify-email.html # تأكيد البريد - حساس
+Disallow: /admin/            # دليل الإدارة - حساس بالكامل
 
-Allow: /
-Allow: /about.html
-Allow: /contact.html
-Allow: /contact-success.html
-Allow: /index.html
-Allow: /payment.html
-Allow: /prices.html
-Allow: /privacy-policy.html
-Allow: /refund-policy.html
-Allow: /services.html
-Allow: /terms-and-conditions.html
-Allow: /track-order.html
-Allow: /sitemap.xml
+Allow: /                      # السماح بزحف الصفحات العامة
+Allow: /about.html            # صفحة حولنا - عامة
+Allow: /contact.html          # اتصل بنا - عامة
+Allow: /contact-success.html  # نجاح التواصل - عامة
+Allow: /index.html            # الرئيسية - عامة
+Allow: /payment.html          # طرق الدفع - عامة
+Allow: /prices.html           # الأسعار - عامة
+Allow: /privacy-policy.html   # سياسة الخصوصية - عامة
+Allow: /refund-policy.html    # سياسة الاسترجاع - عامة
+Allow: /services.html         # الخدمات - عامة
+Allow: /terms-and-conditions.html  # الشروط - عامة
+Allow: /track-order.html      # تتبع الطلب - عامة
+Allow: /sitemap.xml           # خريطة الموقع - عامة
 
+# رابط خريطة الموقع لمساعدة محركات البحث
 Sitemap: https://khadamat.pages.dev/sitemap.xml
