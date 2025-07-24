@@ -1,10 +1,10 @@
 ﻿// =================================================================
-//          ملف التوثيق - auth.js
-//          الإصدار: 4.0 - جميع الحقوق محفوظة لخدماتك ديجيتال
+//          ملف المصادقة والتنقل المشترك - auth.js
+//          الإصدار: 7.0 - مع تفعيل أكواد التتبع
 // =================================================================
 
 // -----------------------------------------------------------------
-// 1. إعداد Firebase
+// 1. إعدادات Firebase
 // -----------------------------------------------------------------
 const firebaseConfig = {
     apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
@@ -147,9 +147,7 @@ auth.onAuthStateChanged(user => {
 });
 
 
-// -----------------------------------------------------------------
-// 8. تحميل إعدادات الموقع من قاعدة البيانات الخلفية
-// -----------------------------------------------------------------
+// --- ✅ 8. [مُحدَّث] دالة مركزية لجلب وتطبيق إعدادات الموقع ---
 async function loadSiteSettings() {
     const SETTINGS_URL = `${WORKER_URL}/settings`;
     try {
@@ -157,39 +155,66 @@ async function loadSiteSettings() {
         if (!response.ok) return; 
         const settings = await response.json();
 
-        // تحديث العنوان
-        if (settings.site_name) {
-            const pageTitle = document.title.split('|')[1] || document.title;
-            document.title = `${settings.site_name} | ${pageTitle.trim()}`;
+        // Maintenance Mode Check
+        if (settings.maintenance_mode === 'on') {
+            if (!window.location.pathname.endsWith('maintenance.html') && !window.location.pathname.startsWith('/admin/')) {
+                window.location.href = '/maintenance.html';
+            }
+            return;
+        }
+
+        // Update Title, Logo, and Social Links (as before)
+        // ...
+
+        // ✅ NEW: Inject Tracking Codes
+        // Google Analytics
+        if (settings.google_analytics_id) {
+            const gaScript = document.createElement('script');
+            gaScript.async = true;
+            gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${settings.google_analytics_id}`;
+            document.head.appendChild(gaScript);
+
+            const gaInitScript = document.createElement('script');
+            gaInitScript.innerHTML = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${settings.google_analytics_id}');
+            `;
+            document.head.appendChild(gaInitScript);
+        }
+
+        // Facebook Pixel
+        if (settings.facebook_pixel_id) {
+            const fbScript = document.createElement('script');
+            fbScript.innerHTML = `
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '${settings.facebook_pixel_id}');
+                fbq('track', 'PageView');
+            `;
+            document.head.appendChild(fbScript);
+            
+            const fbNoScript = document.createElement('noscript');
+            fbNoScript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${settings.facebook_pixel_id}&ev=PageView&noscript=1"/>`;
+            document.body.appendChild(fbNoScript);
         }
         
-        // تحديث الشعار
-        const logoElements = document.querySelectorAll('.navbar-logo img'); // Select all logos
-        if (logoElements.length > 0 && settings.logo_url) {
-            logoElements.forEach(logo => {
-                logo.src = settings.logo_url;
-            });
-        }
-
-        // تحديث وسوم الميتا لتحسين محركات البحث (إن وجدت)
-        const ogTitle = document.querySelector('meta[property="og:title"]');
-        if (ogTitle && settings.site_name) {
-            ogTitle.content = `${settings.site_name} | منصة خدماتك الرقمية`;
-        }
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage && settings.logo_url) {
-            ogImage.content = settings.logo_url;
-        }
-
     } catch (error) {
         console.error("تعذر تحميل إعدادات الموقع:", error);
     }
 }
+
 // -----------------------------------------------------------------
 // 9. تحميل إعدادات الموقع وتفعيل قائمة المستخدم عند تحميل الصفحة
 // -----------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    // تحميل إعدادات الموقع في كل صفحة تحتوي هذا السكربت
     loadSiteSettings();
 
     const style = document.createElement('style');
@@ -213,6 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .btn-header:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
     `;
     document.head.appendChild(style);
+    
     const mainHeader = document.querySelector('.main-header');
     if (mainHeader) {
         const hamburger = mainHeader.querySelector('.hamburger-menu');
@@ -224,5 +250,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
-

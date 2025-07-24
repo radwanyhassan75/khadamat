@@ -79,6 +79,39 @@
                                 <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ إعدادات الموقع</button></div>
                             </form>
                         </div>
+                         <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">روابط التواصل الاجتماعي</h3>
+                            <form id="social-form" class="space-y-4">
+                                <div>
+                                    <label for="facebook_url" class="text-sm font-medium text-gray-700">رابط فيسبوك</label>
+                                    <input type="url" id="facebook_url" name="facebook_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://facebook.com/yourpage">
+                                </div>
+                                <div>
+                                    <label for="whatsapp_url" class="text-sm font-medium text-gray-700">رابط واتساب (wa.me)</label>
+                                    <input type="url" id="whatsapp_url" name="whatsapp_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://wa.me/212...">
+                                </div>
+                                <div>
+                                    <label for="instagram_url" class="text-sm font-medium text-gray-700">رابط انستغرام</label>
+                                    <input type="url" id="instagram_url" name="instagram_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://instagram.com/yourprofile">
+                                </div>
+                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ الروابط</button></div>
+                            </form>
+                        </div>
+                        <!-- ✅ NEW: Tracking Codes Card -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">أكواد التتبع والتحليلات</h3>
+                            <form id="tracking-form" class="space-y-4">
+                                <div>
+                                    <label for="google_analytics_id" class="text-sm font-medium text-gray-700">Google Analytics ID</label>
+                                    <input type="text" id="google_analytics_id" name="google_analytics_id" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="G-XXXXXXXXXX">
+                                </div>
+                                <div>
+                                    <label for="facebook_pixel_id" class="text-sm font-medium text-gray-700">Facebook Pixel ID</label>
+                                    <input type="text" id="facebook_pixel_id" name="facebook_pixel_id" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="1234567890123456">
+                                </div>
+                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ أكواد التتبع</button></div>
+                            </form>
+                        </div>
                     </div>
                     <div class="lg:col-span-2">
                         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -90,43 +123,19 @@
                                 </div>
                                 <hr>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="cashplus_iban" class="text-sm font-medium text-gray-700">كاش بلوس (IBAN)</label>
-                                        <input type="text" id="cashplus_iban" name="cashplus_iban" class="w-full mt-1" dir="ltr">
-                                    </div>
-                                    <div>
-                                        <label for="cashplus_phone" class="text-sm font-medium text-gray-700">كاش بلوس (رقم الهاتف)</label>
-                                        <input type="text" id="cashplus_phone" name="cashplus_phone" class="w-full mt-1" dir="ltr">
-                                    </div>
+                                    <div><label for="cashplus_iban" class="text-sm font-medium text-gray-700">كاش بلوس (IBAN)</label><input type="text" id="cashplus_iban" name="cashplus_iban" class="w-full mt-1" dir="ltr"></div>
+                                    <div><label for="cashplus_phone" class="text-sm font-medium text-gray-700">كاش بلوس (رقم الهاتف)</label><input type="text" id="cashplus_phone" name="cashplus_phone" class="w-full mt-1" dir="ltr"></div>
                                 </div>
                                 <hr>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="orange_rib" class="text-sm font-medium text-gray-700">أورنج موني (RIB)</label>
-                                        <input type="text" id="orange_rib" name="orange_rib" class="w-full mt-1" dir="ltr">
-                                    </div>
-                                    <div>
-                                        <label for="orange_phone" class="text-sm font-medium text-gray-700">أورنج موني (رقم الهاتف)</label>
-                                        <input type="text" id="orange_phone" name="orange_phone" class="w-full mt-1" dir="ltr">
-                                    </div>
+                                     <div><label for="orange_rib" class="text-sm font-medium text-gray-700">أورنج موني (RIB)</label><input type="text" id="orange_rib" name="orange_rib" class="w-full mt-1" dir="ltr"></div>
+                                     <div><label for="orange_phone" class="text-sm font-medium text-gray-700">أورنج موني (رقم الهاتف)</label><input type="text" id="orange_phone" name="orange_phone" class="w-full mt-1" dir="ltr"></div>
                                 </div>
                                 <hr>
-                                <div>
-                                    <label for="cih_rib" class="text-sm font-medium text-gray-700">بنك CIH (RIB)</label>
-                                    <input type="text" id="cih_rib" name="cih_rib" class="w-full mt-1" dir="ltr">
-                                </div>
-                                <div>
-                                    <label for="bmce_rib" class="text-sm font-medium text-gray-700">بنك BMCE (RIB)</label>
-                                    <input type="text" id="bmce_rib" name="bmce_rib" class="w-full mt-1" dir="ltr">
-                                </div>
-                                <div>
-                                    <label for="attijari_rib" class="text-sm font-medium text-gray-700">بنك التجاري وفا (RIB)</label>
-                                    <input type="text" id="attijari_rib" name="attijari_rib" class="w-full mt-1" dir="ltr">
-                                </div>
-                                <div>
-                                    <label for="soge_rib" class="text-sm font-medium text-gray-700">Société Générale (RIB)</label>
-                                    <input type="text" id="soge_rib" name="soge_rib" class="w-full mt-1" dir="ltr">
-                                </div>
+                                <div><label for="cih_rib" class="text-sm font-medium text-gray-700">بنك CIH (RIB)</label><input type="text" id="cih_rib" name="cih_rib" class="w-full mt-1" dir="ltr"></div>
+                                <div><label for="bmce_rib" class="text-sm font-medium text-gray-700">بنك BMCE (RIB)</label><input type="text" id="bmce_rib" name="bmce_rib" class="w-full mt-1" dir="ltr"></div>
+                                <div><label for="attijari_rib" class="text-sm font-medium text-gray-700">بنك التجاري وفا (RIB)</label><input type="text" id="attijari_rib" name="attijari_rib" class="w-full mt-1" dir="ltr"></div>
+                                <div><label for="soge_rib" class="text-sm font-medium text-gray-700">Société Générale (RIB)</label><input type="text" id="soge_rib" name="soge_rib" class="w-full mt-1" dir="ltr"></div>
                                 
                                 <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ معلومات الدفع</button></div>
                             </form>
