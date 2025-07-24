@@ -1,7 +1,6 @@
 # ملف robots.txt لموقع المكتب الرقمي
 # يحدد الصفحات المسموح بزحفها وتلك المحظورة
 User-agent: *
-Disallow: /auth.js           # سكربت مصادقة - حساس
 Disallow: /complete-profile.html  # إكمال الملف - يتطلب تسجيل دخول
 Disallow: /dashboard.html    # لوحة التحكم - حساس
 Disallow: /delete-account.html  # حذف الحساب - حساس
