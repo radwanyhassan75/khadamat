@@ -1,7 +1,10 @@
 ﻿// =================================================================
 //          ملف المصادقة والتنقل المشترك - auth.js
-//          الإصدار: 7.0 - مع تفعيل أكواد التتبع
+//          الإصدار: 7.1 - مع إصلاح مشكلة وميض المحتوى في وضع الصيانة
 // =================================================================
+
+// ✅ FIX: Hide the page content immediately to prevent flashing
+document.documentElement.style.visibility = 'hidden';
 
 // -----------------------------------------------------------------
 // 1. إعدادات Firebase
@@ -147,27 +150,50 @@ auth.onAuthStateChanged(user => {
 });
 
 
-// --- ✅ 8. [مُحدَّث] دالة مركزية لجلب وتطبيق إعدادات الموقع ---
+// --- ✅ 8. [مُصحَّح] دالة مركزية لجلب وتطبيق إعدادات الموقع ---
 async function loadSiteSettings() {
     const SETTINGS_URL = `${WORKER_URL}/settings`;
     try {
         const response = await fetch(SETTINGS_URL);
-        if (!response.ok) return; 
+        if (!response.ok) {
+            document.documentElement.style.visibility = 'visible'; // Show page on error
+            return; 
+        }
         const settings = await response.json();
 
         // Maintenance Mode Check
         if (settings.maintenance_mode === 'on') {
             if (!window.location.pathname.endsWith('maintenance.html') && !window.location.pathname.startsWith('/admin/')) {
                 window.location.href = '/maintenance.html';
+                return; // Stop further execution
             }
-            return;
         }
 
-        // Update Title, Logo, and Social Links (as before)
-        // ...
+        // Update Title
+        if (settings.site_name !== undefined) {
+            const pageTitle = document.title.split('|')[1] || document.title;
+            document.title = `${settings.site_name || 'المكتب الرقمي'} | ${pageTitle.trim()}`;
+        }
+        
+        // Update Logo
+        const logoElements = document.querySelectorAll('.navbar-logo img');
+        if (logoElements.length > 0 && settings.logo_url !== undefined) {
+            logoElements.forEach(logo => {
+                logo.src = settings.logo_url || 'https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true';
+            });
+        }
+        
+        // Update Social Links in Footer
+        const facebookLink = document.getElementById('social-link-facebook');
+        if(facebookLink) facebookLink.href = settings.facebook_url || '#';
+        
+        const whatsappLink = document.getElementById('social-link-whatsapp');
+        if(whatsappLink) whatsappLink.href = settings.whatsapp_url || '#';
 
-        // ✅ NEW: Inject Tracking Codes
-        // Google Analytics
+        const instagramLink = document.getElementById('social-link-instagram');
+        if(instagramLink) instagramLink.href = settings.instagram_url || '#';
+
+        // Inject Tracking Codes
         if (settings.google_analytics_id) {
             const gaScript = document.createElement('script');
             gaScript.async = true;
@@ -184,7 +210,6 @@ async function loadSiteSettings() {
             document.head.appendChild(gaInitScript);
         }
 
-        // Facebook Pixel
         if (settings.facebook_pixel_id) {
             const fbScript = document.createElement('script');
             fbScript.innerHTML = `
@@ -208,6 +233,11 @@ async function loadSiteSettings() {
         
     } catch (error) {
         console.error("تعذر تحميل إعدادات الموقع:", error);
+    } finally {
+        // ✅ FIX: Reveal the page content only after the check is complete.
+        if (document.documentElement.style.visibility !== 'visible') {
+            document.documentElement.style.visibility = 'visible';
+        }
     }
 }
 

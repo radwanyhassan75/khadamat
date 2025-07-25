@@ -12,22 +12,39 @@
     <style>
         body {
             font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .fa-spin-slow {
+            animation: fa-spin 4s linear infinite;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="text-center p-8 max-w-lg mx-auto">
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="text-center p-8 max-w-lg mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200">
         <div class="text-indigo-600 mb-6">
-            <i class="fas fa-tools text-7xl"></i>
+            <i class="fas fa-cogs text-7xl fa-spin-slow"></i>
         </div>
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">نعود قريباً!</h1>
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">نعود قريبًا!</h1>
         <p class="text-lg text-gray-600 mb-8">
-            عذراً على الإزعاج، لكننا نقوم حالياً ببعض أعمال الصيانة والتطوير. سنعود للعمل بكامل طاقتنا في أقرب وقت ممكن. شكراً لصبركم!
+            عذرًا على الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة والتطوير لتحسين تجربتكم. سنعود للعمل بكامل طاقتنا في أقرب وقت ممكن. شكرًا لصبركم!
         </p>
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200">
             <p class="text-gray-700 font-semibold">للتواصل العاجل، يمكنكم مراسلتنا عبر:</p>
-            <p class="text-indigo-600 font-bold mt-2">contact@khadamatuk.com</p>
+            <a id="contact-link" href="#" class="inline-block text-indigo-600 font-bold text-lg mt-2 transition hover:text-indigo-800">
+                khadmatidigital@outlook.com
+            </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactLink = document.getElementById('contact-link');
+            const email = "khadmatidigital@outlook.com";
+            const subject = encodeURIComponent("استفسار بخصوص الصيانة");
+            const body = encodeURIComponent("متى سيتم إرجاع الموقع للعمل؟");
+
+            contactLink.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        });
+    </script>
 </body>
 </html>
