@@ -1,14 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />`n    <link rel="icon" href="/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ط·آ·ط¢آ¥ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¾ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ·ط¢آ®ط·آ·ط¢آµط·آ¸ط¸آ¹ - ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ·ط¹آ¾ط·آ·ط¢آ¨ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ±ط·آ¸أ¢â‚¬ع‘ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¸آ¹</title>
+    <title>إكمال الملف الشخصي - المكتب الرقمي</title>
+    
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" href="/favicon.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,131 +15,187 @@
 
     <style>
         :root {
-            --primary-color: #0056b3; --dark-color: #2c3e50; --light-color: #ffffff;
-            --gray-color: #f4f7f9; --text-color: #555; --border-radius: 8px;
-            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --primary-color: #0056b3;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
         body {
-            font-family: 'Cairo', sans-serif; margin: 0; direction: rtl;
-            background-color: var(--gray-color); display: flex; justify-content: center;
-            align-items: center; min-height: 100vh; padding: 20px;
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-header {
+            background: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            padding: 0 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 70px; }
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
         }
         .profile-container { width: 100%; max-width: 480px; }
         .profile-card {
-            background: var(--light-color); padding: 40px;
-            border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            background: var(--light-color);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             text-align: center;
+            border-top: 5px solid var(--primary-color);
         }
-        .profile-card h1 { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin: 0 0 10px 0; }
+        .profile-card h1 { font-size: 2rem; font-weight: 700; color: var(--dark-color); margin: 0 0 10px 0; }
         .profile-card p { font-size: 1rem; color: var(--text-color); margin-bottom: 30px; }
         .form-group { margin-bottom: 20px; text-align: right; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: var(--border-radius); font-size: 1rem; box-sizing: border-box; }
-        .btn {
-            width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--primary-color);
-            border: none; color: white; font-weight: bold; border-radius: var(--border-radius);
-            cursor: pointer; transition: background 0.3s;
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
         }
-        .btn:disabled { background-color: #a5d6a7; cursor: not-allowed; }
-        #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); font-weight: 700; }
-        #message-box.error { background-color: #fdecea; color: #dc3545; }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:disabled { background-color: #a0aec0; cursor: not-allowed; }
+        #message-box {
+            display: none;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            background-color: #fdecea;
+            color: #dc3545;
+        }
+        .main-footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--dark-color);
+            color: var(--light-color);
+        }
     </style>
 </head>
 <body>
-    <div class="profile-container">
-        <div class="profile-card">
-            <h1>ط·آ·ط¢آ®ط·آ·ط¢آ·ط·آ¸ط«â€ ط·آ·ط¢آ© ط·آ·ط¢آ£ط·آ·ط¢آ®ط·آ¸ط¸آ¹ط·آ·ط¢آ±ط·آ·ط¢آ©!</h1>
-            <p>ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ±ط·آ·ط¢آ­ط·آ·ط¢آ¨ط·آ·ط¢آ§ط·آ¸أ¢â‚¬آ¹ ط·آ·ط¢آ¨ط·آ¸ط¦â€™. ط·آ¸ط¸آ¹ط·آ·ط¢آ±ط·آ·ط¢آ¬ط·آ¸أ¢â‚¬آ° ط·آ·ط¢آ¥ط·آ·ط¢آ¯ط·آ·ط¢آ®ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ±ط·آ¸أ¢â‚¬ع‘ط·آ¸أ¢â‚¬آ¦ ط·آ¸أ¢â‚¬طŒط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ط·آ¸ط¦â€™ ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ¥ط·آ¸ط¦â€™ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ¸أ¢â‚¬آ¦ط·آ¸أ¢â‚¬â€چط·آ¸ط¸آ¾ط·آ¸ط¦â€™ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ´ط·آ·ط¢آ®ط·آ·ط¢آµط·آ¸ط¸آ¹.</p>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img id="site-logo" src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
+            </a>
+        </nav>
+    </header>
 
-            <div id="message-box"></div>
-
-            <form id="complete-profile-form">
-                <div class="form-group">
-                    <label for="phone">ط·آ·ط¢آ±ط·آ¸أ¢â‚¬ع‘ط·آ¸أ¢â‚¬آ¦ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬طŒط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ¸ط¸آ¾ (ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¢آ¨)</label>
-                    <input type="tel" id="phone" required placeholder="ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ«ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ: 0612345678">
-                </div>
-                <button type="submit" id="submit-btn" class="btn">ط·آ·ط¢آ­ط·آ¸ط¸آ¾ط·آ·ط¢آ¸ ط·آ¸ط«â€ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ¹ط·آ·ط¢آ©</button>
-            </form>
+    <main class="main-content">
+        <div class="profile-container">
+            <div class="profile-card">
+                <h1>مرحبًا بك!</h1>
+                <p>يرجى إكمال ملفك الشخصي بإدخال رقم هاتفك للمتابعة.</p>
+                <div id="message-box"></div>
+                <form id="complete-profile-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="phone">رقم الهاتف</label>
+                        <input type="tel" id="phone" required pattern="^0[5-7][0-9]{8}$" placeholder="مثال: 0612345678" inputmode="numeric">
+                    </div>
+                    <button type="submit" id="submit-btn" class="btn">حفظ ومتابعة</button>
+                </form>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Firebase SDK Scripts -->
+    <footer class="main-footer">
+        <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
+    </footer>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="auth.js"></script>
     
     <script>
-        // --- 1. Firebase Configuration ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
-            authDomain: "khadamatukdigital.firebaseapp.com",
-            projectId: "khadamatukdigital",
-            storageBucket: "khadamatukdigital.appspot.com",
-            messagingSenderId: "690661888019",
-            appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileForm = document.getElementById('complete-profile-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const messageBox = document.getElementById('message-box');
+            let currentUser = null;
 
-        const profileForm = document.getElementById('complete-profile-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const messageBox = document.getElementById('message-box');
-        let currentUser = null;
-
-        // --- 2. Auth Guard ---
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in.
-                currentUser = user;
-            } else {
-                // No user is signed in, redirect to login.
-                window.location.href = "login.html";
-            }
-        });
-
-        // --- 3. Form Submission Logic ---
-        profileForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            const phoneNumber = document.getElementById('phone').value;
-            if (!phoneNumber.trim()) {
-                alert('ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ±ط·آ·ط¢آ¬ط·آ·ط¢آ§ط·آ·ط·إ’ ط·آ·ط¢آ¥ط·آ·ط¢آ¯ط·آ·ط¢آ®ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ ط·آ·ط¢آ±ط·آ¸أ¢â‚¬ع‘ط·آ¸أ¢â‚¬آ¦ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸أ¢â‚¬طŒط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ¸ط¸آ¾.');
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            messageBox.style.display = 'none';
-
-            // Get a reference to the user's document in Firestore
-            const userDocRef = db.collection('users').doc(currentUser.uid);
-
-            // Save the user's data to Firestore
-            // We use { merge: true } to avoid overwriting existing data like displayName and email
-            userDocRef.set({
-                uid: currentUser.uid,
-                displayName: currentUser.displayName,
-                email: currentUser.email,
-                phoneNumber: phoneNumber
-            }, { merge: true })
-            .then(() => {
-                // On success, redirect to the dashboard
-                window.location.href = "dashboard.html";
-            })
-            .catch((error) => {
-                messageBox.textContent = `ط·آ·ط¢آ®ط·آ·ط¢آ·ط·آ·ط¢آ£ ط·آ¸ط¸آ¾ط·آ¸ط¸آ¹ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ­ط·آ¸ط¸آ¾ط·آ·ط¢آ¸: ${error.message}`;
-                messageBox.className = 'error';
-                messageBox.style.display = 'block';
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'ط·آ·ط¢آ­ط·آ¸ط¸آ¾ط·آ·ط¢آ¸ ط·آ¸ط«â€ ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ¨ط·آ·ط¢آ¹ط·آ·ط¢آ©';
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    currentUser = user;
+                } else {
+                    window.location.href = "login.html";
+                }
             });
+
+            profileForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!currentUser) return;
+
+                let phoneNumber = document.getElementById('phone').value.trim();
+                phoneNumber = phoneNumber.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+
+                if (!/^0[5-7][0-9]{8}$/.test(phoneNumber)) {
+                    showMessage('يرجى إدخال رقم هاتف مغربي صحيح (مثال: 0612345678).');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                messageBox.style.display = 'none';
+
+                const userDocRef = db.collection('users').doc(currentUser.uid);
+
+                userDocRef.set({
+                    phoneNumber: phoneNumber
+                }, { merge: true })
+                .then(() => {
+                    window.location.href = "dashboard.html";
+                })
+                .catch((error) => {
+                    showMessage(`حدث خطأ أثناء الحفظ: ${error.message}`);
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'حفظ ومتابعة';
+                });
+            });
+            
+            function showMessage(message) {
+                messageBox.textContent = message;
+                messageBox.style.display = 'block';
+            }
+            
+            document.getElementById('current-year').textContent = new Date().getFullYear();
         });
     </script>
 </body>
 </html>
-
-
