@@ -1,22 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- Google AdSense Code -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
      crossorigin="anonymous"></script>
+     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>من نحن - خدماتك | عن الموقع</title>
+    <title>من نحن - المكتب الرقمي | رؤيتنا ورسالتنا</title>
+    
+    <!-- Favicon and Meta Tags -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" href="/favicon.png">
+    
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         :root {
             --primary-color: #0056b3;
@@ -28,11 +34,12 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
         body {
-            font-family: 'Cairo', 'Amiri', 'NotoT Naskh Arabic', serif;
+            font-family: 'Cairo', sans-serif;
             margin: 0;
             background-color: var(--light-color);
             direction: rtl;
             color: var(--text-color);
+            line-height: 1.8;
         }
         .main-header {
             background: var(--light-color);
@@ -47,6 +54,7 @@
         .navbar-menu { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .navbar-actions { min-width: 150px; text-align: left; }
         .page-hero {
             background-color: var(--dark-color);
             color: var(--light-color);
@@ -68,7 +76,6 @@
             max-width: 900px;
             margin: 60px auto;
             padding: 0 20px;
-            line-height: 2;
             font-size: 1.1rem;
         }
         .content-section h2 {
@@ -147,6 +154,9 @@
             text-decoration: none;
             font-weight: 700;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-primary {
             background-color: var(--primary-color);
@@ -154,6 +164,7 @@
         }
         .btn-primary:hover {
             background-color: #00458e;
+            transform: translateY(-2px);
         }
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
@@ -174,31 +185,36 @@
 
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار خدماتك"></a>
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
             <ul class="navbar-menu">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
                 <li><a href="about.html" class="active">من نحن</a></li>
             </ul>
-            <div id="navbar-actions" class="navbar-actions"></div>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- Populated by auth.js. No changes needed here. -->
+            </div>
         </nav>
     </header>
 
     <main>
         <section class="page-hero">
-            <h1>من نحن</h1>
+            <!-- ✅ IMPROVEMENT: More specific and professional title for SEO -->
+            <h1>عن المكتب الرقمي</h1>
             <p>
-                مرحبًا بكم في "خدماتك"، المنصة الرائدة التي تهدف إلى تسهيل الوصول إلى أفضل الخدمات في جميع أنحاء الوطن العربي. نحن نؤمن بأن الجودة والموثوقية هما أساس أي خدمة ناجحة، ونعمل جاهدين لتقديم تجربة فريدة وآمنة لجميع مستخدمينا.
+                <!-- ✅ IMPROVEMENT: Refined text to be more specific to the brand and its mission -->
+                نحن شريكك الموثوق لتسهيل كافة معاملاتك الإدارية والرقمية في المغرب. نلتزم بتقديم خدمات احترافية تجمع بين الدقة، السرعة، والأمان.
             </p>
         </section>
 
         <section class="content-section">
-            <h2>رسالتنا</h2>
+            <h2>رسالتنا ورؤيتنا</h2>
             <p>
-                نسعى في "خدماتك" إلى بناء جسر من الثقة بين مقدمي الخدمات والعملاء من خلال توفير منصة سهلة الاستخدام، تجمع بين التنوع والجودة والشفافية. نؤمن بأن كل فرد يستحق الحصول على خدمة مميزة تلبي احتياجاته وتفوق توقعاته.
+                <!-- ✅ IMPROVEMENT: Replaced "خدماتك" with "المكتب الرقمي" and focused the mission statement -->
+                في **المكتب الرقمي**، نسعى لبناء جسر من الثقة مع عملائنا عبر توفير منصة سهلة الاستخدام، تقدم خدمات عالية الجودة بشفافية تامة. نؤمن بأن كل فرد يستحق الحصول على خدمة مميزة تلبي احتياجاته وتفوق توقعاته.
                 <br><br>
-                رؤيتنا هي أن نصبح الخيار الأول لكل من يبحث عن خدمة موثوقة في العالم العربي، من خلال تطوير مستمر وابتكار دائم، مع الالتزام بأعلى معايير الجودة والأمان.
+                رؤيتنا هي أن نصبح الخيار الأول في المغرب لكل من يبحث عن إنجاز معاملاته الإدارية والرقمية بكفاءة، من خلال التطوير المستمر والابتكار، مع الالتزام بأعلى معايير الدقة وحماية البيانات.
             </p>
         </section>
 
@@ -218,53 +234,64 @@
                     </div>
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-rocket"></i></div>
-                        <h3>الابتكار والتطوير</h3>
+                        <h3>السرعة والكفاءة</h3>
                         <p>نسعى باستمرار لتطوير خدماتنا وتقديم حلول مبتكرة تلبي احتياجات السوق المتغيرة.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
                         <h3>المصداقية والشفافية</h3>
-                        <p>نؤمن بأهمية الشفافية في التعامل مع العملاء ومقدمي الخدمات، ونعمل على بناء علاقات قائمة على الثقة والاحترام المتبادل.</p>
+                        <p>نؤمن بأهمية الشفافية في التعامل، ونعمل على بناء علاقات قائمة على الثقة والاحترام المتبادل.</p>
                     </div>
                 </div>
             </div>
         </section>
         
         <section class="cta-section">
-            <h2>انضم إلينا اليوم وكن جزءًا من مجتمع خدماتك</h2>
+            <!-- ✅ IMPROVEMENT: More direct and benefit-oriented Call to Action -->
+            <h2>هل أنت جاهز لإنجاز معاملاتك بسهولة؟</h2>
             <p>
-                اكتشف مجموعة واسعة من الخدمات المميزة وكن على تواصل مع أفضل مقدمي الخدمات في الوطن العربي. سجل الآن وابدأ رحلتك معنا!
+                اكتشف مجموعتنا الواسعة من الخدمات المصممة لتوفير وقتك وجهدك. ابدأ الآن رحلتك نحو تجربة رقمية سلسة.
             </p>
-            <a href="services.html" class="btn btn-primary">استعرض الخدمات</a>
+            <a href="services.html" class="btn btn-primary">استعرض جميع الخدمات</a>
         </section>
     </main>
 
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-section">
-                <h3>خدماتك</h3>
-                <p>منصة متخصصة في ربط العملاء بمقدمي الخدمات الموثوقين في جميع أنحاء الوطن العربي.</p>
+                <!-- ✅ IMPROVEMENT: Consistent branding -->
+                <h3>المكتب الرقمي</h3>
+                <p>منصتك المتكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
             </div>
             <div class="footer-section">
                 <h3>روابط سريعة</h3>
                 <ul>
                     <li><a href="index.html">الرئيسية</a></li>
                     <li><a href="services.html">الخدمات</a></li>
+                    <!-- ✅ FIX: Added missing important links -->
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>تواصل معنا</h3>
+                <!-- ✅ IMPROVEMENT: Changed title to be more accurate -->
+                <h3>قانوني ومعلومات</h3>
                 <ul>
-                    <li><a href="#">البريد الإلكتروني</a></li>
-                    <li><a href="#">سياسة الخصوصية</a></li>
+                    <!-- ✅ FIX: Corrected link from "#" to the contact page -->
+                    <li><a href="contact.html">تواصل معنا</a></li>
+                    <!-- ✅ FIX: Corrected link from "#" to the privacy policy page -->
+                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                    <!-- ✅ FIX: Added a link to the terms page, which is crucial for AdSense -->
+                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; <span id="current-year"></span> خدماتك. جميع الحقوق محفوظة.</p>
+            <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
 
+    <!-- Firebase scripts - No changes needed here -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
