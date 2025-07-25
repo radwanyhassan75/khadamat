@@ -12,38 +12,140 @@
     <style>
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            opacity: 0;
+            animation: fadeIn 0.3s ease-in forwards;
         }
-        .fa-spin-slow {
-            animation: fa-spin 4s linear infinite;
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .spinning {
+            animation: spin 8s linear infinite;
+        }
+        .pulsing {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .contact-btn {
+            transition: all 0.3s ease;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-    <div class="text-center p-8 max-w-lg mx-auto bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200">
-        <div class="text-indigo-600 mb-6">
-            <i class="fas fa-cogs text-7xl fa-spin-slow"></i>
-        </div>
-        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">نعود قريبًا!</h1>
-        <p class="text-lg text-gray-600 mb-8">
-            عذرًا على الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة والتطوير لتحسين تجربتكم. سنعود للعمل بكامل طاقتنا في أقرب وقت ممكن. شكرًا لصبركم!
-        </p>
-        <div class="bg-gray-100 p-6 rounded-lg border border-gray-200">
-            <p class="text-gray-700 font-semibold">للتواصل العاجل، يمكنكم مراسلتنا عبر:</p>
-            <a id="contact-link" href="#" class="inline-block text-indigo-600 font-bold text-lg mt-2 transition hover:text-indigo-800">
-                khadmatidigital@outlook.com
-            </a>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center min-h-screen p-4">
+    <div class="text-center p-8 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden relative">
+        <!-- Animated background elements -->
+        <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-indigo-100 opacity-30"></div>
+        <div class="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-blue-100 opacity-30"></div>
+        
+        <!-- Main content -->
+        <div class="relative z-10">
+            <!-- Animated icons -->
+            <div class="flex justify-center space-x-6 mb-8">
+                <div class="floating">
+                    <i class="fas fa-tools text-5xl text-indigo-600"></i>
+                </div>
+                <div class="floating" style="animation-delay: 0.5s;">
+                    <i class="fas fa-cog text-5xl text-blue-500 spinning"></i>
+                </div>
+                <div class="floating" style="animation-delay: 1s;">
+                    <i class="fas fa-wrench text-5xl text-indigo-400"></i>
+                </div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4 pulsing">نعود قريباً!</h1>
+            
+            <div class="mb-8">
+                <p class="text-lg text-gray-600 mb-4 leading-relaxed">
+                    عذراً على الإزعاج، نحن نقوم حاليًا بإجراء بعض التحديثات وتحسينات الأداء لخدمتكم بشكل أفضل.
+                </p>
+                <p class="text-gray-500">
+                    نعدكم بأننا سنعود أقوى وأفضل من قبل!
+                </p>
+            </div>
+            
+            
+            <!-- Contact section -->
+            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-6 rounded-xl border border-indigo-100">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+                    <i class="fas fa-headset text-indigo-600 ml-2"></i>
+                    للتواصل العاجل
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="mailto:khadmatidigital@outlook.com?subject=استفسار%20عن%20موعد%20انتهاء%20الصيانة&body=متى%20سيتم%20ارجاع%20الموقع%20للعمل؟%0D%0A%0D%0Aنشكركم%20على%20اهتمامكم"
+                       class="contact-btn bg-white p-4 rounded-lg border border-gray-200 flex items-center justify-center hover:border-indigo-300 transition-all duration-300">
+                        <i class="fas fa-envelope text-indigo-600 text-2xl mr-3"></i>
+                        <div class="text-right">
+                            <p class="font-semibold text-gray-700">البريد الإلكتروني</p>
+                            <p class="text-indigo-600 text-sm">khadmatidigital@outlook.com</p>
+                        </div>
+                    </a>
+                    
+                </div>
+                
+                <p class="text-sm text-gray-500 mt-4">
+                    سيتم الرد على جميع الاستفسارات خلال 24 ساعة
+                </p>
+            </div>
+            
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const contactLink = document.getElementById('contact-link');
-            const email = "khadmatidigital@outlook.com";
-            const subject = encodeURIComponent("استفسار بخصوص الصيانة");
-            const body = encodeURIComponent("متى سيتم إرجاع الموقع للعمل؟");
+    <!-- Audio element for maintenance sound -->
+    <audio id="maintenanceSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-warning-alarm-886.mp3" type="audio/mpeg">
+    </audio>
 
-            contactLink.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    <script>
+        // Page loads instantly with the fade-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interactive maintenance sound
+            const sound = document.getElementById('maintenanceSound');
+            sound.volume = 0.2;
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Auto-play prevented: ", e));
+            
+            // Click sound effect for interactive elements
+            const interactiveElements = document.querySelectorAll('button, a, .contact-btn, [onclick]');
+            const clickSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3');
+            clickSound.volume = 0.3;
+            
+            interactiveElements.forEach(el => {
+                el.addEventListener('click', () => {
+                    clickSound.currentTime = 0;
+                    clickSound.play();
+                });
+            });
+            
+
+            // Animated background elements interaction
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                const bg1 = document.querySelector('.absolute.-top-20');
+                const bg2 = document.querySelector('.absolute.-bottom-20');
+                
+                bg1.style.transform = `translate(${x * 20}px, ${y * 20}px)`;
+                bg2.style.transform = `translate(${-x * 30}px, ${-y * 30}px)`;
+            });
         });
     </script>
 </body>
