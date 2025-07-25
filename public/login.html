@@ -285,6 +285,9 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // --- Worker URL ---
+        const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev/';
+
         // --- DOM Elements ---
         const loginForm = document.getElementById('login-form');
         const googleBtn = document.getElementById('google-signin-btn');
@@ -298,7 +301,39 @@
             messageBox.style.display = 'block';
         }
 
+        // --- ✅ NEW: Send Login Notification Function ---
+        // This function sends a request to our worker to trigger a login email alert.
+        function sendLoginNotification(user) {
+            if (!user) return;
+
+            fetch(`${WORKER_URL}api/notify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'login',
+                    data: {
+                        email: user.email,
+                        displayName: user.displayName || 'عميلنا العزيز'
+                    }
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Login notification request sent successfully.');
+                } else {
+                    console.error('Failed to send login notification:', data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error sending login notification request:', error);
+            });
+        }
+
         async function checkProfileAndRedirect(user) {
+            // ✅ MODIFIED: Send notification first, then redirect.
+            sendLoginNotification(user);
+
             try {
                 const userDocRef = db.collection('users').doc(user.uid);
                 const userDoc = await userDocRef.get();
@@ -342,6 +377,7 @@
                         auth.signOut(); // Sign out user if not verified
                         return;
                     }
+                    // The function now sends the notification before redirecting
                     return checkProfileAndRedirect(userCredential.user);
                 })
                 .catch(error => {
@@ -370,7 +406,7 @@
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         }).then(() => checkProfileAndRedirect(user));
                     } else {
-                        // If existing user, just redirect
+                        // If existing user, just redirect (notification will be sent)
                         return checkProfileAndRedirect(user);
                     }
                 })

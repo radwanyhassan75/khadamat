@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <a href="privacy-policy.html" class="cookie-link">سياسة الخصوصية</a>
                         <a href="terms-and-conditions.html" class="cookie-link">الشروط والأحكام</a>
                         <a href="refund-policy.html" class="cookie-link">سياسة الاسترجاع</a>
-                        <a href="data-deletion-policy.html" class="cookie-link">سياسة حذف البيانات</a>
+                        <a href="data-deletion.html" class="cookie-link">سياسة حذف البيانات</a>
                     </div>
                 </div>
             </div>

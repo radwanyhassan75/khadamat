@@ -354,6 +354,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     
     <!-- Your Firebase configuration -->
+    <!-- This file should contain your firebase.initializeApp(firebaseConfig); -->
     <script src="auth.js"></script> 
     
     <script>
@@ -366,7 +367,9 @@
                 navLinks.classList.toggle('active');
             });
 
-            // --- The rest of the script is the same ---
+            // --- Worker URL ---
+            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev/';
+
             const registerForm = document.getElementById('register-form');
             const submitBtn = document.getElementById('submit-btn');
             const messageBox = document.getElementById('message-box');
@@ -391,6 +394,36 @@
             }
             setTimeout(initRecaptcha, 500);
 
+            // --- ✅ NEW: Sync User with Backend Function ---
+            // This function sends the new user's data to our worker.
+            // The worker then saves it to the D1 database and sends the welcome email.
+            function syncUserWithBackend(user) {
+                if (!user) return;
+                
+                console.log(`Syncing user ${user.uid} to backend...`);
+                fetch(`${WORKER_URL}users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: user.uid,
+                        email: user.email,
+                        displayName: user.displayName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('User synced successfully with backend.');
+                    } else {
+                        // Log error but don't block the user flow
+                        console.error('Backend sync failed:', data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error during backend sync:', err);
+                });
+            }
+
             registerForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const name = document.getElementById("name").value.trim();
@@ -412,7 +445,8 @@
                     })
                     .then((user) => {
                         console.log("User created, syncing with backend...");
-                        // syncUserWithBackend(user); 
+                        // ✅ MODIFIED: Call the sync function here
+                        syncUserWithBackend(user); 
                         return user.sendEmailVerification();
                     })
                     .then(() => { window.location.href = "verify-email.html"; })
@@ -436,7 +470,6 @@
             // --- Google One Tap Sign-In ---
             window.onGoogleLibraryLoad = () => {
                 google.accounts.id.initialize({
-                    // ⚠️ هام جداً: استبدل هذا المعرف بمعرف العميل الحقيقي الخاص بك من Google Cloud Console
                     client_id: '690661888019-2k8fl4c839q0mnki373ii96nhhb4ckmh.apps.googleusercontent.com',
                     callback: handleGoogleOneTap,
                     auto_select: true,
@@ -463,8 +496,10 @@
                 const isNewUser = result.additionalUserInfo.isNewUser;
                 if (isNewUser) {
                     console.log("New social user, syncing with backend...");
-                    // syncUserWithBackend(user); 
+                    // ✅ MODIFIED: Call the sync function for new social users
+                    syncUserWithBackend(user); 
                 }
+                // Redirect to dashboard for both new and existing social users
                 window.location.href = "dashboard.html";
             }
 

@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
+     crossorigin="anonymous"></script>
     <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -8,7 +10,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-54LWRL4T');</script>
 <!-- End Google Tag Manager -->
- <!-- Google tag (gtag.js) -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MPPD2NSF38"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -18,7 +20,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   gtag('config', 'G-MPPD2NSF38');
 </script>
     <!-- =================================================================
-         META TAGS, FONTS, AND ICONS
+        META TAGS, FONTS, AND ICONS
     ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +54,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- =================================================================
-         INTERNAL CSS STYLES
+        INTERNAL CSS STYLES
     ================================================================== -->
     <style>
         :root {
@@ -120,6 +122,71 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .category-card-desc { font-size: 1rem; color: var(--text-color); line-height: 1.7; margin-bottom: 30px; flex-grow: 1; }
         .btn-outline { background: transparent; color: var(--primary-color); border-color: var(--primary-color); }
         .btn-outline:hover { background: var(--primary-color); color: var(--light-color); }
+        
+        /* --- ✅ NEW: Newsletter Section Styles --- */
+        .newsletter-section {
+            padding: 80px 0;
+            background-color: var(--dark-color);
+            background-image: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://placehold.co/1920x500/2c3e50/ffffff?text=BG');
+            background-size: cover;
+            background-position: center;
+            color: var(--light-color);
+        }
+        .newsletter-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .newsletter-content h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        .newsletter-content p {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            margin-bottom: 30px;
+        }
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--light-color);
+            border-radius: 50px;
+            padding: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        .newsletter-form input {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            padding: 15px 25px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            outline: none;
+            color: var(--dark-color);
+        }
+        .newsletter-form button {
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: none;
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .newsletter-form button:hover {
+            background-color: #00458e;
+        }
+        #newsletter-message {
+            margin-top: 15px;
+            font-weight: 700;
+            height: 20px; /* Reserve space to prevent layout shift */
+        }
+        #newsletter-message.success { color: #28a745; }
+        #newsletter-message.error { color: #dc3545; }
+
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
         .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
@@ -218,6 +285,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </section>
     </main>
+
+    <!-- ✅ NEW: Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>انضم إلى قائمتنا البريدية</h2>
+                <p>كن أول من يعرف عن خدماتنا الجديدة، العروض الحصرية، وآخر المستجدات مباشرة في بريدك الإلكتروني.</p>
+                <form id="newsletter-form" class="newsletter-form">
+                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit">اشتراك</button>
+                </form>
+                <div id="newsletter-message"></div>
+            </div>
+        </div>
+    </section>
 
     <footer class="main-footer">
         <div class="container">
@@ -318,6 +400,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 if (e.target !== searchInput) {
                     suggestionsBox.style.display = 'none';
                 }
+            });
+
+            // --- ✅ NEW: Newsletter Form Logic ---
+            const newsletterForm = document.getElementById('newsletter-form');
+            const newsletterEmail = document.getElementById('newsletter-email');
+            const newsletterMessage = document.getElementById('newsletter-message');
+            const workerUrl = 'https://orders-worker.radwanyhassan75.workers.dev'; // Your worker URL
+
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = newsletterEmail.value.trim();
+                
+                if (!email) {
+                    newsletterMessage.textContent = 'الرجاء إدخال بريد إلكتروني.';
+                    newsletterMessage.className = 'error';
+                    return;
+                }
+
+                newsletterMessage.textContent = 'جارٍ الإرسال...';
+                newsletterMessage.className = '';
+
+                fetch(`${workerUrl}/api/subscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        newsletterMessage.textContent = 'شكراً لاشتراكك! تم إرسال رسالة تأكيد.';
+                        newsletterMessage.className = 'success';
+                        newsletterEmail.value = '';
+                    } else {
+                        newsletterMessage.textContent = data.error || 'حدث خطأ ما.';
+                        newsletterMessage.className = 'error';
+                    }
+                })
+                .catch(err => {
+                    console.error('Subscription error:', err);
+                    newsletterMessage.textContent = 'فشل الاتصال بالخادم. حاول مرة أخرى.';
+                    newsletterMessage.className = 'error';
+                });
             });
         });
     </script>
