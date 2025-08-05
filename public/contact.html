@@ -31,7 +31,6 @@
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             --danger-color: #dc3545;
-            --success-color: #28a745;
         }
         html { scroll-behavior: smooth; }
         body {
@@ -156,29 +155,13 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* New Alert Styles */
         .alert {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: var(--border-radius);
-            border-right: 5px solid;
-            font-size: 1rem;
+            border-right: 5px solid; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
         }
-        .alert-icon { font-size: 1.5rem; margin-left: 1rem; }
-        .alert.alert-success {
-            background-color: #e9f7ef;
-            border-color: var(--success-color);
-            color: #155724;
+        .alert-danger {
+            background-color: #fdecea; border-color: #f5c6cb; color: #721c24;
         }
-        .alert.alert-danger {
-            background-color: #fdecea;
-            border-color: var(--danger-color);
-            color: #721c24;
-        }
-        
+
         .main-footer {
             background-color: var(--dark-color); color: #bdc3c7;
             padding: 60px 0 20px; margin-top: 60px;
@@ -216,7 +199,8 @@
 
         <div class="contact-wrapper">
             <div class="contact-form-container">
-                <div id="message-container"></div> <form id="contact-form">
+                <div id="message-container"></div>
+                <form id="contact-form">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                         <div class="form-group">
                             <label for="name">الاسم الكامل <span class="required-star">*</span></label>
@@ -253,7 +237,7 @@
                         <input type="file" id="attachment" name="attachment">
                     </div>
                     <button type="submit" id="submit-btn" class="submit-btn">
-                        <span id="btn-text">إرسال الرسالة</span>
+                        <span id="btn-text">إرسال التذكرة</span>
                         <div id="btn-spinner" class="spinner" style="display: none;"></div>
                     </button>
                 </form>
@@ -297,6 +281,8 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- ✅ تم إرجاع الكود إلى حالته الأصلية والمستقرة ---
+        const WORKER_URL = "https://orders-worker.radwanyhassan75.workers.dev"; // عنوان الـ Worker
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
         const btnText = document.getElementById('btn-text');
@@ -326,55 +312,47 @@
             }
         }
 
-        // --- ✅ NEW: Improved showMessage function ---
-        function showMessage(message, type = 'success') {
-            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-            const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-            
-            messageContainer.innerHTML = `
-                <div class="alert ${alertClass}" role="alert">
-                    <i class="fas ${iconClass} alert-icon"></i>
-                    <div>${message}</div>
-                </div>`;
-            
-            // Scroll to the message so the user sees it
-            messageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            messageContainer.innerHTML = ''; // Clear previous messages
             submitBtn.disabled = true;
             btnText.style.display = 'none';
             btnSpinner.style.display = 'block';
+            messageContainer.innerHTML = ''; // مسح الرسائل السابقة
 
             const formData = new FormData(contactForm);
-            formData.append('type', 'contact_form');
+            const data = Object.fromEntries(formData.entries());
+
+            // إضافة رقم الطلب إلى نص الرسالة إذا كان موجوداً
+            if (data.orderId) {
+                data.message = `${data.message}\n\nرقم الطلب المتعلق: ${data.orderId}`;
+            }
+
+            // إضافة هوية المستخدم إذا كان مسجلاً للدخول
+            const user = auth.currentUser;
+            if (user) {
+                data.userId = user.uid;
+            }
 
             try {
-                const unifiedWebhookUrl = 'https://hook.eu2.make.com/wysa2l6i5kysc4xfy15o33jltv3p5htg';
-
-                const response = await fetch(unifiedWebhookUrl, {
+                // ✅ إرسال البيانات إلى الـ Worker لإنشاء تذكرة
+                const response = await fetch(`${WORKER_URL}/tickets`, {
                     method: 'POST',
-                    body: formData
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
                 });
 
+                const result = await response.json();
+
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`فشل الإرسال. الحالة: ${response.status}. ${errorText}`);
+                    throw new Error(result.error || 'فشل إرسال التذكرة.');
                 }
-                
-                // --- ✅ NEW: Show success message and reset form ---
-                showMessage('تم استلام رسالتك بنجاح! سنقوم بالرد عليك في أقرب وقت ممكن.', 'success');
-                contactForm.reset();
-                handleInquiryChange(); // Reset conditional fields as well
+
+                // ✅ النجاح: إعادة التوجيه إلى صفحة النجاح مع رقم التذكرة
+                window.location.href = `contact-success.html?ticketId=${result.ticketId}`;
 
             } catch (error) {
-                // --- ✅ NEW: Better error logging and user message ---
-                console.error('An error occurred during form submission:', error);
-                showMessage(`حدث خطأ أثناء إرسال رسالتك. الرجاء المحاولة مرة أخرى. (تفاصيل الخطأ: ${error.message})`, 'danger');
-            } finally {
-                // --- ✅ NEW: Always re-enable the button ---
+                console.error("Contact form submission error:", error);
+                messageContainer.innerHTML = `<div class="alert alert-danger" role="alert"><p>❌ ${error.message}</p></div>`;
                 submitBtn.disabled = false;
                 btnText.style.display = 'block';
                 btnSpinner.style.display = 'none';
