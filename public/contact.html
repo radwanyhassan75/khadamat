@@ -1,15 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- Google AdSense Code -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
      crossorigin="anonymous"></script>
-     
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اتصل بنا - المكتب الرقمي</title>
     
-    <!-- Favicon and Meta Tags -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -17,7 +15,6 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="icon" href="/favicon.png">
 
-    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
@@ -233,13 +230,12 @@
                         <input type="file" id="attachment" name="attachment">
                     </div>
                     <button type="submit" id="submit-btn" class="submit-btn">
-                        <span id="btn-text">إرسال التذكرة</span>
+                        <span id="btn-text">إرسال الرسالة</span>
                         <div id="btn-spinner" class="spinner" style="display: none;"></div>
                     </button>
                 </form>
             </div>
             <aside class="contact-info-container">
-                <!-- ✅ UPDATED: Email link is now interactive -->
                 <a href="mailto:khadmatidigital@outlook.com?subject=استفسار" style="text-decoration: none; color: inherit;">
                     <div class="contact-info-item">
                         <div class="icon"><i class="fas fa-envelope"></i></div>
@@ -249,7 +245,6 @@
                         </div>
                     </div>
                 </a>
-                <!-- ✅ REMOVED: WhatsApp section is deleted -->
                 <div class="contact-info-item">
                     <div class="icon"><i class="fas fa-clock"></i></div>
                     <div>
@@ -266,7 +261,6 @@
             <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
             <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="services.html">جميع الخدمات</a></li><li><a href="about.html">من نحن</a></li></ul></div>
             <div class="footer-section"><h3>قانوني</h3><ul>
-                <!-- ✅ FIX: Corrected links -->
                 <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
                 <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
             </ul></div>
@@ -274,15 +268,12 @@
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
     
-    <!-- Firebase and Auth Scripts - No changes needed here -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- This entire script is the original logic and remains unchanged ---
-        const WORKER_URL = "https://orders-worker.radwanyhassan75.workers.dev";
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
         const btnText = document.getElementById('btn-text');
@@ -318,38 +309,32 @@
             btnText.style.display = 'none';
             btnSpinner.style.display = 'block';
 
-            // The original logic for creating FormData is preserved.
-            const formData = new FormData();
-            formData.append('userName', document.getElementById('name').value);
-            formData.append('userEmail', document.getElementById('email').value);
-            formData.append('subject', document.getElementById('subject').value);
-            formData.append('message', document.getElementById('message').value);
-            
-            // Append optional fields only if they have a value
-            const orderId = document.getElementById('related-order').value;
-            if (orderId) {
-                formData.append('message', `${formData.get('message')}\n\nرقم الطلب المتعلق: ${orderId}`);
-            }
+            const formData = new FormData(contactForm);
 
-            const user = auth.currentUser;
-            if (user) {
-                formData.append('userId', user.uid);
-            }
-            
-            // This logic to create a ticket in the backend is unchanged.
+            // --- ✅ تعديل حسب خطة العمل ---
+            // 1. إضافة علامة النوع للبيانات
+            formData.append('type', 'contact_form');
+
+            // 2. إرسال البيانات إلى الرابط الموحد الجديد
             try {
-                const response = await fetch(`${WORKER_URL}/tickets`, {
+                const unifiedWebhookUrl = 'https://hook.eu2.make.com/wysa2l6i5kysc4xfy15o33jltv3p5htg';
+
+                const response = await fetch(unifiedWebhookUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(Object.fromEntries(formData))
+                    body: formData
                 });
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.error || 'فشل إرسال التذكرة.');
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`فشل الإرسال. الحالة: ${response.status}. ${errorText}`);
+                }
                 
-                window.location.href = `contact-success.html?ticketId=${result.ticketId}`;
+                // Redirect to a generic success page, as the old logic did.
+                window.location.href = 'contact-success.html';
 
             } catch (error) {
                 showMessage(`❌ ${error.message}`, 'error');
+                // Re-enable the button on failure
                 submitBtn.disabled = false;
                 btnText.style.display = 'block';
                 btnSpinner.style.display = 'none';
