@@ -4,7 +4,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدونة المكتب الرقمي | نصائح وإرشادات لخدماتك</title>
+    <title>جاري تحميل المقال...</title>
     
     <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
+        /* نفس كود الـ CSS من الصفحة الرئيسية */
         :root {
             --primary-color: #0056b3;
             --dark-color: #2c3e50;
@@ -29,30 +30,13 @@
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); direction: rtl; color: var(--text-color); }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--light-color); direction: rtl; color: var(--text-color); }
         .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; width: 100%; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
         .navbar-logo img { height: 70px; }
-        .navbar-menu { list-style: none; display: none; gap: 35px; margin: 0; padding: 0; }
+        .navbar-menu { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; }
-        .page-hero { background-color: var(--dark-color); color: var(--light-color); text-align: center; padding: 80px 20px; }
-        .page-hero h1 { font-size: 3.5rem; font-weight: 900; margin: 0; }
-        .page-hero p { font-size: 1.3rem; max-width: 800px; margin: 15px auto 0; opacity: 0.9; }
-        .blog-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
-        .post-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); border: 1px solid var(--border-color); display: flex; flex-direction: column; transition: all 0.3s ease; overflow: hidden; text-decoration:none; }
-        .post-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
-        .post-card-image { height: 200px; background-size: cover; background-position: center; }
-        .post-card-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
-        .post-card h2 { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); margin-top: 0; margin-bottom: 15px; line-height: 1.4; }
-        .post-card p { color: var(--text-color); line-height: 1.7; flex-grow: 1; margin-bottom: 20px; }
-        .post-card-footer { display: flex; justify-content: space-between; align-items: center; margin-top:auto; }
-        .post-date { font-size: 0.9rem; color: #6c757d; }
-        .btn { padding: 8px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-block; }
-        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-primary:hover { background-color: #00458e; }
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 0 20px; }
         .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
         .footer-section h3 { color: var(--light-color); margin-bottom: 20px; font-size: 1.4rem; }
@@ -60,11 +44,22 @@
         .footer-section ul li a { color: #bdc3c7; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
         .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; margin-top: 40px; font-size: 0.9rem; }
-        @media (min-width: 769px) { .navbar-menu { display: flex; } .hamburger-menu { display: none; } }
+
+        /* Styles for Post Content */
+        .post-container { max-width: 800px; margin: 50px auto; padding: 0 20px; }
+        .post-header h1 { font-size: 2.8rem; font-weight: 900; color: var(--dark-color); line-height: 1.3; margin-bottom: 15px; }
+        .post-meta { color: #6c757d; margin-bottom: 30px; }
+        .post-image { width: 100%; height: auto; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 40px; }
+        .post-content { font-size: 1.1rem; line-height: 2; }
+        .post-content h2 { font-size: 2rem; font-weight: 700; color: var(--dark-color); margin-top: 40px; margin-bottom: 20px; }
+        .post-content h3 { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); margin-top: 30px; margin-bottom: 15px; }
+        .post-content p { margin-bottom: 1.5em; }
+        .post-content a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        .post-content a:hover { text-decoration: underline; }
+        .post-content blockquote { border-right: 4px solid var(--primary-color); padding-right: 20px; margin-right: 0; font-style: italic; color: #6c757d; }
     </style>
 </head>
 <body>
-
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
@@ -76,23 +71,13 @@
                 <li><a href="about.html">من نحن</a></li>
             </ul>
             <div id="navbar-actions" class="navbar-actions"></div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
-    <main>
-        <section class="page-hero">
-            <h1>مدونة المكتب الرقمي</h1>
-            <p>مقالات ونصائح وإرشادات لمساعدتك في إنجاز معاملاتك الإدارية والرقمية بكل سهولة.</p>
-        </section>
-
-        <div class="blog-container">
-            <div id="posts-container" class="blog-grid">
-                <p>جاري تحميل المقالات...</p>
-            </div>
-        </div>
+    <main id="post-container" class="post-container">
+        <p>جاري تحميل المقال...</p>
     </main>
-
+    
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
@@ -104,53 +89,59 @@
         </div>
         <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
-    
+
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('current-year').textContent = new Date().getFullYear();
-            const postsContainer = document.getElementById('posts-container');
+            const postContainer = document.getElementById('post-container');
             const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const postSlug = urlParams.get('slug');
+
+            if (!postSlug) {
+                postContainer.innerHTML = '<p>خطأ: لم يتم تحديد رابط المقال.</p>';
+                return;
+            }
+
             try {
-                const response = await fetch(`${WORKER_URL}/api/posts`);
-                if (!response.ok) throw new Error('فشل تحميل المقالات');
-                const posts = await response.json();
+                const response = await fetch(`${WORKER_URL}/api/posts/slug/${postSlug}`);
+                if (!response.ok) throw new Error('لم يتم العثور على المقال أو أنه غير منشور.');
                 
-                postsContainer.innerHTML = ''; // مسح رسالة التحميل
+                const post = await response.json();
+                
+                document.title = post.meta_title || post.title;
+                const metaDesc = document.createElement('meta');
+                metaDesc.name = 'description';
+                metaDesc.content = post.meta_description || '';
+                document.head.appendChild(metaDesc);
 
-                if (!posts || posts.length === 0) {
-                    postsContainer.innerHTML = '<p>لا توجد مقالات منشورة حاليًا.</p>';
-                    return;
-                }
+                // ✅ تنسيق التاريخ والوقت كما طلبت
+                const postDate = new Date(post.created_at);
+                const formattedDate = postDate.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
+                const formattedTime = postDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute:'2-digit' });
 
-                posts.forEach(post => {
-                    // ✅ تنسيق التاريخ والوقت كما طلبت
-                    const postDate = new Date(post.created_at);
-                    const formattedDate = postDate.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
-                    const formattedTime = postDate.toLocaleTimeString('ar-EG', { hour: '2-digit', minute:'2-digit' });
-                    
-                    const postCardHTML = `
-                        <a href="post.html?slug=${post.slug}" class="post-card">
-                            <div class="post-card-image" style="background-image: url('${post.featured_image_url || 'https://placehold.co/600x400/e2e8f0/cccccc?text=صورة'}');"></div>
-                            <div class="post-card-content">
-                                <h2>${post.title}</h2>
-                                <p>${post.meta_description || 'انقر لقراءة المزيد...'}</p>
-                                <div class="post-card-footer">
-                                    <span class="post-date">${formattedDate}</span>
-                                    <span class="btn btn-primary">اقرأ المزيد</span>
-                                </div>
+                postContainer.innerHTML = `
+                    <article>
+                        <header class="post-header">
+                            <h1>${post.title}</h1>
+                            <div class="post-meta">
+                                <span>بواسطة ${post.author_name || 'فريقنا'}</span> &bull;
+                                <span>${formattedDate} الساعة ${formattedTime}</span>
                             </div>
-                        </a>
-                    `;
-                    postsContainer.insertAdjacentHTML('beforeend', postCardHTML);
-                });
-
+                        </header>
+                        ${post.featured_image_url ? `<img src="${post.featured_image_url}" alt="${post.title}" class="post-image">` : ''}
+                        <div class="post-content">
+                            ${post.content}
+                        </div>
+                    </article>
+                `;
             } catch (error) {
-                console.error('Error fetching posts:', error);
-                postsContainer.innerHTML = '<p>حدث خطأ أثناء تحميل المقالات.</p>';
+                console.error('Error fetching post:', error);
+                postContainer.innerHTML = `<p>حدث خطأ: ${error.message}</p>`;
             }
         });
     </script>
