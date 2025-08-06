@@ -69,10 +69,16 @@
         </div>
     </div>
     
-    <script src="https://unpkg.com/lucide@latest"></script>
+      <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- ✅✅✅ === تم إصلاح ترتيب الـ Scripts هنا === ✅✅✅ -->
+    <!-- 1. تحميل الكود الخاص بالصفحة أولاً -->
+    <script src="manage-blog.js"></script> 
+    <!-- 2. تحميل كود الحماية ثانيًا، ليجد الدالة جاهزة -->
     <script src="admin-auth.js"></script>
+    
     <script>
-        // سنضيف الكود التفاعلي هنا في الخطوة التالية
+        // هذا السطر ضروري لتفعيل أيقونات Lucide
         lucide.createIcons();
     </script>
 </body>
