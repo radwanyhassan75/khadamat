@@ -18,6 +18,7 @@
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --success-color: #198754;
+            --warning-color: #ffc107;
             --border-radius: 16px;
             --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
@@ -86,7 +87,6 @@
         }
         #copy-btn:hover { background: var(--primary-color); }
         
-        /* NEW: Next Steps Section */
         .next-steps {
             text-align: right; border-top: 1px solid #eee; padding-top: 30px; margin-bottom: 35px;
         }
@@ -109,6 +109,53 @@
         .btn:hover { background-color: #00458a; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .btn.secondary { background-color: #6c757d; }
         .btn.secondary:hover { background-color: #5a6268; }
+
+        /* --- NEW: Review Section Styles --- */
+        #review-section {
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+            margin-top: 35px;
+            display: none; /* Hidden by default */
+        }
+        #review-section h3 {
+            font-size: 1.5rem; color: var(--dark-color); margin-bottom: 25px; text-align: center;
+        }
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+        }
+        .star-rating .fa-star {
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .star-rating .fa-star:hover,
+        .star-rating .fa-star.hovered,
+        .star-rating .fa-star.selected {
+            color: var(--warning-color);
+            transform: scale(1.2);
+        }
+        #review-comment {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            min-height: 120px;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+        }
+        #submit-review-btn {
+            width: 100%;
+            background-color: var(--success-color);
+        }
+        #submit-review-btn:hover {
+            background-color: #157347;
+        }
     </style>
 </head>
 <body>
@@ -142,7 +189,6 @@
                 </div>
             </div>
 
-            <!-- NEW: Next Steps Section -->
             <div class="next-steps">
                 <h3>ماذا سيحدث الآن؟</h3>
                 <div class="step">
@@ -174,6 +220,23 @@
                 </a>
                 <a href="index.html" class="btn" role="button">العودة للرئيسية</a>
             </div>
+
+            <!-- NEW: Review Section -->
+            <div id="review-section">
+                <h3>ساعدنا على تحسين خدماتنا!</h3>
+                <div class="star-rating" id="star-rating-container">
+                    <i class="fas fa-star" data-value="1"></i>
+                    <i class="fas fa-star" data-value="2"></i>
+                    <i class="fas fa-star" data-value="3"></i>
+                    <i class="fas fa-star" data-value="4"></i>
+                    <i class="fas fa-star" data-value="5"></i>
+                </div>
+                <textarea id="review-comment" placeholder="اكتب مراجعتك هنا (اختياري)..."></textarea>
+                <button id="submit-review-btn" class="btn">
+                    <i class="fas fa-paper-plane"></i> إرسال التقييم
+                </button>
+            </div>
+
         </div>
     </div>
     
@@ -187,23 +250,42 @@
             const copyBtn = document.getElementById('copy-btn');
             const trackBtn = document.getElementById('track-order-btn');
             const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            
+            // NEW: Review elements
+            const reviewSection = document.getElementById('review-section');
+            const stars = document.querySelectorAll('#star-rating-container .fa-star');
+            const reviewComment = document.getElementById('review-comment');
+            const submitReviewBtn = document.getElementById('submit-review-btn');
+            let currentRating = 0;
+            let currentOrderId = null; // To store the order ID
 
             const params = new URLSearchParams(window.location.search);
             const orderIdFromUrl = params.get('orderId');
             const sessionIdFromUrl = params.get('session_id');
 
             const setOrderId = (orderId) => {
+                currentOrderId = orderId; // Store the ID
                 if (orderId) {
                     display.textContent = orderId;
                     copyBtn.disabled = false;
                     copyBtn.style.cursor = 'pointer';
                     trackBtn.style.display = 'inline-flex';
+                    reviewSection.style.display = 'block'; // Show review section
 
                     copyBtn.addEventListener('click', () => {
-                        navigator.clipboard.writeText(orderId).then(() => {
+                        // Using document.execCommand for wider compatibility in iframes
+                        const textarea = document.createElement('textarea');
+                        textarea.value = orderId;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                            document.execCommand('copy');
                             copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                            setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 2000);
-                        });
+                        } catch (err) {
+                            console.error('Fallback: Oops, unable to copy', err);
+                        }
+                        document.body.removeChild(textarea);
+                        setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 2000);
                     });
                 } else {
                     display.textContent = 'خطأ';
@@ -216,7 +298,7 @@
 
             const fetchOrderFromSession = async (sessionId, retries = 5) => {
                 if (retries <= 0) {
-                    setOrderId(null); // Set to error state after all retries
+                    setOrderId(null);
                     return;
                 }
                 try {
@@ -228,7 +310,6 @@
                             return;
                         }
                     }
-                    // If order not found yet, retry after a delay (webhook might be slow)
                     setTimeout(() => fetchOrderFromSession(sessionId, retries - 1), 1500);
                 } catch (error) {
                     console.error("Error fetching order from session:", error);
@@ -237,15 +318,69 @@
             };
 
             if (orderIdFromUrl) {
-                // Case 1: Bank transfer success
                 setOrderId(orderIdFromUrl);
             } else if (sessionIdFromUrl) {
-                // Case 2: Stripe payment success
                 fetchOrderFromSession(sessionIdFromUrl);
             } else {
-                // Case 3: No ID provided
                 setOrderId(null);
             }
+            
+            // --- NEW: Star Rating Logic ---
+            stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const value = star.dataset.value;
+                    stars.forEach(s => {
+                        s.classList.toggle('hovered', s.dataset.value <= value);
+                    });
+                });
+                star.addEventListener('mouseout', () => {
+                    stars.forEach(s => s.classList.remove('hovered'));
+                });
+                star.addEventListener('click', () => {
+                    currentRating = star.dataset.value;
+                    stars.forEach(s => {
+                        s.classList.toggle('selected', s.dataset.value <= currentRating);
+                    });
+                });
+            });
+
+            // --- NEW: Submit Review Logic ---
+            submitReviewBtn.addEventListener('click', async () => {
+                if (currentRating === 0) {
+                    alert('الرجاء اختيار تقييم (نجمة واحدة على الأقل).');
+                    return;
+                }
+
+                submitReviewBtn.disabled = true;
+                submitReviewBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+                
+                const reviewData = {
+                    orderId: currentOrderId,
+                    rating: parseInt(currentRating),
+                    comment: reviewComment.value
+                };
+
+                try {
+                    // NOTE: The endpoint /api/reviews needs to be created in the worker
+                    const response = await fetch(`${API_URL}/api/reviews`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(reviewData)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('فشل إرسال التقييم.');
+                    }
+                    
+                    reviewSection.innerHTML = `<h3>شكراً جزيلاً لك على تقييمك!</h3><p>نحن نقدر رأيك ونسعى دائمًا لتقديم أفضل خدمة.</p>`;
+
+                } catch (error) {
+                    console.error('Review submission error:', error);
+                    alert('حدث خطأ أثناء إرسال التقييم. الرجاء المحاولة مرة أخرى.');
+                    submitReviewBtn.disabled = false;
+                    submitReviewBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال التقييم';
+                }
+            });
 
             const currentYearEl = document.getElementById('current-year');
             if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
