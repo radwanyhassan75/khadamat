@@ -1,22 +1,22 @@
+# =========================================================
+#  ملف الإعدادات الصحيح والكامل لمشروع Cloudflare Pages
+# =========================================================
+
+# اسم مشروعك في Cloudflare Pages
 name = "khadamat"
-compatibility_date = "2025-07-20"
 
-# يخبر Cloudflare أن ملفات الواجهة الأمامية موجودة في مجلد public
-pages_build_output_dir = "public"
+# تاريخ التوافق لضمان عمل الميزات بشكل صحيح
+compatibility_date = "2024-08-08"
 
-# يربط قاعدة البيانات بالخادم الخلفي
+# يربط قاعدة البيانات D1 بمشروعك
 [[d1_databases]]
 binding = "DB"
 database_name = "main_database"
 database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
-# ================================================
-# ✅ NEW: Durable Object binding for Live Chat
-# This enables real-time chat rooms.
-# ================================================
+
+# يربط غرف الدردشة (Durable Objects) بمشروعك
 [[durable_objects.bindings]]
 name = "LIVE_CHAT_ROOM"
 class_name = "LiveChatRoom"
-
-[[migrations]]
-tag = "v1" # Required for Durable Objects
-new_classes = ["LiveChatRoom"]
+# هذا السطر يخبر Pages أن كود غرفة الدردشة موجود في هذا المشروع نفسه
+script_name = "khadamat"
