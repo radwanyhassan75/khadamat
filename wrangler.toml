@@ -9,3 +9,14 @@ pages_build_output_dir = "public"
 binding = "DB"
 database_name = "main_database"
 database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
+# ================================================
+# ✅ NEW: Durable Object binding for Live Chat
+# This enables real-time chat rooms.
+# ================================================
+[[durable_objects.bindings]]
+name = "LIVE_CHAT_ROOM"
+class_name = "LiveChatRoom"
+
+[[migrations]]
+tag = "v1" # Required for Durable Objects
+new_classes = ["LiveChatRoom"]
