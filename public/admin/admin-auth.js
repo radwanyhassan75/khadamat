@@ -1,80 +1,93 @@
 ﻿// =================================================================
-//          ملف المصادقة للوحة التحكم (النسخة الآمنة)
+//          ملف المصادقة للوحة التحكم (النسخة الآمنة باستخدام Firebase)
 // =================================================================
 
-const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+// 🔑 الخطوة 1: أضف معرّف المستخدم (UID) الخاص بك هنا
+// يمكنك العثور على الـ UID الخاص بك في لوحة تحكم Firebase > قسم Authentication
+// يمكن إضافة أكثر من مدير بفصلهم بفاصلة
+const ADMIN_UIDS = [
+    "mxNwy7nqQBRP5K582gi21TrIBW73", // <--- استبدل هذا بمعرّف حسابك!
+    // "يمكنك-إضافة-معرف-مدير-آخر-هنا" 
+];
 
 /**
- * This function is called when the user submits the password form.
+ * يخفي لوحة التحكم ويعيد التوجيه إلى الصفحة الرئيسية بعد 5 ثوانٍ.
  */
-async function handleLogin(e) {
-    e.preventDefault();
-    const passwordInput = document.getElementById('password-input');
-    const passwordError = document.getElementById('password-error');
-    const submitButton = e.target.querySelector('button[type="submit"]');
-    
-    submitButton.disabled = true;
-    passwordError.classList.add('hidden');
-
-    try {
-        // 1. Fetch settings (including the password) from the server
-        const response = await fetch(`${API_URL}/settings`);
-        if (!response.ok) throw new Error('فشل في الاتصال بالخادم.');
-        
-        const settings = await response.json();
-        const correctPassword = settings.admin_password || '12345678'; // Fallback for safety
-
-        // 2. Compare the entered password with the correct one
-        if (passwordInput.value === correctPassword) {
-            sessionStorage.setItem('isAdminAuthenticated', 'true');
-            showContent();
-        } else {
-            passwordError.textContent = 'كلمة المرور غير صحيحة.';
-            passwordError.classList.remove('hidden');
-            submitButton.disabled = false;
-        }
-    } catch (error) {
-        console.error("Login Error:", error);
-        passwordError.textContent = 'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.';
-        passwordError.classList.remove('hidden');
-        submitButton.disabled = false;
+function denyAccess() {
+    console.error("Access Denied. User is not an admin.");
+    // إخفاء المحتوى فورًا
+    const dashboardContent = document.getElementById('dashboard-content');
+    if (dashboardContent) {
+        dashboardContent.style.display = 'none';
     }
+
+    // عرض رسالة الرفض
+    const accessDeniedMessage = `
+        <div style="text-align: center; padding: 40px; color: #dc3545;">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h1 style="font-size: 2rem; margin-top: 20px;">الوصول مرفوض</h1>
+            <p style="font-size: 1.1rem;">أنت غير مصرح لك بالوصول إلى هذه الصفحة. سيتم إعادة توجيهك الآن.</p>
+        </div>
+    `;
+    document.body.innerHTML = accessDeniedMessage;
+
+    // إعادة التوجيه بعد 5 ثوانٍ
+    setTimeout(() => {
+        window.location.href = '/index.html'; // توجيه إلى الصفحة الرئيسية
+    }, 5000);
 }
 
 /**
- * This function shows the main dashboard content and hides the password gate.
+ * يعرض محتوى لوحة التحكم المخفي.
  */
-function showContent() {
-    document.getElementById('password-gate').style.display = 'none';
-    document.getElementById('dashboard-content').style.display = 'flex';
+function grantAccess() {
+    console.log("Access Granted. Welcome Admin!");
+    const passwordGate = document.getElementById('password-gate'); // قد لا يكون موجودًا، لكن نحذفه احتياطًا
+    const dashboardContent = document.getElementById('dashboard-content');
+
+    if (passwordGate) {
+        passwordGate.style.display = 'none';
+    }
+    if (dashboardContent) {
+        dashboardContent.style.display = 'block'; // أو 'flex' حسب تصميمك
+    }
     
-    // Check if the page-specific initialization function exists before calling it.
+    // تشغيل أي دوال خاصة بالصفحة بعد التحقق من المصادقة
     if (typeof initializePage === 'function') {
         initializePage();
-    } else {
-        console.warn('initializePage function is not defined for this page.');
     }
 }
 
 /**
- * This is the main function that runs on every page load to check authentication.
+ * الوظيفة الرئيسية التي تتحقق من حالة مصادقة المستخدم عند تحميل الصفحة.
  */
-function checkAuth() {
-    const isAuthenticated = sessionStorage.getItem('isAdminAuthenticated') === 'true';
-
-    if (isAuthenticated) {
-        showContent();
-    } else {
-        // If not authenticated, ensure the password gate is visible and content is hidden.
-        document.getElementById('password-gate').style.display = 'flex';
-        document.getElementById('dashboard-content').style.display = 'none';
-        
-        const passwordForm = document.getElementById('password-form');
-        if (passwordForm) {
-            passwordForm.addEventListener('submit', handleLogin);
-        }
+function checkAdminAuth() {
+    // التأكد من أن مكتبة Firebase قد تم تحميلها
+    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
+        console.error("Firebase is not loaded. Make sure Firebase scripts are included before this script.");
+        denyAccess();
+        return;
     }
+
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            // المستخدم قام بتسجيل الدخول
+            // الآن، تحقق مما إذا كان UID الخاص به ضمن قائمة المدراء
+            if (ADMIN_UIDS.includes(user.uid)) {
+                // نعم، هذا المستخدم هو مدير. امنحه الوصول.
+                grantAccess();
+            } else {
+                // قام بتسجيل الدخول، لكنه ليس مديرًا. ارفض الوصول.
+                denyAccess();
+            }
+        } else {
+            // المستخدم لم يقم بتسجيل الدخول. ارفض الوصول واطلب منه تسجيل الدخول.
+            console.log("User is not logged in. Redirecting to login page.");
+            // بدلاً من الرفض مباشرة، يمكنك توجيهه إلى صفحة تسجيل الدخول
+            window.location.href = `/login.html?redirect=${window.location.pathname}`;
+        }
+    });
 }
 
-// Run the authentication check as soon as the DOM is ready.
-document.addEventListener('DOMContentLoaded', checkAuth);
+// ابدأ عملية التحقق بمجرد أن يصبح محتوى الصفحة جاهزًا.
+document.addEventListener('DOMContentLoaded', checkAdminAuth);
