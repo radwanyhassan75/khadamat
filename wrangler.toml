@@ -2,8 +2,8 @@
 #  ملف الإعدادات الصحيح والكامل لمشروع Cloudflare Pages
 # =========================================================
 
-# اسم مشروعك في Cloudflare Pages
-name = "khadamat"
+# wrangler.toml
+name = 'orders-worker'
 
 # تاريخ التوافق لضمان عمل الميزات بشكل صحيح
 compatibility_date = "2024-08-08"
