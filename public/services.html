@@ -20,6 +20,7 @@
             --border-radius: 12px; --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
             --success-color: #198754; --warning-color: #ffc107;
         }
+        html { scroll-behavior: smooth; }
         body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color); direction: rtl; }
         .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; width: 100%; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
@@ -48,11 +49,20 @@
         .btn-order { background: var(--primary-color); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 700; cursor: pointer; font-family: 'Cairo', sans-serif; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .btn-order:hover { background-color: var(--success-color); transform: translateY(-2px) scale(1.05); }
         
-        /* --- NEW: Star Rating Display --- */
+        /* --- Star Rating Display --- */
         .rating-display { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .rating-display .stars { color: var(--warning-color); font-size: 1rem; }
         .rating-display .stars .fa-star.empty { color: #e0e0e0; }
         .rating-display .rating-text { font-size: 0.9rem; color: #6c757d; font-weight: 600; }
+
+        /* --- ✅ NEW: Highlight effect for linked service --- */
+        .service-entry.highlight {
+            animation: highlight-fade 2.5s ease-out;
+        }
+        @keyframes highlight-fade {
+            0%, 10% { background-color: rgba(255, 193, 7, 0.3); }
+            100% { background-color: transparent; }
+        }
 
         @media (max-width: 992px) { .navbar-menu { display: none; } .hamburger-menu { display: block; } .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; } }
         @media (max-width: 768px) { .page-header h1 { font-size: 2.8rem; } .page-header p { font-size: 1.1rem; } .service-entry { flex-direction: column; align-items: flex-start; gap: 15px; } .service-price-action { width: 100%; justify-content: space-between; } }
@@ -105,6 +115,35 @@
                 'خدمات اجتماعية وصحية': 'fa-heartbeat',
                 'خدمات رقمية وتقنية': 'fa-laptop-code',
                 'default': 'fa-concierge-bell'
+            };
+
+            // ✅ NEW: Data mapping to link service names to unique slugs for URL linking
+            const servicesSlugMap = {
+                'تحرير الطلبات الخطية': 'request-writing',
+                'التصريحات بالشرف': 'honor-declarations',
+                'صياغة العقود': 'contract-drafting',
+                'السيرة الذاتية': 'cv-services',
+                'ملء الاستمارات': 'form-filling',
+                'ترجمة بسيطة': 'simple-translation',
+                'تصحيح لغوي': 'proofreading',
+                'إنشاء حسابات إلكترونية': 'account-creation',
+                'تعديل PDF': 'pdf-editing',
+                'صياغة فواتير': 'invoice-drafting',
+                'إرسال شكايات': 'complaint-submission',
+                'التسجيل في منحتي': 'minhaty-registration',
+                'التسجيل في التكوين المهني': 'vocational-training-registration',
+                'التسجيل في الجامعات': 'university-registration',
+                'تسجيل في مباريات عمومية': 'public-competitions-registration',
+                'إعداد ملفات الترشح': 'application-file-preparation',
+                'التسجيل في ANAPEC': 'anapec-registration',
+                'رسالة تحفيزية': 'motivation-letter',
+                'التسجيل في السجل الوطني للسكان': 'rnp-registration',
+                'التسجيل في السجل الاجتماعي الموحد': 'rsu-registration',
+                'الدعم الاجتماعي المباشر': 'direct-social-support',
+                'مشاكل CNSS و AMO': 'cnss-amo-issues',
+                'إنشاء مواقع إلكترونية': 'website-creation',
+                'تصميم الشعارات': 'logo-design',
+                'تصاميم السوشيال ميديا': 'social-media-design'
             };
 
             function generateSchema(service) {
@@ -178,8 +217,11 @@
                             generateSchema(service); // Generate schema for Google
                             const ratingHTML = service.aggregateRating ? renderStars(service.aggregateRating.ratingValue, service.aggregateRating.reviewCount) : '';
                             
+                            // ✅ Get the unique slug for the service to use as an ID
+                            const serviceSlug = servicesSlugMap[service.title] || service.title.replace(/\s+/g, '-').toLowerCase();
+
                             serviceEntriesHTML += `
-                                <div class="service-entry" data-price="${service.price}" data-service="${service.title}">
+                                <div class="service-entry" id="${serviceSlug}" data-price="${service.price}" data-service="${service.title}">
                                     <div class="service-info">
                                         <h4>${service.title}</h4>
                                         ${ratingHTML}
@@ -206,6 +248,8 @@
                     }
                     
                     addEventListeners();
+                    // ✅ NEW: After rendering, check if we need to open a specific service
+                    handleUrlHash();
 
                 } catch (error) {
                     console.error('Failed to fetch services:', error);
@@ -215,7 +259,6 @@
             }
 
             function addEventListeners() {
-                // منطق الأكورديون المحسّن
                 const accordionHeaders = document.querySelectorAll('.accordion-header');
                 accordionHeaders.forEach(header => {
                     header.addEventListener('click', () => {
@@ -239,7 +282,6 @@
                     });
                 });
 
-                // منطق أزرار "اطلب الآن"
                 const orderButtons = document.querySelectorAll('.btn-order');
                 orderButtons.forEach(button => {
                     button.addEventListener('click', (e) => {
@@ -259,6 +301,37 @@
                         }
                     });
                 });
+            }
+
+            // ✅ NEW: Function to handle opening and scrolling to a service from a URL hash
+            function handleUrlHash() {
+                const hash = window.location.hash;
+                if (!hash) return;
+
+                const targetId = hash.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    const accordionItem = targetElement.closest('.accordion-item');
+                    if (accordionItem) {
+                        const header = accordionItem.querySelector('.accordion-header');
+                        
+                        // Open the accordion if it's not already open
+                        if (!header.classList.contains('active')) {
+                            header.click();
+                        }
+
+                        // Wait for the accordion animation to complete before scrolling
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            targetElement.classList.add('highlight');
+                            // Remove the highlight after the animation ends
+                            setTimeout(() => {
+                                targetElement.classList.remove('highlight');
+                            }, 2500);
+                        }, 500); // 500ms matches the transition duration
+                    }
+                }
             }
 
             fetchAndRenderServices();

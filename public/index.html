@@ -352,9 +352,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="auth.js"></script>
     
+    <!-- =================================================================
+         ✅ START: UPDATED SCRIPT FOR HOMEPAGE FUNCTIONALITY
+    ================================================================== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- This code is specific to the home page ---
+            // --- Header scroll effect ---
             const header = document.querySelector('.main-header');
             if (header) {
                 window.addEventListener('scroll', () => {
@@ -368,31 +371,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 });
             }
 
+            // --- Enhanced Search Functionality ---
             const searchInput = document.getElementById('hero-search-input');
             const suggestionsBox = document.getElementById('search-suggestions');
+            
+            // 💡 Data is now structured with a 'name' for display and a 'slug' for the URL
             const servicesData = [
-                'تحرير الطلبات الخطية', 'التصريحات بالشرف', 'صياغة العقود', 'السيرة الذاتية', 'ملء الاستمارات',
-                'ترجمة بسيطة', 'تصحيح لغوي', 'إنشاء حسابات إلكترونية', 'تعديل PDF', 'صياغة فواتير',
-                'إرسال شكايات', 'التسجيل في منحتي', 'التسجيل في التكوين المهني', 'التسجيل في الجامعات',
-                'تسجيل في مباريات عمومية', 'إعداد ملفات الترشح', 'التسجيل في ANAPEC', 'رسالة تحفيزية',
-                'التسجيل في السجل الوطني للسكان', 'التسجيل في السجل الاجتماعي الموحد', 'الدعم الاجتماعي المباشر',
-                'مشاكل CNSS و AMO', 'إنشاء مواقع إلكترونية', 'تصميم الشعارات', 'تصاميم السوشيال ميديا'
+                { name: 'تحرير الطلبات الخطية', slug: 'request-writing' },
+                { name: 'التصريحات بالشرف', slug: 'honor-declarations' },
+                { name: 'صياغة العقود', slug: 'contract-drafting' },
+                { name: 'السيرة الذاتية', slug: 'cv-services' },
+                { name: 'ملء الاستمارات', slug: 'form-filling' },
+                { name: 'ترجمة بسيطة', slug: 'simple-translation' },
+                { name: 'تصحيح لغوي', slug: 'proofreading' },
+                { name: 'إنشاء حسابات إلكترونية', slug: 'account-creation' },
+                { name: 'تعديل PDF', slug: 'pdf-editing' },
+                { name: 'صياغة فواتير', slug: 'invoice-drafting' },
+                { name: 'إرسال شكايات', slug: 'complaint-submission' },
+                { name: 'التسجيل في منحتي', slug: 'minhaty-registration' },
+                { name: 'التسجيل في التكوين المهني', slug: 'vocational-training-registration' },
+                { name: 'التسجيل في الجامعات', slug: 'university-registration' },
+                { name: 'تسجيل في مباريات عمومية', slug: 'public-competitions-registration' },
+                { name: 'إعداد ملفات الترشح', slug: 'application-file-preparation' },
+                { name: 'التسجيل في ANAPEC', slug: 'anapec-registration' },
+                { name: 'رسالة تحفيزية', slug: 'motivation-letter' },
+                { name: 'التسجيل في السجل الوطني للسكان', slug: 'rnp-registration' },
+                { name: 'التسجيل في السجل الاجتماعي الموحد', slug: 'rsu-registration' },
+                { name: 'الدعم الاجتماعي المباشر', slug: 'direct-social-support' },
+                { name: 'مشاكل CNSS و AMO', slug: 'cnss-amo-issues' },
+                { name: 'إنشاء مواقع إلكترونية', slug: 'website-creation' },
+                { name: 'تصميم الشعارات', slug: 'logo-design' },
+                { name: 'تصاميم السوشيال ميديا', slug: 'social-media-design' }
             ];
 
             searchInput.addEventListener('input', () => {
-                const query = searchInput.value.toLowerCase();
+                const query = searchInput.value.toLowerCase().trim();
                 suggestionsBox.innerHTML = '';
+                
                 if (query.length < 2) {
                     suggestionsBox.style.display = 'none';
                     return;
                 }
-                const filteredServices = servicesData.filter(service => service.toLowerCase().includes(query));
+
+                const filteredServices = servicesData.filter(service => service.name.toLowerCase().includes(query));
+
                 if (filteredServices.length > 0) {
                     filteredServices.forEach(service => {
                         const li = document.createElement('li');
                         const a = document.createElement('a');
-                        a.href = `services.html`;
-                        a.textContent = service;
+                        // 💡 The link now points to the specific service on the services page
+                        a.href = `services.html#${service.slug}`; 
+                        a.textContent = service.name;
                         li.appendChild(a);
                         suggestionsBox.appendChild(li);
                     });
@@ -402,13 +431,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
 
+            // Hide suggestions when clicking outside
             document.addEventListener('click', (e) => {
                 if (e.target !== searchInput) {
                     suggestionsBox.style.display = 'none';
                 }
             });
 
-            // --- ✅ NEW: Newsletter Form Logic ---
+            // --- Newsletter Form Logic ---
             const newsletterForm = document.getElementById('newsletter-form');
             const newsletterEmail = document.getElementById('newsletter-email');
             const newsletterMessage = document.getElementById('newsletter-message');
@@ -451,9 +481,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             });
         });
     </script>
+    <!-- =================================================================
+         ✅ END: UPDATED SCRIPT
+    ================================================================== -->
     <script src="cookie-consent.js" defer></script>
-
-   
     <script src="chatbot.js"></script>
 </body>
 </html>
