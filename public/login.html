@@ -68,7 +68,8 @@
             width: 100%; box-sizing: border-box;
         }
         .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-primary:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); }
+        .btn-primary:hover:not(:disabled) { background-color: var(--primary-hover-color); transform: translateY(-2px); }
+        .btn-primary:disabled { background-color: #a5b4fc; cursor: not-allowed; }
         .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
         .hamburger-menu { display: none; cursor: pointer; }
         .hamburger-menu i { font-size: 1.5rem; }
@@ -99,7 +100,8 @@
         }
         .login-branding-section {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary-color), #003a75);
+            background: linear-gradient(135deg, rgba(0, 86, 179, 0.85), rgba(0, 58, 117, 0.95)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxfDB8MXxyYW5kb218MHx8b2ZmaWNlLGNvbGxhYm9yYXRpb258fHx8fHwxNzIyMjE1NjUxfA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center;
+            background-size: cover;
             color: var(--light-color);
             display: flex;
             flex-direction: column;
@@ -349,7 +351,7 @@
                 }
             } catch (error) {
                 console.error("Error checking user profile:", error);
-                showMessage("حدث خطأ أثناء التحقق من ملفك الشخصي.");
+                showMessage("حدث خطأ أثناء التحقق من ملفك الشخصي.", 'error');
                 // Fallback to dashboard if check fails
                 window.location.href = 'dashboard.html';
             }
@@ -358,9 +360,9 @@
         // --- Auth State Management ---
         auth.onAuthStateChanged(user => {
             if (user && user.emailVerified) {
-                // If user is logged in and verified, no need to stay on login page
-                // The checkProfileAndRedirect will handle the final destination
-                console.log("User is already logged in and verified.");
+                // If user is logged in and verified, redirect away from login page
+                console.log("User is already logged in and verified. Redirecting...");
+                window.location.href = 'dashboard.html';
             }
         });
 
@@ -385,7 +387,7 @@
                 })
                 .catch(error => {
                     console.error("Login Error:", error);
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
                         showMessage("البريد الإلكتروني أو كلمة المرور غير صحيحة.", "error");
                     } else {
                         showMessage(`خطأ: ${error.message}`, 'error');
@@ -415,10 +417,15 @@
                 })
                 .catch(error => {
                     console.error("Social Login Error:", error);
-                    if (error.code === 'auth/account-exists-with-different-credential') {
-                        showMessage("يوجد حساب بنفس البريد الإلكتروني ولكن ببيانات دخول مختلفة.", "error");
+                    // ✅ FIXED: Only show error for actual problems, not user closing the popup.
+                    if (error.code !== 'auth/popup-closed-by-user') {
+                        if (error.code === 'auth/account-exists-with-different-credential') {
+                            showMessage("يوجد حساب بنفس البريد الإلكتروني ولكن ببيانات دخول مختلفة.", "error");
+                        } else {
+                            showMessage(`خطأ في تسجيل الدخول: ${error.message}`, 'error');
+                        }
                     } else {
-                        showMessage(`خطأ في تسجيل الدخول: ${error.message}`, 'error');
+                        console.log("Sign-in popup closed by user.");
                     }
                 });
         }
@@ -450,16 +457,13 @@
 
         function handleOneTapResponse(response) {
             console.log("Google One-Tap response received.");
-            // Get the ID token from Google's response
             const id_token = response.credential;
-            // Create a Firebase credential with the Google ID token
             const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
 
             // Sign in to Firebase with the credential
             auth.signInWithCredential(credential)
                 .then(result => {
                     console.log("Successfully signed in with One-Tap.");
-                    // The rest of the logic is the same as the popup social login
                     const user = result.user;
                     if (result.additionalUserInfo.isNewUser) {
                         const userDocRef = db.collection('users').doc(user.uid);

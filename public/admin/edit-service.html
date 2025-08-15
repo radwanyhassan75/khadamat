@@ -4,13 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الخدمة - لوحة التحكم</title>
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="../auth.js"></script>
+    <!-- Tailwind CSS and Font Awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Cairo', 'Tahoma', sans-serif; }
         .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s, color 0.2s; }
@@ -45,13 +50,43 @@
             visibility: visible;
             opacity: 1;
         }
+        /* Image Preview Styles */
+        .image-preview-container {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        #image-preview {
+            width: 150px;
+            height: 100px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        #image-status {
+            font-weight: bold;
+        }
+        #image-status.compatible {
+            color: #198754; /* Green */
+        }
+        #image-status.incompatible {
+            color: #dc3545; /* Red */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
     <!-- Password Gate -->
     <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75" style="display: none;">
-        <!-- Password protection code -->
+        <!-- Password protection code will be injected by admin-auth.js -->
     </div>
 
     <!-- Confirmation Modal -->
@@ -74,7 +109,7 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b border-gray-200">
                 <div class="flex items-center justify-between h-20 px-8">
-                     <div>
+                    <div>
                         <h1 id="page-title" class="text-2xl font-bold text-gray-800">إضافة خدمة جديدة</h1>
                         <p class="text-sm text-gray-500">املأ الحقول أدناه لحفظ الخدمة</p>
                     </div>
@@ -86,24 +121,60 @@
             </header>
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
                 <form id="service-form" class="bg-white p-8 rounded-xl shadow-sm space-y-6 max-w-4xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Title -->
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">عنوان الخدمة</label>
+                        <input type="text" id="title" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+
+                    <!-- ✅ NEW: Slug and URL Generator -->
+                    <div class="space-y-4 rounded-lg bg-gray-50 p-4 border border-gray-200">
                         <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2">عنوان الخدمة</label>
-                            <input type="text" id="title" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                            <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">رابط الخدمة (Slug)</label>
+                            <input type="text" id="slug" class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 ltr text-left">
+                        </div>
+                        <div>
+                             <label for="details_url" class="block text-sm font-medium text-gray-700 mb-2">رابط صفحة التفاصيل (للمشاركة)</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="details_url" class="w-full bg-gray-200 border border-gray-300 rounded-lg py-2 px-3 text-gray-500 ltr text-left" readonly>
+                                <button type="button" id="copy-url-btn" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition flex items-center">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Short Description -->
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">وصف مختصر (للبطاقة)</label>
+                        <textarea id="description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+                    </div>
+
+                    <!-- Long Description -->
+                    <div>
+                        <label for="long_description" class="block text-sm font-medium text-gray-700 mb-2">الوصف الكامل (لصفحة التفاصيل)</label>
+                        <textarea id="long_description" rows="8" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Image URL with Preview -->
+                    <div>
+                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">رابط صورة الخدمة (اختياري)</label>
+                        <input type="url" id="image_url" placeholder="https://example.com/image.jpg" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 ltr text-left">
+                        <div class="image-preview-container">
+                            <div id="image-preview">معاينة</div>
+                            <span id="image-status"></span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">السعر (د.م)</label>
+                            <input type="number" id="price" step="0.01" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                         </div>
                         <div>
                             <label for="category" class="block text-sm font-medium text-gray-700 mb-2">فئة الخدمة</label>
                             <input type="text" id="category" placeholder="مثال: خدمات إدارية" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
-                        <textarea id="description" rows="5" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                    </div>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                         <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">السعر (د.م)</label>
-                            <input type="number" id="price" step="0.01" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                         </div>
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الخدمة</label>
@@ -113,10 +184,7 @@
                             </select>
                         </div>
                     </div>
-                     <div>
-                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">رابط صورة الخدمة (اختياري)</label>
-                        <input type="url" id="image_url" placeholder="https://example.com/image.jpg" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 ltr text-left">
-                    </div>
+                    
                     <div class="border-t border-gray-200 pt-6 flex items-center justify-between">
                         <button type="submit" id="save-btn" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm disabled:bg-indigo-400">
                             <i data-lucide="save" class="w-5 h-5 ml-2"></i>
@@ -143,53 +211,146 @@
                 <a href="manage-services.html" class="sidebar-link active"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span></a>
                 <a href="manage-blog.html" class="sidebar-link"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
                 <a href="support-log.html" class="sidebar-link"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i><span>الدعم الفني</span></a>
+                <a href="settings.html" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
                 <a href="settings.html" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span></a>
             </nav>
         </aside>
     </div>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <script src="admin-auth.js"></script>
     <script>
         function initializePage() {
             lucide.createIcons();
             const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
+            // ✅ FIX: Using your correct domain
+            const SITE_URL = 'https://khadamatmaroc.co.uk'; 
+            
+            // Form Elements
             const form = document.getElementById('service-form');
             const pageTitle = document.getElementById('page-title');
             const saveBtn = document.getElementById('save-btn');
             const saveBtnText = document.getElementById('save-btn-text');
             const deleteBtn = document.getElementById('delete-btn');
+            const titleInput = document.getElementById('title');
+            const slugInput = document.getElementById('slug');
+            const detailsUrlInput = document.getElementById('details_url');
+            const copyUrlBtn = document.getElementById('copy-url-btn');
+
+            // Modal & Toast Elements
             const modal = document.getElementById('confirmation-modal');
             const confirmDeleteBtn = document.getElementById('confirm-delete');
             const cancelDeleteBtn = document.getElementById('cancel-delete');
+            const toast = document.getElementById('toast');
+
+            // Image Preview Elements
+            const imageUrlInput = document.getElementById('image_url');
+            const imagePreview = document.getElementById('image-preview');
+            const imageStatus = document.getElementById('image-status');
 
             const urlParams = new URLSearchParams(window.location.search);
             const serviceId = urlParams.get('id');
+            let isImageCompatible = false;
 
             function showToast(message) {
-                const toast = document.getElementById('toast');
                 toast.textContent = message;
                 toast.className = "show";
                 setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
             }
 
+            function generateSlug(text) {
+                return text.toString().toLowerCase().trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\u0621-\u064A\u0660-\u0669a-z0-9\-]/g, '') 
+                    .replace(/-+/g, '-');
+            }
+
+            function updateDetailsUrl() {
+                const slug = slugInput.value;
+                if (slug) {
+                    detailsUrlInput.value = `${SITE_URL}/service-details.html?slug=${slug}`;
+                } else {
+                    detailsUrlInput.value = '';
+                }
+            }
+
+            titleInput.addEventListener('input', () => {
+                const slug = generateSlug(titleInput.value);
+                slugInput.value = slug;
+                updateDetailsUrl();
+            });
+
+            slugInput.addEventListener('input', () => {
+                updateDetailsUrl();
+            });
+
+            copyUrlBtn.addEventListener('click', () => {
+                detailsUrlInput.select();
+                document.execCommand('copy');
+                showToast('تم نسخ الرابط!');
+            });
+
+            function validateImage(url) {
+                if (!url) {
+                    imagePreview.style.backgroundImage = 'none';
+                    imagePreview.textContent = 'معاينة';
+                    imageStatus.textContent = '';
+                    isImageCompatible = true;
+                    return;
+                }
+                imageStatus.textContent = 'جارٍ التحقق...';
+                imageStatus.className = '';
+                const img = new Image();
+                img.onload = () => {
+                    imagePreview.style.backgroundImage = `url(${url})`;
+                    imagePreview.textContent = '';
+                    imageStatus.textContent = 'متوافقة';
+                    imageStatus.className = 'compatible';
+                    isImageCompatible = true;
+                };
+                img.onerror = () => {
+                    imagePreview.style.backgroundImage = 'none';
+                    imagePreview.textContent = 'فشل التحميل';
+                    imageStatus.textContent = 'غير متوافقة (الرابط لا يعمل)';
+                    imageStatus.className = 'incompatible';
+                    isImageCompatible = false;
+                };
+                img.src = url;
+            }
+
+            imageUrlInput.addEventListener('input', (e) => validateImage(e.target.value));
+            imageUrlInput.addEventListener('paste', (e) => {
+                setTimeout(() => validateImage(e.target.value), 0);
+            });
+
             async function loadServiceData() {
-                if (!serviceId) return;
-                
+                if (!serviceId) {
+                    pageTitle.textContent = 'إضافة خدمة جديدة';
+                    saveBtnText.textContent = 'إضافة الخدمة';
+                    updateDetailsUrl(); // Initial call
+                    return;
+                }
+
                 pageTitle.textContent = 'تعديل الخدمة';
+                saveBtnText.textContent = 'حفظ التغييرات';
                 deleteBtn.classList.remove('hidden');
-                
+
                 try {
-                    const response = await fetch(`${WORKER_URL}/api/services/${serviceId}`);
+                    const response = await fetch(`${WORKER_URL}/api/admin/services/${serviceId}`);
                     if (!response.ok) throw new Error('Service not found');
                     const service = await response.json();
-                    
-                    document.getElementById('title').value = service.title;
-                    document.getElementById('price').value = service.price;
+
+                    titleInput.value = service.title || '';
+                    slugInput.value = service.slug || '';
                     document.getElementById('description').value = service.description || '';
+                    document.getElementById('long_description').value = service.long_description || '';
                     document.getElementById('image_url').value = service.image_url || '';
+                    document.getElementById('price').value = service.price;
+                    document.getElementById('category').value = service.category || '';
                     document.getElementById('status').value = service.status;
-                    document.getElementById('category').value = service.category || ''; // Load category
+                    
+                    validateImage(service.image_url);
+                    updateDetailsUrl(); // Update URL preview after loading data
+
                 } catch (error) {
                     console.error("Failed to load service:", error);
                     showToast('خطأ: لم يتم العثور على الخدمة.');
@@ -203,16 +364,18 @@
                 saveBtnText.textContent = 'جاري الحفظ...';
 
                 const serviceData = {
-                    title: document.getElementById('title').value,
-                    price: parseFloat(document.getElementById('price').value),
+                    title: titleInput.value,
+                    slug: slugInput.value,
                     description: document.getElementById('description').value,
+                    long_description: document.getElementById('long_description').value,
                     image_url: document.getElementById('image_url').value,
+                    price: parseFloat(document.getElementById('price').value),
+                    category: document.getElementById('category').value,
                     status: document.getElementById('status').value,
-                    category: document.getElementById('category').value, // Get category value
                 };
-                
+
                 const method = serviceId ? 'PUT' : 'POST';
-                const endpoint = serviceId ? `${WORKER_URL}/api/services/${serviceId}` : `${WORKER_URL}/api/services`;
+                const endpoint = serviceId ? `${WORKER_URL}/api/admin/services/${serviceId}` : `${WORKER_URL}/api/admin/services`;
 
                 try {
                     const response = await fetch(endpoint, {
@@ -222,9 +385,11 @@
                     });
 
                     if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Server error response:', errorData);
                         throw new Error('فشل حفظ الخدمة');
                     }
-                    
+
                     showToast('تم حفظ الخدمة بنجاح!');
                     setTimeout(() => {
                         window.location.href = 'manage-services.html';
@@ -234,10 +399,10 @@
                     console.error("Save error:", error);
                     showToast('حدث خطأ أثناء الحفظ.');
                     saveBtn.disabled = false;
-                    saveBtnText.textContent = 'حفظ التغييرات';
+                    saveBtnText.textContent = serviceId ? 'حفظ التغييرات' : 'إضافة الخدمة';
                 }
             });
-            
+
             deleteBtn.addEventListener('click', () => {
                 modal.classList.remove('hidden');
             });
@@ -248,12 +413,12 @@
 
             confirmDeleteBtn.addEventListener('click', async () => {
                 if (!serviceId) return;
-                
+
                 confirmDeleteBtn.disabled = true;
                 confirmDeleteBtn.textContent = 'جاري الحذف...';
 
                 try {
-                    const response = await fetch(`${WORKER_URL}/api/services/${serviceId}`, { method: 'DELETE' });
+                    const response = await fetch(`${WORKER_URL}/api/admin/services/${serviceId}`, { method: 'DELETE' });
                     if (!response.ok) {
                         throw new Error('فشل حذف الخدمة');
                     }

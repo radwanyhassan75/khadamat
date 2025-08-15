@@ -447,27 +447,50 @@
                         return user.updateProfile({ displayName: name }).then(() => user);
                     })
                     .then((user) => {
-                        console.log("User created, syncing with backend...");
-                        // ✅ MODIFIED: Call the sync function here
+                        console.log("User created, syncing with backend and sending verification email...");
                         syncUserWithBackend(user); 
-                        return user.sendEmailVerification();
+                        
+                        // ✅ MODIFIED: Send verification email with custom redirect URL
+                        const actionCodeSettings = {
+                            url: 'https://khadamatmaroc.co.uk/email-verified.html', // 👈 Your official domain
+                            handleCodeInApp: true
+                        };
+                        return user.sendEmailVerification(actionCodeSettings);
                     })
-                    .then(() => { window.location.href = "verify-email.html"; })
-                    .catch((error) => { handleAuthError(error); });
+                    .then(() => { 
+                        window.location.href = "verify-email.html"; 
+                    })
+                    .catch((error) => { 
+                        handleAuthError(error); 
+                    });
             });
 
             document.getElementById("google-signup").addEventListener("click", () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider)
                     .then((result) => handleSocialLogin(result))
-                    .catch(handleAuthError);
+                    .catch((error) => {
+                        // ✅ FIXED: Only show error for actual problems, not user closing the popup.
+                        if (error.code !== 'auth/popup-closed-by-user') {
+                            handleAuthError(error);
+                        } else {
+                            console.log("Google sign-in popup closed by user.");
+                        }
+                    });
             });
             
             document.getElementById("facebook-signup").addEventListener("click", () => {
                 const provider = new firebase.auth.FacebookAuthProvider();
                  auth.signInWithPopup(provider)
                     .then((result) => handleSocialLogin(result))
-                    .catch(handleAuthError);
+                    .catch((error) => {
+                        // ✅ FIXED: Only show error for actual problems, not user closing the popup.
+                         if (error.code !== 'auth/popup-closed-by-user') {
+                            handleAuthError(error);
+                        } else {
+                            console.log("Facebook sign-in popup closed by user.");
+                        }
+                    });
             });
             
             // --- Google One Tap Sign-In ---
@@ -499,11 +522,10 @@
                 const isNewUser = result.additionalUserInfo.isNewUser;
                 if (isNewUser) {
                     console.log("New social user, syncing with backend...");
-                    // ✅ MODIFIED: Call the sync function for new social users
                     syncUserWithBackend(user); 
                 }
-                // Redirect to dashboard for both new and existing social users
-                window.location.href = "dashboard.html";
+                // For social logins, we assume email is verified and redirect directly
+                window.location.href = "complete-profile.html";
             }
 
             function showMessage(message, type) {
@@ -547,11 +569,11 @@
         });
     </script>
     <script>
-  window.fbAsyncInit = function() {
+ window.fbAsyncInit = function() {
     FB.init({
       appId      : '1491180262251015',
       xfbml      : true,
-      version    : 'v23.0'
+      version    : 'v20.0'
     });
     FB.AppEvents.logPageView();
   };

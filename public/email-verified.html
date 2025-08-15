@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم تأكيد البريد الإلكتروني - المكتب الرقمي</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd; /* Blue from buttons */
+            --primary-light-color: #e7f1ff; /* Light blue from buttons */
+            --success-color: #198754;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f4f7f9;
+            --text-color: #555;
+            --footer-bg-color: #1c2331; /* Dark blue from footer image */
+            --border-radius: 8px;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            direction: rtl;
+            background-color: var(--gray-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* --- Shared Header --- */
+        .main-header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 50px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s; position: relative; padding-bottom: 5px; }
+        .navbar-menu a.active, .navbar-menu a:hover { color: var(--primary-color); }
+        .navbar-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        .navbar-actions { display: flex; align-items: center; gap: 15px; }
+        .btn { 
+            padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; 
+            font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; border: 2px solid transparent; cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-primary:hover { background-color: #0b5ed7; transform: translateY(-2px); }
+        .btn-light { background-color: var(--primary-light-color); color: var(--primary-color); }
+        .hamburger-menu { display: none; cursor: pointer; }
+        .hamburger-menu i { font-size: 1.5rem; color: var(--dark-color); }
+
+        /* --- Main Content --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .verification-box {
+            background: var(--light-color);
+            padding: 50px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border-top: 5px solid var(--success-color);
+        }
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: #e9f7ef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+        .icon-wrapper i {
+            font-size: 2.5rem;
+            color: var(--success-color);
+        }
+        .verification-box h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 0 0 15px 0;
+        }
+        .verification-box p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        .redirect-message {
+            font-size: 0.95rem;
+            color: #888;
+        }
+        .redirect-message span {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        /* --- Shared Footer --- */
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; box-sizing: border-box; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1400px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p { line-height: 1.8; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.2rem; }
+        .footer-socials a:hover { color: var(--light-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .navbar-menu, .navbar-actions { display: none; }
+            .hamburger-menu { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="pricing.html">الأسعار</a></li>
+                <li><a href="payment.html">طرق الدفع</a></li>
+                <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="about.html">من نحن</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
+                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+            </div>
+            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="verification-box">
+            <div class="icon-wrapper">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>تم تأكيد بريدك الإلكتروني بنجاح!</h1>
+            <p>شكراً لك على تفعيل حسابك. أصبحت الآن جاهزاً للاستفادة من جميع خدماتنا.</p>
+            <p class="redirect-message">
+                سيتم توجيهك إلى صفحة إكمال ملفك الشخصي خلال <span id="countdown">4</span> ثوانٍ...
+            </p>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية، مصممة لتلبية احتياجاتك اليومية.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                    <li><a href="pricing.html">قائمة الأسعار</a></li>
+                    <li><a href="payment.html">طرق الدفع</a></li>
+                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="my-orders.html">طلباتي</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="refund.html">سياسة الاسترجاع</a></li>
+                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">تواصل معنا</h3>
+                <div class="footer-socials">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        let seconds = 4;
+
+        const interval = setInterval(() => {
+            seconds--;
+            countdownElement.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(interval);
+                // Redirect to the profile completion page after verification
+                window.location.href = 'complete-profile.html'; 
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
