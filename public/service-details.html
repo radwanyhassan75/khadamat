@@ -415,7 +415,9 @@
                     sidebarTitleEl.textContent = service.title;
                     sidebarDescriptionEl.textContent = service.description;
                     sidebarPriceEl.innerHTML = `${service.price} <span>درهم</span>`;
-                    orderButton.href = `order.html?service=${encodeURIComponent(service.title)}&price=${service.price}`;
+                    
+                    // ✅ FIX: Point the order button to payment-gateway.html
+                    orderButton.href = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${service.price}`;
 
                     // Populate sharing tools
                     populateSocialLinks(service);
