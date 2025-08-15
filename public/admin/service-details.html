@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root {
@@ -31,7 +32,7 @@
             font-family: 'Cairo', sans-serif;
             margin: 0;
             direction: rtl;
-            background-color: var(--light-color);
+            background-color: var(--gray-color);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -62,8 +63,8 @@
 
         /* --- Service Details Styles --- */
         .service-details-container {
-            max-width: 1100px;
-            margin: 60px auto;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 0 20px;
         }
         .loading-state, .error-state {
@@ -72,80 +73,153 @@
             font-size: 1.2rem;
             color: var(--text-color);
         }
-        .service-content {
+        .service-layout {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 50px;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
             align-items: flex-start;
         }
-        .service-image-container {
-            position: sticky;
-            top: 120px; /* Header height + margin */
-        }
-        .service-image {
-            width: 100%;
-            height: 350px;
-            background-color: var(--gray-color);
+        .service-main-content {
+            background-color: var(--light-color);
+            padding: 40px;
             border-radius: var(--border-radius);
-            background-size: cover;
-            background-position: center;
             box-shadow: var(--box-shadow);
         }
-        .service-info h1 {
-            font-size: 2.5rem;
+        .service-main-content h1 {
+            font-size: 2.2rem;
             font-weight: 900;
             color: var(--dark-color);
-            margin-bottom: 15px;
-        }
-        .service-meta {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .service-price {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary-color);
-        }
-        .service-price span {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .service-category {
-            background-color: #e7f1ff;
-            color: var(--primary-color);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9rem;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
         }
         .service-long-description {
             line-height: 1.9;
             color: var(--text-color);
             font-size: 1.1rem;
         }
-        .service-long-description p { margin: 0 0 1.5em 0; }
+        .service-long-description p { margin-bottom: 1.5em; }
         .service-long-description ul { padding-right: 20px; margin-bottom: 1.5em; }
         .service-long-description li { margin-bottom: 0.8em; }
-        .order-button-container {
-            margin-top: 40px;
+        
+        .service-sidebar {
+            position: sticky;
+            top: 110px; /* Header height + margin */
         }
-        .btn-order-large {
-            padding: 15px 35px;
+        .sidebar-card {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        .sidebar-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+        }
+        .sidebar-content {
+            padding: 25px;
+        }
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        .sidebar-description {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+        .sidebar-price {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .sidebar-price span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .btn-order {
+            width: 100%;
             font-size: 1.1rem;
+            padding: 15px;
+        }
+
+        .sharing-section {
+            margin-top: 20px;
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        .sharing-title {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        .si-facebook { background-color: #1877F2; }
+        .si-twitter { background-color: #1DA1F2; }
+        .si-whatsapp { background-color: #25D366; }
+        .si-linkedin { background-color: #0A66C2; }
+        .si-telegram { background-color: #24A1DE; }
+
+        .link-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .link-actions button {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--gray-color);
+            color: var(--dark-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .link-actions button:hover {
+            background-color: #e9e9e9;
+        }
+        .link-actions .lucide {
+            width: 16px;
+            height: 16px;
         }
 
         /* Responsive */
         @media (max-width: 992px) {
             .navbar-menu, .navbar-actions { display: none; }
             .hamburger-menu { display: block; }
-            .service-content { grid-template-columns: 1fr; }
-            .service-image-container { position: static; margin-bottom: 30px; }
-            .service-image { height: 250px; }
-            .service-info h1 { font-size: 2rem; }
+            .service-layout { grid-template-columns: 1fr; }
+            .service-sidebar { position: static; margin-top: 30px; }
         }
     </style>
 </head>
@@ -182,19 +256,43 @@
         </div>
 
         <!-- Service Content (hidden by default) -->
-        <div id="service-content" class="service-content" style="display: none;">
-            <div class="service-image-container">
-                <div id="service-image" class="service-image"></div>
-            </div>
-            <div class="service-info">
-                <h1 id="service-title"></h1>
-                <div class="service-meta">
-                    <div id="service-price" class="service-price"></div>
-                    <div id="service-category" class="service-category"></div>
-                </div>
+        <div id="service-layout" class="service-layout" style="display: none;">
+            <!-- Main Content -->
+            <article class="service-main-content">
+                <h1 id="service-title-main"></h1>
                 <div id="service-long-description" class="service-long-description"></div>
-                <div id="order-button-container" class="order-button-container"></div>
-            </div>
+            </article>
+
+            <!-- Sidebar -->
+            <aside class="service-sidebar">
+                <div class="sidebar-card">
+                    <div id="sidebar-image" class="sidebar-image"></div>
+                    <div class="sidebar-content">
+                        <h2 id="sidebar-title" class="sidebar-title"></h2>
+                        <p id="sidebar-description" class="sidebar-description"></p>
+                        <div id="sidebar-price" class="sidebar-price"></div>
+                        <a id="order-button" href="#" class="btn btn-primary btn-order">
+                            <i class="fas fa-shopping-cart mr-2"></i> اطلب الخدمة الآن
+                        </a>
+                    </div>
+                </div>
+                <div class="sharing-section">
+                    <h3 class="sharing-title">شارك هذه الخدمة</h3>
+                    <div id="social-icons" class="social-icons">
+                        <!-- Social icons will be injected by JS -->
+                    </div>
+                    <div class="link-actions">
+                        <button id="copy-link-btn">
+                            <i data-lucide="link"></i>
+                            <span>نسخ الرابط</span>
+                        </button>
+                        <button id="embed-btn">
+                            <i data-lucide="code"></i>
+                            <span>تضمين</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
         </div>
     </main>
 
@@ -228,17 +326,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
             const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
+            
+            // Page sections
             const loader = document.getElementById('loader');
             const errorMessage = document.getElementById('error-message');
-            const serviceContent = document.getElementById('service-content');
+            const serviceLayout = document.getElementById('service-layout');
             
-            const serviceTitleEl = document.getElementById('service-title');
-            const serviceImageEl = document.getElementById('service-image');
-            const servicePriceEl = document.getElementById('service-price');
-            const serviceCategoryEl = document.getElementById('service-category');
+            // Main content elements
+            const serviceTitleMainEl = document.getElementById('service-title-main');
             const serviceLongDescriptionEl = document.getElementById('service-long-description');
-            const orderButtonContainer = document.getElementById('order-button-container');
+
+            // Sidebar elements
+            const sidebarImageEl = document.getElementById('sidebar-image');
+            const sidebarTitleEl = document.getElementById('sidebar-title');
+            const sidebarDescriptionEl = document.getElementById('sidebar-description');
+            const sidebarPriceEl = document.getElementById('sidebar-price');
+            const orderButton = document.getElementById('order-button');
+            const socialIconsContainer = document.getElementById('social-icons');
+            const copyLinkBtn = document.getElementById('copy-link-btn');
+            const embedBtn = document.getElementById('embed-btn');
 
             const urlParams = new URLSearchParams(window.location.search);
             const serviceSlug = urlParams.get('slug');
@@ -250,73 +358,84 @@
 
             function showError() {
                 loader.style.display = 'none';
-                serviceContent.style.display = 'none';
+                serviceLayout.style.display = 'none';
                 errorMessage.style.display = 'block';
             }
-            
-            function createServiceSchema(service) {
-                const schema = {
-                    "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": service.title,
-                    "description": service.long_description || service.description,
-                    "image": service.image_url,
-                    "url": window.location.href,
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "المكتب الرقمي",
-                        "url": "https://khadamatmaroc.co.uk"
-                    },
-                    "serviceType": service.category,
-                    "offers": {
-                        "@type": "Offer",
-                        "price": service.price.toString(),
-                        "priceCurrency": "MAD",
-                        "url": `https://khadamatmaroc.co.uk/order.html?service=${encodeURIComponent(service.title)}&price=${service.price}`
-                    }
+
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.textContent = message;
+                toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            }
+
+            function populateSocialLinks(service) {
+                const url = window.location.href;
+                const text = `اكتشف خدمة "${service.title}" على موقع المكتب الرقمي!`;
+                
+                const socialLinks = {
+                    whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`,
+                    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+                    twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
+                    linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(service.title)}&summary=${encodeURIComponent(service.description)}`,
+                    telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`
                 };
-                const script = document.createElement('script');
-                script.type = 'application/ld+json';
-                script.textContent = JSON.stringify(schema, null, 2);
-                document.head.appendChild(script);
+
+                socialIconsContainer.innerHTML = `
+                    <a href="${socialLinks.whatsapp}" target="_blank" class="social-icon si-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="${socialLinks.facebook}" target="_blank" class="social-icon si-facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="${socialLinks.twitter}" target="_blank" class="social-icon si-twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="${socialLinks.linkedin}" target="_blank" class="social-icon si-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="${socialLinks.telegram}" target="_blank" class="social-icon si-telegram"><i class="fab fa-telegram-plane"></i></a>
+                `;
             }
 
             async function fetchServiceDetails() {
                 try {
                     const response = await fetch(`${WORKER_URL}/api/services/slug/${serviceSlug}`);
-                    if (!response.ok) {
-                        throw new Error('Service not found');
-                    }
+                    if (!response.ok) throw new Error('Service not found');
                     const service = await response.json();
                     
-                    // Populate the page with service data
+                    // Populate page metadata for SEO
                     document.title = `${service.title} - المكتب الرقمي`;
                     document.querySelector('meta[name="description"]').setAttribute("content", service.description);
 
-                    serviceTitleEl.textContent = service.title;
-                    serviceImageEl.style.backgroundImage = `url('${service.image_url || 'https://placehold.co/600x400/0056b3/ffffff?text=خدمة'}')`;
-                    servicePriceEl.innerHTML = `${service.price} <span>درهم</span>`;
-                    serviceCategoryEl.textContent = service.category;
-                    
-                    // Sanitize and display long description
-                    const longDescriptionHtml = (service.long_description || '')
-                        .replace(/\n/g, '<br>') // Replace newlines with <br>
-                        .replace(/(\*+)([^*]+)\1/g, '<strong>$2</strong>'); // Basic bold markdown
+                    // Populate main content
+                    serviceTitleMainEl.textContent = service.title;
+                    const longDescriptionHtml = (service.long_description || service.description)
+                        .replace(/\n/g, '<br>');
                     serviceLongDescriptionEl.innerHTML = `<p>${longDescriptionHtml}</p>`;
 
-                    // Create and append the order button
-                    const orderButton = document.createElement('a');
+                    // Populate sidebar
+                    sidebarImageEl.style.backgroundImage = `url('${service.image_url || 'https://placehold.co/600x400/0056b3/ffffff?text=خدمة'}')`;
+                    sidebarTitleEl.textContent = service.title;
+                    sidebarDescriptionEl.textContent = service.description;
+                    sidebarPriceEl.innerHTML = `${service.price} <span>درهم</span>`;
                     orderButton.href = `order.html?service=${encodeURIComponent(service.title)}&price=${service.price}`;
-                    orderButton.className = 'btn btn-primary btn-order-large';
-                    orderButton.innerHTML = '<i class="fas fa-shopping-cart"></i> اطلب الخدمة الآن';
-                    orderButtonContainer.appendChild(orderButton);
 
-                    // Create JSON-LD Schema for SEO
-                    createServiceSchema(service);
+                    // Populate sharing tools
+                    populateSocialLinks(service);
+
+                    copyLinkBtn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            showToast('تم نسخ الرابط بنجاح!');
+                        });
+                    });
+
+                    embedBtn.addEventListener('click', () => {
+                        const embedCode = `<iframe src="${window.location.href}" width="100%" height="600" style="border:1px solid #ddd; border-radius: 12px;"></iframe>`;
+                        navigator.clipboard.writeText(embedCode).then(() => {
+                            showToast('تم نسخ كود التضمين!');
+                        });
+                    });
 
                     // Show content
                     loader.style.display = 'none';
-                    serviceContent.style.display = 'grid';
+                    serviceLayout.style.display = 'grid';
 
                 } catch (error) {
                     console.error('Error fetching service details:', error);
