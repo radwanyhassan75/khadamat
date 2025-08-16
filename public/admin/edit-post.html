@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المقال - لوحة التحكم العصرية</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="../auth.js"></script>
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- TinyMCE Rich Text Editor -->
-    <script src="https://cdn.tiny.cloud/1/zpmhp4q38jsl57jo0umqh4phj26r1u24ihzl99ks14x6j7dt/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zpmhp4q38jsl57jo0umqh4phj26r1u24ihzl99ks14x6j7dt/tinymce/6/tinymce.min.js"></script>
     
     <style>
         body, input, textarea, select, button { 
@@ -65,7 +65,6 @@
     </div>
 
     <div id="dashboard-content" class="hidden h-screen md:flex flex-row-reverse">
-        
         <aside class="flex flex-col w-64 bg-white border-l border-slate-200">
             <div class="flex items-center justify-center h-20 border-b border-slate-200">
                 <h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1>
@@ -102,7 +101,6 @@
             <header class="flex items-center justify-between h-20 px-8 bg-white border-b border-slate-200 sticky top-0 z-10">
                 <div>
                     <h2 class="text-xl font-semibold text-slate-800">إدارة المدونة</h2>
-                    <!-- سيتم تحديث هذا العنوان ديناميكيًا -->
                     <p id="page-title" class="text-sm text-slate-500">إنشاء مقال جديد</p>
                 </div>
                 <a href="manage-blog.html" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200 transition-colors duration-200 flex items-center font-medium"><i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i><span>العودة إلى قائمة المقالات</span></a>
@@ -132,20 +130,20 @@
                             <h3 class="text-lg font-semibold text-slate-800 border-b pb-3 mb-4 flex items-center"><i data-lucide="search" class="w-5 h-5 ml-2 text-indigo-500"></i>تحسينات محركات البحث (SEO)</h3>
                             <div>
                                 <label for="meta_title" class="block text-sm font-medium text-slate-600 mb-2">عنوان SEO (Meta Title)</label>
-                                <input type="text" id="meta_title" placeholder="عنوان يظهر في جوجل (60 حرفًا كحد أقصى)" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition">
+                                <input type="text" id="meta_title" placeholder="عنوان يظهر في جوجل (60 حرفًا كحد أقصى)" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition" maxlength="60">
                             </div>
                             <div>
                                 <label for="meta_description" class="block text-sm font-medium text-slate-600 mb-2">وصف SEO (Meta Description)</label>
-                                <textarea id="meta_description" rows="3" placeholder="وصف موجز وجذاب للمقال (160 حرفًا كحد أقصى)" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition"></textarea>
+                                <textarea id="meta_description" rows="3" placeholder="وصف موجز وجذاب للمقال (160 حرفًا كحد أقصى)" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition" maxlength="160"></textarea>
                             </div>
                         </div>
                         <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 space-y-6">
-                             <h3 class="text-lg font-semibold text-slate-800 border-b pb-3 mb-4 flex items-center"><i data-lucide="settings-2" class="w-5 h-5 ml-2 text-indigo-500"></i>خيارات النشر</h3>
+                            <h3 class="text-lg font-semibold text-slate-800 border-b pb-3 mb-4 flex items-center"><i data-lucide="settings-2" class="w-5 h-5 ml-2 text-indigo-500"></i>خيارات النشر</h3>
                             <div>
                                 <label for="featured_image_url" class="block text-sm font-medium text-slate-600 mb-2">رابط الصورة البارزة</label>
                                 <input type="url" id="featured_image_url" placeholder="https://example.com/image.jpg" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition">
                             </div>
-                             <div>
+                            <div>
                                 <label for="tags" class="block text-sm font-medium text-slate-600 mb-2">الوسوم (افصل بفاصلة ,)</label>
                                 <input type="text" id="tags" placeholder="أخبار, تحديثات, خدمات" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition">
                             </div>
@@ -161,7 +159,6 @@
                     <div class="pt-4 flex justify-start">
                         <button type="submit" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-300 flex items-center shadow-lg hover:shadow-xl disabled:bg-indigo-400">
                             <i data-lucide="save" class="w-5 h-5 ml-2"></i>
-                            <!-- سيتم تحديث هذا النص ديناميكيًا -->
                             <span id="submit-button-text">حفظ المقال</span>
                         </button>
                     </div>
@@ -176,7 +173,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            
             const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
 
             async function handleLogin(e) {
@@ -193,7 +189,7 @@
                     if (!response.ok) throw new Error('فشل في الاتصال بالخادم.');
                     
                     const settings = await response.json();
-                    const correctPassword = settings.admin_password || '12345678';
+                    const correctPassword = settings.find(s => s.key === 'admin_password')?.value || '12345678';
 
                     if (passwordInput.value === correctPassword) {
                         sessionStorage.setItem('isAdminAuthenticated', 'true');
@@ -234,7 +230,6 @@
                 }
             }
 
-            // ✅✅✅ تم تحديث هذه الدالة بالكامل لتشمل منطق التعديل ✅✅✅
             function initializePage() {
                 lucide.createIcons();
 
@@ -248,7 +243,6 @@
                 const titleInput = document.getElementById('title');
                 const slugInput = document.getElementById('slug');
 
-                // دالة لجلب بيانات المقال وتعبئة الحقول
                 async function loadPostForEditing() {
                     if (!isEditMode) return;
 
@@ -256,13 +250,18 @@
                     submitButtonText.textContent = 'تحديث المقال';
 
                     try {
-                        const response = await fetch(`${API_URL}/api/posts/${postId}`);
+                        const response = await fetch(`${API_URL}/api/admin/posts/${postId}`);
+                        console.log('Fetch Response Status:', response.status); // تسجيل حالة الاستجابة
                         if (!response.ok) {
-                            throw new Error('فشل في جلب بيانات المقال للتعديل.');
+                            throw new Error(`فشل في جلب بيانات المقال. الحالة: ${response.status}`);
                         }
                         const post = await response.json();
+                        console.log('Fetched Post Data:', post); // تسجيل البيانات المستلمة
+                        if (!post || typeof post !== 'object' || Object.keys(post).length === 0) {
+                            throw new Error('بيانات المقال غير صالحة أو فارغة.');
+                        }
 
-                        // تعبئة الحقول بالبيانات
+                        // تعبئة الحقول
                         titleInput.value = post.title || '';
                         slugInput.value = post.slug || '';
                         document.getElementById('meta_title').value = post.meta_title || '';
@@ -270,20 +269,21 @@
                         document.getElementById('featured_image_url').value = post.featured_image_url || '';
                         document.getElementById('tags').value = Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || '');
                         document.getElementById('status').value = post.status || 'draft';
-                        
-                        // تعبئة محرر النصوص بالمحتوى
-                        tinymce.get('content-editor').setContent(post.content || '');
-
+                        const editor = tinymce.get('content-editor');
+                        if (editor) {
+                            editor.setContent(post.content || '');
+                        } else {
+                            console.error('TinyMCE editor not initialized yet.');
+                        }
                     } catch (error) {
                         console.error('Error loading post for editing:', error);
-                        showNotification('خطأ في تحميل بيانات المقال.', 'error');
+                        showNotification('خطأ في تحميل بيانات المقال: ' + error.message, 'error');
                     }
                 }
 
-                // تهيئة محرر النصوص، وبعدها يتم جلب البيانات في حال التعديل
                 tinymce.init({
                     selector: '#content-editor',
-                    plugins: 'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount directionality',
+                    plugins: 'advlist autolink lists link image charmap searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount directionality',
                     toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help | ltr rtl',
                     directionality: 'rtl',
                     language: 'ar',
@@ -292,8 +292,14 @@
                     content_style: 'body { font-family:Cairo,Arial,sans-serif; font-size:16px }',
                     setup: function (editor) {
                         editor.on('init', function () {
-                            // يتم استدعاء هذه الدالة بعد أن يصبح المحرر جاهزًا
+                            console.log('TinyMCE initialized, loading post data...');
                             loadPostForEditing();
+                        });
+                        editor.on('load', function () {
+                            if (tinymce.get('content-editor')) {
+                                console.log('TinyMCE loaded, ensuring post data load...');
+                                loadPostForEditing();
+                            }
                         });
                     }
                 });
@@ -309,7 +315,6 @@
 
                 titleInput.addEventListener('keyup', () => slugInput.value = generateSlug(titleInput.value));
 
-                // معالج إرسال النموذج المحدث (يعمل للإنشاء والتعديل)
                 postForm.addEventListener('submit', async function(event) {
                     event.preventDefault(); 
                     
@@ -336,7 +341,7 @@
                     submitButtonText.textContent = isEditMode ? 'جارٍ التحديث...' : 'جارٍ الحفظ...';
 
                     try {
-                        const url = isEditMode ? `${API_URL}/api/posts/${postId}` : `${API_URL}/api/posts`;
+                        const url = isEditMode ? `${API_URL}/api/admin/posts/${postId}` : `${API_URL}/api/admin/posts`;
                         const method = isEditMode ? 'PUT' : 'POST';
 
                         const response = await fetch(url, {
