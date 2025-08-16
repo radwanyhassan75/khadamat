@@ -98,171 +98,184 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="admin-auth.js"></script>
-    <script>
-        function initializePage() {
+<script>
+    function initializePage() {
+        lucide.createIcons();
+        
+        const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+        let allUsers = [];
+        const searchInput = document.getElementById('search-input');
+        const resultsCount = document.getElementById('results-count');
+        const modal = document.getElementById('user-details-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'فشل تحميل المستخدمين');
+                }
+                allUsers = await response.json();
+                renderUsers(allUsers);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                showMessage(`خطأ في تحميل المستخدمين: ${error.message}`, 'error');
+            }
+        }
+
+        function renderUsers(usersToRender) {
+            const tbody = document.getElementById('users-body');
+            tbody.innerHTML = '';
+            resultsCount.textContent = `(${usersToRender.length}) مستخدم`;
+
+            if (usersToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-gray-500">لا يوجد مستخدمون مطابقون للبحث.</td></tr>`;
+                return;
+            }
+
+            usersToRender.forEach(user => {
+                const row = document.createElement('tr');
+                const statusColor = user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                const userJson = JSON.stringify(user).replace(/"/g, '&quot;');
+                
+                row.innerHTML = `
+                    <td class="p-4">
+                        <button onclick='showUserDetails(${userJson})' class="flex items-center text-right hover:underline">
+                            <div class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-semibold ${user.profilePicture ? 'bg-gray-200' : 'bg-indigo-500'} text-white" title="${user.displayName || 'مستخدم بدون اسم'}">
+                                ${user.profilePicture ? 
+                                    `<img src="${user.profilePicture}" alt="${user.displayName || 'User'}" class="w-full h-full rounded-full object-cover">` : 
+                                    (user.displayName ? user.displayName.charAt(0) : 'U')}
+                            </div>
+                            <div class="mr-4">
+                                <p class="font-semibold text-gray-800">${user.displayName || 'مستخدم بدون اسم'}</p>
+                                <p class="text-sm text-gray-500">${user.email}</p>
+                            </div>
+                        </button>
+                    </td>
+                    <td class="p-4 text-sm text-gray-500">${new Date(user.createdAt).toLocaleDateString('ar-EG')}</td>
+                    <td class="p-4 text-sm text-gray-700 font-medium">${user.totalOrders}</td>
+                    <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full ${statusColor}">${user.status === 'active' ? 'نشط' : 'محظور'}</span></td>
+                    <td class="p-4 flex items-center gap-2"><button onclick='deleteUser("${user.id}", "${user.displayName}")' title="حذف المستخدم" class="p-2 text-red-500 bg-red-100 rounded-full hover:bg-red-200"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            lucide.createIcons();
+        }
+
+        function filterAndRender() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filteredUsers = allUsers;
+            if (searchTerm) {
+                filteredUsers = allUsers.filter(user => 
+                    user.displayName?.toLowerCase().includes(searchTerm) || 
+                    user.email?.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderUsers(filteredUsers);
+        }
+
+        window.showUserDetails = async (user) => {
+            document.getElementById('modal-user-name').textContent = user.displayName || 'مستخدم بدون اسم';
+            document.getElementById('modal-user-email').textContent = user.email;
+            document.getElementById('modal-user-join-date').textContent = new Date(user.createdAt).toLocaleString('ar-EG');
+            
+            const statusP = document.getElementById('modal-user-status');
+            statusP.textContent = user.status === 'active' ? 'نشط' : 'محظور';
+            statusP.className = user.status === 'active' ? 'font-bold text-green-600' : 'font-bold text-red-600';
+
+            const banBtn = document.getElementById('modal-ban-btn');
+            const isBanned = user.status === 'banned';
+            banBtn.innerHTML = isBanned ? '<i data-lucide="check-circle" class="w-5 h-5"></i><span>إلغاء الحظر</span>' : '<i data-lucide="ban" class="w-5 h-5"></i><span>حظر المستخدم</span>';
+            banBtn.className = `w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isBanned ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`;
+            banBtn.onclick = () => updateUserStatus(user.id, isBanned ? 'active' : 'banned');
+
+            const tabsContainer = document.getElementById('modal-tabs');
+            tabsContainer.innerHTML = `
+                <button onclick="window.location.href='orders.html?search=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600">الطلبات (${user.totalOrders})</button>
+                <button onclick="window.location.href='support-log.html?userId=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">سجل الدعم</button>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             lucide.createIcons();
             
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
-            let allUsers = [];
-            const searchInput = document.getElementById('search-input');
-            const resultsCount = document.getElementById('results-count');
-            const modal = document.getElementById('user-details-modal');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
-
-            async function fetchUsers() {
-                try {
-                    const response = await fetch(`${API_URL}/users`);
-                    if (!response.ok) throw new Error(`تعذر جلب المستخدمين (الحالة: ${response.status})`);
-                    allUsers = await response.json();
-                    if (!Array.isArray(allUsers)) throw new Error("قائمة المستخدمين غير متوفرة.");
-                    filterAndRender();
-                } catch (error) {
-                    document.getElementById('users-body').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-500">${error.message}</td></tr>`;
+            const ordersContent = document.getElementById('modal-orders-content');
+            ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">جاري تحميل الطلبات...</p>`;
+            try {
+                const response = await fetch(`${API_URL}/orders?userId=${user.id}`);
+                const orders = await response.json();
+                if (orders.length > 0) {
+                    ordersContent.innerHTML = `<ul class="divide-y">${orders.map(o => `
+                        <li class="p-2 hover:bg-gray-50">
+                            <a href="orders.html?search=${o.id}" class="block">
+                                <div class="flex justify-between items-center"><p class="font-semibold">${o.serviceName}</p><p class="text-xs text-gray-500">${new Date(o.createdAt).toLocaleDateString('ar-EG')}</p></div>
+                                <p class="text-sm text-gray-600">${o.status}</p>
+                            </a>
+                        </li>`).join('')}</ul>`;
+                } else {
+                    ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">لا توجد طلبات لهذا المستخدم.</p>`;
                 }
+            } catch (e) {
+                ordersContent.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل الطلبات.</p>`;
             }
+        };
 
-            function renderUsers(usersToRender) {
-                const tbody = document.getElementById('users-body');
-                tbody.innerHTML = '';
-                resultsCount.textContent = `(${usersToRender.length}) مستخدم`;
-
-                if (usersToRender.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-gray-500">لا يوجد مستخدمون مطابقون للبحث.</td></tr>`;
-                    return;
-                }
-
-                usersToRender.forEach(user => {
-                    const row = document.createElement('tr');
-                    const statusColor = user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-                    const userJson = JSON.stringify(user).replace(/"/g, '&quot;');
-                    
-                    row.innerHTML = `
-                        <td class="p-4">
-                            <button onclick='showUserDetails(${userJson})' class="flex items-center text-right hover:underline">
-                                <div class="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
-                                <div class="mr-4">
-                                    <p class="font-semibold text-gray-800">${user.displayName || 'مستخدم بدون اسم'}</p>
-                                    <p class="text-sm text-gray-500">${user.email}</p>
-                                </div>
-                            </button>
-                        </td>
-                        <td class="p-4 text-sm text-gray-500">${new Date(user.createdAt).toLocaleDateString('ar-EG')}</td>
-                        <td class="p-4 text-sm text-gray-700 font-medium">${user.totalOrders}</td>
-                        <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full ${statusColor}">${user.status === 'active' ? 'نشط' : 'محظور'}</span></td>
-                        <td class="p-4 flex items-center gap-2"><button onclick='deleteUser("${user.id}", "${user.displayName}")' title="حذف المستخدم" class="p-2 text-red-500 bg-red-100 rounded-full hover:bg-red-200"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
-                    `;
-                    tbody.appendChild(row);
+        window.updateUserStatus = async (userId, newStatus) => {
+            try {
+                const response = await fetch(`${API_URL}/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
                 });
-                lucide.createIcons();
+                if (!response.ok) throw new Error('تعذر تحديث حالة المستخدم.');
+                showMessage('تم تحديث حالة المستخدم بنجاح.', 'success');
+                modal.classList.add('hidden');
+                fetchUsers();
+            } catch (error) {
+                showMessage(`خطأ: ${error.message}`, 'error');
             }
+        };
 
-            function filterAndRender() {
-                const searchTerm = searchInput.value.toLowerCase();
-                let filteredUsers = allUsers;
-                if (searchTerm) {
-                    filteredUsers = allUsers.filter(user => user.displayName?.toLowerCase().includes(searchTerm) || user.email?.toLowerCase().includes(searchTerm));
-                }
-                renderUsers(filteredUsers);
+        window.deleteUser = async (userId, userName) => {
+            if (!await showConfirmationModal(`هل أنت متأكد من حذف المستخدم "${userName}"؟`)) return;
+            try {
+                const response = await fetch(`${API_URL}/users/${userId}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('تعذر حذف المستخدم.');
+                showMessage('تم حذف المستخدم بنجاح.', 'success');
+                fetchUsers();
+            } catch (error) {
+                showMessage(`خطأ: ${error.message}`, 'error');
             }
+        };
 
-            window.showUserDetails = async (user) => {
-                document.getElementById('modal-user-name').textContent = user.displayName || 'مستخدم بدون اسم';
-                document.getElementById('modal-user-email').textContent = user.email;
-                document.getElementById('modal-user-join-date').textContent = new Date(user.createdAt).toLocaleString('ar-EG');
-                
-                const statusP = document.getElementById('modal-user-status');
-                statusP.textContent = user.status === 'active' ? 'نشط' : 'محظور';
-                statusP.className = user.status === 'active' ? 'font-bold text-green-600' : 'font-bold text-red-600';
+        modalCloseBtn.onclick = () => modal.classList.add('hidden');
+        searchInput.addEventListener('input', filterAndRender);
 
-                const banBtn = document.getElementById('modal-ban-btn');
-                const isBanned = user.status === 'banned';
-                banBtn.innerHTML = isBanned ? '<i data-lucide="check-circle" class="w-5 h-5"></i><span>إلغاء الحظر</span>' : '<i data-lucide="ban" class="w-5 h-5"></i><span>حظر المستخدم</span>';
-                banBtn.className = `w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isBanned ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}`;
-                banBtn.onclick = () => updateUserStatus(user.id, isBanned ? 'active' : 'banned');
-
-                const tabsContainer = document.getElementById('modal-tabs');
-                tabsContainer.innerHTML = `
-                    <button onclick="window.location.href='orders.html?search=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600">الطلبات (${user.totalOrders})</button>
-                    <button onclick="window.location.href='support-log.html?userId=${user.id}'" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">سجل الدعم</button>
-                `;
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                lucide.createIcons();
-                
-                const ordersContent = document.getElementById('modal-orders-content');
-                ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">جاري تحميل الطلبات...</p>`;
-                try {
-                    const response = await fetch(`${API_URL}/orders?userId=${user.id}`);
-                    const orders = await response.json();
-                    if(orders.length > 0) {
-                        ordersContent.innerHTML = `<ul class="divide-y">${orders.map(o => `
-                            <li class="p-2 hover:bg-gray-50">
-                                <a href="orders.html?search=${o.id}" class="block">
-                                    <div class="flex justify-between items-center"><p class="font-semibold">${o.serviceName}</p><p class="text-xs text-gray-500">${new Date(o.createdAt).toLocaleDateString('ar-EG')}</p></div>
-                                    <p class="text-sm text-gray-600">${o.status}</p>
-                                </a>
-                            </li>`).join('')}</ul>`;
-                    } else {
-                        ordersContent.innerHTML = `<p class="text-center p-8 text-gray-500">لا توجد طلبات لهذا المستخدم.</p>`;
-                    }
-                } catch(e) {
-                    ordersContent.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل الطلبات.</p>`;
-                }
-            };
-
-            window.updateUserStatus = async (userId, newStatus) => {
-                try {
-                    const response = await fetch(`${API_URL}/users/${userId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: newStatus })
-                    });
-                    if (!response.ok) throw new Error('تعذر تحديث حالة المستخدم.');
-                    showMessage('تم تحديث حالة المستخدم بنجاح.', 'success');
-                    modal.classList.add('hidden');
-                    fetchUsers();
-                } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
-                }
-            };
-
-            window.deleteUser = async (userId, userName) => {
-                if (!await showConfirmationModal(`هل أنت متأكد من حذف المستخدم "${userName}"؟`)) return;
-                try {
-                    const response = await fetch(`${API_URL}/users/${userId}`, { method: 'DELETE' });
-                    if (!response.ok) throw new Error('تعذر حذف المستخدم.');
-                    showMessage('تم حذف المستخدم بنجاح.', 'success');
-                    fetchUsers();
-                } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
-                }
-            };
-
-            modalCloseBtn.onclick = () => modal.classList.add('hidden');
-            searchInput.addEventListener('input', filterAndRender);
-            
-            function showMessage(message, type = 'success') {
-                const container = document.getElementById('message-container');
-                const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
-                container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
-                setTimeout(() => container.innerHTML = '', 4000);
-            }
-
-            function showConfirmationModal(message) {
-                return new Promise(resolve => {
-                    const modalHtml = `<div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto"><h3 class="text-lg font-bold text-gray-800 mb-4">${message}</h3><div class="flex justify-end space-x-2"><button id="confirm-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">إلغاء</button><button id="confirm-ok" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">حذف</button></div></div></div>`;
-                    document.body.insertAdjacentHTML('beforeend', modalHtml);
-                    const modalEl = document.getElementById('confirmation-modal');
-                    document.getElementById('confirm-ok').onclick = () => { modalEl.remove(); resolve(true); };
-                    document.getElementById('confirm-cancel').onclick = () => { modalEl.remove(); resolve(false); };
-                });
-            }
-
-            fetchUsers();
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('message-container');
+            const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+            container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
+            setTimeout(() => container.innerHTML = '', 4000);
         }
-        // Call initializePage on load
-        window.addEventListener('DOMContentLoaded', initializePage);
-    </script>
+
+        function showConfirmationModal(message) {
+            return new Promise(resolve => {
+                const modalHtml = `<div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto"><h3 class="text-lg font-bold text-gray-800 mb-4">${message}</h3><div class="flex justify-end space-x-2"><button id="confirm-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">إلغاء</button><button id="confirm-ok" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">حذف</button></div></div></div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                const modalEl = document.getElementById('confirmation-modal');
+                document.getElementById('confirm-ok').onclick = () => { modalEl.remove(); resolve(true); };
+                document.getElementById('confirm-cancel').onclick = () => { modalEl.remove(); resolve(false); };
+            });
+        }
+
+        fetchUsers();
+    }
+
+    window.addEventListener('DOMContentLoaded', initializePage);
+</script>
 </body>
 </html>

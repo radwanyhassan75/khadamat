@@ -171,75 +171,103 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="admin-auth.js"></script>
-    <script>
-        function initializePage() {
-            lucide.createIcons();
-            
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/settings";
-            const allForms = document.querySelectorAll('form:not(#password-form)');
-            const maintenanceToggle = document.getElementById('maintenance_mode_toggle');
-            const maintenanceHiddenInput = document.getElementById('maintenance_mode');
+<script>
+    function initializePage() {
+        lucide.createIcons();
+        
+        const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/settings";
+        const allForms = document.querySelectorAll('form:not(#password-form)');
+        const maintenanceToggle = document.getElementById('maintenance_mode_toggle');
+        const maintenanceHiddenInput = document.getElementById('maintenance_mode');
 
-            async function loadSettings() {
-                try {
-                    const response = await fetch(API_URL);
-                    if (!response.ok) throw new Error('تعذر تحميل الإعدادات.');
-                    const settings = await response.json();
-                    
-                    Object.keys(settings).forEach(key => {
-                        const input = document.getElementById(key);
-                        if (input && input.type !== 'checkbox') {
-                            input.value = settings[key];
-                        }
-                    });
-
-                    if (settings.maintenance_mode === 'on') {
-                        maintenanceToggle.checked = true;
-                        maintenanceHiddenInput.value = 'on';
-                    } else {
-                        maintenanceToggle.checked = false;
-                        maintenanceHiddenInput.value = 'off';
+        async function loadSettings() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('تعذر تحميل الإعدادات: ' + response.statusText);
+                }
+                const settings = await response.json();
+                
+                settings.forEach(setting => {
+                    const input = document.getElementById(setting.key);
+                    if (input && input.type !== 'checkbox') {
+                        input.value = setting.value || '';
                     }
+                });
 
-                } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
+                const maintenanceSetting = settings.find(s => s.key === 'maintenance_mode');
+                if (maintenanceSetting && maintenanceSetting.value === 'on') {
+                    maintenanceToggle.checked = true;
+                    maintenanceHiddenInput.value = 'on';
+                } else {
+                    maintenanceToggle.checked = false;
+                    maintenanceHiddenInput.value = 'off';
+                }
+            } catch (error) {
+                showMessage(`خطأ: ${error.message}`, 'error');
+            }
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formId = form.id;
+            const formData = new FormData(form);
+            const settings = [];
+
+            // Map form inputs to settings
+            for (let [key, value] of formData.entries()) {
+                if (value.trim()) { // Only send non-empty values
+                    settings.push({ key, value });
                 }
             }
 
-            async function handleFormSubmit(event) {
-                event.preventDefault();
-                const form = event.target;
-                const formData = new FormData(form);
-                const settingsToUpdate = Object.fromEntries(formData.entries());
+            if (formId === 'maintenance-form') {
+                settings.push({ key: 'maintenance_mode', value: maintenanceToggle.checked ? 'on' : 'off' });
+            }
 
-                try {
+            if (settings.length === 0) {
+                showMessage('يرجى إدخال قيمة واحدة على الأقل', 'error');
+                return;
+            }
+
+            try {
+                for (const setting of settings) {
                     const response = await fetch(API_URL, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(settingsToUpdate)
+                        body: JSON.stringify(setting)
                     });
-                    if (!response.ok) throw new Error('تعذر حفظ التغييرات.');
-                    showMessage('تم حفظ التغييرات بنجاح.', 'success');
-                } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'فشل في تحديث الإعداد');
+                    }
                 }
+                showMessage('تم تحديث الإعدادات بنجاح', 'success');
+                loadSettings(); // Reload settings to reflect changes
+            } catch (error) {
+                console.error('Error updating setting:', error);
+                showMessage('خطأ في تحديث الإعداد: ' + error.message, 'error');
             }
-
-            allForms.forEach(form => form.addEventListener('submit', handleFormSubmit));
-            
-            maintenanceToggle.addEventListener('change', () => {
-                maintenanceHiddenInput.value = maintenanceToggle.checked ? 'on' : 'off';
-            });
-
-            function showMessage(message, type = 'success') {
-                const container = document.getElementById('message-container');
-                const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
-                container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
-                setTimeout(() => container.innerHTML = '', 4000);
-            }
-
-            loadSettings();
         }
-    </script>
+
+        allForms.forEach(form => form.addEventListener('submit', handleFormSubmit));
+        
+        maintenanceToggle.addEventListener('change', () => {
+            maintenanceHiddenInput.value = maintenanceToggle.checked ? 'on' : 'off';
+        });
+
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('message-container');
+            const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+            container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
+            setTimeout(() => container.innerHTML = '', 4000);
+        }
+
+        loadSettings();
+    }
+
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
 </body>
 </html>
