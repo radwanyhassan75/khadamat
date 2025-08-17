@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق من البريد الإلكتروني - المكتب الرقمي</title>
+    <title>إجراءات الحساب - المكتب الرقمي</title>
     
     <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -17,50 +17,60 @@
 
     <style>
         :root {
-            --primary-color: #0d6efd;
+            --primary-color: #0056b3;
+            --primary-hover-color: #004494;
             --success-color: #198754;
             --error-color: #dc3545;
-            --dark-color: #2c3e50;
+            --dark-color: #1d2d3d;
             --light-color: #ffffff;
-            --gray-color: #f4f7f9;
+            --gray-color: #f7f9fc;
             --text-color: #555;
+            --text-light: #a9b4c2;
             --border-radius: 12px;
             --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --footer-bg-color: #1c2331;
         }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
-            direction: rtl;
             background-color: var(--gray-color);
+            direction: rtl;
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
         .main-header {
-            background-color: var(--light-color);
+            background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 0 5%;
+            padding: 10px 5%;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
         }
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        .navbar-logo img { height: 50px; }
-        .main-container {
+        .navbar-logo img { height: 60px; }
+        .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 600; font-size: 1rem; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-color); }
+        .hamburger { display: none; cursor: pointer; }
+        .hamburger .bar { display: block; width: 25px; height: 3px; margin: 5px auto; background-color: var(--dark-color); transition: all 0.3s ease-in-out; }
+        
+        .main-content {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
         }
-        .verification-box {
+        .action-container {
             background: var(--light-color);
             padding: 50px;
             border-radius: var(--border-radius);
@@ -69,7 +79,6 @@
             max-width: 500px;
             width: 100%;
             border-top: 5px solid var(--primary-color);
-            transition: border-color 0.3s;
         }
         .icon-wrapper {
             width: 80px;
@@ -79,41 +88,42 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 25px;
-            transition: background-color 0.3s;
+            background-color: #e7f1ff;
         }
-        .icon-wrapper i {
-            font-size: 2.5rem;
-            transition: color 0.3s;
+        .icon-wrapper i { font-size: 2.5rem; color: var(--primary-color); }
+        h1 { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin: 0 0 15px 0; }
+        p { font-size: 1.1rem; color: var(--text-color); margin-bottom: 30px; line-height: 1.7; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; }
+        .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .btn { width: 100%; padding: 14px; background-color: var(--primary-color); color: #fff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background-color 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+        .btn:disabled { background-color: #a0aec0; cursor: not-allowed; }
+        #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: 8px; font-weight: 600; }
+        #message-box.success { background-color: #e9f7ef; color: #198754; }
+        #message-box.error { background-color: #fdecea; color: #dc3545; }
+
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p { line-height: 1.8; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.2rem; }
+        .footer-socials a:hover { color: var(--light-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        
+        @media (max-width: 992px) {
+            .nav-links { position: fixed; top: 80px; right: -100%; background: var(--light-color); width: 100%; height: calc(100vh - 80px); flex-direction: column; align-items: center; padding-top: 50px; transition: right 0.5s ease-in-out; }
+            .nav-links.active { right: 0; }
+            .hamburger { display: block; }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
         }
-        h1 {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--dark-color);
-            margin: 0 0 15px 0;
-        }
-        p {
-            font-size: 1.1rem;
-            color: var(--text-color);
-            margin-bottom: 30px;
-            line-height: 1.7;
-        }
-        .redirect-message {
-            font-size: 0.95rem;
-            color: #888;
-        }
-        .redirect-message span {
-            font-weight: 700;
-            color: var(--dark-color);
-        }
-        .verification-box.loading { border-top-color: var(--primary-color); }
-        .verification-box.loading .icon-wrapper { background-color: #e7f1ff; }
-        .verification-box.loading .icon-wrapper i { color: var(--primary-color); }
-        .verification-box.success { border-top-color: var(--success-color); }
-        .verification-box.success .icon-wrapper { background-color: #e9f7ef; }
-        .verification-box.success .icon-wrapper i { color: var(--success-color); }
-        .verification-box.error { border-top-color: var(--error-color); }
-        .verification-box.error .icon-wrapper { background-color: #fbe9e9; }
-        .verification-box.error .icon-wrapper i { color: var(--error-color); }
     </style>
 </head>
 <body>
@@ -122,29 +132,104 @@
             <a href="index.html" class="navbar-logo">
                 <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
             </a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="tracking.html">تتبع الطلب</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </nav>
     </header>
 
-    <main class="main-container">
-        <div id="verification-box" class="verification-box loading">
-            <div class="icon-wrapper">
-                <i id="icon" class="fas fa-spinner fa-spin"></i>
+    <main class="main-content">
+        <div id="action-container" class="action-container">
+            <!-- Loading View -->
+            <div id="loading-view">
+                <div class="icon-wrapper"><i class="fas fa-spinner fa-spin"></i></div>
+                <h1>جاري معالجة طلبك...</h1>
+                <p>يرجى الانتظار قليلاً.</p>
             </div>
-            <h1 id="title">جاري التحقق...</h1>
-            <p id="message">يرجى الانتظار قليلاً بينما نقوم بتأكيد بريدك الإلكتروني.</p>
-            <p id="redirect-message" class="redirect-message" style="display: none;">
-                سيتم توجيهك خلال <span id="countdown">4</span> ثوانٍ...
-            </p>
+
+            <!-- Verify Email Success View -->
+            <div id="verify-email-view" style="display: none;">
+                <div class="icon-wrapper" style="background-color: #e9f7ef;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i></div>
+                <h1>تم تأكيد بريدك الإلكتروني بنجاح!</h1>
+                <p>شكراً لك. سيتم توجيهك الآن لإكمال ملفك الشخصي.</p>
+                <a href="complete-profile.html" class="btn">المتابعة</a>
+            </div>
+
+            <!-- Reset Password View -->
+            <div id="reset-password-view" style="display: none;">
+                <div class="icon-wrapper"><i class="fas fa-key"></i></div>
+                <h1>إعادة تعيين كلمة المرور</h1>
+                <p>أدخل كلمة المرور الجديدة. تأكد من أنها قوية وآمنة.</p>
+                <div id="message-box"></div>
+                <form id="reset-password-form">
+                    <div class="form-group">
+                        <label for="new-password">كلمة المرور الجديدة</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <button type="submit" id="submit-btn" class="btn"><i class="fas fa-save"></i> حفظ</button>
+                </form>
+            </div>
+            
+            <!-- Universal Success View (for other actions like email change) -->
+            <div id="universal-success-view" style="display: none;">
+                 <div class="icon-wrapper" style="background-color: #e9f7ef;"><i class="fas fa-check-circle" style="color: var(--success-color);"></i></div>
+                <h1 id="success-title">تم الإجراء بنجاح!</h1>
+                <p id="success-message">لقد تم تحديث معلومات حسابك.</p>
+                <a href="login.html" class="btn">العودة إلى تسجيل الدخول</a>
+            </div>
+            
+            <!-- Error View -->
+            <div id="error-view" style="display: none;">
+                <div class="icon-wrapper" style="background-color: #fbe9e9;"><i class="fas fa-times-circle" style="color: var(--error-color);"></i></div>
+                <h1 id="error-title">حدث خطأ</h1>
+                <p id="error-message">الرابط الذي استخدمته غير صالح أو منتهي الصلاحية.</p>
+                <a href="index.html" class="btn">العودة إلى الصفحة الرئيسية</a>
+            </div>
         </div>
     </main>
 
-    <footer class="main-footer" style="background-color: #1c2331; color: #bdc3c7; padding: 20px 5%; text-align: center;">
-        <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="my-orders.html">طلباتي</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                    <li><a href="refund.html">سياسة الاسترجاع</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+        </div>
     </footer>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -162,12 +247,28 @@
             }
             const auth = firebase.auth();
 
-            const box = document.getElementById('verification-box');
-            const icon = document.getElementById('icon');
-            const title = document.getElementById('title');
-            const message = document.getElementById('message');
-            const redirectMessage = document.getElementById('redirect-message');
-            const countdownElement = document.getElementById('countdown');
+            // --- Hamburger Menu Logic ---
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // --- Views ---
+            const loadingView = document.getElementById('loading-view');
+            const verifyEmailView = document.getElementById('verify-email-view');
+            const resetPasswordView = document.getElementById('reset-password-view');
+            const universalSuccessView = document.getElementById('universal-success-view');
+            const errorView = document.getElementById('error-view');
+            const errorMessage = document.getElementById('error-message');
+
+            function showView(viewToShow) {
+                [loadingView, verifyEmailView, resetPasswordView, universalSuccessView, errorView].forEach(view => {
+                    view.style.display = 'none';
+                });
+                viewToShow.style.display = 'block';
+            }
 
             function getParameterByName(name, url = window.location.href) {
                 name = name.replace(/[\[\]]/g, '\\$&');
@@ -178,54 +279,91 @@
                 return decodeURIComponent(results[2].replace(/\+/g, ' '));
             }
 
-            async function handleVerification() {
+            async function handleAction() {
+                const mode = getParameterByName('mode');
                 const actionCode = getParameterByName('oobCode');
 
-                if (!actionCode) {
-                    showError("رابط التحقق غير صالح أو مفقود.");
+                if (!mode || !actionCode) {
+                    errorMessage.textContent = "الرابط غير صالح أو غير مكتمل.";
+                    showView(errorView);
                     return;
                 }
 
-                try {
-                    await auth.applyActionCode(actionCode);
-                    showSuccess();
-                } catch (error) {
-                    console.error("Firebase verification error:", error);
-                    showError("رابط التحقق غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.");
+                switch (mode) {
+                    case 'verifyEmail':
+                        try {
+                            await auth.applyActionCode(actionCode);
+                            showView(verifyEmailView);
+                        } catch (error) {
+                            errorMessage.textContent = "رابط تأكيد البريد غير صالح أو منتهي الصلاحية.";
+                            showView(errorView);
+                        }
+                        break;
+                    
+                    case 'resetPassword':
+                        try {
+                            await auth.verifyPasswordResetCode(actionCode);
+                            showView(resetPasswordView);
+                            setupResetForm(actionCode);
+                        } catch (error) {
+                            errorMessage.textContent = "رابط إعادة تعيين كلمة المرور غير صالح أو منتهي الصلاحية.";
+                            showView(errorView);
+                        }
+                        break;
+
+                    case 'recoverEmail':
+                        // This handles reverting a changed email
+                        try {
+                            await auth.applyActionCode(actionCode);
+                            document.getElementById('success-title').textContent = "تم استعادة البريد الإلكتروني";
+                            document.getElementById('success-message').textContent = "تم بنجاح استعادة بريدك الإلكتروني الأصلي.";
+                            showView(universalSuccessView);
+                        } catch (error) {
+                            errorMessage.textContent = "فشل استعادة البريد الإلكتروني. قد يكون الرابط منتهي الصلاحية.";
+                            showView(errorView);
+                        }
+                        break;
+                        
+                    default:
+                        errorMessage.textContent = "الإجراء المطلوب غير معروف.";
+                        showView(errorView);
+                        break;
                 }
             }
 
-            function showSuccess() {
-                box.className = 'verification-box success';
-                icon.className = 'fas fa-check-circle';
-                title.textContent = 'تم تأكيد بريدك الإلكتروني بنجاح!';
-                message.textContent = 'شكراً لك على تفعيل حسابك. أصبحت الآن جاهزاً للاستفادة من جميع خدماتنا.';
-                redirectMessage.style.display = 'block';
-                startCountdown();
-            }
-
-            function showError(errorMessage) {
-                box.className = 'verification-box error';
-                icon.className = 'fas fa-times-circle';
-                title.textContent = 'حدث خطأ';
-                message.textContent = errorMessage;
-            }
-
-            function startCountdown() {
-                let seconds = 4;
-                countdownElement.textContent = seconds;
-                const interval = setInterval(() => {
-                    seconds--;
-                    countdownElement.textContent = seconds;
-                    if (seconds <= 0) {
-                        clearInterval(interval);
-                        // Redirect to the profile completion page
-                        window.location.href = 'complete-profile.html'; 
+            function setupResetForm(actionCode) {
+                const resetForm = document.getElementById('reset-password-form');
+                const newPasswordInput = document.getElementById('new-password');
+                const submitBtn = document.getElementById('submit-btn');
+                
+                resetForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const newPassword = newPasswordInput.value;
+                    if (newPassword.length < 6) {
+                        showMessage('error', 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.');
+                        return;
                     }
-                }, 1000);
+                    submitBtn.disabled = true;
+                    try {
+                        await auth.confirmPasswordReset(actionCode, newPassword);
+                        document.getElementById('success-title').textContent = "تم تغيير كلمة المرور بنجاح!";
+                        document.getElementById('success-message').textContent = "يمكنك الآن استخدام كلمة المرور الجديدة لتسجيل الدخول.";
+                        showView(universalSuccessView);
+                    } catch (error) {
+                        showMessage('error', "حدث خطأ. قد يكون الرابط منتهي الصلاحية.");
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+            
+            function showMessage(type, message) {
+                const messageBox = document.getElementById('message-box');
+                messageBox.textContent = message;
+                messageBox.className = type;
+                messageBox.style.display = 'block';
             }
 
-            handleVerification();
+            handleAction();
         });
     </script>
 </body>
