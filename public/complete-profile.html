@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="output.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إكمال الملف الشخصي - المكتب الرقمي</title>
@@ -19,12 +16,14 @@
     <style>
         :root {
             --primary-color: #0056b3;
-            --dark-color: #2c3e50;
+            --dark-color: #1d2d3d;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --text-color: #555;
+            --text-light: #a9b4c2;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --footer-bg-color: #1c2331;
         }
         body {
             font-family: 'Cairo', sans-serif;
@@ -36,20 +35,31 @@
             flex-direction: column;
             min-height: 100vh;
         }
+        
+        /* --- Professional Header --- */
         .main-header {
             background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 10px 5%;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
         }
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 80px;
-            padding: 0 5%;
             max-width: 1200px;
             margin: 0 auto;
         }
-        .navbar-logo img { height: 70px; }
+        .navbar-logo img { height: 60px; }
+        .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 600; font-size: 1rem; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-color); }
+        .hamburger { display: none; cursor: pointer; }
+        .hamburger .bar { display: block; width: 25px; height: 3px; margin: 5px auto; background-color: var(--dark-color); transition: all 0.3s ease-in-out; }
+        
+        /* --- Main Content --- */
         .main-content {
             flex: 1;
             display: flex;
@@ -90,6 +100,9 @@
             border-radius: var(--border-radius);
             cursor: pointer;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn:disabled { background-color: #a0aec0; cursor: not-allowed; }
         #message-box {
@@ -101,11 +114,30 @@
             background-color: #fdecea;
             color: #dc3545;
         }
-        .main-footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--dark-color);
-            color: var(--light-color);
+
+        /* --- Professional Footer --- */
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p { line-height: 1.8; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.2rem; }
+        .footer-socials a:hover { color: var(--light-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .nav-links { position: fixed; top: 80px; right: -100%; background: var(--light-color); width: 100%; height: calc(100vh - 80px); flex-direction: column; align-items: center; padding-top: 50px; transition: right 0.5s ease-in-out; }
+            .nav-links.active { right: 0; }
+            .hamburger { display: block; }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
         }
     </style>
 </head>
@@ -115,6 +147,18 @@
             <a href="index.html" class="navbar-logo">
                 <img id="site-logo" src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
             </a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="tracking.html">تتبع الطلب</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </nav>
     </header>
 
@@ -136,7 +180,37 @@
     </main>
 
     <footer class="main-footer">
-        <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="my-orders.html">طلباتي</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                    <li><a href="refund.html">سياسة الاسترجاع</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
+        </div>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -146,6 +220,19 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Hamburger Menu Logic ---
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // --- Firebase Initialization ---
+            // Assuming firebase.initializeApp is called in auth.js
+            const auth = firebase.auth();
+            const db = firebase.firestore(); // ✅ FIX: Initialize Firestore database
+
             const profileForm = document.getElementById('complete-profile-form');
             const submitBtn = document.getElementById('submit-btn');
             const messageBox = document.getElementById('message-box');
@@ -164,6 +251,7 @@
                 if (!currentUser) return;
 
                 let phoneNumber = document.getElementById('phone').value.trim();
+                // Basic conversion for Arabic numerals if needed
                 phoneNumber = phoneNumber.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 
                 if (!/^0[5-7][0-9]{8}$/.test(phoneNumber)) {
@@ -181,12 +269,14 @@
                     phoneNumber: phoneNumber
                 }, { merge: true })
                 .then(() => {
-                    window.location.href = "dashboard.html";
+                    window.location.href = "dashboard.html"; // Or any other page
                 })
                 .catch((error) => {
+                    console.error("Error updating profile:", error); // Log the full error
                     showMessage(`حدث خطأ أثناء الحفظ: ${error.message}`);
                 })
                 .finally(() => {
+                    // This block was missing, it's important to re-enable the button on failure
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'حفظ ومتابعة';
                 });
