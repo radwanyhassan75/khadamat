@@ -36,6 +36,7 @@
             --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             --success-color: #198754;
             --danger-color: #dc3545;
+            --footer-bg-color: #1c2331;
         }
         html { scroll-behavior: smooth; }
         body {
@@ -150,6 +151,21 @@
         .terms-group label { margin-bottom: 0; }
         #recaptcha-container { min-height: 78px; margin-bottom: 15px; display: flex; justify-content: center; transform: scale(0.95); transform-origin: center; }
         
+        /* --- IMPROVED FOOTER --- */
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p { line-height: 1.8; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.2rem; }
+        .footer-socials a:hover { color: var(--light-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        
         @media (max-width: 992px) {
             .nav-links { position: fixed; top: 80px; right: -100%; background: var(--light-color); width: 100%; height: calc(100vh - 80px); flex-direction: column; align-items: center; padding-top: 50px; transition: right 0.5s ease-in-out; }
             .nav-links.active { right: 0; }
@@ -250,24 +266,31 @@
     </main>
 
     <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-col">
-                <h3>المكتب الرقمي</h3>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
                 <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <div class="footer-socials">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
             </div>
-            <div class="footer-col">
-                <h3>روابط سريعة</h3>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
                 <ul>
                     <li><a href="about.html">من نحن</a></li>
-                    <li><a href="services.html">الخدمات</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
                     <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="my-orders.html">طلباتي</a></li>
                 </ul>
             </div>
-            <div class="footer-col">
-                <h3>قانوني</h3>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
                 <ul>
                     <li><a href="privacy.html">سياسة الخصوصية</a></li>
-                    <li><a href="terms.html">الشروط والاحكام</a></li>
+                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                    <li><a href="refund.html">سياسة الاسترجاع</a></li>
                 </ul>
             </div>
         </div>
@@ -374,15 +397,12 @@
                     
                     syncUserWithBackend(user); 
                     
-                    // This is the correct and only way with the compat library.
-                    // It sends the default Firebase email, but crucially, it uses your custom redirect URL.
                     const actionCodeSettings = {
                         url: 'https://khadamatmaroc.co.uk/auth-action-handler.html', // Your custom verification page
                         handleCodeInApp: true
                     };
                     await user.sendEmailVerification(actionCodeSettings);
                     
-                    // Redirect to a page that tells the user to check their email
                     window.location.href = "verify-email.html"; 
 
                 } catch (error) {
@@ -441,4 +461,4 @@
         });
     </script>
 </body>
-</html>
+</ht
