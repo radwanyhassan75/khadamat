@@ -182,7 +182,6 @@
                 appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
             };
 
-            // Initialize Firebase only if it hasn't been initialized yet
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
@@ -197,7 +196,9 @@
                         <h1 style="font-size: 2rem; margin-top: 20px;">الوصول مرفوض</h1>
                         <p style="font-size: 1.1rem;">أنت غير مصرح لك بالوصول إلى هذه الصفحة. سيتم إعادة توجيهك الآن.</p>
                     </div>`;
-                setTimeout(() => { window.location.href = '/login.html'; }, 4000);
+                // ✅✅✅ THE FIX - PART 1 ✅✅✅
+                // Using a relative path `../../login.html` to correctly navigate out of the /public/admin/ directory.
+                setTimeout(() => { window.location.href = '../../login.html'; }, 4000);
             }
 
             function grantAccess() {
@@ -229,13 +230,16 @@
                         }
                     } else {
                         console.error("3. لم يتم العثور على أي مستخدم مسجل دخوله. إعادة التوجيه لصفحة الدخول...");
-                        const redirectUrl = `/login.html?redirect=${window.location.pathname}${window.location.search}`;
+                        // ✅✅✅ THE FIX - PART 2 ✅✅✅
+                        // Correctly encodes the full redirect path and uses a relative path to find login.html
+                        const redirectPath = window.location.pathname + window.location.search;
+                        const redirectUrl = `../../login.html?redirect=${encodeURIComponent(redirectPath)}`;
                         window.location.href = redirectUrl;
                     }
                 });
             }
 
-            // --- Part 2: Page-Specific Logic ---
+            // --- Part 2: Page-Specific Logic (No changes needed here) ---
             function initializePage() {
                 const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
                 
@@ -294,12 +298,11 @@
                             editor.setContent(post.content || '');
                         }
                     } catch (error) {
-                        // --- IMPROVED ERROR LOGGING ---
                         console.error("======================================================");
                         console.error("حدث خطأ جسيم أثناء محاولة جلب بيانات المقال للتعديل.");
                         console.error("الدالة المتأثرة: loadPostForEditing()");
                         console.error("السبب المحتمل:", error.message);
-                        console.error("تفاصيل الخطأ الكاملة:", error); // This logs the full error object with stack trace
+                        console.error("تفاصيل الخطأ الكاملة:", error);
                         console.error("======================================================");
                         showNotification('خطأ في تحميل بيانات المقال. تحقق من الكونسول لمزيد من التفاصيل.', 'error');
                     }
