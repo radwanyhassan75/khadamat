@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>إدارة المقال - لوحة التحكم العصرية</title>
+    <title>إدارة المقال - لوحة التحكم</title>
+    
+    <!-- Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="../auth.js"></script>
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -33,7 +34,7 @@
 
         #notification {
             position: fixed;
-            bottom: 20px;
+            bottom: -100px; /* Start off-screen */
             left: 50%;
             transform: translateX(-50%);
             padding: 12px 24px;
@@ -42,29 +43,22 @@
             z-index: 10001;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            transition: opacity 0.3s, visibility 0.3s, bottom 0.4s;
         }
         #notification.show {
             opacity: 1;
             visibility: visible;
-            transform: translate(-50%, -20px);
+            bottom: 20px; /* Slide in */
+        }
+        /* Hide content until authorized */
+        #dashboard-content {
+            display: none;
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-700">
 
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75">
-        <form id="password-form" class="bg-white p-8 rounded-lg shadow-xl text-center w-full max-w-sm">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">الرجاء إدخال كلمة المرور</h2>
-            <p id="password-error" class="text-red-500 text-sm mb-3 h-5 hidden"></p>
-            <input type="password" id="password-input" class="w-full px-4 py-2 border border-slate-300 rounded-lg mb-4 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 transition" placeholder="كلمة المرور..." required>
-            <button type="submit" class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg w-full font-semibold hover:bg-indigo-700 transition disabled:bg-indigo-400">
-                دخول
-            </button>
-        </form>
-    </div>
-
-    <div id="dashboard-content" class="hidden h-screen md:flex flex-row-reverse">
+    <div id="dashboard-content" class="h-screen md:flex flex-row-reverse">
         <aside class="flex flex-col w-64 bg-white border-l border-slate-200">
             <div class="flex items-center justify-center h-20 border-b border-slate-200">
                 <h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1>
@@ -167,70 +161,84 @@
         </div>
     </div>
     
-    <div id="notification" class="bg-green-500"></div>
+    <div id="notification"></div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // =================================================================
+            // START: COMBINED SCRIPT (auth.js + admin-auth.js + page logic)
+            // =================================================================
 
-            async function handleLogin(e) {
-                e.preventDefault();
-                const passwordInput = document.getElementById('password-input');
-                const passwordError = document.getElementById('password-error');
-                const submitButton = e.target.querySelector('button[type="submit"]');
-                
-                submitButton.disabled = true;
-                passwordError.classList.add('hidden');
+            // --- Part 0: Firebase Initialization ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+                authDomain: "khadamatukdigital.firebaseapp.com",
+                projectId: "khadamatukdigital",
+                storageBucket: "khadamatukdigital.appspot.com",
+                messagingSenderId: "690661888019",
+                appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+            };
 
-                try {
-                    const response = await fetch(`${API_URL}/settings`);
-                    if (!response.ok) throw new Error('فشل في الاتصال بالخادم.');
-                    
-                    const settings = await response.json();
-                    const correctPassword = settings.find(s => s.key === 'admin_password')?.value || '12345678';
+            // Initialize Firebase only if it hasn't been initialized yet
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
 
-                    if (passwordInput.value === correctPassword) {
-                        sessionStorage.setItem('isAdminAuthenticated', 'true');
-                        showContent();
+            // --- Part 1: Admin Authentication Logic ---
+            const ADMIN_UIDS = ["mxNwy7nqQBRP5K582gi21TrIBW73"];
+
+            function denyAccess() {
+                console.error("الوصول مرفوض. المستخدم ليس مديراً أو لم يسجل دخوله.");
+                document.body.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545; font-family: 'Cairo', sans-serif;">
+                        <h1 style="font-size: 2rem; margin-top: 20px;">الوصول مرفوض</h1>
+                        <p style="font-size: 1.1rem;">أنت غير مصرح لك بالوصول إلى هذه الصفحة. سيتم إعادة توجيهك الآن.</p>
+                    </div>`;
+                setTimeout(() => { window.location.href = '/login.html'; }, 4000);
+            }
+
+            function grantAccess() {
+                console.log("تم منح الوصول. مرحباً أيها المدير! جارٍ تهيئة الصفحة...");
+                const dashboardContent = document.getElementById('dashboard-content');
+                if (dashboardContent) {
+                    dashboardContent.style.display = 'flex';
+                }
+                initializePage();
+            }
+
+            function checkAdminAuth() {
+                console.log("1. بدء عملية التحقق من هوية المدير...");
+                if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
+                    console.error("خطأ فادح: مكتبة Firebase لم يتم تحميلها.");
+                    denyAccess();
+                    return;
+                }
+                firebase.auth().onAuthStateChanged(user => {
+                    console.log("2. Firebase أعطى تحديثًا لحالة المستخدم...");
+                    if (user) {
+                        console.log("3. تم العثور على مستخدم مسجل دخوله. UID:", user.uid);
+                        if (ADMIN_UIDS.includes(user.uid)) {
+                            console.log("4. نتيجة التحقق: UID متطابق. هذا المستخدم هو مدير.");
+                            grantAccess();
+                        } else {
+                            console.error("4. نتيجة التحقق: UID غير متطابق. هذا المستخدم ليس مديرًا.");
+                            denyAccess();
+                        }
                     } else {
-                        passwordError.textContent = 'كلمة المرور غير صحيحة.';
-                        passwordError.classList.remove('hidden');
-                        submitButton.disabled = false;
+                        console.error("3. لم يتم العثور على أي مستخدم مسجل دخوله. إعادة التوجيه لصفحة الدخول...");
+                        const redirectUrl = `/login.html?redirect=${window.location.pathname}${window.location.search}`;
+                        window.location.href = redirectUrl;
                     }
-                } catch (error) {
-                    console.error("Login Error:", error);
-                    passwordError.textContent = 'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.';
-                    passwordError.classList.remove('hidden');
-                    submitButton.disabled = false;
-                }
+                });
             }
 
-            function showContent() {
-                document.getElementById('password-gate').style.display = 'none';
-                document.getElementById('dashboard-content').style.display = 'flex';
-                
-                if (typeof initializePage === 'function') {
-                    initializePage();
-                }
-            }
-
-            function checkAuth() {
-                const isAuthenticated = sessionStorage.getItem('isAdminAuthenticated') === 'true';
-                if (isAuthenticated) {
-                    showContent();
-                } else {
-                    document.getElementById('password-gate').style.display = 'flex';
-                    document.getElementById('dashboard-content').style.display = 'none';
-                    const passwordForm = document.getElementById('password-form');
-                    if (passwordForm) {
-                        passwordForm.addEventListener('submit', handleLogin);
-                    }
-                }
-            }
-
+            // --- Part 2: Page-Specific Logic ---
             function initializePage() {
+                const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+                
                 lucide.createIcons();
 
                 const urlParams = new URLSearchParams(window.location.search);
@@ -251,33 +259,49 @@
 
                     try {
                         const response = await fetch(`${API_URL}/api/admin/posts/${postId}`);
-                        console.log('Fetch Response Status:', response.status); // تسجيل حالة الاستجابة
                         if (!response.ok) {
-                            throw new Error(`فشل في جلب بيانات المقال. الحالة: ${response.status}`);
+                            const errorData = await response.json().catch(() => ({ error: 'فشل في قراءة استجابة الخادم' }));
+                            throw new Error(`فشل جلب البيانات. الحالة: ${response.status}. السبب: ${errorData.error}`);
                         }
                         const post = await response.json();
-                        console.log('Fetched Post Data:', post); // تسجيل البيانات المستلمة
-                        if (!post || typeof post !== 'object' || Object.keys(post).length === 0) {
-                            throw new Error('بيانات المقال غير صالحة أو فارغة.');
+                        if (!post || typeof post !== 'object') {
+                            throw new Error('بيانات المقال المستلمة غير صالحة.');
                         }
 
-                        // تعبئة الحقول
                         titleInput.value = post.title || '';
                         slugInput.value = post.slug || '';
                         document.getElementById('meta_title').value = post.meta_title || '';
                         document.getElementById('meta_description').value = post.meta_description || '';
                         document.getElementById('featured_image_url').value = post.featured_image_url || '';
-                        document.getElementById('tags').value = Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || '');
+                        
+                        let tagsValue = '';
+                        if (post.tags) {
+                            try {
+                                const parsedTags = JSON.parse(post.tags);
+                                if (Array.isArray(parsedTags)) {
+                                    tagsValue = parsedTags.join(', ');
+                                }
+                            } catch (e) {
+                                tagsValue = post.tags;
+                            }
+                        }
+                        document.getElementById('tags').value = tagsValue;
+
                         document.getElementById('status').value = post.status || 'draft';
+                        
                         const editor = tinymce.get('content-editor');
                         if (editor) {
                             editor.setContent(post.content || '');
-                        } else {
-                            console.error('TinyMCE editor not initialized yet.');
                         }
                     } catch (error) {
-                        console.error('Error loading post for editing:', error);
-                        showNotification('خطأ في تحميل بيانات المقال: ' + error.message, 'error');
+                        // --- IMPROVED ERROR LOGGING ---
+                        console.error("======================================================");
+                        console.error("حدث خطأ جسيم أثناء محاولة جلب بيانات المقال للتعديل.");
+                        console.error("الدالة المتأثرة: loadPostForEditing()");
+                        console.error("السبب المحتمل:", error.message);
+                        console.error("تفاصيل الخطأ الكاملة:", error); // This logs the full error object with stack trace
+                        console.error("======================================================");
+                        showNotification('خطأ في تحميل بيانات المقال. تحقق من الكونسول لمزيد من التفاصيل.', 'error');
                     }
                 }
 
@@ -292,19 +316,13 @@
                     content_style: 'body { font-family:Cairo,Arial,sans-serif; font-size:16px }',
                     setup: function (editor) {
                         editor.on('init', function () {
-                            console.log('TinyMCE initialized, loading post data...');
                             loadPostForEditing();
-                        });
-                        editor.on('load', function () {
-                            if (tinymce.get('content-editor')) {
-                                console.log('TinyMCE loaded, ensuring post data load...');
-                                loadPostForEditing();
-                            }
                         });
                     }
                 });
 
                 function generateSlug(text) {
+                    if (!text) return '';
                     return text.toString().toLowerCase()
                         .replace(/\s+/g, '-')
                         .replace(/[^\u0600-\u06FF\w\-]+/g, '')
@@ -319,7 +337,6 @@
                     event.preventDefault(); 
                     
                     const submitButton = postForm.querySelector('button[type="submit"]');
-                    
                     const content = tinymce.get('content-editor').getContent();
                     if (!titleInput.value || !content) {
                         showNotification('يرجى ملء حقلي العنوان والمحتوى.', 'error');
@@ -351,7 +368,8 @@
                         });
 
                         if (!response.ok) {
-                            throw new Error(`فشل الخادم. الحالة: ${response.status}`);
+                            const errorResult = await response.json().catch(() => ({}));
+                            throw new Error(errorResult.error || `فشل الخادم. الحالة: ${response.status}`);
                         }
 
                         showNotification(isEditMode ? 'تم تحديث المقال بنجاح!' : 'تم حفظ المقال بنجاح!', 'success');
@@ -362,7 +380,7 @@
 
                     } catch (error) {
                         console.error('Error saving post:', error);
-                        showNotification('حدث خطأ أثناء الحفظ. يرجى المحاولة مرة أخرى.', 'error');
+                        showNotification('حدث خطأ أثناء الحفظ: ' + error.message, 'error');
                     } finally {
                         submitButton.disabled = false;
                         submitButtonText.textContent = isEditMode ? 'تحديث المقال' : 'حفظ المقال';
@@ -373,20 +391,23 @@
                     const notification = document.getElementById('notification');
                     notification.textContent = message;
                     
-                    if (type === 'error') {
-                        notification.className = 'bg-red-500';
+                    notification.className = '';
+                    notification.classList.add('show');
+                    if (type === 'success') {
+                        notification.classList.add('bg-green-500');
                     } else {
-                        notification.className = 'bg-green-500';
+                        notification.classList.add('bg-red-500');
                     }
                     
-                    notification.classList.add('show');
                     setTimeout(() => {
                         notification.classList.remove('show');
                     }, 3000);
                 }
             }
 
-            checkAuth();
+            // --- Part 3: Start the Authentication Process ---
+            checkAdminAuth();
+
         });
     </script>
     

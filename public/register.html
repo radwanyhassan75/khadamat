@@ -1,9 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="output.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إنشاء حساب جديد - المكتب الرقمي</title>
@@ -19,6 +16,10 @@
     <!-- Google API for reCAPTCHA and One Tap -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
 
     <style>
         :root {
@@ -36,9 +37,7 @@
             --success-color: #198754;
             --danger-color: #dc3545;
         }
-
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
@@ -49,8 +48,6 @@
             flex-direction: column;
             min-height: 100vh;
         }
-
-        /* --- Header --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
@@ -67,32 +64,11 @@
             margin: 0 auto;
         }
         .navbar-logo img { height: 60px; }
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 25px;
-            margin: 0;
-            padding: 0;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark-color);
-            font-weight: 600;
-            font-size: 1rem;
-            transition: color 0.3s;
-        }
+        .nav-links { list-style: none; display: flex; gap: 25px; margin: 0; padding: 0; }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 600; font-size: 1rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--primary-color); }
         .hamburger { display: none; cursor: pointer; }
-        .hamburger .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            margin: 5px auto;
-            background-color: var(--dark-color);
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* --- Main Content --- */
+        .hamburger .bar { display: block; width: 25px; height: 3px; margin: 5px auto; background-color: var(--dark-color); transition: all 0.3s ease-in-out; }
         .main-content {
             flex: 1;
             display: flex;
@@ -100,7 +76,6 @@
             justify-content: center;
             padding: 40px 20px;
         }
-
         .main-container {
             display: flex;
             width: 100%;
@@ -110,7 +85,6 @@
             border-radius: var(--border-radius);
             overflow: hidden;
         }
-
         .form-section {
             flex: 1;
             padding: 40px 50px;
@@ -119,7 +93,6 @@
             justify-content: center;
             overflow-y: auto;
         }
-        
         .branding-section {
             flex: 1;
             background: linear-gradient(135deg, var(--primary-color), #003a75), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8b2ZmaWNlLGNvbXB1dGVyc3x8fHx8fDE3MjE3MzQ0MzA&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1080') no-repeat center center;
@@ -133,19 +106,12 @@
             text-align: center;
             padding: 40px;
         }
-
-        .branding-section .logo {
-            height: 100px;
-            margin-bottom: 20px;
-            filter: brightness(0) invert(1);
-        }
-        
+        .branding-section .logo { height: 100px; margin-bottom: 20px; filter: brightness(0) invert(1); }
         .branding-section h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 15px; }
         .branding-section p { font-size: 1.1rem; max-width: 350px; line-height: 1.7; }
         .form-header .logo-mobile { display: none; height: 70px; margin-bottom: 15px; }
         .form-header h1 { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin: 0 0 5px 0; text-align: center; }
         .form-header p { font-size: 1rem; color: var(--text-color); margin-bottom: 25px; text-align: center; }
-
         .form-group { margin-bottom: 18px; text-align: right; position: relative; }
         .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
         .form-group input {
@@ -157,7 +123,6 @@
             outline: none; border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); background-color: var(--light-color);
         }
-
         .btn {
             width: 100%; padding: 15px; font-size: 1.1rem; background-color: var(--primary-color);
             border: none; color: white; font-weight: bold; border-radius: var(--border-radius);
@@ -166,83 +131,43 @@
         }
         .btn:hover:not(:disabled) { background-color: var(--primary-hover-color); transform: translateY(-2px); }
         .btn:disabled { background-color: #a5b4fc; cursor: not-allowed; }
-
         .social-login { display: flex; gap: 15px; margin: 20px 0; }
         .btn-social { flex: 1; background: var(--light-color); color: var(--dark-color); border: 1px solid var(--border-color); }
         .btn-social i { font-size: 1.2rem; }
         .btn-google i { color: #ea4335; }
         .btn-facebook i { color: #1877f2; }
-
         .divider { display: flex; align-items: center; text-align: center; color: #aaa; margin: 20px 0; font-size: 0.9rem; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border-color); }
         .divider:not(:empty)::before { margin-left: .5em; }
         .divider:not(:empty)::after { margin-right: .5em; }
-
         .form-footer { margin-top: 20px; font-size: 0.95rem; text-align: center; }
         .form-footer a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
-
         #message-box { display: none; padding: 15px; margin-bottom: 20px; border-radius: var(--border-radius); font-weight: 600; text-align: center; }
         #message-box.success { background-color: #e9f7ef; color: #28a745; border: 1px solid #a3e9a4; }
         #message-box.error { background-color: #fdecea; color: #dc3545; border: 1px solid #f5c6cb;}
-
         .terms-group { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
         .terms-group input[type='checkbox'] { width: auto; }
         .terms-group label { margin-bottom: 0; }
-
         #recaptcha-container { min-height: 78px; margin-bottom: 15px; display: flex; justify-content: center; transform: scale(0.95); transform-origin: center; }
         
-        /* --- Footer --- */
-        .main-footer {
-            padding: 50px 5%;
-            background: var(--dark-color);
-            color: var(--text-light);
-        }
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-bottom: 40px;
-            border-bottom: 1px solid #3a4a5b;
-        }
-        .footer-col h3 { color: var(--light-color); font-size: 1.2rem; margin-bottom: 20px; }
-        .footer-col p { line-height: 1.8; }
-        .footer-col ul { list-style: none; padding: 0; }
-        .footer-col ul li { margin-bottom: 10px; }
-        .footer-col ul a { text-decoration: none; color: var(--text-light); transition: color 0.3s; }
-        .footer-col ul a:hover { color: var(--light-color); }
-        .footer-bottom { text-align: center; padding-top: 30px; font-size: 0.9rem; }
-        .footer-bottom a { color: var(--light-color); text-decoration: none; }
-        
-        /* --- Responsive Design --- */
         @media (max-width: 992px) {
-            .nav-links {
-                position: fixed; top: 80px; right: -100%;
-                background: var(--light-color); width: 100%;
-                height: calc(100vh - 80px); flex-direction: column;
-                align-items: center; padding-top: 50px;
-                transition: right 0.5s ease-in-out;
-            }
+            .nav-links { position: fixed; top: 80px; right: -100%; background: var(--light-color); width: 100%; height: calc(100vh - 80px); flex-direction: column; align-items: center; padding-top: 50px; transition: right 0.5s ease-in-out; }
             .nav-links.active { right: 0; }
             .hamburger { display: block; }
             .hamburger.active .bar:nth-child(2) { opacity: 0; }
             .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
             .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-            
             .branding-section { display: none; }
             .form-header .logo-mobile { display: block; margin-right: auto; margin-left: auto; }
             .form-section { padding: 30px; }
             .main-container { width: 100%; max-width: 500px; }
         }
-        
         @media (max-width: 576px) {
              .main-content { padding: 20px 10px; }
              .form-section { padding: 20px; }
              .social-login { flex-direction: column; }
              .main-container { box-shadow: none; border-radius: 0; }
         }
-
     </style>
 </head>
 <body>
@@ -351,18 +276,26 @@
             <p>تم تصميم الموقع بواسطة <a href="#">HASSAN</a></p>
         </div>
     </footer>
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
-    <!-- Your Firebase configuration -->
-    <!-- This file should contain your firebase.initializeApp(firebaseConfig); -->
-    <script src="auth.js"></script> 
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Mobile Menu ---
+            // --- Firebase Configuration ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+                authDomain: "khadamatukdigital.firebaseapp.com",
+                projectId: "khadamatukdigital",
+                storageBucket: "khadamatukdigital.appspot.com",
+                messagingSenderId: "690661888019",
+                appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const auth = firebase.auth();
+            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
+
+            // --- Your existing DOM Elements and Mobile Menu logic ---
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.nav-links');
             hamburger.addEventListener('click', () => {
@@ -370,64 +303,56 @@
                 navLinks.classList.toggle('active');
             });
 
-            // --- Worker URL ---
-            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev/';
-
             const registerForm = document.getElementById('register-form');
             const submitBtn = document.getElementById('submit-btn');
             const messageBox = document.getElementById('message-box');
 
+            // --- reCAPTCHA Initialization (Your existing code) ---
             function initRecaptcha() {
                 if(document.getElementById('recaptcha-container').innerHTML !== '') return;
-                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                    'size': 'normal',
-                    'callback': (response) => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
-                    },
-                    'expired-callback': () => {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
-                    }
-                });
-                recaptchaVerifier.render().catch(error => {
-                    console.error("reCAPTCHA render error:", error);
-                    showMessage("لا يمكن عرض reCAPTCHA. يرجى تحديث الصفحة.", "error");
-                });
+                try {
+                    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                        'size': 'normal',
+                        'callback': (response) => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
+                        },
+                        'expired-callback': () => {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
+                        }
+                    });
+                    recaptchaVerifier.render().catch(error => {
+                        console.error("reCAPTCHA render error:", error);
+                        showMessage("لا يمكن عرض reCAPTCHA. يرجى تحديث الصفحة.", "error");
+                    });
+                } catch(e) {
+                     console.error("reCAPTCHA initialization failed:", e);
+                     showMessage("فشل تهيئة reCAPTCHA. قد يكون هناك مشكلة في الاتصال.", "error");
+                }
             }
             setTimeout(initRecaptcha, 500);
 
-            // --- ✅ NEW: Sync User with Backend Function ---
-            // This function sends the new user's data to our worker.
-            // The worker then saves it to the D1 database and sends the welcome email.
+            // --- Backend Sync Function (Your existing code) ---
             function syncUserWithBackend(user) {
                 if (!user) return;
-                
-                console.log(`Syncing user ${user.uid} to backend...`);
-                fetch(`${WORKER_URL}users`, {
+                fetch(`${WORKER_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         id: user.uid,
                         email: user.email,
-                        displayName: user.displayName
+                        displayName: user.displayName,
+                        profilePicture: user.photoURL
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('User synced successfully with backend.');
-                    } else {
-                        // Log error but don't block the user flow
-                        console.error('Backend sync failed:', data.error);
-                    }
-                })
-                .catch(err => {
-                    console.error('Error during backend sync:', err);
-                });
+                }).then(res => res.json()).then(data => {
+                    if (data.success) console.log('User synced successfully with backend.');
+                    else console.error('Backend sync failed:', data.error);
+                }).catch(err => console.error('Error during backend sync:', err));
             }
 
-            registerForm.addEventListener('submit', (e) => {
+            // --- CORRECTED Registration Form Submission ---
+            registerForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const name = document.getElementById("name").value.trim();
                 const email = document.getElementById("email").value.trim();
@@ -441,150 +366,79 @@
                 
                 setLoading(true);
 
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        return user.updateProfile({ displayName: name }).then(() => user);
-                    })
-                    .then((user) => {
-                        console.log("User created, syncing with backend and sending verification email...");
-                        syncUserWithBackend(user); 
-                        
-                        // ✅ MODIFIED: Send verification email with custom redirect URL
-                        const actionCodeSettings = {
-                            url: 'https://khadamatmaroc.co.uk/email-verified.html', // 👈 Your official domain
-                            handleCodeInApp: true
-                        };
-                        return user.sendEmailVerification(actionCodeSettings);
-                    })
-                    .then(() => { 
-                        window.location.href = "verify-email.html"; 
-                    })
-                    .catch((error) => { 
-                        handleAuthError(error); 
-                    });
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const user = userCredential.user;
+                    
+                    await user.updateProfile({ displayName: name });
+                    
+                    syncUserWithBackend(user); 
+                    
+                    // This is the correct and only way with the compat library.
+                    // It sends the default Firebase email, but crucially, it uses your custom redirect URL.
+                    const actionCodeSettings = {
+                        url: 'https://khadamatmaroc.co.uk/auth-action-handler.html', // Your custom verification page
+                        handleCodeInApp: true
+                    };
+                    await user.sendEmailVerification(actionCodeSettings);
+                    
+                    // Redirect to a page that tells the user to check their email
+                    window.location.href = "verify-email.html"; 
+
+                } catch (error) {
+                    handleAuthError(error);
+                }
             });
 
+            // --- Your existing Social Login and Helper Functions ---
             document.getElementById("google-signup").addEventListener("click", () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider)
-                    .then((result) => handleSocialLogin(result))
-                    .catch((error) => {
-                        // ✅ FIXED: Only show error for actual problems, not user closing the popup.
-                        if (error.code !== 'auth/popup-closed-by-user') {
-                            handleAuthError(error);
-                        } else {
-                            console.log("Google sign-in popup closed by user.");
-                        }
-                    });
+                auth.signInWithPopup(provider).then(handleSocialLogin).catch(handleAuthError);
             });
-            
             document.getElementById("facebook-signup").addEventListener("click", () => {
                 const provider = new firebase.auth.FacebookAuthProvider();
-                 auth.signInWithPopup(provider)
-                    .then((result) => handleSocialLogin(result))
-                    .catch((error) => {
-                        // ✅ FIXED: Only show error for actual problems, not user closing the popup.
-                         if (error.code !== 'auth/popup-closed-by-user') {
-                            handleAuthError(error);
-                        } else {
-                            console.log("Facebook sign-in popup closed by user.");
-                        }
-                    });
+                auth.signInWithPopup(provider).then(handleSocialLogin).catch(handleAuthError);
             });
-            
-            // --- Google One Tap Sign-In ---
-            window.onGoogleLibraryLoad = () => {
-                google.accounts.id.initialize({
-                    client_id: '690661888019-2k8fl4c839q0mnki373ii96nhhb4ckmh.apps.googleusercontent.com',
-                    callback: handleGoogleOneTap,
-                    auto_select: true,
-                    prompt_parent_id: 'g_id_onload'
-                });
-                google.accounts.id.prompt(); 
-            };
-            
-            function handleGoogleOneTap(response) {
-                console.log("Received One-Tap response:", response);
-                const id_token = response.credential;
-                const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-                
-                auth.signInWithCredential(credential)
-                    .then((result) => handleSocialLogin(result))
-                    .catch(error => {
-                        console.error("Firebase signInWithCredential error:", error);
-                        handleAuthError(error, "حدث خطأ أثناء محاولة ربط حسابك في Google.");
-                    });
-            }
-            
             function handleSocialLogin(result) {
-                const user = result.user;
                 const isNewUser = result.additionalUserInfo.isNewUser;
                 if (isNewUser) {
-                    console.log("New social user, syncing with backend...");
-                    syncUserWithBackend(user); 
+                    syncUserWithBackend(result.user); 
                 }
-                // For social logins, we assume email is verified and redirect directly
                 window.location.href = "complete-profile.html";
             }
-
             function showMessage(message, type) {
                 messageBox.textContent = message;
-                messageBox.className = ``;
-                messageBox.classList.add(type);
+                messageBox.className = type;
                 messageBox.style.display = "block";
             }
-            
             function setLoading(isLoading) {
+                submitBtn.disabled = isLoading;
                 if (isLoading) {
-                    submitBtn.disabled = true;
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الإنشاء...';
                     messageBox.style.display = "none";
                 } else {
-                    submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
                 }
             }
-            
-            function handleAuthError(error, customMessage) {
+            function handleAuthError(error) {
                 console.error("Authentication Error:", error);
-                let friendlyMessage = customMessage || "حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى.";
-                if (!customMessage) {
-                    switch (error.code) {
-                        case 'auth/email-already-in-use': friendlyMessage = "هذا البريد الإلكتروني مسجل بالفعل. حاول تسجيل الدخول."; break;
-                        case 'auth/invalid-email': friendlyMessage = "البريد الإلكتروني الذي أدخلته غير صالح."; break;
-                        case 'auth/weak-password': friendlyMessage = "كلمة المرور ضعيفة جدًا. يرجى اختيار كلمة مرور أقوى."; break;
-                        case 'auth/popup-closed-by-user': friendlyMessage = "تم إلغاء نافذة التسجيل. يرجى المحاولة مرة أخرى."; break;
-                        case 'auth/account-exists-with-different-credential': friendlyMessage = "لديك حساب مسجل بالفعل باستخدام طريقة أخرى بنفس البريد الإلكتروني."; break;
-                    }
+                let friendlyMessage = "حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى.";
+                switch (error.code) {
+                    case 'auth/email-already-in-use': friendlyMessage = "هذا البريد الإلكتروني مسجل بالفعل. حاول تسجيل الدخول."; break;
+                    case 'auth/invalid-email': friendlyMessage = "البريد الإلكتروني الذي أدخلته غير صالح."; break;
+                    case 'auth/weak-password': friendlyMessage = "كلمة المرور ضعيفة جدًا. يرجى اختيار كلمة مرور أقوى."; break;
+                    case 'auth/popup-closed-by-user': return;
+                    case 'auth/account-exists-with-different-credential': friendlyMessage = "لديك حساب مسجل بالفعل باستخدام طريقة أخرى بنفس البريد الإلكتروني."; break;
                 }
                 showMessage(friendlyMessage, "error");
                 setLoading(false);
                 if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined') {
-                    grecaptcha.reset();
+                    try { grecaptcha.reset(); } catch(e) { console.error("Error resetting reCAPTCHA", e); }
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = '<i class="fas fa-lock"></i> الرجاء التحقق من reCAPTCHA';
                 }
             }
         });
     </script>
-    <script>
- window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1491180262251015',
-      xfbml      : true,
-      version    : 'v20.0'
-    });
-    FB.AppEvents.logPageView();
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
 </body>
 </html>

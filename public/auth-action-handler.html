@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحقق من البريد الإلكتروني - المكتب الرقمي</title>
+    
+    <!-- Firebase Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --success-color: #198754;
+            --error-color: #dc3545;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f4f7f9;
+            --text-color: #555;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            direction: rtl;
+            background-color: var(--gray-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 5%;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .navbar-logo img { height: 50px; }
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .verification-box {
+            background: var(--light-color);
+            padding: 50px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border-top: 5px solid var(--primary-color);
+            transition: border-color 0.3s;
+        }
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            transition: background-color 0.3s;
+        }
+        .icon-wrapper i {
+            font-size: 2.5rem;
+            transition: color 0.3s;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--dark-color);
+            margin: 0 0 15px 0;
+        }
+        p {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        .redirect-message {
+            font-size: 0.95rem;
+            color: #888;
+        }
+        .redirect-message span {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        .verification-box.loading { border-top-color: var(--primary-color); }
+        .verification-box.loading .icon-wrapper { background-color: #e7f1ff; }
+        .verification-box.loading .icon-wrapper i { color: var(--primary-color); }
+        .verification-box.success { border-top-color: var(--success-color); }
+        .verification-box.success .icon-wrapper { background-color: #e9f7ef; }
+        .verification-box.success .icon-wrapper i { color: var(--success-color); }
+        .verification-box.error { border-top-color: var(--error-color); }
+        .verification-box.error .icon-wrapper { background-color: #fbe9e9; }
+        .verification-box.error .icon-wrapper i { color: var(--error-color); }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo">
+                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
+            </a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div id="verification-box" class="verification-box loading">
+            <div class="icon-wrapper">
+                <i id="icon" class="fas fa-spinner fa-spin"></i>
+            </div>
+            <h1 id="title">جاري التحقق...</h1>
+            <p id="message">يرجى الانتظار قليلاً بينما نقوم بتأكيد بريدك الإلكتروني.</p>
+            <p id="redirect-message" class="redirect-message" style="display: none;">
+                سيتم توجيهك خلال <span id="countdown">4</span> ثوانٍ...
+            </p>
+        </div>
+    </main>
+
+    <footer class="main-footer" style="background-color: #1c2331; color: #bdc3c7; padding: 20px 5%; text-align: center;">
+        <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+                authDomain: "khadamatukdigital.firebaseapp.com",
+                projectId: "khadamatukdigital",
+                storageBucket: "khadamatukdigital.appspot.com",
+                messagingSenderId: "690661888019",
+                appId: "1:690661888019:web:8770076b69beda7d2d6fe6",
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const auth = firebase.auth();
+
+            const box = document.getElementById('verification-box');
+            const icon = document.getElementById('icon');
+            const title = document.getElementById('title');
+            const message = document.getElementById('message');
+            const redirectMessage = document.getElementById('redirect-message');
+            const countdownElement = document.getElementById('countdown');
+
+            function getParameterByName(name, url = window.location.href) {
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            async function handleVerification() {
+                const actionCode = getParameterByName('oobCode');
+
+                if (!actionCode) {
+                    showError("رابط التحقق غير صالح أو مفقود.");
+                    return;
+                }
+
+                try {
+                    await auth.applyActionCode(actionCode);
+                    showSuccess();
+                } catch (error) {
+                    console.error("Firebase verification error:", error);
+                    showError("رابط التحقق غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.");
+                }
+            }
+
+            function showSuccess() {
+                box.className = 'verification-box success';
+                icon.className = 'fas fa-check-circle';
+                title.textContent = 'تم تأكيد بريدك الإلكتروني بنجاح!';
+                message.textContent = 'شكراً لك على تفعيل حسابك. أصبحت الآن جاهزاً للاستفادة من جميع خدماتنا.';
+                redirectMessage.style.display = 'block';
+                startCountdown();
+            }
+
+            function showError(errorMessage) {
+                box.className = 'verification-box error';
+                icon.className = 'fas fa-times-circle';
+                title.textContent = 'حدث خطأ';
+                message.textContent = errorMessage;
+            }
+
+            function startCountdown() {
+                let seconds = 4;
+                countdownElement.textContent = seconds;
+                const interval = setInterval(() => {
+                    seconds--;
+                    countdownElement.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        // Redirect to the profile completion page
+                        window.location.href = 'complete-profile.html'; 
+                    }
+                }, 1000);
+            }
+
+            handleVerification();
+        });
+    </script>
+</body>
+</html>
