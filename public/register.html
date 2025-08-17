@@ -20,6 +20,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
@@ -316,6 +317,7 @@
                 firebase.initializeApp(firebaseConfig);
             }
             const auth = firebase.auth();
+            const db = firebase.firestore();
             const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
             // --- Your existing DOM Elements and Mobile Menu logic ---
@@ -359,19 +361,17 @@
             // --- Backend Sync Function (Your existing code) ---
             function syncUserWithBackend(user) {
                 if (!user) return;
-                fetch(`${WORKER_URL}/users`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: user.uid,
-                        email: user.email,
-                        displayName: user.displayName,
-                        profilePicture: user.photoURL
-                    })
-                }).then(res => res.json()).then(data => {
-                    if (data.success) console.log('User synced successfully with backend.');
-                    else console.error('Backend sync failed:', data.error);
-                }).catch(err => console.error('Error during backend sync:', err));
+                const userDocRef = db.collection('users').doc(user.uid);
+                userDocRef.set({
+                    id: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    profilePicture: user.photoURL,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    role: 'customer' // Set default role
+                }, { merge: true })
+                .then(() => console.log('User synced successfully with Firestore.'))
+                .catch(err => console.error('Error during Firestore sync:', err));
             }
 
             // --- CORRECTED Registration Form Submission ---
@@ -398,7 +398,7 @@
                     syncUserWithBackend(user); 
                     
                     const actionCodeSettings = {
-                        url: 'https://khadamatmaroc.co.uk/auth-action-handler.html', // Your custom verification page
+                        url: 'https://khadamatmaroc.co.uk/auth-action-handler.html',
                         handleCodeInApp: true
                     };
                     await user.sendEmailVerification(actionCodeSettings);
@@ -410,7 +410,7 @@
                 }
             });
 
-            // --- Your existing Social Login and Helper Functions ---
+            // --- CORRECTED Social Login ---
             document.getElementById("google-signup").addEventListener("click", () => {
                 const provider = new firebase.auth.GoogleAuthProvider();
                 auth.signInWithPopup(provider).then(handleSocialLogin).catch(handleAuthError);
@@ -419,6 +419,7 @@
                 const provider = new firebase.auth.FacebookAuthProvider();
                 auth.signInWithPopup(provider).then(handleSocialLogin).catch(handleAuthError);
             });
+            
             function handleSocialLogin(result) {
                 const isNewUser = result.additionalUserInfo.isNewUser;
                 if (isNewUser) {
@@ -426,6 +427,8 @@
                 }
                 window.location.href = "complete-profile.html";
             }
+
+            // --- Helper Functions ---
             function showMessage(message, type) {
                 messageBox.textContent = message;
                 messageBox.className = type;
@@ -435,7 +438,6 @@
                 submitBtn.disabled = isLoading;
                 if (isLoading) {
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الإنشاء...';
-                    messageBox.style.display = "none";
                 } else {
                     submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> إنشاء الحساب';
                 }
@@ -447,7 +449,9 @@
                     case 'auth/email-already-in-use': friendlyMessage = "هذا البريد الإلكتروني مسجل بالفعل. حاول تسجيل الدخول."; break;
                     case 'auth/invalid-email': friendlyMessage = "البريد الإلكتروني الذي أدخلته غير صالح."; break;
                     case 'auth/weak-password': friendlyMessage = "كلمة المرور ضعيفة جدًا. يرجى اختيار كلمة مرور أقوى."; break;
-                    case 'auth/popup-closed-by-user': return;
+                    case 'auth/popup-closed-by-user':
+                    case 'auth/cancelled-popup-request':
+                        return; // Don't show an error if the user closes the popup
                     case 'auth/account-exists-with-different-credential': friendlyMessage = "لديك حساب مسجل بالفعل باستخدام طريقة أخرى بنفس البريد الإلكتروني."; break;
                 }
                 showMessage(friendlyMessage, "error");

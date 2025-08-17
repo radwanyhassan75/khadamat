@@ -1,67 +1,83 @@
 ﻿// =================================================================
-//      ملف المصادقة للوحة التحكم (نسخة التشخيص لمعرفة سبب المشكلة)
+// ملف المصادقة للوحة التحكم (النسخة الاحترافية والآمنة)
+// This version uses a secure, server-side check to determine if a
+// user is an admin, instead of an insecure hardcoded list.
 // =================================================================
 
-// 🔑 تأكد من أن معرّف المستخدم (UID) الخاص بك موجود هنا بشكل صحيح
-const ADMIN_UIDS = [
-    "mxNwy7nqQBRP5K582gi21TrIBW73" 
-];
+// The URL of your deployed worker
+const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
 function denyAccess() {
-    console.error("القرار النهائي: رفض الوصول.");
+    console.error("Access Denied: User is not an admin.");
     document.body.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #dc3545;">
+        <div style="text-align: center; padding: 40px; color: #dc3545; font-family: 'Cairo', sans-serif;">
             <h1 style="font-size: 2rem; margin-top: 20px;">الوصول مرفوض</h1>
-            <p style="font-size: 1.1rem;">أنت غير مصرح لك بالوصول إلى هذه الصفحة. سيتم إعادة توجيهك الآن.</p>
+            <p style="font-size: 1.1rem;">أنت غير مصرح لك بالوصول إلى هذه الصفحة.</p>
         </div>
     `;
-    setTimeout(() => { window.location.href = '/index.html'; }, 5000);
+    setTimeout(() => { window.location.href = '/index.html'; }, 4000);
 }
 
-function grantAccess() {
-    console.log("القرار النهائي: تم منح الوصول. مرحبًا أيها المدير!");
+function grantAccess(callback) {
+    console.log("Access Granted: Welcome Admin!");
     const dashboardContent = document.getElementById('dashboard-content');
     if (dashboardContent) {
-        dashboardContent.style.display = 'flex'; // أو 'block'
+        // Use 'flex' or 'block' depending on your layout
+        dashboardContent.style.display = 'flex'; 
     }
-    if (typeof initializePage === 'function') {
-        initializePage();
+    // If the page has an initialization function, call it
+    if (typeof callback === 'function') {
+        callback();
     }
 }
 
-function checkAdminAuth() {
-    console.log("1. بدء عملية التحقق من هوية المدير...");
+async function checkAdminRole(user) {
+    try {
+        // This securely asks our worker if the user is an admin
+        const response = await fetch(`${WORKER_URL}/api/users/${user.uid}/status`);
+        if (!response.ok) {
+            console.error("Server responded with an error when checking admin status.");
+            return false;
+        }
+        const data = await response.json();
+        return data.isAdmin === true;
+    } catch (error) {
+        console.error("Error connecting to the server to check admin status:", error);
+        return false;
+    }
+}
+
+function checkAdminAuth(pageInitializationFunction) {
+    console.log("Starting professional authentication check...");
 
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
-        console.error("خطأ فادح: مكتبة Firebase لم يتم تحميلها.");
+        console.error("Fatal Error: Firebase library not loaded.");
         denyAccess();
         return;
     }
 
-    firebase.auth().onAuthStateChanged(user => {
-        console.log("2. Firebase أعطى تحديثًا لحالة المستخدم...");
-
+    firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
-            // المستخدم قام بتسجيل الدخول
-            console.log("3. تم العثور على مستخدم مسجل دخوله.");
-            console.log("   - الـ UID الذي يراه الموقع هو:", user.uid);
-            console.log("   - قائمة المدراء المسموح لهم هي:", ADMIN_UIDS);
-
-            if (ADMIN_UIDS.includes(user.uid)) {
-                // نعم، هذا المستخدم هو مدير.
-                console.log("4. نتيجة التحقق: UID متطابق. هذا المستخدم هو مدير.");
-                grantAccess();
+            console.log("User is signed in. Verifying admin role with server...");
+            const isAdmin = await checkAdminRole(user);
+            
+            if (isAdmin) {
+                console.log("Server confirmed: User is an admin.");
+                grantAccess(pageInitializationFunction);
             } else {
-                // قام بتسجيل الدخول، لكنه ليس مديرًا.
-                console.error("4. نتيجة التحقق: UID غير متطابق. هذا المستخدم ليس مديرًا.");
+                console.error("Server confirmed: User is NOT an admin.");
                 denyAccess();
             }
         } else {
-            // المستخدم لم يقم بتسجيل الدخول.
-            console.error("3. لم يتم العثور على أي مستخدم مسجل دخوله. إعادة التوجيه لصفحة الدخول...");
-            window.location.href = `/login.html?redirect=${window.location.pathname}`;
+            console.log("User is not signed in. Redirecting to login...");
+            const redirectUrl = `/login.html?redirect=${window.location.pathname}${window.location.search}`;
+            window.location.href = redirectUrl;
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', checkAdminAuth);
+// This line allows pages to call the checkAdminAuth function
+// For example, in your admin pages, you should have a script that calls:
+// document.addEventListener('DOMContentLoaded', () => {
+//     checkAdminAuth(initializePage); // where initializePage is your page's main function
+// });

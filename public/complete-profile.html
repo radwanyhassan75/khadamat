@@ -130,7 +130,6 @@
         .footer-socials a:hover { color: var(--light-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
         
-        /* Responsive */
         @media (max-width: 992px) {
             .nav-links { position: fixed; top: 80px; right: -100%; background: var(--light-color); width: 100%; height: calc(100vh - 80px); flex-direction: column; align-items: center; padding-top: 50px; transition: right 0.5s ease-in-out; }
             .nav-links.active { right: 0; }
@@ -228,8 +227,7 @@
                 navLinks.classList.toggle('active');
             });
 
-            // --- Firebase Initialization ---
-            // Assuming firebase.initializeApp is called in auth.js
+            // --- Firebase Initialization is expected to be in auth.js ---
             const auth = firebase.auth();
             const db = firebase.firestore(); // ✅ FIX: Initialize Firestore database
 
@@ -251,7 +249,6 @@
                 if (!currentUser) return;
 
                 let phoneNumber = document.getElementById('phone').value.trim();
-                // Basic conversion for Arabic numerals if needed
                 phoneNumber = phoneNumber.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 
                 if (!/^0[5-7][0-9]{8}$/.test(phoneNumber)) {
@@ -276,7 +273,7 @@
                     showMessage(`حدث خطأ أثناء الحفظ: ${error.message}`);
                 })
                 .finally(() => {
-                    // This block was missing, it's important to re-enable the button on failure
+                    // This block re-enables the button on failure
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'حفظ ومتابعة';
                 });
