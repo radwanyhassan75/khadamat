@@ -169,8 +169,9 @@
     </style>
 </head>
 <body>
+    <!-- CORRECT Client ID is now used -->
     <div id="g_id_onload"
-         data-client_id="690661888019-q72g782s2k8q3o2v8q4p6b5a3c1j0f1g.apps.googleusercontent.com"
+         data-client_id="690661888019-2k8fl4c839q0mnki373ii96nhhb4ckmh.apps.googleusercontent.com"
          data-context="signup"
          data-ux_mode="popup"
          data-callback="handleCredentialResponse"
@@ -363,13 +364,10 @@
             registerForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
-                // reCAPTCHA v3 execution
                 grecaptcha.ready(function() {
-                  grecaptcha.execute('6Lf2IakrAAAAAIeW-UZxY_-JZEBY05QwryU_Y_f5', {action: 'submit'}).then(async function(token) {
-                      // Add the token to your form submission.
-                      // IMPORTANT: You should verify this token on your server-side with your secret key.
-                      // For this client-side only example, we will proceed, but this is NOT secure for production.
+                  grecaptcha.execute('6Lf2IakrAAAAAIeW-UZxY_-JZEBY05QwryU_Y_f5', {action: 'signup'}).then(async function(token) {
                       console.log('reCAPTCHA token:', token);
+                      // In a real app, you would send this token to your server for verification.
 
                       const name = document.getElementById("name").value.trim();
                       const email = document.getElementById("email").value.trim();
