@@ -1,0 +1,16 @@
+# File: wrangler.toml
+
+# اسم الـ Worker الخاص بك
+name = "orders-worker"
+
+# الملف الرئيسي الذي سيبدأ منه الـ Worker
+main = "index.js"
+
+# تاريخ التوافق
+compatibility_date = "2025-07-20"
+
+# --- ✅ ربط قاعدة البيانات ---
+[[d1_databases]]
+binding = "DB"
+database_name = "main_database"
+database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"

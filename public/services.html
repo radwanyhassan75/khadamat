@@ -3,224 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدماتنا الرقمية والإدارية - المكتب الرقمي</title>
-    <meta name="description" content="اكتشف مجموعة خدماتنا الرقمية والإدارية المصممة لتلبية جميع احتياجاتك بكفاءة وسرعة. من تصميم السير الذاتية إلى التسجيل في المباريات والجامعات.">
-    <!-- Fonts & Icons -->
+    <title>خدماتنا الرقمية المتكاملة - المكتب الرقمي</title>
+    <meta name="description" content="اكتشف مجموعة خدماتنا الرقمية في المغرب. نقدم حلولاً متكاملة للأفراد والشركات، من كتابة السير الذاتية إلى الخدمات الإدارية. اطلب خدمتك الآن.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuse.js for smart search -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
 
     <style>
         :root {
-            --primary-color: #0056b3;
-            --primary-hover-color: #004494;
+            --primary-color: #0d6efd;
+            --primary-light: #e7f1ff;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
-            --gray-color: #f4f7f9;
+            --gray-color: #f8f9fa;
             --text-color: #555;
-            --border-color: #e0e0e0;
-            --footer-bg-color: #1c2331;
+            --border-color: #dee2e6;
             --border-radius: 12px;
-            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
-            direction: rtl;
             background-color: var(--gray-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        /* --- Shared Header --- */
-        .main-header {
-            background-color: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 0 5%;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 90px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 600; font-size: 1rem; transition: color 0.3s; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); }
-        .navbar-actions { display: flex; gap: 15px; }
-        .btn { 
-            padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; 
-            font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
-            gap: 8px; border: 2px solid transparent; cursor: pointer; transition: all 0.3s ease;
-        }
-        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-primary:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); }
-        .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
-        .hamburger-menu { display: none; cursor: pointer; }
-        .hamburger-menu i { font-size: 1.5rem; }
-
-        /* --- Main Content --- */
-        .page-header {
-            background: linear-gradient(135deg, rgba(0, 86, 179, 0.85), rgba(0, 58, 117, 0.95)), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxfDB8MXxyYW5kb218MHx8c2VydmljZXMsdGVjaHx8fHx8fDE3MjIyMTYxODd8&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center;
-            background-size: cover;
-            color: var(--light-color);
-            text-align: center;
-            padding: 80px 20px;
-        }
-        .page-header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin: 0 0 10px 0;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        }
-        .page-header p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
-        .services-section {
-            padding: 60px 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        #services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .service-card {
-            background-color: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
-        }
-        .service-card-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-        }
-        .service-card-content {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .service-card h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            margin: 0 0 10px 0;
-        }
-        .service-card-description {
-            font-size: 0.95rem;
-            line-height: 1.7;
+            direction: rtl;
             color: var(--text-color);
-            flex-grow: 1;
-            margin-bottom: 20px;
         }
-        .service-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            margin-top: auto;
-        }
-        .service-price {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary-color);
-        }
-        .service-price span {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        .service-rating {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            color: #ffc107; /* Gold color for stars */
-        }
-        .service-rating .review-count {
-            color: var(--text-color);
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .btn-order {
-            padding: 8px 18px;
-            font-size: 0.9rem;
-        }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        /* --- Header --- */
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 50px; }
+        .nav-links { list-style: none; display: none; gap: 30px; margin: 0; padding: 0; align-items: center; }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; border-radius: 3px; bottom: 0; right: 0; background-color: var(--primary-color); transition: width 0.3s ease-in-out; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+        .nav-links a.active::after { width: 100%; }
+        .navbar-actions { display: flex; align-items: center; gap: 10px; }
+        .auth-btn { text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid transparent; }
+        .btn-login { background-color: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
+        .btn-login:hover { background-color: #dbe9ff; }
+        .btn-signup { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-signup:hover { background-color: #0b5ed7; }
+        .hamburger { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        @media (min-width: 1024px) { .hamburger { display: none; } }
 
-        /* --- Shared Footer --- */
-        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 40px 5% 20px; box-sizing: border-box; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
-        .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; }
-        .footer-section ul { list-style: none; padding: 0; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s ease; }
-        .footer-section a:hover { color: var(--light-color); }
+        /* --- Page Header --- */
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 { font-size: 3rem; font-weight: 900; color: var(--dark-color); margin: 0; }
+        .page-header p { font-size: 1.2rem; color: var(--text-color); margin-top: 10px; }
+
+        /* --- Filters and Search Bar --- */
+        .controls-container { background: var(--light-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+        .category-filters { display: flex; flex-wrap: wrap; gap: 10px; }
+        .category-btn { background-color: #e9ecef; color: var(--dark-color); border: none; padding: 10px 20px; border-radius: 50px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
+        .category-btn:hover { background-color: #ced4da; }
+        .category-btn.active { background-color: var(--primary-color); color: var(--light-color); box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3); }
+        .search-wrapper { position: relative; width: 100%; max-width: 350px; }
+        #search-input { width: 100%; padding: 12px 45px 12px 20px; border: 2px solid var(--border-color); border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; }
+        #search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15); }
+        .search-wrapper .search-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: #adb5bd; }
+
+        /* --- Services Grid --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .service-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; border: 1px solid var(--border-color); }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
+        .service-card.hidden { display: none; }
+        .service-image-container { width: 100%; height: 200px; overflow: hidden; }
+        .service-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .service-card:hover .service-image { transform: scale(1.05); }
+        .service-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+        .service-title { font-size: 1.4rem; font-weight: 700; color: var(--dark-color); margin: 0 0 10px 0; }
+        .service-description { font-size: 1rem; line-height: 1.7; margin: 0 0 20px 0; flex-grow: 1; color: #6c757d; }
+        .service-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 10px; }
+        .service-price { font-size: 1.5rem; font-weight: 900; color: var(--primary-color); }
+        .action-btn { background-color: var(--primary-color); color: var(--light-color); text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; transition: all 0.3s ease; border: none; font-family: 'Cairo', sans-serif; cursor: pointer; font-size: 0.9rem; text-align: center; }
+        .action-btn.details-btn { background-color: #e9ecef; color: var(--dark-color); }
+        .action-btn:hover { background-color: #0b5ed7; color: var(--light-color); }
+        
+        /* --- Loading and Error States --- */
+        #loading-state, #error-state, #no-results-state { text-align: center; padding: 50px; font-size: 1.2rem; font-weight: 600; grid-column: 1 / -1; display: none; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #e9ecef; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Modal for Service Details --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content { background: var(--light-color); border-radius: var(--border-radius); max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .modal-close { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-color); }
+        .modal-title { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin-top: 0; }
+        .modal-body { font-size: 1.1rem; line-height: 1.8; color: var(--text-color); }
+        .modal-body p { margin: 0 0 15px 0; }
+        .modal-footer { margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: left; }
+
+        /* --- Footer --- */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.5rem; }
+        .footer-socials a:hover { color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
-        .footer-bottom a { color: var(--light-color); text-decoration: none; }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .navbar-menu, .navbar-actions { display: none; }
-            .hamburger-menu { display: block; }
-        }
+        .newsletter-form { display: flex; margin-top: 20px; }
+        .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
+        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <ul class="nav-links">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html" class="active">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
+                <li><a href="blog.html">المدونة</a></li>
+                <li><a href="pricing.html">الأسعار</a></li>
+                <li><a href="payment.html">طرق الدفع</a></li>
+                <li><a href="faq.html">الأسئلة الشائعة</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="track-order.html">تتبع الطلب</a></li>
+                <li><a href="about.html">من نحن</a></li>
             </ul>
-            <div class="navbar-actions">
-                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
-                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+            <div id="navbar-actions" class="navbar-actions">
+                 <!-- Auth buttons will be dynamically inserted here by auth.js -->
             </div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
-    <main>
-        <div class="page-header">
+    <main class="container">
+        <header class="page-header">
             <h1>خدماتنا الرقمية</h1>
-            <p>حلول متكاملة وموثوقة لجميع احتياجاتك الإدارية والرقمية، مصممة لتوفير وقتك وجهدك.</p>
+            <p>نقدم حلولاً متكاملة لتلبية جميع احتياجاتك. تصفح خدماتنا واختر ما يناسبك.</p>
+        </header>
+
+        <div class="controls-container">
+            <div id="category-filters" class="category-filters"></div>
+            <div class="search-wrapper">
+                <input type="text" id="search-input" placeholder="ابحث بالاسم، الوصف، أو حتى بالدارجة...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
         </div>
 
-        <section class="services-section">
-            <div id="services-grid">
-                <!-- Service cards will be inserted here by JavaScript -->
-                <p>جارٍ تحميل الخدمات...</p>
-            </div>
-        </section>
+        <div id="services-grid" class="services-grid"></div>
+        
+        <div id="loading-state"><div class="spinner"></div><p>جاري تحميل الخدمات...</p></div>
+        <div id="error-state"><p>عذراً، حدث خطأ أثناء تحميل الخدمات.</p></div>
+        <div id="no-results-state"><p>لا توجد خدمات تطابق بحثك.</p></div>
     </main>
 
     <footer class="main-footer">
@@ -228,211 +168,222 @@
             <div class="footer-section">
                 <h3 class="footer-title">المكتب الرقمي</h3>
                 <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
             </div>
             <div class="footer-section">
-                <h3 class="footer-title">روابط سريعة</h3>
+                <h3 class="footer-title">روابط مهمة</h3>
                 <ul>
                     <li><a href="about.html">من نحن</a></li>
-                    <li><a href="services.html">الخدمات</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                    <li><a href="pricing.html">قائمة الأسعار</a></li>
+                    <li><a href="payment.html">طرق الدفع</a></li>
+                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
                     <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3 class="footer-title">قانوني</h3>
                 <ul>
-                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
-                    <li><a href="terms.html">الشروط والأحكام</a></li>
+                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                    <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
                 </ul>
             </div>
+            <div class="footer-section">
+                <h3 class="footer-title">انضم إلى قائمتنا البريدية</h3>
+                <p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
+                <form id="newsletter-form" class="newsletter-form">
+                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit">اشترك</button>
+                </form>
+            </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
-            <p>تم تصميم الموقع بواسطة <a href="#" target="_blank">HASSAN</a></p>
-        </div>
+        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
+
+    <div id="service-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="modal-close-btn" class="modal-close">&times;</button>
+            <h2 id="modal-title" class="modal-title"></h2>
+            <div id="modal-body" class="modal-body"></div>
+            <div id="modal-footer" class="modal-footer"></div>
+        </div>
+    </div>
+    
+    <!-- ✅✅✅ START: THE FIX ✅✅✅ -->
+    <!-- 1. Load Firebase Libraries FIRST -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    
+    <!-- 2. Then load your auth.js script that USES Firebase -->
+    <script src="auth.js"></script>
+    <!-- ✅✅✅ END: THE FIX ✅✅✅ -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
             const servicesGrid = document.getElementById('services-grid');
-            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev/';
-
-            const serviceImageMap = {
-                'مقاول': 'https://images.unsplash.com/photo-1556761175-b413da4b248b?q=80&w=1974&auto=format&fit=crop',
-                'pdf': 'https://images.unsplash.com/photo-1599301515233-0a257d817572?q=80&w=1932&auto=format&fit=crop',
-                'فواتير': 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop',
-                'شكايات': 'https://images.unsplash.com/photo-1516553174826-d05833723cd4?q=80&w=2070&auto=format&fit=crop',
-                'مراسلات': 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2072&auto=format&fit=crop',
-                'سيرة ذاتية': 'https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'استمارات': 'https://images.unsplash.com/photo-1564982933992-2296d98e051c?q=80&w=2070&auto=format&fit=crop',
-                'ترجمة': 'https://images.unsplash.com/photo-1543165794-5445e03b9303?q=80&w=2070&auto=format&fit=crop',
-                'حسابات إلكترونية': 'https://images.unsplash.com/photo-1554224154-260325c25768?q=80&w=2070&auto=format&fit=crop',
-                'طلبات خطية': 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1973&auto=format&fit=crop',
-                'تصريحات': 'https://images.unsplash.com/photo-1556742044-53c2351a9121?q=80&w=2070&auto=format&fit=crop',
-                'عقود': 'https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'وثائق': 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=1906&auto=format&fit=crop',
-                'إدخال البيانات': 'https://images.pexels.com/photos/316466/pexels-photo-316466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'تحويل الملفات': 'https://images.pexels.com/photos/3183172/pexels-photo-3183172.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'استبيانات': 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=2076&auto=format&fit=crop',
-                'تصحيح': 'https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'rsu': 'https://www.rsu.ma/o/rsu_theme/images/logoar.svg',
-                'دعم اجتماعي': 'https://alhoukouma.gov.ma/wp-content/uploads/2023/11/logo-AF--e1700488062620-optimized.png',
-                'تعديل المعطيات': 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop',
-                'استخراج وصل': 'https://images.unsplash.com/photo-1606183362174-73d43bad8d39?q=80&w=1974&auto=format&fit=crop',
-                'cnss': 'https://bladi24.ma/wp-content/uploads/2024/01/cnss.jpg',
-                'rnp': 'https://www.dreamjob.ma/wp-content/uploads/2022/12/Rnp.ma-1.png',
-                'سكن': 'https://www.usms.ac.ma/apps/culture/onousc.png',
-                'منحتي': 'https://alwadifa-club.com/wp-content/uploads/2024/12/%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85-%D8%A8%D8%B7%D8%A7%D9%82%D8%A9-%D9%85%D9%86%D8%AD%D8%AA%D9%8A-2024.png',
-                'تكوين': 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop',
-                'مدارس': 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=2086&auto=format&fit=crop',
-                'جامعات': 'https://images.pexels.com/photos/207691/pexels-photo-207691.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'anapec': 'https://www.dreamjob.ma/wp-content/uploads/2025/07/anapec.png',
-                'تحفيزية': 'https://images.unsplash.com/photo-1519071026959-a13938575111?q=80&w=1974&auto=format&fit=crop',
-                'موارد بشرية': 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop',
-                'مباريات': 'https://images.unsplash.com/photo-1579566346927-c68383817a25?q=80&w=1974&auto=format&fit=crop',
-                'ترشح': 'https://images.pexels.com/photos/3182773/pexels-photo-3182773.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'ملء الطلبات': 'https://images.pexels.com/photos/3184310/pexels-photo-3184310.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'تتبع النتائج': 'https://images.pexels.com/photos/3184308/pexels-photo-3184308.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-                'هوية بصرية': 'https://images.unsplash.com/photo-1600693512294-5d5358f68340?q=80&w=2070&auto=format&fit=crop',
-                'تعديل الصور': 'https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?q=80&w=1974&auto=format&fit=crop',
-                'qr': 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Qr-3.png',
-                'مواقع إلكترونية': 'https://images.unsplash.com/photo-1555774698-0b77e0abfe3d?q=80&w=2070&auto=format&fit=crop',
-                'لوغوهات': 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=2071&auto=format&fit=crop',
-                'سوشيال ميديا': 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1974&auto=format&fit=crop'
-            };
-
-            // ✅ FIX: Added the missing getServiceImage function
-            function getServiceImage(title) {
-                for (const key in serviceImageMap) {
-                    if (title.includes(key)) {
-                        return serviceImageMap[key];
-                    }
-                }
-                return 'https://placehold.co/600x400/0056b3/ffffff?text=خدمة'; // Default fallback
-            }
-
-            function createServiceSchema(service) {
-                const schema = {
-                    "@context": "https://schema.org",
-                    "@type": "Service",
-                    "name": service.title,
-                    "description": service.description,
-                    "image": service.image_url,
-                    "url": `https://khadamatmaroc.co.uk/service-details.html?slug=${service.slug}`,
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "المكتب الرقمي",
-                        "url": "https://khadamatmaroc.co.uk"
-                    },
-                    "serviceType": service.category || "خدمات رقمية",
-                    "offers": {
-                        "@type": "Offer",
-                        "price": service.price.toString(),
-                        "priceCurrency": "MAD",
-                        "url": `https://khadamatmaroc.co.uk/order.html?service=${encodeURIComponent(service.title)}&price=${service.price}`
-                    }
-                };
-
-                if (service.aggregateRating && service.aggregateRating.reviewCount > 0) {
-                    schema.aggregateRating = {
-                        "@type": "AggregateRating",
-                        "ratingValue": service.aggregateRating.ratingValue,
-                        "reviewCount": service.aggregateRating.reviewCount,
-                        "itemReviewed": {
-                           "@type": "Service",
-                           "name": service.title
-                        }
-                    };
-                }
-
-                const script = document.createElement('script');
-                script.type = 'application/ld+json';
-                script.textContent = JSON.stringify(schema, null, 2);
-                document.head.appendChild(script);
-            }
+            const categoryFiltersContainer = document.getElementById('category-filters');
+            const searchInput = document.getElementById('search-input');
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            const noResultsState = document.getElementById('no-results-state');
             
-            function createPageSchema(services) {
-                const itemListElement = services.map((service, index) => {
-                    return {
-                        "@type": "ListItem",
-                        "position": index + 1,
-                        "url": `https://khadamatmaroc.co.uk/service-details.html?slug=${service.slug}`,
-                        "name": service.title
-                    };
-                });
+            const modal = document.getElementById('service-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalFooter = document.getElementById('modal-footer');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
 
-                const pageSchema = {
-                    "@context": "https://schema.org",
-                    "@type": "ItemList",
-                    "name": "قائمة خدمات المكتب الرقمي",
-                    "description": "تصفح جميع الخدمات الرقمية والإدارية التي يقدمها المكتب الرقمي.",
-                    "itemListElement": itemListElement
-                };
-                
-                const script = document.createElement('script');
-                script.type = 'application/ld+json';
-                script.textContent = JSON.stringify(pageSchema, null, 2);
-                document.head.appendChild(script);
+            let allServicesData = [];
+            let fuse;
+
+            async function fetchServices() {
+                try {
+                    const response = await fetch(`${API_URL}/api/services`);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    allServicesData = await response.json();
+                    
+                    const options = {
+                        includeScore: true,
+                        keys: ['title', 'description', 'meta_description', 'category'],
+                        threshold: 0.4
+                    };
+                    fuse = new Fuse(allServicesData, options);
+
+                    renderServices(allServicesData);
+                    renderCategories(allServicesData);
+                } catch (error) {
+                    console.error("Error fetching services:", error);
+                    errorState.style.display = 'block';
+                } finally {
+                    loadingState.style.display = 'none';
+                }
             }
 
-            // ✅ UPGRADE: Updated createServiceCard to include the "Details" button
-            function createServiceCard(service) {
-                const card = document.createElement('div');
-                card.className = 'service-card';
-                service.image_url = service.image_url || getServiceImage(service.title);
+            function renderServices(services) {
+                servicesGrid.innerHTML = '';
+                services.forEach(service => {
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.dataset.id = service.id;
+                    
+                    const orderUrl = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${encodeURIComponent(service.price)}`;
 
-                let ratingHtml = '';
-                if (service.aggregateRating && service.aggregateRating.reviewCount > 0) {
-                    ratingHtml = `
-                        <div class="service-rating">
-                            <i class="fas fa-star"></i>
-                            <strong>${service.aggregateRating.ratingValue}</strong>
-                            <span class="review-count">(${service.aggregateRating.reviewCount} مراجعة)</span>
+                    card.innerHTML = `
+                        <div class="service-image-container">
+                            <img src="${service.image_url}" alt="${service.title}" class="service-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e9ecef/343a40?text=${encodeURIComponent(service.title)}';">
+                        </div>
+                        <div class="service-content">
+                            <h3 class="service-title">${service.title}</h3>
+                            <p class="service-description">${service.meta_description || service.description}</p>
+                            <div class="service-footer">
+                                <span class="service-price">${service.price} د.م.</span>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="action-btn details-btn" data-service-id="${service.id}">التفاصيل</button>
+                                    <a href="${orderUrl}" class="action-btn">اطلب الآن</a>
+                                </div>
+                            </div>
                         </div>
                     `;
-                }
-
-                card.innerHTML = `
-                    <div class="service-card-image" style="background-image: url('${service.image_url}')"></div>
-                    <div class="service-card-content">
-                        <h3>${service.title}</h3>
-                        <p class="service-card-description">${service.description}</p>
-                        <div class="service-card-footer">
-                            <div class="service-price">${service.price} <span>درهم</span></div>
-                            ${ratingHtml}
-                        </div>
-                        <div class="flex items-center gap-2 mt-5">
-                             <a href="order.html?service=${encodeURIComponent(service.title)}&price=${service.price}" class="btn btn-primary btn-order flex-1">اطلب الآن</a>
-                             <a href="service-details.html?slug=${service.slug}" class="btn btn-light btn-order flex-1">تفاصيل</a>
-                        </div>
-                    </div>
-                `;
-                return card;
+                    servicesGrid.appendChild(card);
+                });
             }
 
-            fetch(`${WORKER_URL}api/services`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(services => {
-                    servicesGrid.innerHTML = ''; 
-                    if (services && services.length > 0) {
-                        services.forEach(service => {
-                            const card = createServiceCard(service);
-                            servicesGrid.appendChild(card);
-                            createServiceSchema(service);
-                        });
-                        createPageSchema(services);
-                    } else {
-                        servicesGrid.innerHTML = '<p>لا توجد خدمات متاحة حالياً.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching services:', error);
-                    servicesGrid.innerHTML = '<p>حدث خطأ أثناء تحميل الخدمات. يرجى المحاولة مرة أخرى لاحقاً.</p>';
+            function renderCategories(services) {
+                const categories = ['الكل', ...new Set(services.map(s => s.category).filter(Boolean))];
+                categoryFiltersContainer.innerHTML = '';
+                categories.forEach(category => {
+                    const button = document.createElement('button');
+                    button.className = 'category-btn';
+                    button.textContent = category;
+                    button.dataset.category = category;
+                    if (category === 'الكل') button.classList.add('active');
+                    
+                    button.addEventListener('click', () => {
+                        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        filterAndSearch();
+                    });
+                    categoryFiltersContainer.appendChild(button);
                 });
+            }
+
+            function filterAndSearch() {
+                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+                const searchTerm = searchInput.value.trim();
+
+                if (searchTerm === '' && activeCategory === 'الكل') {
+                    renderServices(allServicesData);
+                    noResultsState.style.display = 'none';
+                    return;
+                }
+
+                let filteredServices = allServicesData;
+
+                if (activeCategory !== 'الكل') {
+                    filteredServices = filteredServices.filter(service => (service.category || 'عام') === activeCategory);
+                }
+
+                if (searchTerm !== '') {
+                    const searchResults = fuse.search(searchTerm);
+                    const serviceIdsFromSearch = new Set(searchResults.map(result => result.item.id));
+                    filteredServices = filteredServices.filter(service => serviceIdsFromSearch.has(service.id));
+                }
+
+                renderServices(filteredServices);
+                noResultsState.style.display = filteredServices.length === 0 ? 'block' : 'none';
+            }
+            
+            async function openServiceModal(serviceId) {
+                modalBody.innerHTML = '<div class="spinner"></div>';
+                modalFooter.innerHTML = '';
+                modal.style.display = 'flex';
+                try {
+                    const response = await fetch(`${API_URL}/api/services/${serviceId}`);
+                    if (!response.ok) throw new Error('Service details not found');
+                    const service = await response.json();
+                    
+                    const detailsPageUrl = `service-details.html?slug=${encodeURIComponent(service.slug)}`;
+                    const orderUrl = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${encodeURIComponent(service.price)}`;
+
+                    modalTitle.textContent = service.title;
+                    modalBody.innerHTML = (service.long_description || 'لا تتوفر تفاصيل إضافية لهذه الخدمة.').replace(/\n/g, '<br><br>');
+                    modalFooter.innerHTML = `<a href="${detailsPageUrl}" class="action-btn details-btn">عرض صفحة التفاصيل الكاملة</a><a href="${orderUrl}" class="action-btn">اطلب هذه الخدمة الآن</a>`;
+
+                } catch (error) {
+                    modalBody.innerHTML = 'عذراً، لم نتمكن من تحميل تفاصيل الخدمة.';
+                    console.error("Error fetching service details:", error);
+                }
+            }
+
+            function closeServiceModal() {
+                modal.style.display = 'none';
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', filterAndSearch);
+            modalCloseBtn.addEventListener('click', closeServiceModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeServiceModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Escape" && modal.style.display === 'flex') closeServiceModal();
+            });
+
+            servicesGrid.addEventListener('click', (e) => {
+                const detailsButton = e.target.closest('.details-btn');
+                if (detailsButton) {
+                    const serviceId = detailsButton.dataset.serviceId;
+                    openServiceModal(serviceId);
+                }
+            });
+
+            fetchServices();
         });
     </script>
 </body>

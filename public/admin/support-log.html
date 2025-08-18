@@ -154,55 +154,63 @@
                 }
             }
             
-            function renderDossier(ticket, initialMessage) {
-                const isClosed = ticket.status === 'closed';
-                const attachmentHTML = initialMessage && initialMessage.attachmentUrl 
-                    ? `<a href="${initialMessage.attachmentUrl}" target="_blank" class="flex items-center gap-2 text-indigo-600 hover:underline">
-                           <i data-lucide="paperclip" class="w-4 h-4"></i>
-                           <span>عرض المرفق</span>
-                       </a>`
-                    : '<p class="text-gray-500">لا يوجد مرفق</p>';
+function renderDossier(ticket, initialMessage) {
+    const isClosed = ticket.status === 'closed';
+    const attachmentHTML = initialMessage && initialMessage.attachmentUrl 
+        ? `<a href="${initialMessage.attachmentUrl}" target="_blank" class="flex items-center gap-2 text-indigo-600 hover:underline">
+               <i data-lucide="paperclip" class="w-4 h-4"></i>
+               <span>عرض المرفق</span>
+           </a>`
+        : '<p class="text-gray-500">لا يوجد مرفق</p>';
 
-                dossierPanelEl.innerHTML = `
-                    <div class="space-y-6">
-                        <!-- Ticket Info -->
-                        <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h3 class="font-bold text-lg text-gray-800">${ticket.subject}</h3>
-                            <p class="text-sm text-gray-500 mt-1">رقم التذكرة: ${ticket.id}</p>
-                            <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</p>
-                        </div>
-                        
-                        <!-- User Info -->
-                        <div class="bg-white p-4 rounded-lg shadow-sm">
-                             <h4 class="font-semibold text-gray-500 text-sm mb-2">بيانات المستخدم</h4>
-                             <p class="font-bold text-lg text-gray-800">${ticket.userName}</p>
-                             <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض المستخدم &rarr;</a>
-                        </div>
+    dossierPanelEl.innerHTML = `
+        <div class="space-y-6">
+            <!-- Ticket Info -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h3 class="font-bold text-lg text-gray-800">${ticket.subject}</h3>
+                <p class="text-sm text-gray-500">رقم التذكرة: ${ticket.id}</p>
+                <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</p>
+            </div>
+            
+            <!-- User Info -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                 <h4 class="font-semibold text-gray-500 text-sm mb-2">بيانات المستخدم</h4>
+                 <p class="font-bold text-lg text-gray-800">${ticket.userName || '-'}</p>
+                 <p class="text-sm text-gray-500">البريد الإلكتروني: ${ticket.userEmail || '-'}</p>
+                 <p class="text-sm text-gray-500">رقم الهاتف: ${ticket.userPhone || '-'}</p>
+                 <p class="text-sm text-gray-500">رقم الطلب: ${ticket.orderId || '-'}</p>
+                 <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض المستخدم &rarr;</a>
+            </div>
 
-                        <!-- Initial Message -->
-                        <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-semibold text-gray-500 text-sm mb-2">رسالة المستخدم</h4>
-                            <p class="text-gray-700 whitespace-pre-wrap">${initialMessage ? initialMessage.message : 'لا توجد رسالة.'}</p>
-                        </div>
+            <!-- Initial Message -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-gray-500 text-sm mb-2">رسالة المستخدم</h4>
+                <p class="text-gray-700 whitespace-pre-wrap">${initialMessage ? initialMessage.message : 'لا توجد رسالة.'}</p>
+            </div>
 
-                        <!-- Attachment -->
-                        <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-semibold text-gray-500 text-sm mb-2">المرفق</h4>
-                            ${attachmentHTML}
-                        </div>
+            <!-- Attachment -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-gray-500 text-sm mb-2">المرفق</h4>
+                ${attachmentHTML}
+            </div>
 
-                        <!-- Actions -->
-                        <div class="bg-white p-4 rounded-lg shadow-sm">
-                            <h4 class="font-bold text-gray-800 mb-2">إجراء</h4>
-                            <button id="close-ticket-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isClosed ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}"></button>
-                        </div>
-                    </div>
-                `;
-                const closeTicketBtn = document.getElementById('close-ticket-btn');
-                closeTicketBtn.innerHTML = isClosed ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح التذكرة</span>' : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
-                closeTicketBtn.onclick = () => updateTicketStatus(ticket.id, isClosed ? 'open' : 'closed');
-                lucide.createIcons();
-            }
+            <!-- Actions -->
+            <div class="bg-white p-4 rounded-lg shadow-sm">
+                <h4 class="font-bold text-gray-800 mb-2">إجراء</h4>
+                <button id="close-ticket-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isClosed ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}"></button>
+            </div>
+        </div>
+    `;
+
+    // زر إغلاق أو إعادة فتح التذكرة
+    const closeTicketBtn = document.getElementById('close-ticket-btn');
+    closeTicketBtn.innerHTML = isClosed 
+        ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح التذكرة</span>' 
+        : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
+    closeTicketBtn.onclick = () => updateTicketStatus(ticket.id, isClosed ? 'open' : 'closed');
+
+    lucide.createIcons();
+}
             
             async function updateTicketStatus(ticketId, newStatus) {
                 try {

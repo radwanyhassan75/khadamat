@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابعة تذكرة الدعم - المكتب الرقمي</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --dark-color: #2c3e50;
+            --light-color: #ffffff;
+            --gray-color: #f8f9fa;
+            --text-color: #555;
+            --border-color: #dee2e6;
+            --success-color: #28a745;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        body {
+            font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color);
+            direction: rtl; color: var(--text-color);
+        }
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 {
+            font-size: 2.5rem; font-weight: 900; color: var(--dark-color);
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+        }
+        .page-header i { color: var(--primary-color); }
+        .card {
+            background: var(--light-color); border: 1px solid var(--border-color);
+            border-radius: var(--border-radius); padding: 30px;
+            box-shadow: var(--box-shadow); margin-bottom: 30px;
+        }
+        .card h3 {
+            font-size: 1.5rem; font-weight: 700; color: var(--dark-color);
+            margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px; display: inline-block;
+        }
+        .search-form { display: flex; gap: 10px; align-items: center; }
+        .search-form input {
+            flex-grow: 1; padding: 14px 18px; border: 1px solid #ced4da;
+            border-radius: 8px; font-size: 1rem; font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .search-form input:focus {
+            outline: none; border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
+        }
+        .search-form button {
+            padding: 14px 25px; background-color: var(--primary-color); color: white;
+            border: none; border-radius: 8px; cursor: pointer;
+            font-size: 1rem; font-weight: bold; transition: all 0.3s ease;
+        }
+        .search-form button:hover { background-color: #00458e; }
+        #searchResult { margin-top: 25px; }
+        .ticket-summary {
+            border: 1px solid var(--border-color); background-color: #f1f5f9;
+            border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px;
+        }
+        .ticket-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 1.1rem; }
+        .ticket-item strong { color: var(--dark-color); font-weight: 700; }
+        .ticket-item span { color: var(--text-color); }
+        .status { font-weight: bold; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem; }
+        .status.open { color: #155724; background-color: #d4edda; }
+        .status.closed { color: #721c24; background-color: #f8d7da; }
+        .message { padding: 15px; margin-bottom: 10px; border-radius: 8px; border-right-width: 5px; border-right-style: solid; }
+        .message.user { background-color: #e9f5ff; border-right-color: var(--primary-color); }
+        .message.admin { background-color: #f3f4f6; border-right-color: var(--success-color); }
+        .message p { margin: 5px 0; }
+        .message small { color: #6b7280; }
+        .empty-state { text-align: center; padding: 20px; background-color: #f1f5f9; border-radius: 8px; color: var(--text-color); }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="page-header">
+            <h1><i class="fas fa-ticket-alt"></i> متابعة حالة تذكرتك</h1>
+        </header>
+
+        <section id="manualSearch" class="card">
+            <h3><i class="fas fa-search"></i> البحث برقم التذكرة</h3>
+            <p>أدخل رقم التذكرة الذي استلمته لمتابعة آخر التحديثات.</p>
+            <form id="search-form" class="search-form">
+                <input type="text" id="ticketIdInput" placeholder="مثال: ticket_17234567890">
+                <button type="button" onclick="searchTicket()">بحث</button>
+            </form>
+            <div id="searchResult"></div>
+        </section>
+    </main>
+
+    <script>
+        const API_BASE = "https://orders-worker.radwanyhassan75.workers.dev";
+
+        // البحث عن تذكرة برقمها وعرض كل معلوماتها
+        async function searchTicket() {
+            const ticketId = document.getElementById("ticketIdInput").value.trim();
+            const resultDiv = document.getElementById("searchResult");
+            if (!ticketId) {
+                resultDiv.innerHTML = "<p class='empty-state'>الرجاء إدخال رقم التذكرة.</p>";
+                return;
+            }
+            
+            resultDiv.innerHTML = "<p class='empty-state'>جاري البحث...</p>";
+
+            try {
+                const res = await fetch(`${API_BASE}/tickets/${ticketId}`);
+                const result = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(result.error || 'لم يتم العثور على التذكرة.');
+                }
+                
+                // استخراج معلومات التذكرة والرسائل من الرد المدمج
+                const ticket = result.ticket;
+                const messages = result.messages;
+
+                const statusClass = ticket.status === 'open' ? 'open' : 'closed';
+                const statusText = ticket.status === 'open' ? 'مفتوحة' : 'مغلقة';
+                
+                // بناء عرض معلومات التذكرة الأساسية
+                let html = `
+                    <div class="ticket-summary">
+                        <div class="ticket-item">
+                            <strong>الموضوع:</strong> <span>${ticket.subject}</span>
+                        </div>
+                        <div class="ticket-item">
+                            <strong>الحالة:</strong> <span class="status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="ticket-item">
+                            <strong>تاريخ الإنشاء:</strong> <span>${new Date(ticket.createdAt).toLocaleDateString('ar-EG')}</span>
+                        </div>
+                    </div>
+                    <h4><i class="fas fa-comments"></i> سجل المحادثات</h4>
+                `;
+
+                // إضافة عرض الرسائل
+                if (messages.length > 0) {
+                    messages.forEach(msg => {
+                        const senderName = msg.sender === 'user' ? 'أنت' : 'فريق الدعم';
+                        const messageClass = msg.sender === 'user' ? 'user' : 'admin';
+                        html += `
+                            <div class="message ${messageClass}">
+                                <strong>${senderName}</strong>
+                                <p>${(msg.message || 'لا يوجد نص للرسالة').replace(/\n/g, '<br>')}</p>
+                                ${msg.attachmentUrl ? `<p><a href="${msg.attachmentUrl}" target="_blank">عرض المرفق</a></p>` : ''}
+                                <small>${new Date(msg.createdAt).toLocaleString('ar-EG')}</small>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += "<p class='empty-state'>لا توجد رسائل في هذه التذكرة بعد.</p>";
+                }
+                
+                resultDiv.innerHTML = html;
+
+            } catch (err) {
+                console.error("خطأ البحث:", err);
+                resultDiv.innerHTML = `<p class="empty-state" style="color: #dc3545;">${err.message}</p>`;
+            }
+        }
+        
+        document.getElementById('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            searchTicket();
+        });
+    </script>
+</body>
+</html>

@@ -205,12 +205,17 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                         <div class="form-group">
                             <label for="name">الاسم الكامل <span class="required-star">*</span></label>
-                            <input type="text" id="name" name="userName" required>
+                            <input type="text" id="name" name="name" required>
                         </div>
                         <div class="form-group">
                             <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                            <input type="email" id="email" name="userEmail" required>
+                            <input type="email" id="email" name="email" required>
                         </div>
+                        <div class="form-group">
+    <label for="phone">رقم الهاتف <span class="required-star">*</span></label>
+    <input type="tel" id="phone" name="phone" required placeholder="مثال: 0612345678">
+</div>
+
                     </div>
                     <div class="form-group">
                         <label for="inquiry-type">نوع الاستفسار <span class="required-star">*</span></label>
@@ -282,8 +287,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- ✅ تم إرجاع الكود إلى حالته الأصلية والمستقرة ---
-        const WORKER_URL = "https://orders-worker.radwanyhassan75.workers.dev"; // عنوان الـ Worker
+        const WORKER_URL = "https://orders-worker.radwanyhassan75.workers.dev";
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
         const btnText = document.getElementById('btn-text');
@@ -312,7 +316,10 @@
                 relatedOrderInput.value = '';
             }
         }
-
+        
+        // ==========================================================
+        //  ✅✅✅ بداية الكود الصحيح والمُعدل لعملية الإرسال ✅✅✅
+        // ==========================================================
         contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             submitBtn.disabled = true;
@@ -320,26 +327,34 @@
             btnSpinner.style.display = 'block';
             messageContainer.innerHTML = ''; // مسح الرسائل السابقة
 
+            // 1. إنشاء FormData من النموذج (هذا يجمع كل الحقول والملفات)
             const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
 
-            // إضافة رقم الطلب إلى نص الرسالة إذا كان موجوداً
-            if (data.orderId) {
-                data.message = `${data.message}\n\nرقم الطلب المتعلق: ${data.orderId}`;
+            // 2. إضافة البيانات الإضافية مباشرة إلى FormData
+            const orderId = formData.get('orderId');
+            if (orderId) {
+                const currentMessage = formData.get('message');
+                const newMessage = `${currentMessage}\n\nرقم الطلب المتعلق: ${orderId}`;
+                formData.set('message', newMessage); // نستخدم .set لتحديث الرسالة
+                formData.append('userPhone', document.getElementById('phone').value);
+formData.append('userName', document.getElementById('name').value);
+formData.append('userEmail', document.getElementById('email').value);
+formData.append('orderId', relatedOrderInput.value || '');
+
             }
 
-            // إضافة هوية المستخدم إذا كان مسجلاً للدخول
             const user = auth.currentUser;
             if (user) {
-                data.userId = user.uid;
+                // إذا كان المستخدم مسجلاً، أضف هويته إلى البيانات
+                formData.append('userId', user.uid);
             }
 
             try {
-                // ✅ إرسال البيانات إلى الـ Worker لإنشاء تذكرة
+                // 3. إرسال كائن FormData مباشرة إلى الخادم
                 const response = await fetch(`${WORKER_URL}/tickets`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    // ⚠️ ملاحظة: لا تضع 'Content-Type' هنا، المتصفح سيهتم بذلك تلقائياً
+                    body: formData 
                 });
 
                 const result = await response.json();
@@ -359,6 +374,9 @@
                 btnSpinner.style.display = 'none';
             }
         });
+        // ==========================================================
+        //  ✅✅✅ نهاية الكود الصحيح والمُعدل لعملية الإرسال ✅✅✅
+        // ==========================================================
         
         document.getElementById('current-year').textContent = new Date().getFullYear();
     });
