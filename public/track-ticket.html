@@ -7,18 +7,20 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --primary-color: #0056b3;
+            --primary-color: #0d6efd;
+            --primary-light: #e7f1ff;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --text-color: #555;
             --border-color: #dee2e6;
-            --success-color: #28a745;
+            --success-color: #198754;
+            --danger-color: #dc3545;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
@@ -26,149 +28,352 @@
             font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color);
             direction: rtl; color: var(--text-color);
         }
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
-        .page-header { text-align: center; margin-bottom: 40px; }
-        .page-header h1 {
-            font-size: 2.5rem; font-weight: 900; color: var(--dark-color);
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-        }
-        .page-header i { color: var(--primary-color); }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        
+        /* --- Header --- */
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 50px; }
+        .nav-links { list-style: none; display: none; gap: 30px; margin: 0; padding: 0; align-items: center; }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; border-radius: 3px; bottom: 0; right: 0; background-color: var(--primary-color); transition: width 0.3s ease-in-out; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+        .nav-links a.active::after { width: 100%; }
+        .navbar-actions { display: flex; align-items: center; gap: 10px; }
+        .auth-btn { text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid transparent; }
+        .btn-login { background-color: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
+        .btn-login:hover { background-color: #dbe9ff; }
+        .btn-signup { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-signup:hover { background-color: #0b5ed7; }
+        .hamburger { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        @media (min-width: 1024px) { .hamburger { display: none; } }
+
         .card {
             background: var(--light-color); border: 1px solid var(--border-color);
             border-radius: var(--border-radius); padding: 30px;
             box-shadow: var(--box-shadow); margin-bottom: 30px;
         }
-        .card h3 {
-            font-size: 1.5rem; font-weight: 700; color: var(--dark-color);
-            margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px; display: inline-block;
+        .card h1, .card h3 {
+            font-weight: 900; color: var(--dark-color); margin-top: 0;
         }
         .search-form { display: flex; gap: 10px; align-items: center; }
         .search-form input {
-            flex-grow: 1; padding: 14px 18px; border: 1px solid #ced4da;
+            flex-grow: 1; padding: 14px 18px; border: 2px solid var(--border-color);
             border-radius: 8px; font-size: 1rem; font-family: 'Cairo', sans-serif;
             transition: all 0.3s ease;
         }
         .search-form input:focus {
             outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
         }
         .search-form button {
             padding: 14px 25px; background-color: var(--primary-color); color: white;
             border: none; border-radius: 8px; cursor: pointer;
             font-size: 1rem; font-weight: bold; transition: all 0.3s ease;
         }
-        .search-form button:hover { background-color: #00458e; }
-        #searchResult { margin-top: 25px; }
+        .search-form button:hover { background-color: #0b5ed7; }
+        
+        #chat-interface { display: none; }
+        
         .ticket-summary {
-            border: 1px solid var(--border-color); background-color: #f1f5f9;
-            border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px;
+            background-color: var(--primary-light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
-        .ticket-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 1.1rem; }
-        .ticket-item strong { color: var(--dark-color); font-weight: 700; }
-        .ticket-item span { color: var(--text-color); }
-        .status { font-weight: bold; padding: 4px 10px; border-radius: 20px; font-size: 0.9rem; }
-        .status.open { color: #155724; background-color: #d4edda; }
-        .status.closed { color: #721c24; background-color: #f8d7da; }
-        .message { padding: 15px; margin-bottom: 10px; border-radius: 8px; border-right-width: 5px; border-right-style: solid; }
-        .message.user { background-color: #e9f5ff; border-right-color: var(--primary-color); }
-        .message.admin { background-color: #f3f4f6; border-right-color: var(--success-color); }
-        .message p { margin: 5px 0; }
-        .message small { color: #6b7280; }
-        .empty-state { text-align: center; padding: 20px; background-color: #f1f5f9; border-radius: 8px; color: var(--text-color); }
+        .summary-item { display: flex; flex-direction: column; }
+        .summary-item .label { font-size: 0.9rem; color: #6c757d; margin-bottom: 5px; }
+        .summary-item .value { font-size: 1.1rem; font-weight: 700; color: var(--dark-color); }
+        .status { font-weight: bold; padding: 4px 12px; border-radius: 50px; font-size: 0.9rem; text-align: center; }
+        .status.open { color: #0f5132; background-color: #d1e7dd; }
+        .status.closed { color: #842029; background-color: #f8d7da; }
+
+        .messages-history {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 15px; margin-bottom: 10px; border-radius: var(--border-radius);
+            max-width: 80%; clear: both;
+        }
+        .message.user {
+            background-color: var(--primary-color); color: white;
+            border-bottom-right-radius: 0; float: right;
+        }
+        .message.admin {
+            background-color: #e9ecef; color: var(--dark-color);
+            border-bottom-left-radius: 0; float: left;
+        }
+        .message p { margin: 0 0 8px 0; line-height: 1.7; }
+        .message .meta { font-size: 0.8rem; opacity: 0.8; }
+        
+        .reply-form textarea {
+            width: 100%; box-sizing: border-box; padding: 12px;
+            border: 2px solid var(--border-color); border-radius: 8px;
+            font-family: 'Cairo', sans-serif; font-size: 1rem; margin-bottom: 10px;
+            resize: vertical; min-height: 80px;
+        }
+        .reply-actions { display: flex; justify-content: space-between; align-items: center; }
+        .reply-actions button {
+            padding: 12px 25px; border: none; border-radius: 8px;
+            font-weight: 700; cursor: pointer; transition: background-color 0.3s;
+        }
+        .btn-send { background-color: var(--success-color); color: white; }
+        .btn-close-ticket { background-color: var(--danger-color); color: white; }
+        
+        .state-message { text-align: center; padding: 20px; font-weight: 600; }
+
+        /* --- Footer --- */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.5rem; }
+        .footer-socials a:hover { color: var(--primary-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        .newsletter-form { display: flex; margin-top: 20px; }
+        .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
+        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <main class="container">
-        <header class="page-header">
-            <h1><i class="fas fa-ticket-alt"></i> متابعة حالة تذكرتك</h1>
-        </header>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <ul class="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="blog.html">المدونة</a></li>
+                <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                 <!-- Auth buttons will be dynamically inserted here by auth.js -->
+            </div>
+            <div class="hamburger"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
 
-        <section id="manualSearch" class="card">
-            <h3><i class="fas fa-search"></i> البحث برقم التذكرة</h3>
-            <p>أدخل رقم التذكرة الذي استلمته لمتابعة آخر التحديثات.</p>
+    <main class="container">
+        <div class="card">
+            <h1><i class="fas fa-ticket-alt"></i> متابعة تذكرة الدعم</h1>
+            <p>أدخل رقم التذكرة الذي استلمته في بريدك الإلكتروني لعرض المحادثة والرد على فريق الدعم.</p>
             <form id="search-form" class="search-form">
-                <input type="text" id="ticketIdInput" placeholder="مثال: ticket_17234567890">
-                <button type="button" onclick="searchTicket()">بحث</button>
+                <input type="text" id="ticketIdInput" placeholder="مثال: ticket_1234567890" required>
+                <button type="submit">بحث</button>
             </form>
-            <div id="searchResult"></div>
-        </section>
+        </div>
+
+        <div id="chat-interface" class="card">
+            <div id="ticket-summary" class="ticket-summary"></div>
+            <div id="messages-history" class="messages-history"></div>
+            
+            <form id="reply-form" class="reply-form">
+                <h3><i class="fas fa-reply"></i> أضف ردًا جديدًا</h3>
+                <textarea id="reply-message" placeholder="اكتب رسالتك هنا..." required></textarea>
+                <input type="file" id="reply-attachment">
+                <div class="reply-actions">
+                    <button type="submit" class="btn-send">إرسال الرد</button>
+                    <button type="button" id="close-ticket-btn" class="btn-close-ticket">إغلاق التذكرة</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="status-message" class="state-message" style="display: none;"></div>
     </main>
 
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">انضم إلى قائمتنا البريدية</h3>
+                <p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
+                <form id="newsletter-form" class="newsletter-form">
+                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit">اشترك</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+    </footer>
+    
+    <!-- ✅ Load Firebase Libraries FIRST -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    
+    <!-- ✅ Then load your auth.js script that USES Firebase -->
+    <script src="auth.js"></script>
+
     <script>
-        const API_BASE = "https://orders-worker.radwanyhassan75.workers.dev";
-
-        // البحث عن تذكرة برقمها وعرض كل معلوماتها
-        async function searchTicket() {
-            const ticketId = document.getElementById("ticketIdInput").value.trim();
-            const resultDiv = document.getElementById("searchResult");
-            if (!ticketId) {
-                resultDiv.innerHTML = "<p class='empty-state'>الرجاء إدخال رقم التذكرة.</p>";
-                return;
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
             
-            resultDiv.innerHTML = "<p class='empty-state'>جاري البحث...</p>";
+            const searchForm = document.getElementById('search-form');
+            const ticketIdInput = document.getElementById('ticketIdInput');
+            const chatInterface = document.getElementById('chat-interface');
+            const ticketSummary = document.getElementById('ticket-summary');
+            const messagesHistory = document.getElementById('messages-history');
+            const replyForm = document.getElementById('reply-form');
+            const replyMessage = document.getElementById('reply-message');
+            const replyAttachment = document.getElementById('reply-attachment');
+            const closeTicketBtn = document.getElementById('close-ticket-btn');
+            const statusMessage = document.getElementById('status-message');
 
-            try {
-                const res = await fetch(`${API_BASE}/tickets/${ticketId}`);
-                const result = await res.json();
+            let currentTicketId = null;
 
-                if (!res.ok) {
-                    throw new Error(result.error || 'لم يتم العثور على التذكرة.');
-                }
+            searchForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                currentTicketId = ticketIdInput.value.trim();
+                if (!currentTicketId) return;
                 
-                // استخراج معلومات التذكرة والرسائل من الرد المدمج
-                const ticket = result.ticket;
-                const messages = result.messages;
+                statusMessage.textContent = 'جاري البحث...';
+                statusMessage.style.display = 'block';
+                chatInterface.style.display = 'none';
 
+                try {
+                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}`);
+                    const data = await response.json();
+
+                    if (!response.ok) throw new Error(data.error || 'فشل جلب بيانات التذكرة.');
+
+                    renderChat(data.ticket, data.messages);
+                    statusMessage.style.display = 'none';
+                    chatInterface.style.display = 'block';
+
+                } catch (error) {
+                    statusMessage.textContent = `خطأ: ${error.message}`;
+                    console.error("Search Error:", error);
+                }
+            });
+
+            function renderChat(ticket, messages) {
                 const statusClass = ticket.status === 'open' ? 'open' : 'closed';
                 const statusText = ticket.status === 'open' ? 'مفتوحة' : 'مغلقة';
-                
-                // بناء عرض معلومات التذكرة الأساسية
-                let html = `
-                    <div class="ticket-summary">
-                        <div class="ticket-item">
-                            <strong>الموضوع:</strong> <span>${ticket.subject}</span>
-                        </div>
-                        <div class="ticket-item">
-                            <strong>الحالة:</strong> <span class="status ${statusClass}">${statusText}</span>
-                        </div>
-                        <div class="ticket-item">
-                            <strong>تاريخ الإنشاء:</strong> <span>${new Date(ticket.createdAt).toLocaleDateString('ar-EG')}</span>
-                        </div>
-                    </div>
-                    <h4><i class="fas fa-comments"></i> سجل المحادثات</h4>
+                ticketSummary.innerHTML = `
+                    <div class="summary-item"><span class="label">الموضوع</span><span class="value">${ticket.subject}</span></div>
+                    <div class="summary-item"><span class="label">تاريخ الإنشاء</span><span class="value">${new Date(ticket.createdAt).toLocaleDateString('ar-EG')}</span></div>
+                    <div class="summary-item"><span class="label">آخر تحديث</span><span class="value">${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</span></div>
+                    <div class="summary-item"><span class="label">الحالة</span><span class="value status ${statusClass}">${statusText}</span></div>
                 `;
 
-                // إضافة عرض الرسائل
-                if (messages.length > 0) {
-                    messages.forEach(msg => {
-                        const senderName = msg.sender === 'user' ? 'أنت' : 'فريق الدعم';
-                        const messageClass = msg.sender === 'user' ? 'user' : 'admin';
-                        html += `
-                            <div class="message ${messageClass}">
-                                <strong>${senderName}</strong>
-                                <p>${(msg.message || 'لا يوجد نص للرسالة').replace(/\n/g, '<br>')}</p>
-                                ${msg.attachmentUrl ? `<p><a href="${msg.attachmentUrl}" target="_blank">عرض المرفق</a></p>` : ''}
-                                <small>${new Date(msg.createdAt).toLocaleString('ar-EG')}</small>
-                            </div>
-                        `;
-                    });
-                } else {
-                    html += "<p class='empty-state'>لا توجد رسائل في هذه التذكرة بعد.</p>";
-                }
-                
-                resultDiv.innerHTML = html;
+                messagesHistory.innerHTML = '';
+                messages.forEach(msg => {
+                    appendMessage(msg);
+                });
+                messagesHistory.scrollTop = messagesHistory.scrollHeight;
 
-            } catch (err) {
-                console.error("خطأ البحث:", err);
-                resultDiv.innerHTML = `<p class="empty-state" style="color: #dc3545;">${err.message}</p>`;
+                if (ticket.status === 'closed') {
+                    replyMessage.disabled = true;
+                    replyAttachment.disabled = true;
+                    replyForm.querySelector('button[type="submit"]').disabled = true;
+                    closeTicketBtn.disabled = true;
+                    replyMessage.placeholder = 'تم إغلاق هذه المحادثة.';
+                } else {
+                    replyMessage.disabled = false;
+                    replyAttachment.disabled = false;
+                    replyForm.querySelector('button[type="submit"]').disabled = false;
+                    closeTicketBtn.disabled = false;
+                    replyMessage.placeholder = 'اكتب رسالتك هنا...';
+                }
             }
-        }
-        
-        document.getElementById('search-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            searchTicket();
+            
+            function appendMessage(msg) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender}`;
+                messageDiv.innerHTML = `
+                    <p>${(msg.message || '').replace(/\n/g, '<br>')}</p>
+                    ${msg.attachmentUrl ? `<a href="${msg.attachmentUrl}" target="_blank">عرض المرفق</a>` : ''}
+                    <div class="meta">${new Date(msg.createdAt).toLocaleString('ar-EG')}</div>
+                `;
+                messagesHistory.appendChild(messageDiv);
+            }
+
+            replyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const messageText = replyMessage.value.trim();
+                const attachmentFile = replyAttachment.files[0];
+                if (!messageText && !attachmentFile) return;
+
+                const formData = new FormData();
+                formData.append('sender', 'user');
+                formData.append('message', messageText);
+                if (attachmentFile) {
+                    formData.append('attachment', attachmentFile);
+                }
+
+                try {
+                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}/messages`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const newMsg = await response.json();
+                    if (!response.ok) throw new Error(newMsg.error || 'فشل إرسال الرسالة.');
+
+                    appendMessage(newMsg);
+                    messagesHistory.scrollTop = messagesHistory.scrollHeight;
+                    replyMessage.value = '';
+                    replyAttachment.value = '';
+
+                } catch (error) {
+                    alert(`خطأ: ${error.message}`);
+                }
+            });
+
+            closeTicketBtn.addEventListener('click', async () => {
+                if (!confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟ لا يمكنك إعادة فتحها.')) return;
+
+                try {
+                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'closed' })
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error || 'فشل إغلاق التذكرة.');
+
+                    searchForm.dispatchEvent(new Event('submit'));
+
+                } catch (error) {
+                    alert(`خطأ: ${error.message}`);
+                }
+            });
         });
     </script>
 </body>

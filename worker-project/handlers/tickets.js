@@ -11,6 +11,7 @@ export async function handleTickets(request, env, ctx) {
     let ticketId = pathParts.find(part => part.startsWith('ticket_'));
     const isMessagesRoute = pathParts.includes('messages');
 
+    // --- GET: Fetch ticket data ---
     if (request.method === "GET") {
         const userId = url.searchParams.get('userId');
         
@@ -32,16 +33,22 @@ export async function handleTickets(request, env, ctx) {
         }
     } 
     
-    else if (request.method === "POST" && ticketId && isMessagesRoute) { // Add a new message to a ticket
+    // --- POST: Add a new message to an existing ticket ---
+    else if (request.method === "POST" && ticketId && isMessagesRoute) {
         const formData = await request.formData();
-        const sender = formData.get('sender');
+        const sender = formData.get('sender'); // Should be 'user' or 'admin'
+        const message = formData.get('message');
         const now = new Date().toISOString();
+
+        if (!sender || !message) {
+            return new Response(JSON.stringify({ error: "Sender and message are required." }), { status: 400, headers: corsHeaders });
+        }
 
         const messageData = {
             id: `msg_${Date.now()}`,
             ticketId: ticketId,
             sender: sender,
-            message: formData.get('message'),
+            message: message,
             attachmentUrl: null,
             createdAt: now
         };
@@ -60,20 +67,26 @@ export async function handleTickets(request, env, ctx) {
         await env.DB.prepare("UPDATE support_tickets SET updatedAt = ?, lastReplier = ? WHERE id = ?")
             .bind(now, sender, ticketId).run();
         
-        if (sender === 'admin') {
-            const ticketInfo = await env.DB.prepare("SELECT userId FROM support_tickets WHERE id = ?").bind(ticketId).first();
-            if (ticketInfo && ticketInfo.userId && ticketInfo.userId !== 'guest-user') {
+        // Send email notification to the other party
+        const ticketInfo = await env.DB.prepare("SELECT userId FROM support_tickets WHERE id = ?").bind(ticketId).first();
+        if (sender === 'admin' && ticketInfo) {
+            // Find user's email to send notification
+            if (ticketInfo.userId !== 'guest-user') {
                 const userInfo = await env.DB.prepare("SELECT email FROM users WHERE id = ?").bind(ticketInfo.userId).first();
                 if (userInfo && userInfo.email) {
                     ctx.waitUntil(sendEmailWithResend({ to: userInfo.email, subject: `لديك رد جديد على تذكرتك #${ticketId}`, html: getNewMessageNotificationHTML(ticketId) }, env));
                 }
             }
+        } else if (sender === 'user') {
+            // Notify admin of a new user reply
+            ctx.waitUntil(sendEmailWithResend({ to: 'support@khadamatmaroc.co.uk', subject: `رد جديد من مستخدم على التذكرة #${ticketId}`, html: getNewMessageNotificationHTML(ticketId) }, env));
         }
 
         return new Response(JSON.stringify(messageData), { status: 201, headers: corsHeaders });
     }
     
-    else if (request.method === "POST") { // Create a new ticket
+    // --- POST: Create a new ticket ---
+    else if (request.method === "POST") {
         const formData = await request.formData();
         const newTicketId = `ticket_${Date.now()}`;
         const now = new Date().toISOString();
@@ -85,7 +98,7 @@ export async function handleTickets(request, env, ctx) {
             status: 'open',
             createdAt: now,
             updatedAt: now,
-            lastReplier: 'user'
+            lastReplier: 'user' // The user is the first replier
         };
 
         const messageData = {
@@ -97,7 +110,7 @@ export async function handleTickets(request, env, ctx) {
             createdAt: now
         };
 
-        const attachmentFile = formData.get('attachment');
+        const attachmentFile = formData.get('attachmentFile'); // Ensure this matches the form name
         if (attachmentFile && typeof attachmentFile.name === 'string' && attachmentFile.name) {
             if (!env.RECEIPTS_BUCKET || !env.R2_PUBLIC_URL) throw new Error("R2 bucket for attachments is not configured.");
             const fileName = `attachments/${newTicketId}/${Date.now()}-${attachmentFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
@@ -122,7 +135,8 @@ export async function handleTickets(request, env, ctx) {
         return new Response(JSON.stringify({ success: true, ticketId: newTicketId }), { status: 201, headers: corsHeaders });
     }
 
-    else if (request.method === "PUT" && ticketId) { // Update ticket status
+    // --- PUT: Update ticket status (e.g., close) ---
+    else if (request.method === "PUT" && ticketId) {
         const { status } = await request.json();
         if (!['open', 'closed'].includes(status)) return new Response(JSON.stringify({ error: "Invalid status" }), { status: 400, headers: corsHeaders });
         

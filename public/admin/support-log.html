@@ -1,13 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link href="../public/output.css" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>سجل الدعم - لوحة تحكم خدماتك</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,47 +15,43 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #a8a8a8; border-radius: 4px; }
+        .message { max-width: 80%; }
+        .message.user { float: right; clear: both; }
+        .message.admin { float: left; clear: both; }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Password Protection Gate -->
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">يرجى إدخال كلمة المرور للمتابعة</h2>
-            <form id="password-form">
-                <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********" autocomplete="current-password">
-                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
-                <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">دخول</button>
-            </form>
-        </div>
-    </div>
-
     <!-- Main Dashboard Content -->
-    <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
+    <div id="dashboard-content" class="h-screen bg-gray-100 md:flex md:flex-row-reverse">
         <!-- Sidebar -->
         <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
-    <nav class="flex-1 px-4 py-8 space-y-2">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
+            </div>
+            <nav class="flex-1 px-4 py-8 space-y-2">
                 <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>لوحة التحكم</a>
                 <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
                 <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
-                <a href="manage-blog.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i>المدونة</a>
+                <a href="manage-blog.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i>المدونة</a>
                 <a href="manage-services.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i>الخدمات</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>الدعم الفني</a>
-                <a href="manage-reviews.html" class="sidebar-link"><i data-lucide="star" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
+                <a href="support-log.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>الدعم الفني</a>
+                <a href="manage-reviews.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="star" class="w-5 h-5 ml-3"></i>المراجعات</a>
                 <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
             </nav>
         </aside>
 
         <!-- Main content area -->
         <div class="flex flex-col flex-1">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0"><h2 class="text-xl font-semibold text-gray-800">سجل الدعم الفني</h2><div class="flex items-center space-x-4"><span class="font-semibold">المسؤول</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
+            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md flex-shrink-0">
+                <h2 class="text-xl font-semibold text-gray-800">سجل الدعم الفني</h2>
+                <div id="admin-info-placeholder"></div>
+            </header>
             
             <main class="flex-1 flex overflow-hidden">
                 <!-- Ticket List Panel -->
                 <div class="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-l border-gray-200">
-                    <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث في سجل الدعم..." class="w-full px-4 py-2 border rounded-lg"></div>
+                    <div class="p-4 border-b"><input id="search-input" type="text" placeholder="ابحث بالاسم أو الموضوع..." class="w-full px-4 py-2 border rounded-lg"></div>
                     <div id="filter-buttons" class="p-2 flex justify-center gap-2 border-b">
                         <button data-status="all" class="filter-btn bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">الكل</button>
                         <button data-status="open" class="filter-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">مفتوح</button>
@@ -68,40 +60,76 @@
                     <div id="ticket-list" class="flex-1 overflow-y-auto"></div>
                 </div>
 
-                <!-- Dossier Panel -->
-                <div id="dossier-panel" class="hidden flex-1 bg-gray-50 p-6 overflow-y-auto">
-                    <!-- Content will be rendered here by JavaScript -->
-                </div>
+                <!-- Chat Panel -->
+                <div id="chat-panel" class="flex-1 flex flex-col bg-gray-50">
+                    <div id="no-chat-selected" class="flex flex-1 flex-col items-center justify-center text-center p-8">
+                        <i data-lucide="inbox" class="w-16 h-16 text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد تذكرة دعم</h3>
+                        <p class="text-gray-500 mt-2">يرجى اختيار تذكرة من القائمة لعرض المحادثة.</p>
+                    </div>
 
-                <div id="no-chat-selected" class="flex flex-1 flex-col items-center justify-center text-center p-8 bg-gray-50">
-                    <i data-lucide="inbox" class="w-16 h-16 text-gray-300 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-700">لم يتم تحديد تذكرة دعم</h3>
-                    <p class="text-gray-500 mt-2">يرجى اختيار تذكرة من القائمة لعرض تفاصيلها أو الرد عليها.</p>
+                    <div id="chat-area" class="hidden flex-1 flex flex-col">
+                        <div class="flex items-center justify-between p-4 bg-white border-b">
+                            <div id="user-info"></div>
+                            <button id="close-ticket-btn" class="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700">إغلاق التذكرة</button>
+                        </div>
+                        <div id="messages-history" class="flex-1 p-4 overflow-y-auto"></div>
+                        <div class="p-4 bg-white border-t">
+                            <div class="bg-gray-100 p-3 rounded-lg mb-2">
+                                <h4 class="text-sm font-bold mb-2">أدوات المشرف</h4>
+                                <form id="order-search-form" class="flex items-center gap-2">
+                                    <input type="text" id="order-id-input" placeholder="أدخل رقم الطلب KH-..." class="flex-grow px-2 py-1 border rounded-md text-sm">
+                                    <button type="submit" class="bg-gray-700 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-800">بحث</button>
+                                </form>
+                                <div id="order-details-card" class="mt-2 text-sm hidden"></div>
+                                <button id="send-order-info-btn" class="w-full mt-2 bg-indigo-600 text-white py-1 rounded-md text-sm hover:bg-indigo-700 hidden">إرسال تفاصيل الطلب للمستخدم</button>
+                            </div>
+                            <form id="reply-form">
+                                <textarea id="reply-message" class="w-full p-2 border rounded-md" placeholder="اكتب ردك هنا..." rows="3"></textarea>
+                                <div class="flex justify-between items-center mt-2">
+                                    <input type="file" id="reply-attachment">
+                                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">إرسال الرد</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
     </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="admin-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="../auth.js"></script>
     <script>
-        function initializePage() {
+        document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-            
             const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
             let allTickets = [];
-            let activeTicket = null;
+            let currentTicketId = null;
+            let currentOrderDetailsText = '';
 
             const ticketListEl = document.getElementById('ticket-list');
-            const dossierPanelEl = document.getElementById('dossier-panel');
             const noChatSelectedEl = document.getElementById('no-chat-selected');
+            const chatAreaEl = document.getElementById('chat-area');
+            const userInfoEl = document.getElementById('user-info');
+            const messagesHistoryEl = document.getElementById('messages-history');
+            const replyForm = document.getElementById('reply-form');
+            const replyMessage = document.getElementById('reply-message');
+            const replyAttachment = document.getElementById('reply-attachment');
+            const closeTicketBtn = document.getElementById('close-ticket-btn');
+            const orderSearchForm = document.getElementById('order-search-form');
+            const orderIdInput = document.getElementById('order-id-input');
+            const orderDetailsCard = document.getElementById('order-details-card');
+            const sendOrderInfoBtn = document.getElementById('send-order-info-btn');
             const searchInput = document.getElementById('search-input');
             const filterButtons = document.querySelectorAll('.filter-btn');
 
             async function fetchTickets() {
                 ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جاري تحميل التذاكر...</p>';
                 try {
-                    const response = await fetch(`${API_URL}/tickets`);
+                    const response = await fetch(`${API_URL}/api/tickets`);
                     if (!response.ok) throw new Error('تعذر تحميل التذاكر');
                     allTickets = await response.json();
                     filterAndRender();
@@ -113,119 +141,168 @@
             function renderTicketList(tickets) {
                 ticketListEl.innerHTML = '';
                 if (tickets.length === 0) {
-                    ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر دعم.</p>';
+                    ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر تطابق البحث.</p>';
                     return;
                 }
                 tickets.forEach(ticket => {
                     const item = document.createElement('div');
                     item.className = 'ticket-item p-4 border-b hover:bg-gray-50 cursor-pointer';
                     item.dataset.ticketId = ticket.id;
-                    const statusColor = ticket.status === 'open' ? 'text-green-600' : 'text-gray-500';
+                    const statusClass = ticket.status === 'open' ? 'text-green-600' : 'text-gray-500';
                     item.innerHTML = `
                         <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-gray-800">${ticket.userName}</h4>
-                            <span class="text-xs text-gray-500">${new Date(ticket.updatedAt).toLocaleDateString('ar-EG')}</span>
+                            <h4 class="font-bold text-gray-800 truncate">${ticket.subject}</h4>
+                            <span class="text-xs text-gray-500 flex-shrink-0">${new Date(ticket.updatedAt).toLocaleDateString('ar-EG')}</span>
                         </div>
-                        <p class="text-sm text-gray-600 truncate">${ticket.subject}</p>
-                        <span class="text-xs font-semibold ${statusColor}">${ticket.status === 'open' ? 'مفتوح' : 'مغلق'}</span>
+                        <p class="text-sm text-gray-600">ID: ${ticket.id}</p>
+                        <span class="text-xs font-semibold ${statusClass}">${ticket.status === 'open' ? 'مفتوح' : 'مغلق'}</span>
                     `;
-                    item.addEventListener('click', () => selectTicket(ticket));
+                    item.addEventListener('click', () => selectTicket(ticket.id));
                     ticketListEl.appendChild(item);
                 });
             }
 
-            async function selectTicket(ticket) {
-                activeTicket = ticket;
+            async function selectTicket(ticketId) {
+                currentTicketId = ticketId;
                 document.querySelectorAll('.ticket-item').forEach(el => {
-                    el.classList.toggle('bg-indigo-50', el.dataset.ticketId === ticket.id);
+                    el.classList.toggle('bg-indigo-50', el.dataset.ticketId === ticketId);
                 });
 
-                dossierPanelEl.classList.remove('hidden');
                 noChatSelectedEl.classList.add('hidden');
-                dossierPanelEl.innerHTML = '<p class="text-center p-8 text-gray-500">جاري تحميل التفاصيل...</p>';
+                chatAreaEl.classList.remove('hidden');
+                chatAreaEl.classList.add('flex');
+                messagesHistoryEl.innerHTML = '<p class="text-center p-8 text-gray-500">جاري تحميل المحادثة...</p>';
 
                 try {
-                    const response = await fetch(`${API_URL}/tickets/${ticket.id}`);
-                    const messages = await response.json();
-                    const initialMessage = messages.find(m => m.sender === 'user');
-                    renderDossier(ticket, initialMessage);
+                    const response = await fetch(`${API_URL}/api/tickets/${ticketId}`);
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.error);
+                    renderChat(data.ticket, data.messages);
                 } catch (error) {
-                    dossierPanelEl.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل تفاصيل التذكرة.</p>`;
+                    messagesHistoryEl.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل تفاصيل التذكرة.</p>`;
                 }
             }
             
-function renderDossier(ticket, initialMessage) {
-    const isClosed = ticket.status === 'closed';
-    const attachmentHTML = initialMessage && initialMessage.attachmentUrl 
-        ? `<a href="${initialMessage.attachmentUrl}" target="_blank" class="flex items-center gap-2 text-indigo-600 hover:underline">
-               <i data-lucide="paperclip" class="w-4 h-4"></i>
-               <span>عرض المرفق</span>
-           </a>`
-        : '<p class="text-gray-500">لا يوجد مرفق</p>';
+            async function renderChat(ticket, messages) {
+                let userDisplayName = 'زائر';
+                let userEmail = 'غير مسجل';
+                if (ticket.userId !== 'guest-user') {
+                    try {
+                        const userResponse = await fetch(`${API_URL}/api/users/${ticket.userId}`);
+                        if (userResponse.ok) {
+                            const userData = await userResponse.json();
+                            userDisplayName = userData.displayName || 'مستخدم مسجل';
+                            userEmail = userData.email;
+                        }
+                    } catch (e) { console.error("Could not fetch user details"); }
+                }
+                
+                userInfoEl.innerHTML = `
+                    <div>
+                        <h3 class="font-bold text-lg">${userDisplayName}</h3>
+                        <p class="text-sm text-gray-500">${userEmail}</p>
+                    </div>`;
+                
+                messagesHistoryEl.innerHTML = '';
+                messages.forEach(msg => appendMessage(msg));
+                messagesHistoryEl.scrollTop = messagesHistoryEl.scrollHeight;
+                
+                const isClosed = ticket.status === 'closed';
+                replyMessage.disabled = isClosed;
+                replyAttachment.disabled = isClosed;
+                replyForm.querySelector('button[type="submit"]').disabled = isClosed;
+                closeTicketBtn.disabled = isClosed;
+                closeTicketBtn.textContent = isClosed ? 'تم الإغلاق' : 'إغلاق التذكرة';
+                replyMessage.placeholder = isClosed ? 'تم إغلاق هذه المحادثة.' : 'اكتب ردك هنا...';
+            }
 
-    dossierPanelEl.innerHTML = `
-        <div class="space-y-6">
-            <!-- Ticket Info -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                <h3 class="font-bold text-lg text-gray-800">${ticket.subject}</h3>
-                <p class="text-sm text-gray-500">رقم التذكرة: ${ticket.id}</p>
-                <p class="text-sm text-gray-500">آخر تحديث: ${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</p>
-            </div>
-            
-            <!-- User Info -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                 <h4 class="font-semibold text-gray-500 text-sm mb-2">بيانات المستخدم</h4>
-                 <p class="font-bold text-lg text-gray-800">${ticket.userName || '-'}</p>
-                 <p class="text-sm text-gray-500">البريد الإلكتروني: ${ticket.userEmail || '-'}</p>
-                 <p class="text-sm text-gray-500">رقم الهاتف: ${ticket.userPhone || '-'}</p>
-                 <p class="text-sm text-gray-500">رقم الطلب: ${ticket.orderId || '-'}</p>
-                 <a href="users.html?search=${ticket.userId}" class="text-xs text-indigo-600 hover:underline">عرض المستخدم &rarr;</a>
-            </div>
+            function appendMessage(msg) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender}`;
+                messageDiv.innerHTML = `
+                    <div class="p-3 rounded-lg ${msg.sender === 'admin' ? 'bg-indigo-500 text-white' : 'bg-gray-200'}">
+                        <p class="text-sm">${(msg.message || '').replace(/\n/g, '<br>')}</p>
+                        ${msg.attachmentUrl ? `<a href="${msg.attachmentUrl}" target="_blank" class="text-sm font-bold mt-2 inline-block hover:underline ${msg.sender === 'admin' ? 'text-indigo-200' : 'text-indigo-600'}">عرض المرفق</a>` : ''}
+                    </div>
+                    <div class="text-xs text-gray-400 mt-1 px-2 ${msg.sender === 'admin' ? 'text-left' : 'text-right'}">${new Date(msg.createdAt).toLocaleString('ar-EG')}</div>
+                `;
+                messagesHistoryEl.appendChild(messageDiv);
+                messagesHistoryEl.scrollTop = messagesHistoryEl.scrollHeight;
+            }
 
-            <!-- Initial Message -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                <h4 class="font-semibold text-gray-500 text-sm mb-2">رسالة المستخدم</h4>
-                <p class="text-gray-700 whitespace-pre-wrap">${initialMessage ? initialMessage.message : 'لا توجد رسالة.'}</p>
-            </div>
+            replyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const messageText = replyMessage.value.trim();
+                const attachmentFile = replyAttachment.files[0];
+                if (!messageText && !attachmentFile) return;
 
-            <!-- Attachment -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                <h4 class="font-semibold text-gray-500 text-sm mb-2">المرفق</h4>
-                ${attachmentHTML}
-            </div>
+                const formData = new FormData();
+                formData.append('sender', 'admin');
+                formData.append('message', messageText);
+                if (attachmentFile) formData.append('attachment', attachmentFile);
 
-            <!-- Actions -->
-            <div class="bg-white p-4 rounded-lg shadow-sm">
-                <h4 class="font-bold text-gray-800 mb-2">إجراء</h4>
-                <button id="close-ticket-btn" class="w-full text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition ${isClosed ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'}"></button>
-            </div>
-        </div>
-    `;
-
-    // زر إغلاق أو إعادة فتح التذكرة
-    const closeTicketBtn = document.getElementById('close-ticket-btn');
-    closeTicketBtn.innerHTML = isClosed 
-        ? '<i data-lucide="lock-open" class="w-4 h-4"></i><span>إعادة فتح التذكرة</span>' 
-        : '<i data-lucide="lock" class="w-4 h-4"></i><span>إغلاق التذكرة</span>';
-    closeTicketBtn.onclick = () => updateTicketStatus(ticket.id, isClosed ? 'open' : 'closed');
-
-    lucide.createIcons();
-}
-            
-            async function updateTicketStatus(ticketId, newStatus) {
                 try {
-                    await fetch(`${API_URL}/tickets/${ticketId}`, {
+                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}/messages`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const newMsg = await response.json();
+                    if (!response.ok) throw new Error(newMsg.error || 'فشل إرسال الرسالة.');
+
+                    appendMessage(newMsg);
+                    replyMessage.value = '';
+                    replyAttachment.value = '';
+                    await loadAllTickets(); // Refresh ticket list to show updated time
+                } catch (error) {
+                    alert(`خطأ: ${error.message}`);
+                }
+            });
+
+            closeTicketBtn.addEventListener('click', async () => {
+                if (!confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟')) return;
+                try {
+                    await fetch(`${API_URL}/api/tickets/${currentTicketId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: newStatus })
+                        body: JSON.stringify({ status: 'closed' })
                     });
-                    dossierPanelEl.classList.add('hidden');
-                    noChatSelectedEl.classList.remove('hidden');
-                    fetchTickets();
+                    await selectTicket(currentTicketId);
+                    await loadAllTickets();
                 } catch (error) {
-                    alert('تعذر تحديث حالة التذكرة');
+                    alert(`خطأ: ${error.message}`);
                 }
-            }
+            });
+            
+            orderSearchForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const orderId = orderIdInput.value.trim();
+                if (!orderId) return;
+                
+                orderDetailsCard.classList.remove('hidden');
+                orderDetailsCard.innerHTML = 'جاري البحث...';
+                sendOrderInfoBtn.classList.add('hidden');
+
+                try {
+                    const response = await fetch(`${API_URL}/api/orders/${orderId}`);
+                    const order = await response.json();
+                    if (!response.ok) throw new Error(order.error || 'لم يتم العثور على الطلب.');
+
+                    currentOrderDetailsText = `تفاصيل الطلب: ${order.id}\nالخدمة: ${order.serviceName}\nالحالة: ${order.status}\nالسعر: ${order.price} د.م.`;
+                    orderDetailsCard.innerHTML = currentOrderDetailsText.replace(/\n/g, '<br>');
+                    sendOrderInfoBtn.classList.remove('hidden');
+                } catch (error) {
+                    orderDetailsCard.innerHTML = `<span class="text-red-500">${error.message}</span>`;
+                }
+            });
+
+            sendOrderInfoBtn.addEventListener('click', () => {
+                if (currentOrderDetailsText) {
+                    replyMessage.value += (replyMessage.value ? '\n\n' : '') + currentOrderDetailsText;
+                    orderDetailsCard.classList.add('hidden');
+                    sendOrderInfoBtn.classList.add('hidden');
+                    orderIdInput.value = '';
+                }
+            });
 
             function filterAndRender() {
                 const searchTerm = searchInput.value.toLowerCase();
@@ -238,14 +315,13 @@ function renderDossier(ticket, initialMessage) {
 
                 if (searchTerm) {
                     filteredTickets = filteredTickets.filter(t => 
-                        (t.userName && t.userName.toLowerCase().includes(searchTerm)) || 
-                        (t.subject && t.subject.toLowerCase().includes(searchTerm))
+                        (t.subject && t.subject.toLowerCase().includes(searchTerm)) ||
+                        (t.id && t.id.toLowerCase().includes(searchTerm))
                     );
                 }
                 renderTicketList(filteredTickets);
             }
 
-            // Event Listeners
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     filterButtons.forEach(btn => {
@@ -258,11 +334,9 @@ function renderDossier(ticket, initialMessage) {
                 });
             });
             searchInput.addEventListener('input', filterAndRender);
+            
             fetchTickets();
-        }
-        // Call initializePage on load
-        window.addEventListener('DOMContentLoaded', initializePage);
+        });
     </script>
 </body>
 </html>
-
