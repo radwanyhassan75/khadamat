@@ -1,20 +1,19 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="output.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>تم استلام طلبك بنجاح!</title>
+    <title>تم استلام طلبك بنجاح! - المكتب الرقمي</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 
     <style>
         :root {
-            --primary-color: #0056b3;
-            --dark-color: #212529;
+            --primary-color: #0d6efd;
+            --primary-light: #e7f1ff;
+            --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --success-color: #198754;
@@ -29,22 +28,24 @@
             direction: rtl;
             color: #495057;
         }
-        .main-header {
-            background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            position: sticky; top: 0; width: 100%; z-index: 1000;
-        }
-        .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto;
-        }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
+        /* --- Header --- */
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        .navbar-logo img { height: 50px; }
+        .nav-links { list-style: none; display: none; gap: 30px; margin: 0; padding: 0; align-items: center; }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-color); }
+        .navbar-actions { display: flex; align-items: center; gap: 10px; }
+        .auth-btn { text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid transparent; }
+        .btn-login { background-color: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
+        .btn-login:hover { background-color: #dbe9ff; }
+        .btn-signup { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-signup:hover { background-color: #0b5ed7; }
         
         .main-container {
             display: flex; justify-content: center; align-items: center;
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 160px);
             padding: 40px 20px; box-sizing: border-box;
         }
         .success-card {
@@ -56,120 +57,65 @@
             font-size: 5.5rem; color: var(--success-color); margin-bottom: 25px;
             animation: scaleUp 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes scaleUp {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .success-title {
-            font-size: 2.3rem; color: var(--dark-color); margin-bottom: 15px; font-weight: 900;
-        }
-        .success-subtitle {
-            font-size: 1.15rem; color: #555; margin-bottom: 35px; line-height: 1.8;
-        }
-        .order-id-box {
-            background: var(--gray-color); border: 1px solid #e0e0e0; padding: 25px;
-            border-radius: var(--border-radius); margin-bottom: 35px;
-        }
-        .order-id-box p {
-            margin: 0 0 15px 0; font-weight: 700; font-size: 1.1rem; color: var(--dark-color);
-        }
-        .order-id-container {
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-            background: white; padding: 10px; border-radius: 12px; border: 1px solid #ccc;
-        }
-        #order-id-display {
-            font-size: 2rem; color: var(--primary-color); font-weight: 700;
-            letter-spacing: 2px; user-select: all; flex-grow: 1; margin: 0;
-        }
-        #copy-btn {
-            background: #0d6efd; color: white; border: none; border-radius: 8px;
-            padding: 12px 18px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease;
-        }
-        #copy-btn:hover { background: var(--primary-color); }
+        @keyframes scaleUp { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-title { font-size: 2.3rem; color: var(--dark-color); margin-bottom: 15px; font-weight: 900; }
+        .success-subtitle { font-size: 1.15rem; color: #555; margin-bottom: 35px; line-height: 1.8; }
+        .order-id-box { background: var(--gray-color); border: 1px solid #e0e0e0; padding: 25px; border-radius: var(--border-radius); margin-bottom: 35px; }
+        .order-id-box p { margin: 0 0 15px 0; font-weight: 700; font-size: 1.1rem; color: var(--dark-color); }
+        .order-id-container { display: flex; align-items: center; justify-content: center; gap: 15px; background: white; padding: 10px; border-radius: 12px; border: 1px solid #ccc; }
+        #order-id-display { font-size: 2rem; color: var(--primary-color); font-weight: 700; letter-spacing: 2px; user-select: all; flex-grow: 1; margin: 0; }
+        #copy-btn { background: #0d6efd; color: white; border: none; border-radius: 8px; padding: 12px 18px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; }
         
-        .next-steps {
-            text-align: right; border-top: 1px solid #eee; padding-top: 30px; margin-bottom: 35px;
-        }
+        .next-steps { text-align: right; border-top: 1px solid #eee; padding-top: 30px; margin-bottom: 35px; }
         .next-steps h3 { font-size: 1.5rem; color: var(--dark-color); margin-bottom: 25px; text-align: center; }
         .step { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
-        .step-icon {
-            background-color: #e9f5ff; color: var(--primary-color); font-size: 1.5rem;
-            min-width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .step-icon { background-color: #e9f5ff; color: var(--primary-color); font-size: 1.5rem; min-width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .step-text h4 { margin: 0 0 5px 0; font-size: 1.1rem; color: var(--dark-color); }
         .step-text p { margin: 0; color: #6c757d; }
 
         .actions { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 10px; background-color: var(--primary-color);
-            color: white; padding: 14px 32px; border-radius: 12px; font-weight: 700;
-            font-size: 1.1rem; text-decoration: none; transition: all 0.3s ease;
-        }
+        .btn { display: inline-flex; align-items: center; gap: 10px; background-color: var(--primary-color); color: white; padding: 14px 32px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; text-decoration: none; transition: all 0.3s ease; }
         .btn:hover { background-color: #00458a; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .btn.secondary { background-color: #6c757d; }
         .btn.secondary:hover { background-color: #5a6268; }
 
-        /* --- NEW: Review Section Styles --- */
-        #review-section {
-            border-top: 1px solid #eee;
-            padding-top: 30px;
-            margin-top: 35px;
-            display: none; /* Hidden by default */
-        }
-        #review-section h3 {
-            font-size: 1.5rem; color: var(--dark-color); margin-bottom: 25px; text-align: center;
-        }
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            font-size: 2.5rem;
-        }
-        .star-rating .fa-star {
-            color: #e0e0e0;
-            cursor: pointer;
-            transition: color 0.2s, transform 0.2s;
-        }
-        .star-rating .fa-star:hover,
-        .star-rating .fa-star.hovered,
-        .star-rating .fa-star.selected {
-            color: var(--warning-color);
-            transform: scale(1.2);
-        }
-        #review-comment {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            min-height: 120px;
-            margin-bottom: 25px;
-            box-sizing: border-box;
-        }
-        #submit-review-btn {
-            width: 100%;
-            background-color: var(--success-color);
-        }
-        #submit-review-btn:hover {
-            background-color: #157347;
-        }
+        #review-section { border-top: 1px solid #eee; padding-top: 30px; margin-top: 35px; display: none; }
+        #review-section h3 { font-size: 1.5rem; color: var(--dark-color); margin-bottom: 25px; text-align: center; }
+        .star-rating { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; font-size: 2.5rem; }
+        .star-rating .fa-star { color: #e0e0e0; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+        .star-rating .fa-star:hover, .star-rating .fa-star.hovered, .star-rating .fa-star.selected { color: var(--warning-color); transform: scale(1.2); }
+        #review-comment { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; font-family: 'Cairo', sans-serif; font-size: 1rem; min-height: 120px; margin-bottom: 25px; box-sizing: border-box; }
+        #submit-review-btn { width: 100%; background-color: var(--success-color); }
+        #submit-review-btn:hover { background-color: #157347; }
+        
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
+        .footer-socials a { color: #bdc3c7; font-size: 1.5rem; }
+        .footer-socials a:hover { color: var(--primary-color); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        .newsletter-form { display: flex; margin-top: 20px; }
+        .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
+        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <ul class="nav-links">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
         </nav>
     </header>
 
@@ -177,10 +123,7 @@
         <div class="success-card">
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
             <h1 class="success-title">شكراً لك، تم استلام طلبك بنجاح!</h1>
-            <p class="success-subtitle">
-                لقد استلمنا تأكيد الدفع وسيبدأ فريقنا في معالجة طلبك فوراً.
-            </p>
-
+            <p class="success-subtitle">لقد استلمنا تأكيد الدفع وسيبدأ فريقنا في معالجة طلبك فوراً.</p>
             <div class="order-id-box">
                 <p>احتفظ برقم طلبك لاستخدامه في التتبع:</p>
                 <div class="order-id-container">
@@ -188,7 +131,6 @@
                     <button id="copy-btn" title="نسخ رقم الطلب"><i class="fas fa-copy"></i></button>
                 </div>
             </div>
-
             <div class="next-steps">
                 <h3>ماذا سيحدث الآن؟</h3>
                 <div class="step">
@@ -213,141 +155,129 @@
                     </div>
                 </div>
             </div>
-
             <div class="actions">
-                <a href="my-orders.html" id="track-order-btn" class="btn secondary" role="button">
-                    <i class="fas fa-receipt"></i> عرض كل طلباتي
-                </a>
+                <a href="#" id="track-order-btn" class="btn secondary" role="button"><i class="fas fa-receipt"></i> <span>تتبع طلبك</span></a>
                 <a href="index.html" class="btn" role="button">العودة للرئيسية</a>
             </div>
-
-            <!-- NEW: Review Section -->
             <div id="review-section">
                 <h3>ساعدنا على تحسين خدماتنا!</h3>
                 <div class="star-rating" id="star-rating-container">
-                    <i class="fas fa-star" data-value="1"></i>
-                    <i class="fas fa-star" data-value="2"></i>
-                    <i class="fas fa-star" data-value="3"></i>
-                    <i class="fas fa-star" data-value="4"></i>
-                    <i class="fas fa-star" data-value="5"></i>
+                    <i class="fas fa-star" data-value="1"></i><i class="fas fa-star" data-value="2"></i><i class="fas fa-star" data-value="3"></i><i class="fas fa-star" data-value="4"></i><i class="fas fa-star" data-value="5"></i>
                 </div>
                 <textarea id="review-comment" placeholder="اكتب مراجعتك هنا (اختياري)..."></textarea>
-                <button id="submit-review-btn" class="btn">
-                    <i class="fas fa-paper-plane"></i> إرسال التقييم
-                </button>
+                <button id="submit-review-btn" class="btn"><i class="fas fa-paper-plane"></i> إرسال التقييم</button>
+                <div id="review-message"></div>
             </div>
-
         </div>
     </div>
     
-    <footer class="main-footer" style="background-color: var(--dark-color); color: #bdc3c7; padding: 40px 20px; text-align: center;">
-        <p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p>
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section"><h3 class="footer-title">المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
+            <div class="footer-section"><h3 class="footer-title">روابط مهمة</h3><ul><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li></ul></div>
+            <div class="footer-section"><h3 class="footer-title">قانوني</h3><ul><li><a href="privacy-policy.html">سياسة الخصوصية</a></li><li><a href="terms-and-conditions.html">الشروط والأحكام</a></li></ul></div>
+            <div class="footer-section"><h3 class="footer-title">انضم لقائمتنا</h3><p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p><form id="newsletter-form" class="newsletter-form"><input type="email" placeholder="أدخل بريدك الإلكتروني" required><button type="submit">اشترك</button></form></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const display = document.getElementById('order-id-display');
+        document.addEventListener('DOMContentLoaded', async () => {
+            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            const orderIdDisplay = document.getElementById('order-id-display');
             const copyBtn = document.getElementById('copy-btn');
             const trackBtn = document.getElementById('track-order-btn');
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            const trackBtnText = trackBtn.querySelector('span');
             
-            // NEW: Review elements
             const reviewSection = document.getElementById('review-section');
             const stars = document.querySelectorAll('#star-rating-container .fa-star');
             const reviewComment = document.getElementById('review-comment');
             const submitReviewBtn = document.getElementById('submit-review-btn');
+            const reviewMessage = document.getElementById('review-message');
+            
             let currentRating = 0;
-            let currentOrderId = null; // To store the order ID
+            let orderDetails = null;
+            let soundsReady = false;
+
+            const starSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.2, release: 0.2 } }).toDestination();
+            const submitSound = new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.3 } }).toDestination();
+            
+            async function initAudio() {
+                if (!soundsReady) {
+                    await Tone.start();
+                    soundsReady = true;
+                }
+            }
+            document.body.addEventListener('click', initAudio, { once: true });
 
             const params = new URLSearchParams(window.location.search);
-            const orderIdFromUrl = params.get('orderId');
-            const sessionIdFromUrl = params.get('session_id');
+            const orderId = params.get('orderId');
 
-            const setOrderId = (orderId) => {
-                currentOrderId = orderId; // Store the ID
-                if (orderId) {
-                    display.textContent = orderId;
-                    copyBtn.disabled = false;
-                    copyBtn.style.cursor = 'pointer';
-                    trackBtn.style.display = 'inline-flex';
-                    reviewSection.style.display = 'block'; // Show review section
-
-                    copyBtn.addEventListener('click', () => {
-                        // Using document.execCommand for wider compatibility in iframes
-                        const textarea = document.createElement('textarea');
-                        textarea.value = orderId;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        try {
-                            document.execCommand('copy');
-                            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                        } catch (err) {
-                            console.error('Fallback: Oops, unable to copy', err);
-                        }
-                        document.body.removeChild(textarea);
-                        setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 2000);
-                    });
-                } else {
-                    display.textContent = 'خطأ';
-                    display.style.fontSize = '1.2rem';
-                    copyBtn.disabled = true;
-                    copyBtn.style.cursor = 'not-allowed';
-                    trackBtn.style.display = 'none';
-                }
-            };
-
-            const fetchOrderFromSession = async (sessionId, retries = 5) => {
-                if (retries <= 0) {
-                    setOrderId(null);
-                    return;
-                }
+            if (orderId) {
+                orderIdDisplay.textContent = orderId;
                 try {
-                    const response = await fetch(`${API_URL}/api/order-by-session?session_id=${sessionId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.orderId) {
-                            setOrderId(data.orderId);
-                            return;
-                        }
-                    }
-                    setTimeout(() => fetchOrderFromSession(sessionId, retries - 1), 1500);
+                    const response = await fetch(`${API_URL}/api/orders/${orderId}`);
+                    if (!response.ok) throw new Error('Order not found');
+                    orderDetails = await response.json();
+                    reviewSection.style.display = 'block';
                 } catch (error) {
-                    console.error("Error fetching order from session:", error);
-                    setTimeout(() => fetchOrderFromSession(sessionId, retries - 1), 1500);
+                    console.error("Failed to fetch order details:", error);
+                    reviewSection.innerHTML = '<p>لا يمكن ترك تقييم لهذا الطلب حاليًا.</p>';
+                    reviewSection.style.display = 'block';
                 }
-            };
-
-            if (orderIdFromUrl) {
-                setOrderId(orderIdFromUrl);
-            } else if (sessionIdFromUrl) {
-                fetchOrderFromSession(sessionIdFromUrl);
             } else {
-                setOrderId(null);
+                orderIdDisplay.textContent = 'غير محدد';
             }
-            
-            // --- NEW: Star Rating Logic ---
+
+            // --- Smart Tracking Button Logic ---
+            if (typeof auth !== 'undefined') {
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        trackBtn.href = 'my-orders.html';
+                        trackBtnText.textContent = 'عرض كل طلباتي';
+                    } else {
+                        trackBtn.href = `track-order.html?orderId=${orderId || ''}`;
+                        trackBtnText.textContent = 'تتبع هذا الطلب';
+                    }
+                });
+            }
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(orderId).then(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => { copyBtn.innerHTML = '<i class="fas fa-copy"></i>'; }, 2000);
+                });
+            });
+
             stars.forEach(star => {
                 star.addEventListener('mouseover', () => {
-                    const value = star.dataset.value;
-                    stars.forEach(s => {
-                        s.classList.toggle('hovered', s.dataset.value <= value);
-                    });
+                    const value = parseInt(star.dataset.value);
+                    stars.forEach((s, i) => s.classList.toggle('hovered', i < value));
                 });
                 star.addEventListener('mouseout', () => {
                     stars.forEach(s => s.classList.remove('hovered'));
                 });
                 star.addEventListener('click', () => {
-                    currentRating = star.dataset.value;
-                    stars.forEach(s => {
-                        s.classList.toggle('selected', s.dataset.value <= currentRating);
+                    currentRating = parseInt(star.dataset.value);
+                    if (soundsReady) starSound.triggerAttackRelease("E5", "8n");
+                    stars.forEach((s, i) => {
+                        s.classList.toggle('selected', i < currentRating);
                     });
                 });
             });
 
-            // --- NEW: Submit Review Logic ---
             submitReviewBtn.addEventListener('click', async () => {
                 if (currentRating === 0) {
-                    alert('الرجاء اختيار تقييم (نجمة واحدة على الأقل).');
+                    reviewMessage.textContent = 'الرجاء اختيار تقييم (نجمة واحدة على الأقل).';
+                    reviewMessage.style.color = 'red';
+                    return;
+                }
+                if (!orderDetails) {
+                    reviewMessage.textContent = 'لا يمكن إرسال التقييم بسبب عدم توفر معلومات الطلب.';
+                    reviewMessage.style.color = 'red';
                     return;
                 }
 
@@ -355,35 +285,36 @@
                 submitReviewBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
                 
                 const reviewData = {
-                    orderId: currentOrderId,
-                    rating: parseInt(currentRating),
-                    comment: reviewComment.value
+                    orderId: orderDetails.id,
+                    serviceName: orderDetails.serviceName,
+                    customerName: orderDetails.customerName,
+                    rating: currentRating,
+                    comment: reviewComment.value.trim()
                 };
 
                 try {
-                    // NOTE: The endpoint /api/reviews needs to be created in the worker
                     const response = await fetch(`${API_URL}/api/reviews`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(reviewData)
                     });
-
+                    
+                    const result = await response.json();
                     if (!response.ok) {
-                        throw new Error('فشل إرسال التقييم.');
+                        throw new Error(result.error || 'فشل إرسال التقييم.');
                     }
                     
+                    if (soundsReady) submitSound.triggerAttackRelease("G5", "8n");
                     reviewSection.innerHTML = `<h3>شكراً جزيلاً لك على تقييمك!</h3><p>نحن نقدر رأيك ونسعى دائمًا لتقديم أفضل خدمة.</p>`;
 
                 } catch (error) {
                     console.error('Review submission error:', error);
-                    alert('حدث خطأ أثناء إرسال التقييم. الرجاء المحاولة مرة أخرى.');
+                    reviewMessage.textContent = `خطأ: ${error.message}`;
+                    reviewMessage.style.color = 'red';
                     submitReviewBtn.disabled = false;
                     submitReviewBtn.innerHTML = '<i class="fas fa-paper-plane"></i> إرسال التقييم';
                 }
             });
-
-            const currentYearEl = document.getElementById('current-year');
-            if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
         });
     </script>
 

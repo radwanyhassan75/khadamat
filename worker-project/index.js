@@ -1,7 +1,4 @@
-// =================================================================
-//  الملف الرئيسي (index.js) - Main Entry Point
-// This file acts as a router, delegating requests to specialized handlers.
-// =================================================================
+// File: index.js
 
 import { handleEmails } from './emails/emails.js';
 import { handleUsers } from './handlers/users.js';
@@ -11,7 +8,8 @@ import { handleSettings } from './handlers/settings.js';
 import { handleAdmin } from './handlers/admin.js';
 import { handlePosts } from './handlers/posts.js';
 import { handleTickets } from './handlers/tickets.js';
-import { handleSubscribe } from './handlers/subscribe.js'; // ✅ 1. تم إضافة هذا السطر
+import { handleSubscribe } from './handlers/subscribe.js';
+import { handleReviews } from './handlers/reviews.js'; // ✅ 1. تم إضافة هذا السطر
 
 export default {
     async fetch(request, env, ctx) {
@@ -28,18 +26,17 @@ export default {
         }
 
         try {
-            // --- The Router (المنظم) ---
-            // يقوم بتوجيه كل طلب إلى الملف المختص به
-            
+            // --- The Router ---
             if (pathname === '/api/send-verification-email') {
                 return handleEmails(request, env, ctx);
             }
-            
-            // ✅ 2. تم إضافة هذا الشرط لتفعيل مسار الاشتراك
             if (pathname === '/api/subscribe') {
                 return handleSubscribe(request, env, ctx);
             }
-
+            // ✅ 2. تم إضافة هذا الشرط لتفعيل مسار المراجعات
+            if (pathname.startsWith('/api/reviews')) {
+                return handleReviews(request, env, ctx);
+            }
             if (pathname.startsWith('/api/tickets') || pathname.startsWith('/tickets')) {
                 return handleTickets(request, env, ctx);
             }
@@ -62,7 +59,6 @@ export default {
                 return handleAdmin(request, env, ctx);
             }
 
-            // إذا لم يتطابق أي مسار
             return new Response(JSON.stringify({ error: "Route not found" }), { status: 404, headers: corsHeaders });
 
         } catch (error) {

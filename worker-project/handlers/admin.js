@@ -61,11 +61,13 @@ export async function handleAdmin(request, env, ctx) {
         }
     }
 
-    // --- Admin Reviews Logic ---
+    // --- Admin Reviews Logic (Management Only) ---
     else if (pathname.startsWith('/api/admin/reviews')) {
         const pathParts = pathname.split('/').filter(Boolean);
         const reviewId = pathParts.length > 3 ? pathParts[3] : null;
 
+        // Note: POST logic has been moved to a public handler
+        
         if (request.method === 'GET') {
             const { results } = await env.DB.prepare("SELECT id, orderId, serviceName, customerName, rating, comment, status, createdAt FROM reviews ORDER BY createdAt DESC").all();
             return new Response(JSON.stringify(results), { status: 200, headers: corsHeaders });
