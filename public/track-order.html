@@ -1,38 +1,20 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="output.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
-     crossorigin="anonymous"></script>
-    <!-- =================================================================
-            META TAGS, FONTS, AND ICONS
-            This section contains essential metadata, links to Google Fonts for typography,
-            and Font Awesome for icons, ensuring a professional and modern look.
-        ================================================================== -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>تتبع طلبك - المكتب الرقمي</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- =================================================================
-            INTERNAL CSS STYLES
-            This extensive style block defines the entire look and feel of the page,
-            from colors and fonts to layout, animations, and responsiveness.
-        ================================================================== -->
     <style>
-        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
-            --primary-color: #0056b3;
-            --secondary-color: #0d6efd;
+            --primary-color: #0d6efd;
+            --primary-color-dark: #0a58ca;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
-            --text-color: #555;
             --border-color: #dee2e6;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
@@ -40,19 +22,22 @@
             --warning-color: #ffc107;
             --danger-color: #dc3545;
         }
+        
+        html { scroll-behavior: smooth; }
 
-        /* --- إعدادات الجسم العامة --- */
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
             direction: rtl;
             background-color: var(--gray-color);
+            color: var(--dark-color);
         }
-
-        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
+        
+        /* --- Header & Footer --- */
         .main-header {
-            background: var(--light-color);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             width: 100%;
@@ -67,436 +52,436 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        .navbar-logo img { height: 70px; }
-        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .navbar-actions { position: relative; }
-        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
-        .user-menu-button:hover { background-color: var(--gray-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
-        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
-        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
-        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
-        .dropdown-menu a:hover { background-color: var(--gray-color); }
-        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
-        .btn-header.primary { background-color: var(--primary-color); color: white; }
-        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-header:hover { transform: translateY(-2px); }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
-
-        /* --- تصميم حاوية الصفحة الرئيسية --- */
-        main {
-            max-width: 800px;
-            margin: auto;
-            padding: 40px 2rem;
-        }
-        .track-form-card {
-            background: var(--light-color);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            text-align: center;
-            border: 1px solid var(--border-color);
-        }
-        .track-form-card h1 {
-            font-size: 2.2rem;
-            color: var(--dark-color);
-            margin-bottom: 25px;
-            font-weight: 900;
-        }
-        .track-form {
+        .navbar-logo img { height: 50px; }
+        .nav-links {
+            list-style: none;
             display: flex;
-            gap: 10px;
-        }
-        .track-form input {
-            flex-grow: 1;
-            padding: 14px 20px;
-            border: 1px solid #111010;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-family: 'Cairo', sans-serif;
-            transition: all 0.3s ease;
-        }
-        .track-form input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
-        }
-        .track-form button {
-            padding: 14px 30px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .track-form button:hover {
-            background-color: #00458e;
-            transform: translateY(-2px);
-        }
-
-        /* --- تصميم منطقة النتائج والرسائل --- */
-        .message-area {
-            margin-top: 30px;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        #loading-message {
-            color: var(--primary-color);
-        }
-        #loading-message i {
-            font-size: 2rem;
-            animation: spin 1.5s linear infinite;
-        }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        #not-found-message {
-            background-color: #f8d7da;
-            color: #842029;
-            border: 1px solid #f5c2c7;
-        }
-
-        /* --- تصميم بطاقة عرض النتائج الاحترافية --- */
-        #result-area {
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-top: 30px;
-            text-align: right;
-            border-top: 5px solid var(--primary-color);
-            overflow: hidden;
-        }
-        .result-header {
-            background: var(--gray-color);
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .result-header h2 {
+            gap: 30px;
             margin: 0;
-            font-size: 1.5rem;
-            color: var(--dark-color);
+            padding: 0;
+            align-items: center;
         }
-        .result-header p {
-            margin: 5px 0 0 0;
-            color: var(--text-color);
-        }
-        .result-body {
-            padding: 25px;
-        }
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        .field {
-            background: var(--gray-color);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .field .label {
-            font-weight: 700;
-            color: #888;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            display: block;
-        }
-        .field .value {
-            font-weight: 700;
-            color: var(--dark-color);
-            font-size: 1.1rem;
-        }
-        .status-field {
-            grid-column: 1 / -1; /* جعل حقل الحالة يمتد على عرض البطاقة */
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white; /* اللون الافتراضي للنص أبيض */
-        }
-        /* ألوان الحالات */
-        .status-paid { background-color: var(--success-color); }
-        .status-unpaid { background-color: var(--danger-color); }
-        .status-pending-payment { background-color: var(--warning-color); color: var(--dark-color); }
-        .status-completed { background-color: var(--success-color); }
-        .status-in-progress { background-color: var(--secondary-color); }
-        .status-not-completed { background-color: var(--danger-color); }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+        .mobile-nav-toggle { display: none; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
 
-        /* --- التذييل (Footer) --- */
-        .main-footer {
-            background-color: var(--dark-color);
-            color: #bdc3c7;
-            padding: 60px 5% 20px;
-            margin-top: 60px;
-        }
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        .footer-title {
-            color: var(--light-color);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-        }
-        .footer-section ul { list-style: none; padding: 0; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s; }
-        .footer-section a:hover { color: var(--light-color); }
-        .footer-bottom {
-            text-align: center;
-            border-top: 1px solid #34495e;
-            padding-top: 20px;
-            font-size: 0.9rem;
-        }
-        
-        /* --- التصميم المتجاوب --- */
         @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 80px; right: 0; background-color: var(--light-color); width: 100%; padding: 20px 0; box-shadow: var(--box-shadow); text-align: center; gap: 20px; }
-            .result-grid { grid-template-columns: 1fr; }
-            .status-field { grid-column: auto; }
+            .nav-links {
+                position: fixed; top: 80px; right: -100%; width: 70%; height: calc(100vh - 80px);
+                background-color: var(--light-color); flex-direction: column; justify-content: center;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.4s ease-in-out;
+            }
+            .nav-links.active { right: 0; }
+            .mobile-nav-toggle { display: block; }
         }
-        @media (min-width: 769px) {
-            .hamburger-menu { display: none; }
-            .navbar-menu { display: flex; }
+
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        .social-icons a { font-size: 1.5rem; color: #bdc3c7; transition: color 0.3s, transform 0.3s; }
+        .social-icons a:hover { color: var(--light-color); transform: translateY(-3px); }
+        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+        
+        /* --- Main Content --- */
+        main { max-width: 800px; margin: auto; padding: 40px 2rem; }
+        .track-form-card { background: var(--light-color); padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; border: 1px solid var(--border-color); }
+        .track-form-card h1 { font-size: 2.2rem; color: var(--dark-color); margin-bottom: 15px; font-weight: 900; }
+        .track-form { display: flex; gap: 10px; }
+        .track-form input { flex-grow: 1; padding: 14px 20px; border: 1px solid #ccc; border-radius: 50px; font-size: 1.1rem; font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
+        .track-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
+        .track-form button {
+            padding: 14px 30px; background: var(--primary-color); color: white; border: none; border-radius: 50px;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px;
         }
+        .track-form button:hover { background-color: var(--primary-color-dark); }
+        .track-form button .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
+        .track-form button.loading .button-text { display: none; }
+        .track-form button.loading .spinner { display: block; }
+        
+        .message-area { margin-top: 30px; padding: 2rem; border-radius: var(--border-radius); text-align: center; font-weight: 700; font-size: 1.1rem; }
+        #loading-message { color: var(--primary-color); }
+        #loading-message i { font-size: 2rem; animation: spin 1.5s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        #not-found-message { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+
+        .result-card {
+            background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow);
+            margin-top: 30px; text-align: right; border-top: 5px solid var(--primary-color);
+            overflow: hidden; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .result-card.visible { opacity: 1; transform: translateY(0); }
+        .result-header { background: var(--gray-color); padding: 20px 25px; border-bottom: 1px solid var(--border-color); }
+        .result-header h2 { margin: 0; font-size: 1.5rem; color: var(--dark-color); }
+        .result-header p { margin: 5px 0 0 0; color: #555; }
+        .result-body { padding: 25px; }
+        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .field { background: var(--gray-color); padding: 15px; border-radius: 8px; }
+        .field .label { font-weight: 700; color: #888; font-size: 0.9rem; margin-bottom: 5px; display: block; }
+        .field .value { font-weight: 700; color: var(--dark-color); font-size: 1.1rem; }
+        .details-block { grid-column: 1 / -1; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 50px; font-weight: 700; font-size: 1rem; }
+        .status-received { background-color: var(--primary-color); color: white; }
+        .status-in-progress { background-color: #6c757d; color: white; }
+        .status-completed { background-color: var(--success-color); color: white; }
+        .status-canceled { background-color: var(--warning-color); color: var(--dark-color); } /* Changed to Orange as requested */
+        
+        .cancellation-reason { color: var(--danger-color); font-size: 0.9rem; margin-top: 5px; font-weight: normal; }
+        .result-footer { padding: 20px 25px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .contact-support p { margin: 0; font-size: 0.9rem; }
+        .contact-support a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
+        .btn-cancel { background-color: var(--danger-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background-color 0.3s; }
+        .btn-cancel:hover { background-color: #b02a37; }
+        
+        /* --- New Progress Tracker --- */
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 25px 0;
+            position: relative;
+        }
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: 0;
+            left: 0;
+            height: 4px;
+            background-color: var(--border-color);
+            transform: translateY(-50%);
+        }
+        .progress-line {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            height: 4px;
+            background-color: var(--success-color);
+            width: 0;
+            transform: translateY(-50%);
+            transition: width 0.8s ease-in-out;
+        }
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 120px;
+            position: relative;
+            z-index: 1;
+        }
+        .step-icon {
+            width: 50px; height: 50px; border-radius: 50%;
+            background-color: var(--border-color);
+            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            border: 4px solid var(--gray-color);
+            transition: all 0.4s ease;
+        }
+        .step-label { font-weight: 700; color: #aaa; margin-top: 10px; transition: color 0.4s ease; }
+
+        /* Step States */
+        .progress-step.completed .step-icon { background-color: var(--success-color); }
+        .progress-step.completed .step-label { color: var(--dark-color); }
+        .progress-step.active .step-icon { background-color: var(--primary-color); }
+        .progress-step.active .step-label { color: var(--dark-color); }
+        
+        .progress-tracker.canceled .progress-line { background-color: var(--warning-color); }
+        .progress-tracker.canceled .step-icon { background-color: var(--warning-color); color: var(--dark-color); }
+        .progress-tracker.canceled .step-label { color: var(--dark-color); }
+
     </style>
 </head>
 <body>
-
-    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">الرئيسية</a></li>
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <div id="mobile-navbar-actions"></div>
             </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
         </nav>
     </header>
 
     <main>
         <div class="track-form-card">
             <h1><i class="fas fa-search-location"></i> تتبع حالة طلبك</h1>
-            <p style="color: #6c757d; margin-top: -15px; margin-bottom: 25px;">أدخل رقم الطلب الذي تلقيته بعد إتمام عملية الشراء لعرض آخر التحديثات.</p>
+            <p style="color: #6c757d; margin-top: -15px; margin-bottom: 25px;">أدخل رقم الطلب الذي تلقيته لعرض آخر التحديثات.</p>
             <form id="track-form" class="track-form">
                 <input type="text" id="order-id-input" placeholder="مثال: KH-123456" required />
-                <button type="submit">تتبع</button>
+                <button type="submit" id="track-button">
+                    <span class="button-text">تتبع</span>
+                    <div class="spinner"></div>
+                </button>
             </form>
         </div>
 
-        <!-- منطقة عرض النتائج والرسائل -->
         <div id="message-container">
-            <div id="loading-message" class="message-area" style="display: none;">
-                <i class="fas fa-spinner"></i>
-                <p>جاري البحث عن طلبك...</p>
-            </div>
-            <div id="not-found-message" class="message-area" style="display: none;">
-                رقم الطلب غير موجود. تأكد من إدخاله بشكل صحيح أو تواصل معنا.
-            </div>
+            <div id="loading-message" class="message-area" style="display: none;"><i class="fas fa-spinner"></i><p>جاري البحث عن طلبك...</p></div>
+            <div id="not-found-message" class="message-area" style="display: none;"></div>
         </div>
 
-        <div id="result-area" style="display: none;">
+        <div id="result-area" class="result-card" style="display: none;">
             <div class="result-header">
                 <h2 id="result-service-name"></h2>
                 <p>رقم الطلب: <strong id="result-order-id"></strong></p>
             </div>
             <div class="result-body">
-                <div class="result-grid">
-                    <div class="field">
-                        <span class="label"><i class="fas fa-user"></i> الاسم الكامل</span>
-                        <span class="value" id="result-name"></span>
+                <div id="progress-tracker" class="progress-tracker">
+                    <div class="progress-line" id="progress-line"></div>
+                    <div id="step1" class="progress-step">
+                        <div class="step-icon"><i class="fas fa-receipt"></i></div>
+                        <div class="step-label">تم الاستلام</div>
                     </div>
-                    <div class="field">
-                        <span class="label"><i class="fas fa-at"></i> البريد الإلكتروني</span>
-                        <span class="value" id="result-email"></span>
+                    <div id="step2" class="progress-step">
+                        <div class="step-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="step-label">جاري المعالجة</div>
                     </div>
-                    <div class="field status-field">
-                        <span class="label"><i class="fas fa-credit-card"></i> حالة الدفع</span>
-                        <span class="value" id="result-payment"></span>
-                    </div>
-                    <div class="field status-field">
-                        <span class="label"><i class="fas fa-cogs"></i> حالة الطلب</span>
-                        <span class="value" id="result-status"></span>
+                    <div id="step3" class="progress-step">
+                        <div class="step-icon"><i class="fas fa-check-double"></i></div>
+                        <div class="step-label">مكتمل</div>
                     </div>
                 </div>
+                <hr style="margin: 20px 0;">
+                <div class="result-grid">
+                    <div class="field"><span class="label"><i class="fas fa-user"></i> الاسم الكامل</span><span class="value" id="result-name"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-calendar-alt"></i> تاريخ الطلب</span><span class="value" id="result-date"></span></div>
+                    <div class="field details-block"><span class="label"><i class="fas fa-info-circle"></i> حالة الطلب</span><div class="value" id="result-status"></div></div>
+                </div>
+            </div>
+            <div class="result-footer">
+                <div class="contact-support">
+                    <p>هل تحتاج إلى مساعدة؟ <a href="contact.html">تواصل مع فريق الدعم</a>.</p>
+                </div>
+                <div id="cancel-button-container"></div>
             </div>
         </div>
     </main>
 
-    <!-- ✅ التذييل الكامل -->
     <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">المكتب الرقمي</h3>
-                    <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
-                </div>
-                <div class="footer-section">
-                    <h3 class="footer-title">روابط مهمة</h3>
-                    <ul>
-                        <li><a href="about.html">من نحن</a></li>
-                        <li><a href="services.html">جميع الخدمات</a></li>
-                        <li><a href="prices.html">قائمة الأسعار</a></li>
-                        <li><a href="payment-methods.html">طرق الدفع</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3 class="footer-title">قانوني</h3>
-                    <ul>
-                        <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
-                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
-                        <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
-                    </ul>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">المكتب الرقمي</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
-            </div>
+            <div class="footer-section"><h3 class="footer-title">روابط مهمة</h3><ul><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li></ul></div>
+            <div class="footer-section"><h3 class="footer-title">قانوني</h3><ul><li><a href="privacy-policy.html">سياسة الخصوصية</a></li><li><a href="terms-and-conditions.html">الشروط والأحكام</a></li></ul></div>
         </div>
+        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="auth.js"></script>
-
     <script>
-    // =================================================================
-    //         السكريبت الخاص بصفحة تتبع الطلب (متوافق مع Cloudflare Worker)
-    // =================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. تعريف عناصر الواجهة ---
-        const trackForm = document.getElementById('track-form');
-        const orderIdInput = document.getElementById('order-id-input');
-        const resultArea = document.getElementById('result-area');
-        const notFoundMessage = document.getElementById('not-found-message');
-        const loadingMessage = document.getElementById('loading-message');
+        const ui = {
+            trackForm: document.getElementById('track-form'),
+            trackButton: document.getElementById('track-button'),
+            orderIdInput: document.getElementById('order-id-input'),
+            resultArea: document.getElementById('result-area'),
+            notFoundMessage: document.getElementById('not-found-message'),
+            loadingMessage: document.getElementById('loading-message'),
+            cancelBtnContainer: document.getElementById('cancel-button-container'),
+            progressTracker: document.getElementById('progress-tracker'),
+            progressLine: document.getElementById('progress-line'),
+            navLinks: document.getElementById('nav-links'),
+            mobileNavToggle: document.getElementById('mobile-nav-toggle'),
+        };
 
-        // --- 2. رابط Cloudflare Worker API ---
-        const WORKER_URL = 'https://order-processor.radwanyhassan75.workers.dev/api/get-order';
+        const API_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
 
-        // --- 3. الدوال الرئيسية ---
+        // ---  New Status Management ---
+        const STATUS = {
+            RECEIVED: 'تم الاستلام',
+            IN_PROGRESS: 'جاري المعالجة',
+            COMPLETED: 'مكتمل',
+            CANCELLED: 'ملغي'
+        };
 
-        /**
-         * دالة لإظهار رسالة معينة وإخفاء الأخرى
-         * @param {HTMLElement} elementToShow - العنصر الذي سيتم إظهاره
-         */
-        function showMessage(elementToShow) {
-            loadingMessage.style.display = 'none';
-            resultArea.style.display = 'none';
-            notFoundMessage.style.display = 'none';
+        const statusMap = {
+            'received': { text: STATUS.RECEIVED, icon: 'fa-receipt', className: 'status-received' },
+            'in progress': { text: STATUS.IN_PROGRESS, icon: 'fa-cogs', className: 'status-in-progress' },
+            'completed': { text: STATUS.COMPLETED, icon: 'fa-check-double', className: 'status-completed' },
+            'cancelled': { text: STATUS.CANCELLED, icon: 'fa-times-circle', className: 'status-canceled' }
+        };
+
+        function getStatusInfo(status) {
+            const lowerCaseStatus = (status || 'received').toLowerCase().trim();
+            return statusMap[lowerCaseStatus] || statusMap['received'];
+        }
+
+        // --- Event Listeners ---
+        ui.trackForm.addEventListener('submit', handleFormSubmit);
+        ui.mobileNavToggle.addEventListener('click', () => {
+            ui.navLinks.classList.toggle('active');
+        });
+        
+        // --- Functions ---
+        function toggleButtonLoading(isLoading) {
+            ui.trackButton.classList.toggle('loading', isLoading);
+            ui.trackButton.disabled = isLoading;
+        }
+
+        function showMessage(elementToShow, messageText = '') {
+            ui.loadingMessage.style.display = 'none';
+            ui.resultArea.style.display = 'none';
+            ui.resultArea.classList.remove('visible');
+            ui.notFoundMessage.style.display = 'none';
+            
             if (elementToShow) {
+                if (messageText) {
+                    elementToShow.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${messageText}`;
+                }
                 elementToShow.style.display = 'block';
             }
         }
 
-        /**
-         * دالة لتحديد كلاس CSS بناءً على حالة النص
-         * @param {string} statusText - نص الحالة القادم من قاعدة البيانات
-         * @param {boolean} isPaymentStatus - لتحديد إذا كانت الحالة خاصة بالدفع أو الطلب
-         * @returns {string} - اسم كلاس الـ CSS المناسب
-         */
-        function getStatusClass(statusText, isPaymentStatus) {
-            if (!statusText) return '';
-            const text = statusText.toLowerCase();
-            if (isPaymentStatus) {
-                // يفترض أن طريقة الدفع تعني أنه تم الدفع
-                return 'status-paid';
-            } else {
-                if (text.includes('مكتمل')) return 'status-completed';
-                if (text.includes('جاري المعالجة')) return 'status-in-progress';
-                if (text.includes('ملغي')) return 'status-not-completed';
+        function renderOrderStatus(statusInfo, reason) {
+            let html = `<span class="status-badge ${statusInfo.className}"><i class="fas ${statusInfo.icon}"></i> ${statusInfo.text}</span>`;
+            if (statusInfo.text === STATUS.CANCELLED && reason) {
+                html += `<p class="cancellation-reason">السبب: ${reason}</p>`;
             }
-            return ''; // حالة افتراضية
+            return html;
         }
 
-        /**
-         * دالة رئيسية للبحث عن الطلب وعرض نتائجه
-         * @param {string} orderId - رقم الطلب المراد البحث عنه
-         */
+        function updateProgressTracker(statusInfo) {
+            const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
+            steps.forEach(step => step.classList.remove('active', 'completed'));
+            ui.progressTracker.classList.remove('canceled');
+            ui.progressLine.style.width = '0%';
+
+            let progressPercentage = '0%';
+
+            if (statusInfo.text === STATUS.CANCELLED) {
+                ui.progressTracker.classList.add('canceled');
+                steps.forEach(step => step.classList.add('completed')); // Visually fill all for cancellation
+                progressPercentage = '100%';
+            } else if (statusInfo.text === STATUS.COMPLETED) {
+                steps.forEach(step => step.classList.add('completed'));
+                progressPercentage = '100%';
+            } else if (statusInfo.text === STATUS.IN_PROGRESS) {
+                steps[0].classList.add('completed');
+                steps[1].classList.add('active');
+                progressPercentage = '50%';
+            } else { // Received
+                steps[0].classList.add('active');
+                progressPercentage = '0%';
+            }
+            
+            // Animate progress line
+            setTimeout(() => { ui.progressLine.style.width = progressPercentage; }, 100);
+        }
+
         async function searchForOrder(orderId) {
             if (!orderId) return;
-
-            showMessage(loadingMessage); // إظهار مؤشر التحميل
+            
+            showMessage(ui.loadingMessage);
+            toggleButtonLoading(true);
 
             try {
-                const response = await fetch(`${WORKER_URL}?orderId=${encodeURIComponent(orderId)}`);
-                
-                const data = await response.json();
-                
-                if (data.success && data.order) {
-                    const order = data.order;
-                    // ملء البيانات في بطاقة النتائج
-                    document.getElementById('result-service-name').textContent = order.serviceName || 'خدمة غير محددة';
-                    document.getElementById('result-order-id').textContent = order.id || '';
-                    document.getElementById('result-name').textContent = order.customerName || '';
-                    document.getElementById('result-email').textContent = order.email || '';
-                    
-                    // عرض حالة الدفع مع اللون المناسب
-                    const paymentStatusEl = document.getElementById('result-payment');
-                    const paymentStatusText = order.paymentMethod || 'لم يتم التحديد';
-                    paymentStatusEl.innerHTML = `<span class="status-badge ${getStatusClass(paymentStatusText, true)}">${paymentStatusText}</span>`;
-
-                    // عرض حالة الطلب مع اللون المناسب
-                    const orderStatusEl = document.getElementById('result-status');
-                    const orderStatusText = order.status || 'قيد المراجعة';
-                    orderStatusEl.innerHTML = `<span class="status-badge ${getStatusClass(orderStatusText, false)}">${orderStatusText}</span>`;
-                    
-                    showMessage(resultArea); // إظهار بطاقة النتائج
-                } else {
-                    showMessage(notFoundMessage);
+                const response = await fetch(`${API_URL}/api/orders/${orderId}`);
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || 'رقم الطلب غير موجود أو حدث خطأ.');
                 }
+                const order = await response.json();
+                
+                displayOrderData(order);
+                
             } catch (error) {
                 console.error('Fetch Error:', error);
-                notFoundMessage.textContent = 'فشل الاتصال بالخادم. يرجى التأكد من اتصالك بالإنترنت والمحاولة مرة أخرى.';
-                showMessage(notFoundMessage);
+                showMessage(ui.notFoundMessage, error.message);
+            } finally {
+                toggleButtonLoading(false);
             }
         }
 
-        // --- 4. ربط الأحداث ---
+        function displayOrderData(order) {
+            document.getElementById('result-service-name').textContent = order.serviceName || '-';
+            document.getElementById('result-order-id').textContent = order.id || '-';
+            document.getElementById('result-name').textContent = order.customerName || '-';
+            
+            const creationDate = new Date(order.createdAt);
+            document.getElementById('result-date').textContent = creationDate.toLocaleString('ar-EG-u-nu-latn', {
+                year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
 
-        // عند إرسال النموذج يدوياً
-        trackForm.addEventListener('submit', (e) => {
+            const statusInfo = getStatusInfo(order.status);
+            
+            document.getElementById('result-status').innerHTML = renderOrderStatus(statusInfo, order.cancellationReason);
+            updateProgressTracker(statusInfo);
+
+            // Updated cancel button logic
+            const hoursPassed = (new Date() - creationDate) / (1000 * 60 * 60);
+            const isCancellable = statusInfo.text === STATUS.RECEIVED && hoursPassed < 24;
+
+            if (isCancellable) {
+                ui.cancelBtnContainer.innerHTML = `<button onclick="window.cancelOrder('${order.id}')" class="btn-cancel">إلغاء الطلب</button>`;
+            } else {
+                ui.cancelBtnContainer.innerHTML = '';
+            }
+            
+            showMessage(null); // Hide all messages
+            ui.resultArea.style.display = 'block';
+            setTimeout(() => ui.resultArea.classList.add('visible'), 50); // Trigger transition
+        }
+
+        async function handleFormSubmit(e) {
             e.preventDefault();
-            const orderId = orderIdInput.value.trim();
-            searchForOrder(orderId);
-        });
+            const orderId = ui.orderIdInput.value.trim();
+            if(orderId) {
+                // Update URL for easy sharing
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.set('orderId', orderId);
+                window.history.pushState({ path: newUrl.href }, '', newUrl.href);
 
-        // البحث التلقائي عند تحميل الصفحة إذا كان رقم الطلب موجوداً في الرابط
+                await searchForOrder(orderId);
+            }
+        }
+        
+        window.cancelOrder = async (orderId) => {
+            if (!confirm('هل أنت متأكد من إلغاء الطلب؟ قد لا يتم استرجاع المبلغ المدفوع بالكامل.')) return;
+            try {
+                const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'cancelled', cancellationReason: 'تم الإلغاء بواسطة المستخدم' })
+                });
+                if (!response.ok) {
+                    const result = await response.json();
+                    throw new Error(result.error || 'فشل إلغاء الطلب.');
+                }
+                await searchForOrder(orderId); // Refresh the view
+            } catch (error) {
+                alert(`خطأ: ${error.message}`);
+            }
+        };
+
+        // --- Initial Load ---
         const params = new URLSearchParams(window.location.search);
         const urlOrderId = params.get('orderId');
         if (urlOrderId) {
-            orderIdInput.value = urlOrderId; // ملء حقل البحث
-            searchForOrder(urlOrderId);      // البدء في البحث تلقائياً
+            ui.orderIdInput.value = urlOrderId;
+            searchForOrder(urlOrderId);
         }
     });
     </script>
-
 </body>
 </html>
