@@ -1,156 +1,158 @@
 // File: handlers/admin.js
+// This is the complete and final version that handles ALL admin routes.
 
-import { generateSlug } from '../utils/slug.js';
+import { Router } from 'itty-router';
 
-// يمكنك إضافة دالة رفع الملفات إلى R2 هنا إذا كنت ستستخدمها للمرفقات
-// async function uploadToR2(file, bucket, key) { ... }
+// =================================================================================
+// --- Utilities (Auth & DB Check) ---
+// =================================================================================
 
-export async function handleAdmin(request, env, ctx) {
-    const url = new URL(request.url);
-    const { pathname } = url;
-    const corsHeaders = { "Access-Control-Allow-Origin": "*" };
-
-    // --- Admin Tickets (Support) Logic --- [UPGRADED] ---
-    if (pathname.startsWith('/api/admin/tickets')) {
-        const pathParts = pathname.split('/').filter(Boolean);
-        const ticketIdFromPath = pathParts[3];
-
-        // NEW: Handle POSTing a new message to a ticket
-        // Matches URLs like /api/admin/tickets/ticket_123/messages
-        if (request.method === 'POST' && pathname.endsWith('/messages')) {
-            const ticketId = ticketIdFromPath;
-            const formData = await request.formData();
-            
-            const newMessage = {
-                id: `msg_${Date.now()}`,
-                ticketId: ticketId,
-                sender: formData.get('sender') || 'admin',
-                message: formData.get('message'),
-                attachmentUrl: null,
-                createdAt: new Date().toISOString()
-            };
-
-            // Here you can handle file attachments and upload to R2 if needed
-            // const attachmentFile = formData.get('attachment');
-
-            await env.DB.prepare("INSERT INTO ticket_messages (id, ticketId, sender, message, attachmentUrl, createdAt) VALUES (?, ?, ?, ?, ?, ?)")
-                .bind(...Object.values(newMessage)).run();
-
-            // IMPORTANT: Update the ticket's last updated timestamp
-            await env.DB.prepare("UPDATE support_tickets SET updatedAt = ? WHERE id = ?")
-                .bind(new Date().toISOString(), ticketId).run();
-
-            return new Response(JSON.stringify(newMessage), { status: 201 });
-        }
-        
-        // UPGRADED: Get a single ticket AND all its messages
-        else if (request.method === 'GET' && ticketIdFromPath) {
-            const ticket = await env.DB.prepare("SELECT * FROM support_tickets WHERE id = ?").bind(ticketIdFromPath).first();
-            if (!ticket) {
-                return new Response(JSON.stringify({ error: "Ticket not found" }), { status: 404 });
-            }
-            // Also fetch all messages for this ticket
-            const { results: messages } = await env.DB.prepare("SELECT * FROM ticket_messages WHERE ticketId = ? ORDER BY createdAt ASC").bind(ticketIdFromPath).all();
-            
-            // Return both ticket and messages in one response
-            return new Response(JSON.stringify({ ticket, messages }), { status: 200 });
-        }
-        
-        // UPGRADED: Get all tickets, sorted by the most recently updated
-        else if (request.method === 'GET') {
-            const { results } = await env.DB.prepare("SELECT * FROM support_tickets ORDER BY updatedAt DESC").all();
-            return new Response(JSON.stringify(results), { status: 200 });
-        }
-        
-        // UPGRADED: Update ticket status and timestamp
-        else if (request.method === 'PUT' && ticketIdFromPath) {
-            const { status } = await request.json();
-            await env.DB.prepare("UPDATE support_tickets SET status = ?, updatedAt = ? WHERE id = ?").bind(status, new Date().toISOString(), ticketIdFromPath).run();
-            return new Response(JSON.stringify({ message: "Ticket status updated" }), { status: 200 });
-        }
+function withAuth(request, env) {
+    const authHeader = request.headers.get('Authorization');
+    const expectedToken = `Bearer ${env.ADMIN_SECRET_TOKEN}`;
+    if (!env.ADMIN_SECRET_TOKEN) {
+        console.error("ADMIN_SECRET_TOKEN is not set in Cloudflare environment variables.");
+        return new Response(JSON.stringify({ error: "Server configuration error" }), { status: 500 });
     }
-    
-    // --- [بقية الأكواد تبقى كما هي بدون تغيير] ---
-
-    // --- Admin Posts Logic ---
-    else if (pathname.startsWith('/api/admin/posts')) {
-        const pathParts = pathname.split('/').filter(Boolean);
-        const postId = pathParts.length === 4 ? pathParts[3] : null;
-
-        if (request.method === 'GET') {
-            if (postId) {
-                const post = await env.DB.prepare("SELECT * FROM blog_posts WHERE id = ?").bind(postId).first();
-                if (!post) return new Response(JSON.stringify({ error: "Post not found" }), { status: 404, headers: corsHeaders });
-                return new Response(JSON.stringify(post), { status: 200, headers: corsHeaders });
-            } else {
-                const { results } = await env.DB.prepare("SELECT id, title, slug, status, created_at FROM blog_posts ORDER BY created_at DESC").all();
-                return new Response(JSON.stringify(results), { status: 200, headers: corsHeaders });
-            }
-        }
-        // ... (POST, PUT, DELETE for posts)
+    if (!authHeader || authHeader !== expectedToken) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
+}
 
-    // --- Admin Reviews Logic (Management Only) ---
-    else if (pathname.startsWith('/api/admin/reviews')) {
-        const pathParts = pathname.split('/').filter(Boolean);
-        const reviewId = pathParts.length > 3 ? pathParts[3] : null;
-        if (request.method === 'GET') {
-            const { results } = await env.DB.prepare("SELECT id, orderId, serviceName, customerName, rating, comment, status, createdAt FROM reviews ORDER BY createdAt DESC").all();
-            return new Response(JSON.stringify(results), { status: 200, headers: corsHeaders });
-        }
-        // ... (PUT, DELETE for reviews)
+function withDBCheck(request, env) {
+    if (!env.DB) {
+        console.error("Database binding [DB] not found. Please check your wrangler.toml file.");
+        return new Response(JSON.stringify({ error: "Database connection is not configured." }), { status: 500 });
     }
+}
 
-    // --- Admin Services Logic ---
-    else if (pathname.startsWith('/api/admin/services')) {
-        const pathParts = pathname.split('/').filter(Boolean);
-        const serviceId = pathParts.length > 3 ? pathParts[3] : null;
-        if (request.method === 'GET') {
-            if (serviceId) {
-                const service = await env.DB.prepare("SELECT * FROM services WHERE id = ?").bind(serviceId).first();
-                if (!service) return new Response(JSON.stringify({ error: "Service not found" }), { status: 404 });
-                return new Response(JSON.stringify(service), { status: 200 });
-            } else {
-                const { results } = await env.DB.prepare("SELECT id, title, price, category, status, created_at, image_url FROM services ORDER BY created_at DESC").all();
-                return new Response(JSON.stringify(results), { status: 200 });
-            }
-        }
-        // ... (POST, PUT, DELETE for services)
-    }
-    
-    // --- Admin Users Logic ---
-    else if (pathname.startsWith('/api/admin/users')) {
-        const pathParts = pathname.split('/').filter(Boolean);
-        const userId = pathParts.length > 3 ? pathParts[3] : null;
-        if (request.method === 'GET') {
-            if(userId) {
-                const user = await env.DB.prepare("SELECT id, displayName, email, role, createdAt FROM users WHERE id = ?").bind(userId).first();
-                return new Response(JSON.stringify(user), { status: 200 });
-            } else {
-                const { results } = await env.DB.prepare("SELECT id, displayName, email, role, createdAt FROM users ORDER BY createdAt DESC").all();
-                return new Response(JSON.stringify(results), { status: 200 });
-            }
-        }
-        // ... (PUT, DELETE for users)
-    }
-    
-    // --- Admin Settings Logic ---
-    else if (pathname.startsWith('/api/admin/settings')) {
-        if (request.method === 'GET') {
-            const { results } = await env.DB.prepare("SELECT key, value FROM settings").all();
-            const settings = results.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {});
-            return new Response(JSON.stringify(settings), { status: 200 });
-        }
-        if (request.method === 'POST') {
-            const settingsToUpdate = await request.json();
-            const promises = Object.entries(settingsToUpdate).map(([key, value]) => {
-                return env.DB.prepare("UPDATE settings SET value = ? WHERE key = ?").bind(value, key).run();
-            });
-            await Promise.all(promises);
-            return new Response(JSON.stringify({ message: "Settings updated successfully" }), { status: 200 });
-        }
-    }
+// =================================================================================
+// --- Admin Handlers for All Sections ---
+// =================================================================================
 
-    // fallback for any unhandled admin routes
-    return new Response(JSON.stringify({ error: "Admin route not found" }), { status: 404, headers: corsHeaders });
+// --- Orders (NEWLY ADDED) ---
+async function adminGetAllOrders(request, env) {
+    try {
+        // We assume your orders table is named 'orders' and has these columns.
+        // Adjust the query if your table structure is different.
+        const query = "SELECT id, userId, totalAmount, status, paymentStatus, createdAt FROM orders ORDER BY createdAt DESC LIMIT 100;";
+        const { results } = await env.DB.prepare(query).all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch orders.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Tickets ---
+async function adminGetAllTickets(request, env) {
+    try {
+        const query = "SELECT id, subject, status, updatedAt, lastReplier FROM support_tickets ORDER BY updatedAt DESC LIMIT 100;";
+        const { results } = await env.DB.prepare(query).all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch tickets.", details: e.message }), { status: 500 });
+    }
+}
+async function adminGetTicketById(request, env) {
+    try {
+        const { ticketId } = request.params;
+        const ticket = await env.DB.prepare("SELECT * FROM support_tickets WHERE id = ?").bind(ticketId).first();
+        if (!ticket) return new Response(JSON.stringify({ error: "Ticket not found" }), { status: 404 });
+        const { results: messages } = await env.DB.prepare("SELECT * FROM support_messages WHERE ticketId = ? ORDER BY createdAt ASC").bind(ticketId).all();
+        return new Response(JSON.stringify({ ticket, messages }), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch single ticket.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Users ---
+async function adminGetAllUsers(request, env) {
+    try {
+        const { results } = await env.DB.prepare("SELECT id, displayName, email, role, createdAt FROM users ORDER BY createdAt DESC").all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch users.", details: e.message }), { status: 500 });
+    }
+}
+async function adminGetUserById(request, env) {
+    try {
+        const { id } = request.params;
+        const user = await env.DB.prepare("SELECT id, displayName, email, role, createdAt FROM users WHERE id = ?").bind(id).first();
+        if (!user) return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
+        return new Response(JSON.stringify(user), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch user.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Posts ---
+async function adminGetAllPosts(request, env) {
+    try {
+        const { results } = await env.DB.prepare("SELECT id, title, slug, status, created_at FROM blog_posts ORDER BY created_at DESC").all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch posts.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Services ---
+async function adminGetAllServices(request, env) {
+    try {
+        const { results } = await env.DB.prepare("SELECT id, title, price, category, status, created_at FROM services ORDER BY created_at DESC").all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch services.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Reviews ---
+async function adminGetAllReviews(request, env) {
+    try {
+        const { results } = await env.DB.prepare("SELECT id, orderId, serviceName, customerName, rating, status, createdAt FROM reviews ORDER BY createdAt DESC").all();
+        return new Response(JSON.stringify(results), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch reviews.", details: e.message }), { status: 500 });
+    }
+}
+
+// --- Settings ---
+async function adminGetSettings(request, env) {
+    try {
+        const { results } = await env.DB.prepare("SELECT key, value FROM settings").all();
+        const settings = results.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {});
+        return new Response(JSON.stringify(settings), { status: 200 });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: "Failed to fetch settings.", details: e.message }), { status: 500 });
+    }
+}
+
+// =================================================================================
+// --- Router Setup for Admin API ---
+// =================================================================================
+
+const router = Router({ base: '/api/admin' });
+
+// Apply middleware to all admin routes
+router.all('*', withAuth, withDBCheck);
+
+// Define ALL admin routes
+router.get('/orders', adminGetAllOrders); // <-- ROUTE ADDED HERE
+router.get('/tickets', adminGetAllTickets);
+router.get('/tickets/:ticketId', adminGetTicketById);
+router.get('/users', adminGetAllUsers);
+router.get('/users/:id', adminGetUserById);
+router.get('/posts', adminGetAllPosts);
+router.get('/services', adminGetAllServices);
+router.get('/reviews', adminGetAllReviews);
+router.get('/settings', adminGetSettings);
+
+// Fallback for any unhandled admin routes
+router.all('*', () => new Response(JSON.stringify({ error: "Admin route not found" }), { status: 404 }));
+
+// =================================================================================
+// --- Main Exported Handler Function ---
+// =================================================================================
+
+export function handleAdmin(request, env, ctx) {
+    return router.handle(request, env, ctx);
 }

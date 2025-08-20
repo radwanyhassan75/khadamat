@@ -1,25 +1,29 @@
 # File: wrangler.toml
 
-# اسم الـ Worker الخاص بك
+# The name of your Worker
 name = "orders-worker"
 
-# الملف الرئيسي الذي سيبدأ منه الـ Worker
+# The main entrypoint for your Worker
 main = "index.js"
 
-# تاريخ التوافق
+# The compatibility date
 compatibility_date = "2025-07-20"
 
-# --- ✅ ربط قاعدة البيانات ---
+# --- ✅ D1 Database Binding ---
 [[d1_databases]]
 binding = "DB"
 database_name = "main_database"
 database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
-# --- ✅✅✅ ربط مخزن الملفات (R2 Bucket) ---
-[[r2_buckets]]
-binding = "RECEIPTS_BUCKET"  # هذا هو الاسم الذي يستخدمه الكود
-bucket_name = "khadamatuk-receipts" # تم إضافة اسم المخزن الصحيح  
-# ... (الإعدادات الموجودة مسبقًا تبقى كما هي)
 
-# --- ✅✅✅ أضف هذا الجزء لتعريف المتغيرات ---
+# --- ✅ R2 Bucket Binding ---
+[[r2_buckets]]
+binding = "RECEIPTS_BUCKET"
+bucket_name = "khadamatuk-receipts"
+
+# --- ✅ Environment Variables ---
 [vars]
-R2_PUBLIC_URL = "https://pub-3744e16474fa47dba751a996a877f277.r2.dev" # 🚧 استبدل هذا بالرابط العام لمخزن R2 الخاص بك
+R2_PUBLIC_URL = "https://pub-3744e16474fa47dba751a996a877f277.r2.dev"
+
+# --- This section is now disabled for deployment ---
+# [[pages_build_output_dir]]
+# dir = "../public"

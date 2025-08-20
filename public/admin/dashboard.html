@@ -151,97 +151,132 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="admin-auth.js"></script>
-    <script>
-        function initializePage() {
-            lucide.createIcons();
+ <script>
+    function initializePage() {
+        lucide.createIcons();
 
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/orders";
-            let knownOrderIds = new Set();
-            let isFirstLoad = true;
+        // [FIX 1] The API URL has been corrected to point to the admin endpoint.
+        const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/api/admin/orders";
+        let knownOrderIds = new Set();
+        let isFirstLoad = true;
 
-            const statusColors = {
-                "pending": "bg-yellow-100 text-yellow-800",
-                "قيد الانتظار": "bg-yellow-100 text-yellow-800",
-                "مكتمل": "bg-green-100 text-green-800",
-                "ملغي": "bg-red-100 text-red-800"
-            };
+        const statusColors = {
+            "pending": "bg-yellow-100 text-yellow-800",
+            "قيد الانتظار": "bg-yellow-100 text-yellow-800",
+            "مكتمل": "bg-green-100 text-green-800",
+            "ملغي": "bg-red-100 text-red-800"
+        };
 
-            async function loadDashboardData() {
-                try {
-                    const response = await fetch(API_URL);
-                    if (!response.ok) throw new Error(`تعذر جلب البيانات (Status: ${response.status})`);
-                    const orders = await response.json();
-                    if (!Array.isArray(orders)) throw new Error("البيانات المستلمة غير صحيحة.");
-
-                    updateStats(orders);
-                    updateRecentOrders(orders);
-                    
-                    if (isFirstLoad) {
-                        knownOrderIds = new Set(orders.map(o => o.id));
-                        isFirstLoad = false;
-                    } else {
-                        orders.forEach(order => {
-                            if (!knownOrderIds.has(order.id)) {
-                                showNotification(`طلب جديد من ${order.customerName}`, 'shopping-cart');
-                                knownOrderIds.add(order.id);
-                            }
-                        });
-                    }
-                } catch (error) {
-                    console.error("حدث خطأ أثناء جلب البيانات:", error);
-                    const errorContainer = document.getElementById('error-container');
-                    const errorMessage = document.getElementById('error-message');
-                    errorMessage.textContent = `تعذر جلب البيانات: ${error.message}`;
-                    errorContainer.classList.remove('hidden');
-                    ['total-orders', 'pending-orders', 'completed-orders'].forEach(id => {
-                        document.getElementById(id).textContent = 'خطأ';
-                    });
-                }
-            }
-
-            function updateStats(orders) {
-                document.getElementById('total-orders').textContent = orders.length;
-                document.getElementById('pending-orders').textContent = orders.filter(o => o.status === 'pending' || o.status === 'قيد الانتظار').length;
-                document.getElementById('completed-orders').textContent = orders.filter(o => o.status === 'مكتمل').length;
-            }
-
-            function updateRecentOrders(orders) {
-                const tbody = document.getElementById('recent-orders-body');
-                tbody.innerHTML = '';
-                const recentOrders = orders.slice(0, 5);
-                if (recentOrders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">لا توجد طلبات حديثة.</td></tr>`;
+        async function loadDashboardData() {
+            try {
+                // Retrieve the admin token saved by your admin-auth.js script
+                const adminToken = localStorage.getItem('adminSecretToken');
+                if (!adminToken) {
+                    // If no token is found, redirect to login, as the user is not authenticated.
+                    // This assumes you have a login page at '../admin.html'
+                    window.location.href = '../admin.html'; 
                     return;
                 }
-                recentOrders.forEach(order => {
-                    const row = document.createElement('tr');
-                    const statusClass = statusColors[order.status] || "bg-gray-100 text-gray-800";
-                    row.innerHTML = `
-                        <td class="p-4 text-sm font-semibold text-gray-700">${order.id}</td>
-                        <td class="p-4 text-sm text-gray-700">${order.customerName}</td>
-                        <td class="p-4 text-sm text-gray-500">${order.serviceName}</td>
-                        <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full ${statusClass}">${order.status}</span></td>
-                        <td class="p-4 text-sm text-gray-500">${new Date(order.createdAt).toLocaleDateString('ar-EG')}</td>
-                    `;
-                    tbody.appendChild(row);
+
+                // [FIX 2] The Authorization header is now added to the fetch request.
+                const response = await fetch(API_URL, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                if (response.status === 401) { // Unauthorized
+                    throw new Error('غير مصرح لك بالدخول. قد تكون جلسة الدخول انتهت.');
+                }
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`تعذر جلب البيانات (Status: ${response.status}) - ${errorData.error || ''}`);
+                }
+                
+                const data = await response.json();
+                
+                // Assuming the backend returns an array of orders directly
+                const orders = Array.isArray(data) ? data : [];
+
+                updateStats(orders);
+                updateRecentOrders(orders);
+                
+                if (isFirstLoad) {
+                    knownOrderIds = new Set(orders.map(o => o.id));
+                    isFirstLoad = false;
+                } else {
+                    orders.forEach(order => {
+                        if (!knownOrderIds.has(order.id)) {
+                            // Assuming customerName and serviceName exist on the order object
+                            const customerName = order.customerName || 'عميل'; 
+                            showNotification(`طلب جديد من ${customerName}`, 'shopping-cart');
+                            knownOrderIds.add(order.id);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("حدث خطأ أثناء جلب البيانات:", error);
+                const errorContainer = document.getElementById('error-container');
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.textContent = `تعذر جلب البيانات: ${error.message}`;
+                errorContainer.classList.remove('hidden');
+                ['total-orders', 'pending-orders', 'completed-orders'].forEach(id => {
+                    document.getElementById(id).textContent = 'خطأ';
                 });
             }
-
-            function showNotification(message, iconName) {
-                const container = document.getElementById('notification-container');
-                const notif = document.createElement('div');
-                notif.className = 'toast-notification bg-white rounded-lg shadow-lg p-4 flex items-center space-x-3';
-                notif.innerHTML = `<div class="bg-green-100 p-2 rounded-full"><i data-lucide="${iconName}" class="w-5 h-5 text-green-600"></i></div><p class="font-semibold text-gray-800">${message}</p>`;
-                container.appendChild(notif);
-                lucide.createIcons();
-                setTimeout(() => notif.remove(), 5000);
-            }
-            
-            loadDashboardData();
-            setInterval(loadDashboardData, 15000);
         }
-        // Call initializePage on load
-        window.addEventListener('DOMContentLoaded', initializePage);
-    </script>
+
+        function updateStats(orders) {
+            document.getElementById('total-orders').textContent = orders.length;
+            document.getElementById('pending-orders').textContent = orders.filter(o => o.status === 'pending' || o.status === 'قيد الانتظار').length;
+            document.getElementById('completed-orders').textContent = orders.filter(o => o.status === 'completed' || o.status === 'مكتمل').length;
+        }
+
+        function updateRecentOrders(orders) {
+            const tbody = document.getElementById('recent-orders-body');
+            tbody.innerHTML = '';
+            const recentOrders = orders.slice(0, 5);
+            if (recentOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">لا توجد طلبات حديثة.</td></tr>`;
+                return;
+            }
+            recentOrders.forEach(order => {
+                const row = document.createElement('tr');
+                const statusClass = statusColors[order.status] || "bg-gray-100 text-gray-800";
+                 // Ensure we have fallback data if properties are missing
+                const orderId = order.id || 'N/A';
+                const customerName = order.customerName || 'غير متوفر';
+                const serviceName = order.serviceName || 'غير متوفر';
+                const status = order.status || 'غير معروف';
+                const createdAt = order.createdAt ? new Date(order.createdAt).toLocaleDateString('ar-EG') : 'N/A';
+
+                row.innerHTML = `
+                    <td class="p-4 text-sm font-semibold text-gray-700">${orderId}</td>
+                    <td class="p-4 text-sm text-gray-700">${customerName}</td>
+                    <td class="p-4 text-sm text-gray-500">${serviceName}</td>
+                    <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full ${statusClass}">${status}</span></td>
+                    <td class="p-4 text-sm text-gray-500">${createdAt}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showNotification(message, iconName) {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            notif.className = 'toast-notification bg-white rounded-lg shadow-lg p-4 flex items-center space-x-3';
+            notif.innerHTML = `<div class="bg-green-100 p-2 rounded-full"><i data-lucide="${iconName}" class="w-5 h-5 text-green-600"></i></div><p class="font-semibold text-gray-800">${message}</p>`;
+            container.appendChild(notif);
+            lucide.createIcons();
+            setTimeout(() => notif.remove(), 5000);
+        }
+        
+        loadDashboardData();
+        setInterval(loadDashboardData, 15000);
+    }
+    // Call initializePage on load
+    window.addEventListener('DOMContentLoaded', initializePage);
+</script>
+
 </body>
 </html>

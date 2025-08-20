@@ -99,14 +99,19 @@
     </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="../auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-            // After
-const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/api/admin";
+
+            // =================================================================
+            // --- [مهم جداً] الإعدادات الرئيسية ---
+            // =================================================================
+            const API_BASE_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            
+            // [!] استبدل هذا النص بالتوكن السري الخاص بك من إعدادات Cloudflare Worker
+            const ADMIN_SECRET_TOKEN = "Khadamatuk-Admin-Panel-Secret-Key-987w@e!"; 
+            // =================================================================
+
             let allTickets = [];
             let currentTicketId = null;
             let currentOrderDetailsText = '';
@@ -126,17 +131,34 @@ const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/api/admin";
             const sendOrderInfoBtn = document.getElementById('send-order-info-btn');
             const searchInput = document.getElementById('search-input');
             const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            // [FIXED] دالة fetch محسّنة لإضافة التوثيق ومعالجة الأخطاء بشكل أفضل
+            async function apiFetch(endpoint, options = {}) {
+                const headers = {
+                    ...options.headers,
+                    'Authorization': `Bearer ${ADMIN_SECRET_TOKEN}`
+                };
+
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, { ...options, headers });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ error: "An unknown error occurred" }));
+                    const errorMessage = errorData.error || `HTTP error! status: ${response.status}`;
+                    throw new Error(errorMessage);
+                }
+                return response.json();
+            }
 
             async function fetchTickets() {
                 ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جاري تحميل التذاكر...</p>';
                 try {
-                    // After
-const response = await fetch(`${API_URL}/tickets`);
-                    if (!response.ok) throw new Error('تعذر تحميل التذاكر');
-                    allTickets = await response.json();
+                    if (!ADMIN_SECRET_TOKEN || ADMIN_SECRET_TOKEN === "ضع التوكن السري هنا") {
+                        throw new Error("يرجى إعداد التوكن السري (ADMIN_SECRET_TOKEN) في الكود أولاً.");
+                    }
+                    allTickets = await apiFetch('/api/admin/tickets');
                     filterAndRender();
                 } catch (error) {
-                    ticketListEl.innerHTML = `<p class="p-4 text-center text-red-500">${error.message}</p>`;
+                    ticketListEl.innerHTML = `<p class="p-4 text-center text-red-500"><b>خطأ:</b> ${error.message}</p>`;
                 }
             }
 
@@ -176,28 +198,26 @@ const response = await fetch(`${API_URL}/tickets`);
                 messagesHistoryEl.innerHTML = '<p class="text-center p-8 text-gray-500">جاري تحميل المحادثة...</p>';
 
                 try {
-                    // After
-const response = await fetch(`${API_URL}/tickets/${ticketId}`);
-                    const data = await response.json();
-                    if (!response.ok) throw new Error(data.error);
+                    const data = await apiFetch(`/api/admin/tickets/${ticketId}`);
                     renderChat(data.ticket, data.messages);
                 } catch (error) {
-                    messagesHistoryEl.innerHTML = `<p class="text-center p-8 text-red-500">تعذر تحميل تفاصيل التذكرة.</p>`;
+                    messagesHistoryEl.innerHTML = `<p class="text-center p-8 text-red-500"><b>خطأ:</b> ${error.message}</p>`;
                 }
             }
             
             async function renderChat(ticket, messages) {
                 let userDisplayName = 'زائر';
                 let userEmail = 'غير مسجل';
-                if (ticket.userId !== 'guest-user') {
+                if (ticket.userId && ticket.userId !== 'guest-user') {
                     try {
-                        const userResponse = await fetch(`${API_URL}/api/users/${ticket.userId}`);
-                        if (userResponse.ok) {
-                            const userData = await userResponse.json();
-                            userDisplayName = userData.displayName || 'مستخدم مسجل';
-                            userEmail = userData.email;
-                        }
-                    } catch (e) { console.error("Could not fetch user details"); }
+                        // [FIXED] Corrected API path for fetching user
+                        const userData = await apiFetch(`/api/admin/users/${ticket.userId}`);
+                        userDisplayName = userData.displayName || 'مستخدم مسجل';
+                        userEmail = userData.email;
+                    } catch (e) { 
+                        console.error("Could not fetch user details:", e.message); 
+                        // Keep default names if user fetch fails
+                    }
                 }
                 
                 userInfoEl.innerHTML = `
@@ -221,13 +241,15 @@ const response = await fetch(`${API_URL}/tickets/${ticketId}`);
 
             function appendMessage(msg) {
                 const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${msg.sender}`;
+                // [FIXED] Corrected sender check to be 'admin' or 'user'
+                const senderClass = msg.sender === 'admin' ? 'admin' : 'user';
+                messageDiv.className = `message ${senderClass}`;
                 messageDiv.innerHTML = `
-                    <div class="p-3 rounded-lg ${msg.sender === 'admin' ? 'bg-indigo-500 text-white' : 'bg-gray-200'}">
+                    <div class="p-3 rounded-lg ${senderClass === 'admin' ? 'bg-indigo-500 text-white' : 'bg-gray-200'}">
                         <p class="text-sm">${(msg.message || '').replace(/\n/g, '<br>')}</p>
-                        ${msg.attachmentUrl ? `<a href="${msg.attachmentUrl}" target="_blank" class="text-sm font-bold mt-2 inline-block hover:underline ${msg.sender === 'admin' ? 'text-indigo-200' : 'text-indigo-600'}">عرض المرفق</a>` : ''}
+                        ${msg.attachmentUrl ? `<a href="${msg.attachmentUrl}" target="_blank" class="text-sm font-bold mt-2 inline-block hover:underline ${senderClass === 'admin' ? 'text-indigo-200' : 'text-indigo-600'}">عرض المرفق</a>` : ''}
                     </div>
-                    <div class="text-xs text-gray-400 mt-1 px-2 ${msg.sender === 'admin' ? 'text-left' : 'text-right'}">${new Date(msg.createdAt).toLocaleString('ar-EG')}</div>
+                    <div class="text-xs text-gray-400 mt-1 px-2 ${senderClass === 'admin' ? 'text-left' : 'text-right'}">${new Date(msg.createdAt).toLocaleString('ar-EG')}</div>
                 `;
                 messagesHistoryEl.appendChild(messageDiv);
                 messagesHistoryEl.scrollTop = messagesHistoryEl.scrollHeight;
@@ -245,33 +267,36 @@ const response = await fetch(`${API_URL}/tickets/${ticketId}`);
                 if (attachmentFile) formData.append('attachment', attachmentFile);
 
                 try {
-                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}/messages`, {
+                    // [FIXED] Corrected API path for sending message
+                    const newMsg = await apiFetch(`/api/admin/tickets/${currentTicketId}/messages`, {
                         method: 'POST',
                         body: formData
+                        // Note: Don't set Content-Type header when using FormData
                     });
-                    const newMsg = await response.json();
-                    if (!response.ok) throw new Error(newMsg.error || 'فشل إرسال الرسالة.');
 
                     appendMessage(newMsg);
                     replyMessage.value = '';
                     replyAttachment.value = '';
-                    await loadAllTickets(); // Refresh ticket list to show updated time
+                    await fetchTickets(); // Refresh ticket list to show updated time
                 } catch (error) {
+                    console.error(`خطأ: ${error.message}`);
                     alert(`خطأ: ${error.message}`);
                 }
             });
 
             closeTicketBtn.addEventListener('click', async () => {
-                if (!confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟')) return;
+                if (!window.confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟')) return;
                 try {
-                    await fetch(`${API_URL}/api/tickets/${currentTicketId}`, {
+                    // [FIXED] Corrected API path for updating ticket
+                    await apiFetch(`/api/admin/tickets/${currentTicketId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ status: 'closed' })
                     });
                     await selectTicket(currentTicketId);
-                    await loadAllTickets();
+                    await fetchTickets();
                 } catch (error) {
+                    console.error(`خطأ: ${error.message}`);
                     alert(`خطأ: ${error.message}`);
                 }
             });
@@ -286,9 +311,9 @@ const response = await fetch(`${API_URL}/tickets/${ticketId}`);
                 sendOrderInfoBtn.classList.add('hidden');
 
                 try {
-                    const response = await fetch(`${API_URL}/api/orders/${orderId}`);
-                    const order = await response.json();
-                    if (!response.ok) throw new Error(order.error || 'لم يتم العثور على الطلب.');
+                    // This endpoint is not defined in your admin.js, assuming it's in another handler
+                    // If it's part of admin, it needs to be added to the router.
+                    const order = await apiFetch(`/api/orders/${orderId}`);
 
                     currentOrderDetailsText = `تفاصيل الطلب: ${order.id}\nالخدمة: ${order.serviceName}\nالحالة: ${order.status}\nالسعر: ${order.price} د.م.`;
                     orderDetailsCard.innerHTML = currentOrderDetailsText.replace(/\n/g, '<br>');
