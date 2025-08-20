@@ -105,7 +105,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
+            // After
+const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/api/admin";
             let allTickets = [];
             let currentTicketId = null;
             let currentOrderDetailsText = '';
@@ -129,7 +130,8 @@
             async function fetchTickets() {
                 ticketListEl.innerHTML = '<p class="p-4 text-center text-gray-500">جاري تحميل التذاكر...</p>';
                 try {
-                    const response = await fetch(`${API_URL}/api/tickets`);
+                    // After
+const response = await fetch(`${API_URL}/tickets`);
                     if (!response.ok) throw new Error('تعذر تحميل التذاكر');
                     allTickets = await response.json();
                     filterAndRender();
@@ -174,7 +176,8 @@
                 messagesHistoryEl.innerHTML = '<p class="text-center p-8 text-gray-500">جاري تحميل المحادثة...</p>';
 
                 try {
-                    const response = await fetch(`${API_URL}/api/tickets/${ticketId}`);
+                    // After
+const response = await fetch(`${API_URL}/tickets/${ticketId}`);
                     const data = await response.json();
                     if (!response.ok) throw new Error(data.error);
                     renderChat(data.ticket, data.messages);
