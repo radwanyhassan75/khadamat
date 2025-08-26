@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>تجربة API data.gov.ma</title>
+</head>
+<body>
+  <h1>عدد السياح في المغرب</h1>
+  <div id="tourism-data">جارٍ التحميل...</div>
+
+  <script>
+    // رابط API تجريبي
+    const apiUrl = 'https://www.data.gov.ma/data/api/3/action/package_search?q=tourisme';
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const resultDiv = document.getElementById('tourism-data');
+        const total = data.result.count;
+        resultDiv.innerHTML = 'إجمالي مجموعات البيانات السياحية: ' + total;
+      })
+      .catch(error => {
+        console.error('حدث خطأ:', error);
+      });
+  </script>
+</body>
+</html>

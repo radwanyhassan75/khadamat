@@ -1,273 +1,227 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="../public/output.css" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>الإعدادات - لوحة تحكم خدماتك</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
+    <title>الإعدادات - لوحة التحكم</title>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         body { font-family: 'Cairo', sans-serif; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        /* Toggle Switch Styles */
+        .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .sidebar-link.active .lucide { color: #4f46e5; }
+        /* Custom Toggle Switch */
         .toggle-checkbox:checked { right: 0; border-color: #4f46e5; }
         .toggle-checkbox:checked + .toggle-label { background-color: #4f46e5; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">يرجى إدخال كلمة مرور لوحة التحكم</h2>
-            <form id="password-form">
-                <input type="password" id="password-input" class="w-full px-4 py-2 border rounded-lg text-center" autocomplete="current-password">
-                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة. حاول مرة أخرى.</p>
-                <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg">دخول</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
-        <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
-            <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>لوحة التحكم</a>
-                <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
-                <a href="manage-blog.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i>المدونة</a>
-                <a href="manage-services.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i>الخدمات</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>الدعم الفني</a>
-                <a href="manage-reviews.html" class="sidebar-link"><i data-lucide="star" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
-                <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
+                </a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
+                </a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
+                </a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
+                </a>
+                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="file-text" class="w-5 h-5 ml-3 text-gray-500"></i><span>المدونة</span>
+                </a>
+                <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg active">
+                    <i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span>
+                </a>
             </nav>
         </aside>
 
-        <div class="flex flex-col flex-1 overflow-y-auto">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md">
-                <h2 class="text-xl font-semibold text-gray-800">الإعدادات</h2>
-                <div class="flex items-center space-x-4">
-                    <span class="font-semibold">مدير النظام</span>
-                    <div class="w-10 h-10 bg-indigo-200 rounded-full"></div>
-                </div>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b h-20 flex items-center justify-between px-8">
+                <h1 class="text-xl font-bold text-gray-800">إعدادات الموقع</h1>
             </header>
-            
-            <main class="p-6 md:p-8">
-                <div id="message-container" class="mb-4"></div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1 space-y-8">
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">إعدادات الأمان</h3>
-                            <form id="security-form" class="space-y-4">
-                                <div>
-                                    <label for="admin_password" class="text-sm font-medium text-gray-700">كلمة مرور لوحة التحكم</label>
-                                    <input type="password" id="admin_password" name="admin_password" class="w-full mt-1 border-gray-300 rounded-md shadow-sm">
+
+            <main class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- General Settings -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h2 class="text-xl font-bold mb-6 border-b pb-4">الإعدادات العامة</h2>
+                        <div id="general-settings-container" class="space-y-4">
+                            <div>
+                                <label for="site-name" class="block text-sm font-medium text-gray-700">اسم الموقع</label>
+                                <input type="text" id="site-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            </div>
+                            <div>
+                                <label for="logo-url" class="block text-sm font-medium text-gray-700">رابط الشعار</label>
+                                <input type="url" id="logo-url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            </div>
+                            <div class="flex items-center justify-between pt-2">
+                                <span class="text-sm font-medium text-gray-700">وضع الصيانة</span>
+                                <div class="relative inline-block w-14 align-middle select-none transition duration-200 ease-in">
+                                    <input type="checkbox" id="maintenance-mode" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-2 appearance-none cursor-pointer"/>
+                                    <label for="maintenance-mode" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label>
                                 </div>
-                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ كلمة المرور</button></div>
-                            </form>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">إعدادات الموقع</h3>
-                            <form id="site-form" class="space-y-4">
-                                <div>
-                                    <label for="site_name" class="text-sm font-medium text-gray-700">اسم الموقع</label>
-                                    <input type="text" id="site_name" name="site_name" class="w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                </div>
-                                <div>
-                                    <label for="logo_url" class="text-sm font-medium text-gray-700">رابط الشعار (URL)</label>
-                                    <input type="url" id="logo_url" name="logo_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr">
-                                </div>
-                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ إعدادات الموقع</button></div>
-                            </form>
-                        </div>
-                         <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">روابط التواصل الاجتماعي</h3>
-                            <form id="social-form" class="space-y-4">
-                                <div>
-                                    <label for="facebook_url" class="text-sm font-medium text-gray-700">رابط فيسبوك</label>
-                                    <input type="url" id="facebook_url" name="facebook_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://facebook.com/yourpage">
-                                </div>
-                                <div>
-                                    <label for="whatsapp_url" class="text-sm font-medium text-gray-700">رابط واتساب (wa.me)</label>
-                                    <input type="url" id="whatsapp_url" name="whatsapp_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://wa.me/212...">
-                                </div>
-                                <div>
-                                    <label for="instagram_url" class="text-sm font-medium text-gray-700">رابط انستغرام</label>
-                                    <input type="url" id="instagram_url" name="instagram_url" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="https://instagram.com/yourprofile">
-                                </div>
-                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ الروابط</button></div>
-                            </form>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">وضع الصيانة</h3>
-                            <form id="maintenance-form">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-sm font-medium text-gray-700">تفعيل وضع الصيانة للموقع</span>
-                                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                                        <input type="checkbox" id="maintenance_mode_toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                                        <label for="maintenance_mode_toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                    </div>
-                                </div>
-                                <input type="hidden" id="maintenance_mode" name="maintenance_mode" value="off">
-                                <div class="pt-4 mt-4 border-t"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ حالة الصيانة</button></div>
-                            </form>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">أكواد التتبع والتحليلات</h3>
-                            <form id="tracking-form" class="space-y-4">
-                                <div>
-                                    <label for="google_analytics_id" class="text-sm font-medium text-gray-700">Google Analytics ID</label>
-                                    <input type="text" id="google_analytics_id" name="google_analytics_id" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="G-XXXXXXXXXX">
-                                </div>
-                                <div>
-                                    <label for="facebook_pixel_id" class="text-sm font-medium text-gray-700">Facebook Pixel ID</label>
-                                    <input type="text" id="facebook_pixel_id" name="facebook_pixel_id" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" dir="ltr" placeholder="1234567890123456">
-                                </div>
-                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ أكواد التتبع</button></div>
-                            </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="lg:col-span-2">
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-3">معلومات الدفع البنكي</h3>
-                            <form id="payment-form" class="space-y-4">
-                                <div>
-                                    <label for="beneficiary_name" class="text-sm font-medium text-gray-700">اسم المستفيد</label>
-                                    <input type="text" id="beneficiary_name" name="beneficiary_name" class="w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                </div>
-                                <hr>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div><label for="cashplus_iban" class="text-sm font-medium text-gray-700">كاش بلوس (IBAN)</label><input type="text" id="cashplus_iban" name="cashplus_iban" class="w-full mt-1" dir="ltr"></div>
-                                    <div><label for="cashplus_phone" class="text-sm font-medium text-gray-700">كاش بلوس (رقم الهاتف)</label><input type="text" id="cashplus_phone" name="cashplus_phone" class="w-full mt-1" dir="ltr"></div>
-                                </div>
-                                <hr>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                     <div><label for="orange_rib" class="text-sm font-medium text-gray-700">أورنج موني (RIB)</label><input type="text" id="orange_rib" name="orange_rib" class="w-full mt-1" dir="ltr"></div>
-                                     <div><label for="orange_phone" class="text-sm font-medium text-gray-700">أورنج موني (رقم الهاتف)</label><input type="text" id="orange_phone" name="orange_phone" class="w-full mt-1" dir="ltr"></div>
-                                </div>
-                                <hr>
-                                <div><label for="cih_rib" class="text-sm font-medium text-gray-700">بنك CIH (RIB)</label><input type="text" id="cih_rib" name="cih_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="bmce_rib" class="text-sm font-medium text-gray-700">بنك BMCE (RIB)</label><input type="text" id="bmce_rib" name="bmce_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="attijari_rib" class="text-sm font-medium text-gray-700">بنك التجاري وفا (RIB)</label><input type="text" id="attijari_rib" name="attijari_rib" class="w-full mt-1" dir="ltr"></div>
-                                <div><label for="soge_rib" class="text-sm font-medium text-gray-700">Société Générale (RIB)</label><input type="text" id="soge_rib" name="soge_rib" class="w-full mt-1" dir="ltr"></div>
-                                
-                                <div class="pt-2"><button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">حفظ معلومات الدفع</button></div>
-                            </form>
+
+                    <!-- Payment Settings -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h2 class="text-xl font-bold mb-6 border-b pb-4">إعدادات طرق الدفع</h2>
+                        <div id="payment-settings-container" class="space-y-6">
+                            <p class="text-center text-gray-500">جاري تحميل الإعدادات...</p>
                         </div>
+                    </div>
+                    
+                    <!-- Save Button -->
+                    <div class="pt-2">
+                        <button id="save-all-btn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm">
+                            <i data-lucide="save" class="w-5 h-5 ml-2"></i>
+                            <span>حفظ جميع التغييرات</span>
+                        </button>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="admin-auth.js"></script>
-<script>
-    function initializePage() {
-        lucide.createIcons();
-        
-        const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/settings";
-        const allForms = document.querySelectorAll('form:not(#password-form)');
-        const maintenanceToggle = document.getElementById('maintenance_mode_toggle');
-        const maintenanceHiddenInput = document.getElementById('maintenance_mode');
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
 
-        async function loadSettings() {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error('تعذر تحميل الإعدادات: ' + response.statusText);
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const paymentContainer = document.getElementById('payment-settings-container');
+            const saveAllBtn = document.getElementById('save-all-btn');
+
+            async function fetchAllSettings() {
+                try {
+                    const [paymentMethods, generalSettings] = await Promise.all([
+                        supabaseClient.from('payment_methods').select('*').order('name'),
+                        supabaseClient.from('general_settings').select('*').eq('id', 1).single()
+                    ]);
+
+                    if (paymentMethods.error) throw paymentMethods.error;
+                    if (generalSettings.error) throw generalSettings.error;
+
+                    renderPaymentSettings(paymentMethods.data);
+                    renderGeneralSettings(generalSettings.data);
+
+                } catch (error) {
+                    console.error("Error fetching settings:", error);
+                    alert('فشل تحميل الإعدادات.');
                 }
-                const settings = await response.json();
-                
-                settings.forEach(setting => {
-                    const input = document.getElementById(setting.key);
-                    if (input && input.type !== 'checkbox') {
-                        input.value = setting.value || '';
-                    }
+            }
+
+            function renderGeneralSettings(settings) {
+                if (!settings) return;
+                document.getElementById('site-name').value = settings.site_name || '';
+                document.getElementById('logo-url').value = settings.logo_url || '';
+                document.getElementById('maintenance-mode').checked = settings.maintenance_mode || false;
+            }
+
+            function renderPaymentSettings(methods) {
+                paymentContainer.innerHTML = '';
+                if (methods.length === 0) {
+                    paymentContainer.innerHTML = '<p class="text-center text-gray-500">لا توجد طرق دفع لإعدادها.</p>';
+                    return;
+                }
+                methods.forEach(method => {
+                    const details = method.details || {};
+                    const isEnabled = method.is_enabled;
+                    const methodHtml = `
+                        <div class="p-4 border rounded-lg bg-gray-50" data-method-id="${method.id}">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4"><img src="${method.logo_url || 'https://placehold.co/40x40'}" class="h-8 w-auto object-contain"><h3 class="font-bold text-lg">${method.name}</h3></div>
+                                <div class="relative inline-block w-14 align-middle select-none"><input type="checkbox" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-2 appearance-none cursor-pointer" ${isEnabled ? 'checked' : ''}/><label class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label></div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div><label class="block text-sm font-medium text-gray-700">رابط الشعار</label><input type="url" value="${method.logo_url || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="logo_url"></div>
+                                    <div><label class="block text-sm font-medium text-gray-700">اسم المستفيد</label><input type="text" value="${details.beneficiary || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.beneficiary"></div>
+                                    <div><label class="block text-sm font-medium text-gray-700">رقم الحساب (RIB)</label><input type="text" value="${details.rib || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.rib"></div>
+                                    <div><label class="block text-sm font-medium text-gray-700">IBAN</label><input type="text" value="${details.iban || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.iban"></div>
+                                    <div><label class="block text-sm font-medium text-gray-700">رقم الهاتف</label><input type="tel" value="${details.phone || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.phone"></div>
+                                </div>
+                            </div>
+                        </div>`;
+                    paymentContainer.insertAdjacentHTML('beforeend', methodHtml);
+                });
+            }
+
+            saveAllBtn.addEventListener('click', async () => {
+                saveAllBtn.disabled = true;
+                saveAllBtn.querySelector('span').textContent = 'جاري الحفظ...';
+
+                const paymentUpdates = [];
+                document.querySelectorAll('[data-method-id]').forEach(div => {
+                    const id = div.dataset.methodId;
+                    const is_enabled = div.querySelector('.toggle-checkbox').checked;
+                    const details = {};
+                    div.querySelectorAll('.data-field').forEach(input => {
+                        const keyPath = input.dataset.key;
+                        if (keyPath.startsWith('details.')) {
+                            details[keyPath.split('.')[1]] = input.value || null;
+                        }
+                    });
+                    const updateData = {
+                        is_enabled: is_enabled,
+                        details: details,
+                        logo_url: div.querySelector('[data-key="logo_url"]').value || null
+                    };
+                    paymentUpdates.push(supabaseClient.from('payment_methods').update(updateData).eq('id', id));
                 });
 
-                const maintenanceSetting = settings.find(s => s.key === 'maintenance_mode');
-                if (maintenanceSetting && maintenanceSetting.value === 'on') {
-                    maintenanceToggle.checked = true;
-                    maintenanceHiddenInput.value = 'on';
-                } else {
-                    maintenanceToggle.checked = false;
-                    maintenanceHiddenInput.value = 'off';
-                }
-            } catch (error) {
-                showMessage(`خطأ: ${error.message}`, 'error');
-            }
-        }
+                const generalUpdateData = {
+                    id: 1,
+                    site_name: document.getElementById('site-name').value,
+                    logo_url: document.getElementById('logo-url').value,
+                    maintenance_mode: document.getElementById('maintenance-mode').checked
+                };
+                const generalUpdate = supabaseClient.from('general_settings').upsert(generalUpdateData);
 
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formId = form.id;
-            const formData = new FormData(form);
-            const settings = [];
-
-            // Map form inputs to settings
-            for (let [key, value] of formData.entries()) {
-                if (value.trim()) { // Only send non-empty values
-                    settings.push({ key, value });
-                }
-            }
-
-            if (formId === 'maintenance-form') {
-                settings.push({ key: 'maintenance_mode', value: maintenanceToggle.checked ? 'on' : 'off' });
-            }
-
-            if (settings.length === 0) {
-                showMessage('يرجى إدخال قيمة واحدة على الأقل', 'error');
-                return;
-            }
-
-            try {
-                for (const setting of settings) {
-                    const response = await fetch(API_URL, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(setting)
-                    });
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || 'فشل في تحديث الإعداد');
+                try {
+                    const results = await Promise.all([...paymentUpdates, generalUpdate]);
+                    const hasError = results.some(res => res.error);
+                    if (hasError) {
+                        const failedOp = results.find(res => res.error);
+                        throw new Error(`فشل تحديث الإعدادات: ${failedOp.error.message}`);
                     }
+                    alert('تم حفظ جميع التغييرات بنجاح!');
+                } catch (error) {
+                    console.error("Error saving settings:", error);
+                    alert(`حدث خطأ أثناء حفظ التغييرات: ${error.message}`);
+                } finally {
+                    saveAllBtn.disabled = false;
+                    saveAllBtn.querySelector('span').textContent = 'حفظ جميع التغييرات';
                 }
-                showMessage('تم تحديث الإعدادات بنجاح', 'success');
-                loadSettings(); // Reload settings to reflect changes
-            } catch (error) {
-                console.error('Error updating setting:', error);
-                showMessage('خطأ في تحديث الإعداد: ' + error.message, 'error');
-            }
-        }
+            });
 
-        allForms.forEach(form => form.addEventListener('submit', handleFormSubmit));
-        
-        maintenanceToggle.addEventListener('change', () => {
-            maintenanceHiddenInput.value = maintenanceToggle.checked ? 'on' : 'off';
+            fetchAllSettings();
         });
-
-        function showMessage(message, type = 'success') {
-            const container = document.getElementById('message-container');
-            const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
-            container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
-            setTimeout(() => container.innerHTML = '', 4000);
-        }
-
-        loadSettings();
-    }
-
-    document.addEventListener('DOMContentLoaded', initializePage);
-</script>
+    </script>
 </body>
 </html>

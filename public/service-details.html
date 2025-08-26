@@ -48,16 +48,16 @@
         .main-header { background-color: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; padding: 0 5%; }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; max-width: 1200px; margin: 0 auto; }
         .navbar-logo img { height: 70px; }
-        .navbar-menu { display: flex; list-style: none; gap: 30px; margin: 0; padding: 0; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 600; font-size: 1rem; transition: color 0.3s; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); }
+        .nav-links { list-style: none; display: none; gap: 30px; margin: 0; padding: 0; align-items: center; }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
         .navbar-actions { display: flex; gap: 15px; }
         .btn { padding: 10px 22px; border-radius: var(--border-radius); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid transparent; cursor: pointer; transition: all 0.3s ease; }
         .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
         .btn-primary:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); }
-        .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
-        .hamburger-menu { display: none; cursor: pointer; }
-        .hamburger-menu i { font-size: 1.5rem; }
+        .hamburger-menu { display: block; cursor: pointer; font-size: 1.8rem; }
+        @media (min-width: 1024px) { .hamburger-menu { display: none; } }
         .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 40px 5% 20px; box-sizing: border-box; margin-top: auto; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
         .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; }
@@ -65,162 +65,74 @@
         .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s ease; }
         .footer-section a:hover { color: var(--light-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
-        .footer-bottom a { color: var(--light-color); text-decoration: none; }
 
         /* --- Service Details Styles --- */
-        .service-details-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .loading-state, .error-state {
-            text-align: center;
-            padding: 80px 20px;
-            font-size: 1.2rem;
-            color: var(--text-color);
-        }
-        .service-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 40px;
-            align-items: flex-start;
-        }
-        .service-main-content {
-            background-color: var(--light-color);
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-        .service-main-content h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--dark-color);
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 15px;
-        }
-        .service-long-description {
-            line-height: 1.9;
-            color: var(--text-color);
-            font-size: 1.1rem;
-        }
-        .service-long-description p { margin-bottom: 1.5em; }
-        .service-long-description ul { padding-right: 20px; margin-bottom: 1.5em; }
+        .service-details-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .loading-state, .error-state { text-align: center; padding: 80px 20px; font-size: 1.2rem; color: var(--text-color); }
+        .service-layout { display: grid; grid-template-columns: 1fr 350px; gap: 40px; align-items: flex-start; }
+        .service-main-content { background-color: var(--light-color); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .service-main-content h1 { font-size: 2.2rem; font-weight: 900; color: var(--dark-color); margin-bottom: 25px; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; }
+        .service-long-description { line-height: 1.9; color: var(--text-color); font-size: 1.1rem; }
+        .service-long-description p, .service-long-description ul, .service-long-description ol, .service-long-description h2, .service-long-description h3 { margin-bottom: 1.5em; }
+        .service-long-description ul, .service-long-description ol { padding-right: 20px; }
         .service-long-description li { margin-bottom: 0.8em; }
+        .service-long-description h2 { font-size: 1.8rem; font-weight: 700; color: var(--dark-color); }
+        .service-long-description h3 { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); }
         
-        .service-sidebar {
-            position: sticky;
-            top: 110px; /* Header height + margin */
-        }
-        .sidebar-card {
-            background-color: var(--light-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-        }
-        .sidebar-image {
-            height: 220px;
-            background-size: cover;
-            background-position: center;
-        }
-        .sidebar-content {
-            padding: 25px;
-        }
-        .sidebar-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            margin-bottom: 10px;
-        }
-        .sidebar-description {
-            font-size: 0.95rem;
-            color: var(--text-color);
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-        .sidebar-price {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-        }
-        .sidebar-price span {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        .btn-order {
-            width: 100%;
-            font-size: 1.1rem;
-            padding: 15px;
-        }
+        .service-sidebar { position: sticky; top: 110px; }
+        .sidebar-card { background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; }
+        .sidebar-image { height: 220px; background-size: cover; background-position: center; }
+        .sidebar-content { padding: 25px; }
+        .sidebar-title { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); margin-bottom: 10px; }
+        .sidebar-description { font-size: 0.95rem; color: var(--text-color); margin-bottom: 20px; line-height: 1.7; }
+        .sidebar-price { font-size: 2.2rem; font-weight: 900; color: var(--primary-color); margin-bottom: 20px; }
+        .sidebar-price span { font-size: 1rem; font-weight: 600; }
+        .btn-order { width: 100%; font-size: 1.1rem; padding: 15px; }
 
-        .sharing-section {
-            margin-top: 20px;
-            background-color: var(--light-color);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-        .sharing-title {
-            text-align: center;
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 15px;
-        }
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .social-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            transition: transform 0.2s ease;
-        }
-        .social-icon:hover {
-            transform: scale(1.1);
-        }
+        .sharing-section { margin-top: 20px; background-color: var(--light-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .sharing-title { text-align: center; font-weight: 600; color: var(--dark-color); margin-bottom: 15px; }
+        .social-icons { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
+        .social-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: white; font-size: 1.2rem; transition: transform 0.2s ease; }
+        .social-icon:hover { transform: scale(1.1); }
         .si-facebook { background-color: #1877F2; }
         .si-twitter { background-color: #1DA1F2; }
         .si-whatsapp { background-color: #25D366; }
         .si-linkedin { background-color: #0A66C2; }
         .si-telegram { background-color: #24A1DE; }
+        .si-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
 
-        .link-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .link-actions button {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--gray-color);
-            color: var(--dark-color);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .link-actions button:hover {
-            background-color: #e9e9e9;
-        }
-        .link-actions .lucide {
-            width: 16px;
-            height: 16px;
-        }
+        .link-actions { display: flex; gap: 10px; }
+        .link-actions button { flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--gray-color); color: var(--dark-color); font-weight: 600; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .link-actions button:hover { background-color: #e9e9e9; }
+        .link-actions .lucide { width: 16px; height: 16px; }
 
-        /* Responsive */
+        /* --- ✅ UPDATED: Comments Section Styles --- */
+        .comments-section { margin-top: 40px; background-color: var(--light-color); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        .comments-section h2 { font-size: 1.8rem; font-weight: 700; color: var(--dark-color); margin-bottom: 25px; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; }
+        .comment-form-container { border: 2px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .comment-form textarea { width: 100%; border: none; padding: 10px; font-family: 'Cairo', sans-serif; font-size: 1rem; resize: vertical; min-height: 100px; }
+        .comment-form textarea:focus { outline: none; }
+        .comment-form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .attachment-label { cursor: pointer; color: var(--primary-color); font-weight: 600; }
+        #attachment-file { display: none; }
+        #attachment-name { font-size: 0.9rem; color: #888; }
+        .comment-form-login-prompt { text-align: center; padding: 20px; background-color: var(--gray-color); border-radius: 8px; }
+        .comments-list { margin-top: 30px; }
+        .comment { display: flex; gap: 15px; margin-bottom: 20px; }
+        .comment-avatar img { width: 50px; height: 50px; border-radius: 50%; }
+        .comment-body { flex: 1; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        .comment:last-of-type .comment-body { border-bottom: none; }
+        .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .comment-author { font-weight: 700; color: var(--dark-color); }
+        .comment-date { font-size: 0.85rem; color: #888; margin-bottom: 10px; }
+        .comment-text { line-height: 1.7; }
+        .comment-actions { display: flex; align-items: center; gap: 15px; margin-top: 10px; }
+        .reply-btn, .react-btn { background: none; border: none; color: #888; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+        .reactions { display: flex; gap: 5px; }
+        .reaction { cursor: pointer; font-size: 1.2rem; transition: transform 0.2s; }
+        .reaction:hover { transform: scale(1.2); }
+        .replies-container { margin-top: 15px; padding-right: 65px; border-right: 2px solid var(--border-color); }
+
         @media (max-width: 992px) {
             .navbar-menu, .navbar-actions { display: none; }
             .hamburger-menu { display: block; }
@@ -228,68 +140,47 @@
             .service-sidebar { position: static; margin-top: 30px; }
         }
 
-        /* Embed Mode Styles */
-        body.embed-mode {
-            background-color: transparent;
-            padding: 0;
-            margin: 0;
-        }
-        .embed-mode .main-header,
-        .embed-mode .main-footer,
-        .embed-mode .service-main-content {
-            display: none;
-        }
-        .embed-mode .service-layout {
-            display: block;
-        }
-        .embed-mode .service-sidebar {
-            position: static;
-            max-width: 380px;
-            margin: 0 auto;
-        }
+        /* --- Embed Mode Styles --- */
+        body.embed-mode { background-color: transparent; padding: 0; margin: 0; }
+        .embed-mode .main-header, .embed-mode .main-footer, .embed-mode .service-main-content, .embed-mode .sharing-section, .embed-mode .comments-section { display: none; }
+        .embed-mode .service-layout { display: block; }
+        .embed-mode .service-sidebar { position: static; max-width: 380px; margin: 0 auto; }
+        .embed-mode .service-details-container { margin: 0; padding: 0; }
     </style>
 </head>
 <body>
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
-            </a>
-            <ul class="navbar-menu">
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <ul class="nav-links">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html" class="active">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="track-order.html">تتبع الطلب</a></li>
+                <li><a href="blog.html">المدونة</a></li>
+                <li><a href="prices.html">الأسعار</a></li>
+                <li><a href="payment.html">طرق الدفع</a></li>
+                <li><a href="faq.html">الأسئلة الشائعة</a></li>
             </ul>
-            <div class="navbar-actions">
-                <a href="login.html" class="btn btn-light">تسجيل الدخول</a>
-                <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
-            </div>
+            <div id="navbar-actions" class="navbar-actions"></div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
     <main id="main-content" class="service-details-container">
-        <!-- Loading State -->
-        <div id="loader" class="loading-state">
-            <p>جارٍ تحميل تفاصيل الخدمة...</p>
-        </div>
-        
-        <!-- Error State -->
-        <div id="error-message" class="error-state" style="display: none;">
-             <p>عذراً، لم نتمكن من العثور على الخدمة المطلوبة. قد يكون الرابط غير صحيح أو تمت إزالة الخدمة.</p>
-        </div>
+        <div id="loader" class="loading-state"><p>جارٍ تحميل تفاصيل الخدمة...</p></div>
+        <div id="error-message" class="error-state" style="display: none;"><p>عذراً، لم نتمكن من العثور على الخدمة المطلوبة.</p></div>
 
-        <!-- Service Content (hidden by default) -->
         <div id="service-layout" class="service-layout" style="display: none;">
-            <!-- Main Content -->
             <article class="service-main-content">
                 <h1 id="service-title-main"></h1>
                 <div id="service-long-description" class="service-long-description"></div>
+                
+                <section id="comments-section" class="comments-section">
+                    <h2>التعليقات والآراء</h2>
+                    <div id="comment-form-container"></div>
+                    <div id="comments-list" class="comments-list"><p>جاري تحميل التعليقات...</p></div>
+                </section>
             </article>
 
-            <!-- Sidebar -->
             <aside class="service-sidebar">
                 <div class="sidebar-card">
                     <div id="sidebar-image" class="sidebar-image"></div>
@@ -297,25 +188,15 @@
                         <h2 id="sidebar-title" class="sidebar-title"></h2>
                         <p id="sidebar-description" class="sidebar-description"></p>
                         <div id="sidebar-price" class="sidebar-price"></div>
-                        <a id="order-button" href="#" class="btn btn-primary btn-order">
-                            <i class="fas fa-shopping-cart mr-2"></i> اطلب الخدمة الآن
-                        </a>
+                        <a id="order-button" href="#" class="btn btn-primary btn-order"><i class="fas fa-shopping-cart" style="margin-left: 8px;"></i> اطلب الخدمة الآن</a>
                     </div>
                 </div>
                 <div class="sharing-section">
                     <h3 class="sharing-title">شارك هذه الخدمة</h3>
-                    <div id="social-icons" class="social-icons">
-                        <!-- Social icons will be injected by JS -->
-                    </div>
+                    <div id="social-icons" class="social-icons"></div>
                     <div class="link-actions">
-                        <button id="copy-link-btn">
-                            <i data-lucide="link"></i>
-                            <span>نسخ الرابط</span>
-                        </button>
-                        <button id="embed-btn">
-                            <i data-lucide="code"></i>
-                            <span>تضمين</span>
-                        </button>
+                        <button id="copy-link-btn"><i data-lucide="link"></i><span>نسخ الرابط</span></button>
+                        <button id="embed-btn"><i data-lucide="code"></i><span>تضمين</span></button>
                     </div>
                 </div>
             </aside>
@@ -346,25 +227,25 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
-            <p>تم تصميم الموقع بواسطة <a href="#" target="_blank">HASSAN</a></p>
         </div>
     </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
+            const CONTENTFUL_SPACE_ID = 'b7tga4dgq6jm';
+            const CONTENTFUL_ACCESS_TOKEN = 'q2H03KQQh_NwQkOGr0FqbAdFTB6U8FpUOZ09Zssgzsw';
             const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
-            
-            // Page sections
+
             const loader = document.getElementById('loader');
             const errorMessage = document.getElementById('error-message');
             const serviceLayout = document.getElementById('service-layout');
-            
-            // Main content elements
             const serviceTitleMainEl = document.getElementById('service-title-main');
             const serviceLongDescriptionEl = document.getElementById('service-long-description');
-
-            // Sidebar elements
             const sidebarImageEl = document.getElementById('sidebar-image');
             const sidebarTitleEl = document.getElementById('sidebar-title');
             const sidebarDescriptionEl = document.getElementById('sidebar-description');
@@ -373,55 +254,95 @@
             const socialIconsContainer = document.getElementById('social-icons');
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const embedBtn = document.getElementById('embed-btn');
+            const commentFormContainer = document.getElementById('comment-form-container');
+            const commentsList = document.getElementById('comments-list');
+            let currentServiceId = null;
 
             const urlParams = new URLSearchParams(window.location.search);
             const serviceSlug = urlParams.get('slug');
             const isEmbedMode = urlParams.get('embed') === 'true';
 
-            if (isEmbedMode) {
-                document.body.classList.add('embed-mode');
-            }
+            if (isEmbedMode) document.body.classList.add('embed-mode');
+            if (!serviceSlug) { showError(); return; }
 
-            if (!serviceSlug) {
-                showError();
-                return;
-            }
-
+            // --- ✅ FULLY IMPLEMENTED HELPER FUNCTIONS ---
             function showError() {
-                loader.style.display = 'none';
-                serviceLayout.style.display = 'none';
-                errorMessage.style.display = 'block';
+                if(loader) loader.style.display = 'none';
+                if(serviceLayout) serviceLayout.style.display = 'none';
+                if(errorMessage) errorMessage.style.display = 'block';
             }
-
+            
             function showToast(message) {
                 const toast = document.createElement('div');
                 toast.textContent = message;
-                toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300';
+                toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 z-50 opacity-0 transform translate-y-4';
                 document.body.appendChild(toast);
                 setTimeout(() => {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateY(0)';
+                }, 10);
+                setTimeout(() => {
                     toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(4px)';
                     setTimeout(() => toast.remove(), 300);
-                }, 2000);
+                }, 3000);
             }
 
-            function updateMetaTags(service) {
+            function renderRichText(richText) {
+                let html = '';
+                if (!richText || !richText.content) return '<p>لا تتوفر تفاصيل إضافية لهذه الخدمة.</p>';
+                
+                const renderNode = (node) => {
+                    let text = '';
+                    if (node.nodeType === 'text') {
+                        text = node.value.replace(/\n/g, '<br>');
+                        if (node.marks) {
+                            node.marks.forEach(mark => {
+                                if (mark.type === 'bold') text = `<strong>${text}</strong>`;
+                                if (mark.type === 'italic') text = `<em>${text}</em>`;
+                                if (mark.type === 'underline') text = `<u>${text}</u>`;
+                            });
+                        }
+                    }
+                    return text;
+                };
+
+                richText.content.forEach(node => {
+                    let contentHtml = node.content ? node.content.map(renderNode).join('') : '';
+                    if (node.nodeType === 'paragraph') html += `<p>${contentHtml || '&nbsp;'}</p>`;
+                    else if (node.nodeType.startsWith('heading-')) {
+                        const level = node.nodeType.split('-')[1];
+                        html += `<h${level}>${contentHtml}</h${level}>`;
+                    } else if (node.nodeType === 'unordered-list' || node.nodeType === 'ordered-list') {
+                        const listTag = node.nodeType === 'unordered-list' ? 'ul' : 'ol';
+                        let listItems = '';
+                        node.content.forEach(listItem => {
+                            listItems += `<li>${renderRichText(listItem)}</li>`;
+                        });
+                        html += `<${listTag}>${listItems}</${listTag}>`;
+                    }
+                });
+                return html;
+            }
+
+            function updateMetaTags(service, imageUrl) {
                 document.title = `${service.title} - المكتب الرقمي`;
-                document.querySelector('meta[name="description"]').setAttribute("content", service.description);
+                document.querySelector('meta[name="description"]').setAttribute("content", service.shortDescription);
                 document.querySelector('meta[property="og:title"]').setAttribute("content", service.title);
-                document.querySelector('meta[property="og:description"]').setAttribute("content", service.description);
-                document.querySelector('meta[property="og:image"]').setAttribute("content", service.image_url || 'https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true');
+                document.querySelector('meta[property="og:description"]').setAttribute("content", service.shortDescription);
+                document.querySelector('meta[property="og:image"]').setAttribute("content", imageUrl);
                 document.querySelector('meta[property="og:url"]').setAttribute("content", window.location.href);
             }
 
             function populateSocialLinks(service) {
-                const url = window.location.href.split('?')[0] + `?slug=${service.slug}`; // Clean URL
+                const url = window.location.href.split('?')[0] + `?slug=${service.slug}`;
                 const text = `اكتشف خدمة "${service.title}" على موقع المكتب الرقمي!`;
                 
                 const socialLinks = {
                     whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`,
                     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
                     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
-                    linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(service.title)}&summary=${encodeURIComponent(service.description)}`,
+                    linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(service.title)}&summary=${encodeURIComponent(service.shortDescription)}`,
                     telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`
                 };
 
@@ -434,49 +355,178 @@
                 `;
             }
 
-            async function fetchServiceDetails() {
+            // --- NEW & UPDATED COMMENT FUNCTIONS ---
+            function renderCommentForm(user, parentId = null, container) {
+                const formContainer = container || document.getElementById('comment-form-container');
+                if (user) {
+                    formContainer.innerHTML = `
+                        <form class="comment-form" data-parent-id="${parentId || ''}">
+                            <textarea placeholder="${parentId ? 'أضف ردك...' : 'أضف تعليقك هنا...'}" required rows="3"></textarea>
+                            <div class="comment-form-actions">
+                                <span class="attachment-label"><i class="fas fa-paperclip"></i> إرفاق ملف</span>
+                                <button type="submit" class="btn btn-primary">إرسال</button>
+                            </div>
+                        </form>
+                    `;
+                    formContainer.querySelector('form').addEventListener('submit', handleCommentSubmit);
+                } else if (!parentId) {
+                    formContainer.innerHTML = `<div class="comment-form-login-prompt"><p>يجب عليك <a href="login.html" class="text-blue-600 hover:underline">تسجيل الدخول</a> للمشاركة.</p></div>`;
+                }
+            }
+
+            async function handleCommentSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                const textarea = form.querySelector('textarea');
+                const commentText = textarea.value.trim();
+                const parentId = form.dataset.parentId || null;
+
+                if (!commentText || !currentServiceId) return;
+
+                const user = firebase.auth().currentUser;
+                if (!user) { showToast('خطأ: يجب أن تكون مسجلاً للدخول.'); return; }
+
                 try {
-                    const response = await fetch(`${WORKER_URL}/api/services/slug/${serviceSlug}`);
+                    const idToken = await user.getIdToken();
+                    const response = await fetch(`${WORKER_URL}/api/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+                        body: JSON.stringify({ serviceId: currentServiceId, comment: commentText, parentId: parentId })
+                    });
+                    if (!response.ok) throw new Error('Failed to post comment');
+                    
+                    textarea.value = '';
+                    showToast('شكراً لك! تم نشر تعليقك بنجاح.');
+                    fetchComments(currentServiceId);
+                } catch (error) {
+                    console.error('Error posting comment:', error);
+                    showToast('عذراً، حدث خطأ أثناء نشر التعليق.');
+                }
+            }
+
+            async function fetchComments(serviceId) {
+                try {
+                    const response = await fetch(`${WORKER_URL}/api/comments?serviceId=${serviceId}`);
+                    if (!response.ok) throw new Error('Failed to fetch comments');
+                    const comments = await response.json();
+                    renderComments(comments);
+                } catch (error) {
+                    console.error('Error fetching comments:', error);
+                    document.getElementById('comments-list').innerHTML = '<p>لا توجد تعليقات حتى الآن. كن أول من يعلق!</p>';
+                }
+            }
+            
+            function renderComments(comments, container) {
+                const listContainer = container || document.getElementById('comments-list');
+                if (!container) listContainer.innerHTML = '';
+
+                if (!comments || comments.length === 0) {
+                    if (!container) listContainer.innerHTML = '<p>لا توجد تعليقات حتى الآن. كن أول من يعلق!</p>';
+                    return;
+                }
+
+                comments.forEach(comment => {
+                    const commentEl = document.createElement('div');
+                    commentEl.className = 'comment';
+                    const formattedText = comment.text.replace(/\n/g, '<br>');
+
+                    commentEl.innerHTML = `
+                        <div class="comment-avatar">
+                            <img src="${comment.avatar || 'https://placehold.co/50x50/e9ecef/343a40?text=U'}" alt="${comment.author}">
+                        </div>
+                        <div class="comment-body">
+                            <div class="comment-header">
+                                <span class="comment-author">${comment.author}</span>
+                                <span class="comment-date">${new Date(comment.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                            </div>
+                            <p class="comment-text">${formattedText}</p>
+                            <div class="comment-actions">
+                                <button class="reply-btn" data-comment-id="${comment.id}"><i class="fas fa-reply"></i> رد</button>
+                                <div class="reactions">
+                                    <span class="react-btn" data-reaction="�">👍 0</span>
+                                    <span class="react-btn" data-reaction="❤️">❤️ 0</span>
+                                    <span class="react-btn" data-reaction="😂">😂 0</span>
+                                </div>
+                            </div>
+                            <div class="replies-container" id="replies-${comment.id}"></div>
+                        </div>
+                    `;
+                    listContainer.appendChild(commentEl);
+
+                    if (comment.replies && comment.replies.length > 0) {
+                        const repliesContainer = commentEl.querySelector(`#replies-${comment.id}`);
+                        renderComments(comment.replies, repliesContainer);
+                    }
+                });
+            }
+
+            document.getElementById('comments-list').addEventListener('click', (e) => {
+                const replyBtn = e.target.closest('.reply-btn');
+                if (replyBtn) {
+                    const commentId = replyBtn.dataset.commentId;
+                    const repliesContainer = document.getElementById(`replies-${commentId}`);
+                    if (repliesContainer.querySelector('form')) {
+                        repliesContainer.innerHTML = '';
+                    } else {
+                        renderCommentForm(firebase.auth().currentUser, commentId, repliesContainer);
+                    }
+                }
+                
+                const reactBtn = e.target.closest('.react-btn');
+                if (reactBtn) {
+                    const currentCount = parseInt(reactBtn.textContent.split(' ')[1]);
+                    reactBtn.textContent = `${reactBtn.dataset.reaction} ${currentCount + 1}`;
+                    showToast('شكراً لتفاعلك!');
+                }
+            });
+
+            async function fetchServiceDetails() {
+                const url = `https://cdn.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/master/entries?access_token=${CONTENTFUL_ACCESS_TOKEN}&content_type=service&fields.slug=${serviceSlug}&include=1`;
+
+                try {
+                    const response = await fetch(url);
                     if (!response.ok) throw new Error('Service not found');
-                    const service = await response.json();
+                    const data = await response.json();
+                    if (data.items.length === 0) throw new Error('No service found with that slug');
+
+                    const serviceItem = data.items[0];
+                    currentServiceId = serviceItem.sys.id;
+                    const serviceData = serviceItem.fields;
                     
-                    updateMetaTags(service);
+                    const assets = data.includes?.Asset || [];
+                    let imageUrl = 'https://placehold.co/600x400/0056b3/ffffff?text=خدمة';
+                    if (serviceData.image) {
+                        const imageAsset = assets.find(asset => asset.sys.id === serviceData.image.sys.id);
+                        if (imageAsset) imageUrl = `https:${imageAsset.fields.file.url}`;
+                    }
 
-                    // Populate main content
-                    serviceTitleMainEl.textContent = service.title;
-                    const longDescriptionHtml = (service.long_description || service.description)
-                        .replace(/\n/g, '<br>');
-                    serviceLongDescriptionEl.innerHTML = `<p>${longDescriptionHtml}</p>`;
-
-                    // Populate sidebar
-                    sidebarImageEl.style.backgroundImage = `url('${service.image_url || 'https://placehold.co/600x400/0056b3/ffffff?text=خدمة'}')`;
-                    sidebarTitleEl.textContent = service.title;
-                    sidebarDescriptionEl.textContent = service.description;
-                    sidebarPriceEl.innerHTML = `${service.price} <span>درهم</span>`;
+                    updateMetaTags(serviceData, imageUrl);
+                    serviceTitleMainEl.textContent = serviceData.title;
+                    serviceLongDescriptionEl.innerHTML = renderRichText(serviceData.details);
+                    sidebarImageEl.style.backgroundImage = `url('${imageUrl}')`;
+                    sidebarTitleEl.textContent = serviceData.title;
+                    sidebarDescriptionEl.textContent = serviceData.shortDescription;
+                    sidebarPriceEl.innerHTML = `${serviceData.price} <span>درهم</span>`;
+                    orderButton.href = `payment-gateway.html?service=${encodeURIComponent(serviceData.title)}&price=${serviceData.price}`;
+                    populateSocialLinks(serviceData);
                     
-                    orderButton.href = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${service.price}`;
-
-                    // Populate sharing tools
-                    populateSocialLinks(service);
-
-                    copyLinkBtn.addEventListener('click', () => {
-                        const cleanUrl = window.location.href.split('?')[0] + `?slug=${service.slug}`;
-                        navigator.clipboard.writeText(cleanUrl).then(() => {
-                            showToast('تم نسخ الرابط بنجاح!');
-                        });
+                    copyLinkBtn.addEventListener('click', () => { 
+                        const cleanUrl = window.location.href.split('?')[0] + `?slug=${serviceData.slug}`;
+                        navigator.clipboard.writeText(cleanUrl).then(() => showToast('تم نسخ الرابط بنجاح!'));
+                    });
+                    embedBtn.addEventListener('click', () => { 
+                        const embedUrl = window.location.href.split('?')[0] + `?slug=${serviceData.slug}&embed=true`;
+                        const embedCode = `<iframe src="${embedUrl}" width="100%" height="550" style="border:1px solid #ddd; border-radius: 12px; max-width: 380px;"></iframe>`;
+                        navigator.clipboard.writeText(embedCode).then(() => showToast('تم نسخ كود التضمين!'));
                     });
 
-                    embedBtn.addEventListener('click', () => {
-                        const embedUrl = window.location.href.split('?')[0] + `?slug=${service.slug}&embed=true`;
-                        const embedCode = `<iframe src="${embedUrl}" width="100%" height="600" style="border:1px solid #ddd; border-radius: 12px; max-width: 380px;"></iframe>`;
-                        navigator.clipboard.writeText(embedCode).then(() => {
-                            showToast('تم نسخ كود التضمين!');
-                        });
-                    });
-
-                    // Show content
                     loader.style.display = 'none';
                     serviceLayout.style.display = 'grid';
+
+                    fetchComments(currentServiceId);
+                    firebase.auth().onAuthStateChanged(user => {
+                        renderCommentForm(user);
+                    });
 
                 } catch (error) {
                     console.error('Error fetching service details:', error);
@@ -489,3 +539,4 @@
     </script>
 </body>
 </html>
+�

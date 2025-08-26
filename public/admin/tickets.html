@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إدارة تذاكر الدعم - لوحة التحكم</title>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .sidebar-link.active .lucide { color: #4f46e5; }
+        .ticket-item.active { background-color: #eef2ff; border-right-color: #4f46e5; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
+                </a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
+                </a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg active">
+                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i><span>تذاكر الدعم</span>
+                </a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b h-20 flex items-center justify-between px-8">
+                <h1 class="text-xl font-bold text-gray-800">إدارة تذاكر الدعم</h1>
+            </header>
+
+            <main class="flex-1 flex overflow-hidden">
+                <!-- Tickets List -->
+                <div class="w-1/3 bg-white border-l border-gray-200 overflow-y-auto">
+                    <div class="p-4 border-b">
+                        <input type="text" id="search-tickets" placeholder="ابحث في التذاكر..." class="w-full bg-gray-100 border-transparent rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div id="tickets-list-container">
+                        <!-- Loading state -->
+                        <p class="p-4 text-center text-gray-500">جاري تحميل التذاكر...</p>
+                    </div>
+                </div>
+
+                <!-- Ticket Viewer -->
+                <div id="ticket-viewer" class="flex-1 p-8 overflow-y-auto">
+                    <div id="viewer-default-state" class="flex flex-col items-center justify-center h-full text-gray-500">
+                        <i data-lucide="mail-question" class="w-24 h-24 mb-4"></i>
+                        <h2 class="text-xl font-bold">اختر تذكرة لعرضها</h2>
+                        <p>سيتم عرض تفاصيل الرسالة هنا.</p>
+                    </div>
+                    <div id="viewer-content-state" class="hidden">
+                        <!-- Ticket details will be injected here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
+
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const ticketsListContainer = document.getElementById('tickets-list-container');
+            const viewerDefaultState = document.getElementById('viewer-default-state');
+            const viewerContentState = document.getElementById('viewer-content-state');
+            
+            let allTickets = [];
+
+            const ticketStatuses = ['مفتوحة', 'قيد المعالجة', 'مغلقة'];
+
+            async function fetchTickets() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('tickets')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    allTickets = data;
+                    renderTicketsList(allTickets);
+                } catch (error) {
+                    console.error("Error fetching tickets:", error);
+                    ticketsListContainer.innerHTML = '<p class="p-4 text-center text-red-600">فشل تحميل التذاكر.</p>';
+                }
+            }
+
+            function renderTicketsList(tickets) {
+                ticketsListContainer.innerHTML = '';
+                if (tickets.length === 0) {
+                    ticketsListContainer.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد تذاكر حاليًا.</p>';
+                    return;
+                }
+
+                tickets.forEach(ticket => {
+                    const ticketItem = document.createElement('div');
+                    ticketItem.className = 'ticket-item p-4 border-b border-r-4 border-transparent cursor-pointer hover:bg-gray-50';
+                    ticketItem.dataset.ticketId = ticket.id;
+                    
+                    const formattedDate = new Date(ticket.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short' });
+
+                    ticketItem.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="font-bold text-gray-800 truncate">${ticket.customer_name}</h3>
+                            <span class="text-xs text-gray-500">${formattedDate}</span>
+                        </div>
+                        <p class="text-sm text-gray-600 truncate">${ticket.subject || 'بدون موضوع'}</p>
+                    `;
+                    
+                    ticketItem.addEventListener('click', () => displayTicketDetails(ticket.id));
+                    ticketsListContainer.appendChild(ticketItem);
+                });
+            }
+
+            function displayTicketDetails(ticketId) {
+                // Highlight active ticket in the list
+                document.querySelectorAll('.ticket-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.ticketId == ticketId);
+                });
+
+                const ticket = allTickets.find(t => t.id == ticketId);
+                if (!ticket) return;
+
+                viewerDefaultState.style.display = 'none';
+                viewerContentState.style.display = 'block';
+                
+                const statusOptions = ticketStatuses.map(status => 
+                    `<option value="${status}" ${ticket.status === status ? 'selected' : ''}>${status}</option>`
+                ).join('');
+
+                viewerContentState.innerHTML = `
+                    <div class="pb-4 border-b mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900">${ticket.subject || 'بدون موضوع'}</h2>
+                        <div class="text-sm text-gray-500 mt-2">
+                            <span>من: <strong>${ticket.customer_name}</strong> (${ticket.email})</span> | 
+                            <span>رقم التذكرة: <strong>${ticket.public_ticket_id}</strong></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center bg-gray-100 p-3 rounded-lg mb-6">
+                        <span class="font-semibold">حالة التذكرة:</span>
+                        <select id="status-updater" data-ticket-id="${ticket.id}" class="bg-white border border-gray-300 rounded-lg p-2 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            ${statusOptions}
+                        </select>
+                    </div>
+                    <div class="prose max-w-none">
+                        <p>${ticket.message.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+
+                document.getElementById('status-updater').addEventListener('change', handleStatusChange);
+            }
+
+            async function handleStatusChange(event) {
+                const newStatus = event.target.value;
+                const ticketId = event.target.dataset.ticketId;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('tickets')
+                        .update({ status: newStatus })
+                        .eq('id', ticketId);
+                    
+                    if (error) throw error;
+                    
+                    // Update local data and re-render (optional, for immediate feedback)
+                    const ticketIndex = allTickets.findIndex(t => t.id == ticketId);
+                    if (ticketIndex > -1) {
+                        allTickets[ticketIndex].status = newStatus;
+                    }
+
+                } catch (error) {
+                    console.error("Error updating ticket status:", error);
+                    alert('فشل تحديث حالة التذكرة.');
+                }
+            }
+
+            fetchTickets();
+        });
+    </script>
+</body>
+</html>

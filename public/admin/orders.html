@@ -3,387 +3,223 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>إدارة الطلبات - لوحة تحكم خدماتك</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="../auth.js"></script>
+    <title>إدارة الطلبات - لوحة التحكم</title>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         body { font-family: 'Cairo', sans-serif; }
+        .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .sidebar-link.active .lucide { color: #4f46e5; }
+        /* For custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        .table-cell-content { max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        #order-details-modal, #confirmation-modal { transition: opacity 0.3s ease-in-out; }
-        .modal-image { max-height: 150px; border-radius: 8px; border: 1px solid #ddd; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
-        .modal-image:hover { transform: scale(1.05); }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 
-    <!-- Password Protection Gate -->
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
-        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-auto text-center">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800">بوابة الحماية - لوحة تحكم خدماتك</h2>
-            <form id="password-form">
-                <input type="password" id="password-input" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center" placeholder="********">
-                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">كلمة المرور غير صحيحة.</p>
-                <button type="submit" class="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">دخول</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Main Dashboard Content -->
-    <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
+    <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
-        <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md"><h1 class="text-2xl font-bold text-indigo-600">لوحة تحكم خدماتك</h1></div>
-            <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>لوحة التحكم</a>
-                <a href="orders.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
-                <a href="manage-blog.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i>المدونة</a>
-                <a href="manage-services.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i>الخدمات</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>الدعم الفني</a>
-                <a href="manage-reviews.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="star" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
-                <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
+        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
+                </a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg active">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i><span>الطلبات</span>
+                </a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
+                </a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
+                </a>
             </nav>
         </aside>
 
-        <!-- Main content area -->
-        <div class="flex flex-col flex-1 overflow-y-auto">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md"><h2 class="text-xl font-semibold text-gray-800">إدارة الطلبات</h2><div class="flex items-center space-x-4"><span class="font-semibold">مرحبا بك</span><div class="w-10 h-10 bg-indigo-200 rounded-full"></div></div></header>
-            <main class="p-6 md:p-8">
-                <div id="message-container" class="mb-4"></div>
-                <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div class="relative w-full md:w-1/3">
-                            <input type="text" id="search-input" placeholder="بحث بالاسم، البريد الإلكتروني، أو رقم الطلب..." class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
-                        </div>
-                        <div id="filter-buttons" class="flex items-center gap-2 flex-wrap">
-                            <button data-status="all" class="filter-btn bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">الكل</button>
-                            <button data-status="جاري المعالجة" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">جاري المعالجة</button>
-                            <button data-status="مكتمل" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">مكتمل</button>
-                            <button data-status="ملغي" class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">ملغي</button>
-                        </div>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b h-20 flex items-center justify-between px-8">
+                <h1 class="text-xl font-bold text-gray-800">إدارة الطلبات</h1>
+                <!-- Header actions can go here -->
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-8">
+                <!-- Filters and Search -->
+                <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex items-center justify-between gap-4">
+                    <div class="relative flex-grow">
+                        <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                        <input type="text" id="search-input" placeholder="ابحث برقم الطلب أو اسم العميل..." class="w-full bg-gray-100 border-transparent rounded-lg py-2 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="status-filter" class="font-semibold text-gray-600">الحالة:</label>
+                        <select id="status-filter" class="bg-gray-100 border-transparent rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="all">الكل</option>
+                            <option value="قيد المراجعة">قيد المراجعة</option>
+                            <option value="جاري التحقق من الدفع">جاري التحقق من الدفع</option>
+                            <option value="تم التحقق من الدفع">تم التحقق من الدفع</option>
+                            <option value="جاري المعالجة">جاري المعالجة</option>
+                            <option value="مكتمل">مكتمل</option>
+                            <option value="ملغي">ملغي</option>
+                        </select>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md">
-                    <div class="p-4 border-b flex justify-between items-center"><h3 class="text-lg font-semibold text-gray-800">قائمة الطلبات</h3><p id="results-count" class="text-sm text-gray-500"></p></div>
-                    <div class="overflow-x-auto"><table class="w-full"><thead><tr class="text-right text-sm font-semibold text-gray-500 bg-gray-50"><th class="p-4">رقم الطلب</th><th class="p-4">اسم العميل</th><th class="p-4">الخدمة</th><th class="p-4">حالة الدفع</th><th class="p-4">حالة الطلب</th><th class="p-4">تاريخ الطلب</th><th class="p-4">إجراءات</th></tr></thead><tbody id="orders-body" class="divide-y"><tr><td colspan="7" class="p-10 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin text-indigo-600 inline-block"></i></td></tr></tbody></table></div>
+
+                <!-- Orders Table -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-4 text-right font-semibold text-gray-600">رقم الطلب</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">العميل</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">الخدمة</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">التاريخ</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body" class="divide-y divide-gray-100">
+                                <!-- Loading state -->
+                                <tr><td colspan="5" class="p-8 text-center text-gray-500">جاري تحميل الطلبات...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- Order Details Modal -->
-    <div id="order-details-modal" class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <header class="p-4 border-b flex justify-between items-center"><h3 class="text-xl font-bold text-gray-800">تفاصيل الطلب: <span id="modal-order-id" class="text-indigo-600"></span></h3><button id="modal-close-btn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button></header>
-            <section class="p-6 overflow-y-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    <!-- User Info -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-2">معلومات العميل</h4>
-                        <div><p class="font-semibold text-gray-500">اسم العميل</p><p id="modal-customer-name" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">البريد الإلكتروني</p><p id="modal-email" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">رقم الهاتف</p><p id="modal-phone" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">طريقة تسجيل الدخول</p><p id="modal-login-method" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">تاريخ إنشاء الحساب</p><p id="modal-account-date" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">الموقع الجغرافي</p><p id="modal-location" class="text-gray-800"></p></div>
-                    </div>
-                    <!-- Order Info -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-2">معلومات الطلب</h4>
-                        <div><p class="font-semibold text-gray-500">الخدمة المطلوبة</p><p id="modal-service-name" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">تاريخ الطلب</p><p id="modal-order-date" class="text-gray-800"></p></div>
-                        <div><p class="font-semibold text-gray-500">السعر</p><p id="modal-price" class="text-gray-800 font-bold"></p></div>
-                        <div><p class="font-semibold text-gray-500">طريقة الدفع</p><p id="modal-payment-method" class="text-gray-800"></p></div>
-                        <div class="md:col-span-2"><p class="font-semibold text-gray-500">تفاصيل الخدمة</p><p id="modal-service-details" class="text-gray-800 bg-gray-50 p-3 rounded-md min-h-[50px]"></p></div>
-                    </div>
-                    <!-- Attachments -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-bold text-gray-800 border-b pb-2 mb-2">المرفقات</h4>
-                        <div>
-                            <p class="font-semibold text-gray-500">إيصال الدفع</p>
-                            <div id="modal-receipt-container" class="mt-2"><span class="text-gray-500">لا يوجد إيصال.</span></div>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-500">صورة الخدمة</p>
-                            <div id="modal-service-image-container" class="mt-2"><span class="text-gray-500">لا توجد صورة.</span></div>
-                        </div>
-                    </div>
-                </div>
-                <hr class="my-6">
-                <!-- Status Management -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Payment Status -->
-                    <div>
-                        <h4 class="font-bold text-gray-800 mb-2">تغيير حالة الدفع</h4>
-                        <div class="flex items-center gap-4">
-                            <select id="modal-payment-status-select" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring-indigo-200"></select>
-                            <button id="modal-save-payment-status" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">حفظ</button>
-                        </div>
-                        <div id="payment-cancellation-reason-container" class="mt-4 hidden">
-                            <label for="payment-cancellation-reason" class="font-semibold text-gray-500">سبب إلغاء الدفع</label>
-                            <textarea id="payment-cancellation-reason" rows="2" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" placeholder="اكتب سبب الإلغاء هنا..."></textarea>
-                        </div>
-                    </div>
-                    <!-- Order Status -->
-                    <div>
-                        <h4 class="font-bold text-gray-800 mb-2">تغيير حالة الطلب</h4>
-                        <div class="flex items-center gap-4">
-                            <select id="modal-order-status-select" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring-indigo-200"></select>
-                            <button id="modal-save-order-status" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">حفظ</button>
-                        </div>
-                        <div id="order-cancellation-reason-container" class="mt-4 hidden">
-                            <label for="order-cancellation-reason" class="font-semibold text-gray-500">سبب إلغاء الطلب</label>
-                            <textarea id="order-cancellation-reason" rows="2" class="w-full mt-1 border-gray-300 rounded-md shadow-sm" placeholder="اكتب سبب الإلغاء هنا..."></textarea>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="admin-auth.js"></script>
     <script>
-        function initializePage() {
+        document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
 
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev/orders";
-            let allOrders = [];
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const tableBody = document.getElementById('orders-table-body');
             const searchInput = document.getElementById('search-input');
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const resultsCount = document.getElementById('results-count');
-            const modal = document.getElementById('order-details-modal');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const statusFilter = document.getElementById('status-filter');
+            let allOrders = [];
 
-            const statusTranslations = {
-                'in progress': 'جاري المعالجة',
-                'completed': 'مكتمل',
-                'cancelled': 'ملغي',
-                'payment verified': 'تم التحقق من الدفع',
-                'payment processing': 'قيد مراجعة الدفع',
-                'payment cancelled': 'تم الغاء الدفع'
-            };
-            
-            const reverseStatusTranslations = Object.fromEntries(
-                Object.entries(statusTranslations).map(([key, value]) => [value, key])
-            );
-
-            const orderStatusInfo = {
-                "جاري المعالجة": { color: "bg-blue-100 text-blue-800", icon: "play-circle" },
-                "مكتمل": { color: "bg-green-100 text-green-800", icon: "check-circle-2" },
-                "ملغي": { color: "bg-red-100 text-red-800", icon: "x-circle" },
-                "default": { color: "bg-gray-100 text-gray-800", icon: "help-circle" }
-            };
-            const paymentStatusInfo = {
-                "قيد مراجعة الدفع": { color: "bg-yellow-100 text-yellow-800", icon: "loader-2" },
-                "تم التحقق من الدفع": { color: "bg-green-100 text-green-800", icon: "shield-check" },
-                "تم الغاء الدفع": { color: "bg-red-100 text-red-800", icon: "shield-x" },
-                "default": { color: "bg-gray-100 text-gray-800", icon: "help-circle" }
-            };
-
-            const orderStatusOptions = ["جاري المعالجة", "مكتمل", "ملغي"];
-            const paymentStatusOptions = ["قيد مراجعة الدفع", "تم التحقق من الدفع", "تم الغاء الدفع"];
+            const orderStatuses = [
+                'قيد المراجعة',
+                'جاري التحقق من الدفع',
+                'تم التحقق من الدفع',
+                'جاري المعالجة',
+                'مكتمل',
+                'ملغي'
+            ];
 
             async function fetchOrders() {
                 try {
-                    const response = await fetch(API_URL);
-                    if (!response.ok) throw new Error(`خطأ في جلب الطلبات (Status: ${response.status})`);
-                    allOrders = await response.json();
-                    if (!Array.isArray(allOrders)) throw new Error("البيانات المستلمة غير صحيحة.");
-                    filterAndRender();
+                    const { data, error } = await supabaseClient
+                        .from('orders')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    allOrders = data;
+                    renderTable(allOrders);
                 } catch (error) {
-                    document.getElementById('orders-body').innerHTML = `<tr><td colspan="7" class="p-10 text-center text-red-500">${error.message}</td></tr>`;
+                    console.error("Error fetching orders:", error);
+                    tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-600">فشل تحميل الطلبات.</td></tr>';
                 }
             }
 
-            function translateStatus(status) {
-                if (!status) return null;
-                return statusTranslations[status.toLowerCase()] || status;
-            }
-
-            function renderOrders(ordersToRender) {
-                const tbody = document.getElementById('orders-body');
-                tbody.innerHTML = '';
-                resultsCount.textContent = `(${ordersToRender.length}) طلب`;
-                if (ordersToRender.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-10 text-center text-gray-500">لا توجد طلبات مطابقة.</td></tr>`; return;
-                }
-                ordersToRender.forEach(order => {
-                    const row = document.createElement('tr');
-                    const translatedOrderStatus = translateStatus(order.status) || 'غير محدد';
-                    const translatedPaymentStatus = translateStatus(order.paymentStatus) || 'غير محدد';
-                    
-                    const currentOrderStatusInfo = orderStatusInfo[translatedOrderStatus] || orderStatusInfo.default;
-                    const currentPaymentStatusInfo = paymentStatusInfo[translatedPaymentStatus] || paymentStatusInfo.default;
-                    
-                    row.innerHTML = `
-                        <td class="p-4 text-sm font-semibold"><button onclick="window.showOrderDetails('${order.id}')" class="text-indigo-600 hover:underline">${order.id}</button></td>
-                        <td class="p-4 text-sm text-gray-700"><div class="table-cell-content" title="${order.email}">${order.customerName}</div></td>
-                        <td class="p-4 text-sm text-gray-500"><div class="table-cell-content" title="${order.serviceName}">${order.serviceName}</div></td>
-                        <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full flex items-center ${currentPaymentStatusInfo.color}"><i data-lucide="${currentPaymentStatusInfo.icon}" class="w-4 h-4 ml-1"></i>${translatedPaymentStatus}</span></td>
-                        <td class="p-4 text-xs"><span class="px-2 py-1 font-semibold leading-tight rounded-full flex items-center ${currentOrderStatusInfo.color}"><i data-lucide="${currentOrderStatusInfo.icon}" class="w-4 h-4 ml-1"></i>${translatedOrderStatus}</span></td>
-                        <td class="p-4 text-sm text-gray-500">${new Date(order.createdAt).toLocaleString('en-GB')}</td>
-                        <td class="p-4"><button onclick="window.deleteOrder('${order.id}')" class="p-2 text-red-500 bg-red-100 rounded-full hover:bg-red-200"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>`;
-                    tbody.appendChild(row);
-                });
-                lucide.createIcons();
-            }
-
-            function filterAndRender() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const activeFilter = document.querySelector('.filter-btn.bg-indigo-600').dataset.status;
-                let filteredOrders = allOrders;
-                if (activeFilter !== 'all') {
-                    filteredOrders = filteredOrders.filter(o => translateStatus(o.status) === activeFilter);
-                }
-                if (searchTerm) {
-                    filteredOrders = filteredOrders.filter(o => 
-                        o.customerName?.toLowerCase().includes(searchTerm) || 
-                        o.email?.toLowerCase().includes(searchTerm) || 
-                        o.id?.toLowerCase().includes(searchTerm)
-                    );
-                }
-                renderOrders(filteredOrders);
-            }
-
-            window.showOrderDetails = (orderId) => {
-                const order = allOrders.find(o => o.id === orderId);
-                if (!order) {
-                    showMessage('لم يتم العثور على الطلب.', 'error');
+            function renderTable(orders) {
+                tableBody.innerHTML = '';
+                if (orders.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">لا توجد طلبات تطابق البحث.</td></tr>';
                     return;
                 }
 
-                document.getElementById('modal-order-id').textContent = order.id;
-                document.getElementById('modal-customer-name').textContent = order.customerName || 'غير متوفر';
-                document.getElementById('modal-email').textContent = order.email || 'غير متوفر';
-                document.getElementById('modal-phone').textContent = order.phone || 'غير متوفر';
-                document.getElementById('modal-login-method').textContent = order.loginMethod || 'غير محدد';
-                document.getElementById('modal-account-date').textContent = order.accountDate ? new Date(order.accountDate).toLocaleString('en-GB') : 'غير متوفر';
-                document.getElementById('modal-location').textContent = order.location || 'غير متوفر';
-                document.getElementById('modal-order-date').textContent = new Date(order.createdAt).toLocaleString('en-GB');
-                document.getElementById('modal-service-name').textContent = order.serviceName || 'غير متوفر';
-                document.getElementById('modal-price').textContent = `${order.price || 0} درهم`;
-                document.getElementById('modal-payment-method').textContent = order.paymentMethod || 'غير متوفر';
-                document.getElementById('modal-service-details').textContent = order.serviceDetails || 'لا توجد تفاصيل.';
-
-                const receiptContainer = document.getElementById('modal-receipt-container');
-                receiptContainer.innerHTML = order.receiptUrl ? `<a href="${order.receiptUrl}" target="_blank"><img src="${order.receiptUrl}" class="modal-image" alt="إيصال الدفع"></a>` : '<span class="text-gray-500">لا يوجد إيصال.</span>';
-                
-                const serviceImageContainer = document.getElementById('modal-service-image-container');
-                serviceImageContainer.innerHTML = order.serviceImageUrl ? `<a href="${order.serviceImageUrl}" target="_blank"><img src="${order.serviceImageUrl}" class="modal-image" alt="صورة الخدمة"></a>` : '<span class="text-gray-500">لا توجد صورة.</span>';
-
-                const paymentStatusSelect = document.getElementById('modal-payment-status-select');
-                const paymentCancellationContainer = document.getElementById('payment-cancellation-reason-container');
-                paymentStatusSelect.innerHTML = paymentStatusOptions.map(opt => `<option value="${opt}" ${translateStatus(order.paymentStatus) === opt ? 'selected' : ''}>${opt}</option>`).join('');
-                paymentStatusSelect.onchange = () => paymentCancellationContainer.classList.toggle('hidden', paymentStatusSelect.value !== 'تم الغاء الدفع');
-                paymentStatusSelect.onchange();
-                document.getElementById('modal-save-payment-status').onclick = () => updateStatus(order.id, 'payment');
-
-                const orderStatusSelect = document.getElementById('modal-order-status-select');
-                const orderCancellationContainer = document.getElementById('order-cancellation-reason-container');
-                orderStatusSelect.innerHTML = orderStatusOptions.map(opt => `<option value="${opt}" ${translateStatus(order.status) === opt ? 'selected' : ''}>${opt}</option>`).join('');
-                orderStatusSelect.onchange = () => orderCancellationContainer.classList.toggle('hidden', orderStatusSelect.value !== 'ملغي');
-                orderStatusSelect.onchange();
-                document.getElementById('modal-save-order-status').onclick = () => updateStatus(order.id, 'order');
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            };
-
-            modalCloseBtn.onclick = () => modal.classList.add('hidden');
-
-            window.updateStatus = async (id, type) => {
-                let payload = {};
-                if (type === 'payment') {
-                    const newArabicStatus = document.getElementById('modal-payment-status-select').value;
-                    // **FIX:** Send the key as 'status' for payment updates as well
-                    payload.status = reverseStatusTranslations[newArabicStatus] || newArabicStatus;
-                    payload.updateType = 'payment'; // Inform the backend what to update
-                    if (newArabicStatus === 'تم الغاء الدفع') {
-                        payload.paymentCancellationReason = document.getElementById('payment-cancellation-reason').value;
-                    }
-                } else {
-                    const newArabicStatus = document.getElementById('modal-order-status-select').value;
-                    payload.status = reverseStatusTranslations[newArabicStatus] || newArabicStatus;
-                    payload.updateType = 'order'; // Inform the backend what to update
-                    if (newArabicStatus === 'ملغي') {
-                        payload.cancellationReason = document.getElementById('order-cancellation-reason').value;
-                    }
-                }
-
-                try {
-                    const response = await fetch(`${API_URL}/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({ message: 'فشل تحديث الحالة.' }));
-                        throw new Error(errorData.message);
-                    }
+                orders.forEach(order => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50';
                     
-                    showMessage('تم تحديث الحالة بنجاح.', 'success');
-                    modal.classList.add('hidden');
-                    await fetchOrders();
-                } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
-                }
-            };
+                    const formattedDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short', year: 'numeric' });
 
-            window.deleteOrder = async (id) => {
-                if (!await showConfirmationModal("هل أنت متأكد من حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.")) return;
+                    // Create status dropdown
+                    const statusOptions = orderStatuses.map(status => 
+                        `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`
+                    ).join('');
+                    
+                    const statusDropdown = `<select data-order-id="${order.id}" class="status-dropdown bg-transparent font-semibold border-none focus:ring-0">
+                        ${statusOptions}
+                    </select>`;
+
+                    row.innerHTML = `
+                        <td class="p-4 font-semibold text-indigo-600">${order.public_order_id}</td>
+                        <td class="p-4">${order.customer_name}</td>
+                        <td class="p-4 text-gray-600">${order.service_name}</td>
+                        <td class="p-4 text-gray-600">${formattedDate}</td>
+                        <td class="p-4">${statusDropdown}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Add event listeners to the new dropdowns
+                document.querySelectorAll('.status-dropdown').forEach(dropdown => {
+                    dropdown.addEventListener('change', handleStatusChange);
+                });
+            }
+
+            async function handleStatusChange(event) {
+                const newStatus = event.target.value;
+                const orderId = event.target.dataset.orderId;
+
                 try {
-                    const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-                    if (!response.ok) throw new Error('حدث خطأ أثناء حذف الطلب.');
-                    showMessage('تم حذف الطلب بنجاح.', 'success');
-                    await fetchOrders();
+                    const { error } = await supabaseClient
+                        .from('orders')
+                        .update({ status: newStatus })
+                        .eq('id', orderId);
+                    
+                    if (error) throw error;
+                    
+                    // Optional: Add a visual confirmation
+                    event.target.style.color = '#198754';
+                    setTimeout(() => { event.target.style.color = ''; }, 1500);
+
                 } catch (error) {
-                    showMessage(`خطأ: ${error.message}`, 'error');
+                    console.error("Error updating status:", error);
+                    alert('فشل تحديث حالة الطلب.');
                 }
-            };
-
-            function showMessage(message, type = 'success') {
-                const container = document.getElementById('message-container');
-                const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
-                container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
-                setTimeout(() => container.innerHTML = '', 4000);
             }
 
-            function showConfirmationModal(message) {
-                return new Promise(resolve => {
-                    const modalHtml = `<div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto"><h3 class="text-lg font-bold text-gray-800 mb-4">${message}</h3><div class="flex justify-end gap-4"><button id="confirm-cancel" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">إلغاء</button><button id="confirm-ok" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">تأكيد الحذف</button></div></div></div>`;
-                    document.body.insertAdjacentHTML('beforeend', modalHtml);
-                    const modalEl = document.getElementById('confirmation-modal');
-                    document.getElementById('confirm-ok').onclick = () => { modalEl.remove(); resolve(true); };
-                    document.getElementById('confirm-cancel').onclick = () => { modalEl.remove(); resolve(false); };
+            function filterAndSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedStatus = statusFilter.value;
+
+                const filteredOrders = allOrders.filter(order => {
+                    const matchesSearch = order.public_order_id.toLowerCase().includes(searchTerm) ||
+                                          order.customer_name.toLowerCase().includes(searchTerm);
+                    const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
+                    return matchesSearch && matchesStatus;
                 });
+                renderTable(filteredOrders);
             }
 
-            searchInput.addEventListener('input', filterAndRender);
-            filterButtons.forEach(button => button.addEventListener('click', () => {
-                filterButtons.forEach(btn => {
-                    btn.classList.replace('bg-indigo-600', 'bg-gray-200');
-                    btn.classList.replace('text-white', 'text-gray-700');
-                });
-                button.classList.replace('bg-gray-200', 'bg-indigo-600');
-                button.classList.add('text-white');
-                filterAndRender();
-            }));
+            searchInput.addEventListener('input', filterAndSearch);
+            statusFilter.addEventListener('change', filterAndSearch);
 
             fetchOrders();
-        }
-        window.onload = initializePage;
+        });
     </script>
 </body>
 </html>

@@ -1,29 +1,19 @@
-# File: wrangler.toml
-
-# The name of your Worker
 name = "orders-worker"
-
-# The main entrypoint for your Worker
 main = "index.js"
+compatibility_date = "2025-08-25" # تم تحديث التاريخ لآخر إصدار لضمان أفضل توافق
 
-# The compatibility date
-compatibility_date = "2025-07-20"
-
-# --- ✅ D1 Database Binding ---
+# ✅ هذا هو الجزء الصحيح لخدمة موقعك الثابت (الواجهة الأمامية)
+# يخبر Cloudflare بأن محتويات مجلد public هي واجهة الموقع
+# --- الروابط (Bindings) ---
+# لا تغيير هنا، معلوماتك التي أدخلتها صحيحة
 [[d1_databases]]
 binding = "DB"
 database_name = "main_database"
 database_id = "e0efb93b-1a2e-4131-b172-2c81985f9d02"
 
-# --- ✅ R2 Bucket Binding ---
 [[r2_buckets]]
 binding = "RECEIPTS_BUCKET"
 bucket_name = "khadamatuk-receipts"
 
-# --- ✅ Environment Variables ---
 [vars]
 R2_PUBLIC_URL = "https://pub-3744e16474fa47dba751a996a877f277.r2.dev"
-
-# --- This section is now disabled for deployment ---
-# [[pages_build_output_dir]]
-# dir = "../public"

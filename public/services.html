@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- SEO: Static Meta Tags -->
     <title>خدماتنا الرقمية المتكاملة - المكتب الرقمي</title>
     <meta name="description" content="اكتشف مجموعة خدماتنا الرقمية في المغرب. نقدم حلولاً متكاملة للأفراد والشركات، من كتابة السير الذاتية إلى الخدمات الإدارية. اطلب خدمتك الآن.">
     
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <!-- Fuse.js for smart search -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
 
@@ -46,18 +53,22 @@
         .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
         .nav-links a.active::after { width: 100%; }
         .navbar-actions { display: flex; align-items: center; gap: 10px; }
-        .auth-btn { text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid transparent; }
-        .btn-login { background-color: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
-        .btn-login:hover { background-color: #dbe9ff; }
-        .btn-signup { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-signup:hover { background-color: #0b5ed7; }
         .hamburger { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
         @media (min-width: 1024px) { .hamburger { display: none; } }
 
-        /* --- Page Header --- */
-        .page-header { text-align: center; margin-bottom: 40px; }
-        .page-header h1 { font-size: 3rem; font-weight: 900; color: var(--dark-color); margin: 0; }
-        .page-header p { font-size: 1.2rem; color: var(--text-color); margin-top: 10px; }
+        /* --- Professional Page Header --- */
+        .page-header {
+            padding: 80px 20px;
+            background-image: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: var(--light-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+        }
+        .page-header h1 { font-size: 3.5rem; font-weight: 900; margin: 0; }
+        .page-header p { font-size: 1.3rem; margin-top: 10px; opacity: 0.9; }
 
         /* --- Filters and Search Bar --- */
         .controls-container { background: var(--light-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
@@ -69,12 +80,14 @@
         #search-input { width: 100%; padding: 12px 45px 12px 20px; border: 2px solid var(--border-color); border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; }
         #search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15); }
         .search-wrapper .search-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: #adb5bd; }
+        #search-suggestions { position: absolute; top: 110%; left: 0; right: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; z-index: 1001; max-height: 250px; overflow-y: auto; display: none; border: 1px solid var(--border-color); }
+        #search-suggestions li a { display: block; padding: 12px 20px; color: var(--dark-color); text-decoration: none; }
+        #search-suggestions li a:hover { background-color: var(--gray-color); }
 
         /* --- Services Grid --- */
         .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         .service-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; border: 1px solid var(--border-color); }
         .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
-        .service-card.hidden { display: none; }
         .service-image-container { width: 100%; height: 200px; overflow: hidden; }
         .service-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
         .service-card:hover .service-image { transform: scale(1.05); }
@@ -91,17 +104,6 @@
         #loading-state, #error-state, #no-results-state { text-align: center; padding: 50px; font-size: 1.2rem; font-weight: 600; grid-column: 1 / -1; display: none; }
         .spinner { width: 50px; height: 50px; border: 5px solid #e9ecef; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* --- Modal for Service Details --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .modal-content { background: var(--light-color); border-radius: var(--border-radius); max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; animation: slideIn 0.4s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .modal-close { position: absolute; top: 15px; left: 15px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-color); }
-        .modal-title { font-size: 2rem; font-weight: 900; color: var(--dark-color); margin-top: 0; }
-        .modal-body { font-size: 1.1rem; line-height: 1.8; color: var(--text-color); }
-        .modal-body p { margin: 0 0 15px 0; }
-        .modal-footer { margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 20px; text-align: left; }
 
         /* --- Footer --- */
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
@@ -129,15 +131,11 @@
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html" class="active">الخدمات</a></li>
                 <li><a href="blog.html">المدونة</a></li>
-                <li><a href="pricing.html">الأسعار</a></li>
+                <li><a href="prices.html">الأسعار</a></li>
                 <li><a href="payment.html">طرق الدفع</a></li>
                 <li><a href="faq.html">الأسئلة الشائعة</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="about.html">من نحن</a></li>
             </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                 <!-- Auth buttons will be dynamically inserted here by auth.js -->
-            </div>
+            <div id="navbar-actions" class="navbar-actions"></div>
             <div class="hamburger"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
@@ -148,22 +146,28 @@
             <p>نقدم حلولاً متكاملة لتلبية جميع احتياجاتك. تصفح خدماتنا واختر ما يناسبك.</p>
         </header>
 
-        <div class="controls-container">
-            <div id="category-filters" class="category-filters"></div>
-            <div class="search-wrapper">
-                <input type="text" id="search-input" placeholder="ابحث بالاسم، الوصف، أو حتى بالدارجة...">
-                <i class="fas fa-search search-icon"></i>
+        <section class="controls-container" aria-label="أدوات تصفية وبحث الخدمات">
+            <div id="category-filters" class="category-filters">
+                <!-- Category buttons will be dynamically inserted here -->
             </div>
-        </div>
+            <div class="search-wrapper">
+                <input type="text" id="search-input" placeholder="ابحث بالاسم، الوصف، أو حتى بالدارجة..." aria-label="بحث عن خدمة">
+                <i class="fas fa-search search-icon"></i>
+                <ul id="search-suggestions"></ul>
+            </div>
+        </section>
 
-        <div id="services-grid" class="services-grid"></div>
+        <section id="services-grid" class="services-grid" aria-live="polite">
+            <!-- Service cards will be dynamically inserted here -->
+        </section>
         
-        <div id="loading-state"><div class="spinner"></div><p>جاري تحميل الخدمات...</p></div>
+        <div id="loading-state" style="display: block;"><div class="spinner"></div><p>جاري تحميل الخدمات...</p></div>
         <div id="error-state"><p>عذراً، حدث خطأ أثناء تحميل الخدمات.</p></div>
         <div id="no-results-state"><p>لا توجد خدمات تطابق بحثك.</p></div>
     </main>
 
     <footer class="main-footer">
+        <!-- Footer content remains the same -->
         <div class="footer-content">
             <div class="footer-section">
                 <h3 class="footer-title">المكتب الرقمي</h3>
@@ -180,8 +184,6 @@
                     <li><a href="about.html">من نحن</a></li>
                     <li><a href="services.html">جميع الخدمات</a></li>
                     <li><a href="pricing.html">قائمة الأسعار</a></li>
-                    <li><a href="payment.html">طرق الدفع</a></li>
-                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
                     <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </div>
@@ -204,188 +206,253 @@
         </div>
         <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
-
-    <div id="service-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button id="modal-close-btn" class="modal-close">&times;</button>
-            <h2 id="modal-title" class="modal-title"></h2>
-            <div id="modal-body" class="modal-body"></div>
-            <div id="modal-footer" class="modal-footer"></div>
-        </div>
-    </div>
     
-    <!-- ✅✅✅ START: THE FIX ✅✅✅ -->
-    <!-- 1. Load Firebase Libraries FIRST -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
-    <!-- 2. Then load your auth.js script that USES Firebase -->
     <script src="auth.js"></script>
-    <!-- ✅✅✅ END: THE FIX ✅✅✅ -->
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
-            const servicesGrid = document.getElementById('services-grid');
-            const categoryFiltersContainer = document.getElementById('category-filters');
-            const searchInput = document.getElementById('search-input');
-            const loadingState = document.getElementById('loading-state');
-            const errorState = document.getElementById('error-state');
-            const noResultsState = document.getElementById('no-results-state');
-            
-            const modal = document.getElementById('service-modal');
-            const modalTitle = document.getElementById('modal-title');
-            const modalBody = document.getElementById('modal-body');
-            const modalFooter = document.getElementById('modal-footer');
-            const modalCloseBtn = document.getElementById('modal-close-btn');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- ⚠️ الخطوة 1: أدخل معلومات Supabase الخاصة بك هنا ---
+        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
 
-            let allServicesData = [];
-            let fuse;
 
-            async function fetchServices() {
-                try {
-                    const response = await fetch(`${API_URL}/api/services`);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    allServicesData = await response.json();
-                    
-                    const options = {
-                        includeScore: true,
-                        keys: ['title', 'description', 'meta_description', 'category'],
-                        threshold: 0.4
-                    };
-                    fuse = new Fuse(allServicesData, options);
+        // --- تهيئة Supabase Client ---
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-                    renderServices(allServicesData);
-                    renderCategories(allServicesData);
-                } catch (error) {
-                    console.error("Error fetching services:", error);
-                    errorState.style.display = 'block';
-                } finally {
-                    loadingState.style.display = 'none';
-                }
+        // --- جلب عناصر الصفحة ---
+        const servicesGrid = document.getElementById('services-grid');
+        const categoryFiltersContainer = document.getElementById('category-filters');
+        const searchInput = document.getElementById('search-input');
+        const suggestionsBox = document.getElementById('search-suggestions');
+        const loadingState = document.getElementById('loading-state');
+        const errorState = document.getElementById('error-state');
+        const noResultsState = document.getElementById('no-results-state');
+        
+        // --- متغيرات لتخزين البيانات ---
+        let allServicesData = [];
+        let fuse;
+
+        /**
+         * ✅ SECURITY: Sanitizes HTML strings to prevent XSS attacks.
+         */
+        function sanitizeHTML(str) {
+            if (!str) return '';
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
+        /**
+         * ✅ SEO: Generates and injects structured data (JSON-LD) for search engines.
+         */
+        function generateStructuredData(services) {
+            const existingScript = document.querySelector('script[type="application/ld+json"]');
+            if (existingScript) existingScript.remove();
+
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": "قائمة خدمات المكتب الرقمي",
+                "description": "تصفح جميع الخدمات الرقمية والإدارية التي يقدمها المكتب الرقمي.",
+                "itemListElement": services.map((service, index) => ({
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "item": {
+                        "@type": "Service",
+                        "name": service.title,
+                        "description": service.description,
+                        "image": service.imageUrl,
+                        "url": `${window.location.origin}/service-details.html?slug=${service.slug}`,
+                        "provider": { "@type": "Organization", "name": "المكتب الرقمي" },
+                        "offers": { "@type": "Offer", "price": service.price, "priceCurrency": "MAD" }
+                    }
+                }))
+            };
+
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.textContent = JSON.stringify(schema);
+            document.head.appendChild(script);
+        }
+
+        /**
+         * --- الدالة الرئيسية لجلب وعرض البيانات من Supabase ---
+         */
+        async function main() {
+            try {
+                // جلب الخدمات والفئات من Supabase
+                const { data: services, error } = await supabase
+                    .from('services')
+                    .select(`
+                        *,
+                        service_categories ( name )
+                    `)
+                    .eq('status', 'available')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                
+                // تحويل البيانات لتناسب الكود الحالي
+                allServicesData = services.map(service => ({
+                    id: service.id,
+                    title: service.title,
+                    slug: service.slug,
+                    description: service.description,
+                    price: service.price,
+                    category: service.service_categories ? service.service_categories.name : 'غير مصنف',
+                    imageUrl: service.image_url || 'https://placehold.co/600x400/e9ecef/343a40?text=No+Image'
+                }));
+
+                // تهيئة البحث الذكي
+                const fuseOptions = {
+                    includeScore: true,
+                    keys: ['title', 'description', 'category'],
+                    threshold: 0.4
+                };
+                fuse = new Fuse(allServicesData, fuseOptions);
+
+                // جلب الفئات لعرضها كأزرار تصفية
+                const { data: categories, error: catError } = await supabase.from('service_categories').select('name');
+                if (catError) throw catError;
+
+                // عرض كل شيء على الصفحة
+                renderCategories(categories.map(c => c.name));
+                renderServices(allServicesData);
+                generateStructuredData(allServicesData);
+
+            } catch (error) {
+                console.error("Error fetching data from Supabase:", error);
+                errorState.style.display = 'block';
+            } finally {
+                loadingState.style.display = 'none';
             }
+        }
 
-            function renderServices(services) {
-                servicesGrid.innerHTML = '';
-                services.forEach(service => {
-                    const card = document.createElement('div');
-                    card.className = 'service-card';
-                    card.dataset.id = service.id;
-                    
-                    const orderUrl = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${encodeURIComponent(service.price)}`;
+        /**
+         * --- دالة عرض بطاقات الخدمات ---
+         */
+        function renderServices(services) {
+            servicesGrid.innerHTML = '';
+            noResultsState.style.display = services.length === 0 ? 'block' : 'none';
 
-                    card.innerHTML = `
-                        <div class="service-image-container">
-                            <img src="${service.image_url}" alt="${service.title}" class="service-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e9ecef/343a40?text=${encodeURIComponent(service.title)}';">
-                        </div>
-                        <div class="service-content">
-                            <h3 class="service-title">${service.title}</h3>
-                            <p class="service-description">${service.meta_description || service.description}</p>
-                            <div class="service-footer">
-                                <span class="service-price">${service.price} د.م.</span>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="action-btn details-btn" data-service-id="${service.id}">التفاصيل</button>
-                                    <a href="${orderUrl}" class="action-btn">اطلب الآن</a>
-                                </div>
+            services.forEach(service => {
+                const card = document.createElement('article');
+                card.className = 'service-card';
+                
+                const orderUrl = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${encodeURIComponent(service.price)}`;
+                const detailsUrl = `service-details.html?slug=${service.slug}`;
+
+                card.innerHTML = `
+                    <div class="service-image-container">
+                        <img src="${sanitizeHTML(service.imageUrl)}" alt="${sanitizeHTML(service.title)}" class="service-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e9ecef/343a40?text=No+Image';">
+                    </div>
+                    <div class="service-content">
+                        <h3 class="service-title">${sanitizeHTML(service.title)}</h3>
+                        <p class="service-description">${sanitizeHTML(service.description)}</p>
+                        <div class="service-footer">
+                            <span class="service-price">${sanitizeHTML(String(service.price))} د.م.</span>
+                            <div style="display: flex; gap: 10px;">
+                                <a href="${detailsUrl}" class="action-btn details-btn">التفاصيل</a>
+                                <a href="${orderUrl}" class="action-btn">اطلب الآن</a>
                             </div>
                         </div>
-                    `;
-                    servicesGrid.appendChild(card);
+                    </div>`;
+                servicesGrid.appendChild(card);
+            });
+        }
+
+        /**
+         * --- دالة عرض أزرار الفئات ---
+         */
+        function renderCategories(categories) {
+            const allCategories = ['الكل', ...new Set(categories)]; // Ensure unique categories
+            categoryFiltersContainer.innerHTML = '';
+            allCategories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.textContent = category;
+                button.dataset.category = category;
+                if (category === 'الكل') button.classList.add('active');
+                
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    filterAndSearch();
                 });
+                categoryFiltersContainer.appendChild(button);
+            });
+        }
+
+        /**
+         * --- دالة الفلترة والبحث ---
+         */
+        function filterAndSearch() {
+            const activeCategory = document.querySelector('.category-btn.active')?.dataset.category || 'الكل';
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm === '' && activeCategory === 'الكل') {
+                renderServices(allServicesData);
+                return;
             }
 
-            function renderCategories(services) {
-                const categories = ['الكل', ...new Set(services.map(s => s.category).filter(Boolean))];
-                categoryFiltersContainer.innerHTML = '';
-                categories.forEach(category => {
-                    const button = document.createElement('button');
-                    button.className = 'category-btn';
-                    button.textContent = category;
-                    button.dataset.category = category;
-                    if (category === 'الكل') button.classList.add('active');
-                    
-                    button.addEventListener('click', () => {
-                        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                        filterAndSearch();
-                    });
-                    categoryFiltersContainer.appendChild(button);
+            let servicesToRender = allServicesData;
+
+            if (activeCategory !== 'الكل') {
+                servicesToRender = servicesToRender.filter(service => service.category === activeCategory);
+            }
+
+            if (searchTerm !== '') {
+                const searchResults = fuse.search(searchTerm).map(result => result.item);
+                const serviceIdsFromSearch = new Set(searchResults.map(service => service.id));
+                servicesToRender = servicesToRender.filter(service => serviceIdsFromSearch.has(service.id));
+            }
+
+            renderServices(servicesToRender);
+        }
+
+        /**
+         * --- دالة عرض اقتراحات البحث ---
+         */
+        function showSuggestions() {
+            const query = searchInput.value.trim();
+            suggestionsBox.innerHTML = '';
+            if (query.length < 2 || !fuse) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+            const results = fuse.search(query).slice(0, 5); // Show top 5 suggestions
+            if (results.length > 0) {
+                results.forEach(({ item }) => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `service-details.html?slug=${item.slug}`;
+                    a.textContent = item.title;
+                    li.appendChild(a);
+                    suggestionsBox.appendChild(li);
                 });
+                suggestionsBox.style.display = 'block';
+            } else {
+                suggestionsBox.style.display = 'none';
             }
-
-            function filterAndSearch() {
-                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
-                const searchTerm = searchInput.value.trim();
-
-                if (searchTerm === '' && activeCategory === 'الكل') {
-                    renderServices(allServicesData);
-                    noResultsState.style.display = 'none';
-                    return;
-                }
-
-                let filteredServices = allServicesData;
-
-                if (activeCategory !== 'الكل') {
-                    filteredServices = filteredServices.filter(service => (service.category || 'عام') === activeCategory);
-                }
-
-                if (searchTerm !== '') {
-                    const searchResults = fuse.search(searchTerm);
-                    const serviceIdsFromSearch = new Set(searchResults.map(result => result.item.id));
-                    filteredServices = filteredServices.filter(service => serviceIdsFromSearch.has(service.id));
-                }
-
-                renderServices(filteredServices);
-                noResultsState.style.display = filteredServices.length === 0 ? 'block' : 'none';
-            }
-            
-            async function openServiceModal(serviceId) {
-                modalBody.innerHTML = '<div class="spinner"></div>';
-                modalFooter.innerHTML = '';
-                modal.style.display = 'flex';
-                try {
-                    const response = await fetch(`${API_URL}/api/services/${serviceId}`);
-                    if (!response.ok) throw new Error('Service details not found');
-                    const service = await response.json();
-                    
-                    const detailsPageUrl = `service-details.html?slug=${encodeURIComponent(service.slug)}`;
-                    const orderUrl = `payment-gateway.html?service=${encodeURIComponent(service.title)}&price=${encodeURIComponent(service.price)}`;
-
-                    modalTitle.textContent = service.title;
-                    modalBody.innerHTML = (service.long_description || 'لا تتوفر تفاصيل إضافية لهذه الخدمة.').replace(/\n/g, '<br><br>');
-                    modalFooter.innerHTML = `<a href="${detailsPageUrl}" class="action-btn details-btn">عرض صفحة التفاصيل الكاملة</a><a href="${orderUrl}" class="action-btn">اطلب هذه الخدمة الآن</a>`;
-
-                } catch (error) {
-                    modalBody.innerHTML = 'عذراً، لم نتمكن من تحميل تفاصيل الخدمة.';
-                    console.error("Error fetching service details:", error);
-                }
-            }
-
-            function closeServiceModal() {
-                modal.style.display = 'none';
-            }
-
-            // Event listeners
-            searchInput.addEventListener('input', filterAndSearch);
-            modalCloseBtn.addEventListener('click', closeServiceModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeServiceModal();
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === "Escape" && modal.style.display === 'flex') closeServiceModal();
-            });
-
-            servicesGrid.addEventListener('click', (e) => {
-                const detailsButton = e.target.closest('.details-btn');
-                if (detailsButton) {
-                    const serviceId = detailsButton.dataset.serviceId;
-                    openServiceModal(serviceId);
-                }
-            });
-
-            fetchServices();
+        }
+        
+        // --- ربط الأحداث ---
+        searchInput.addEventListener('input', () => {
+            filterAndSearch();
+            showSuggestions();
         });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+
+        // --- بدء تشغيل كل شيء ---
+        main();
+    });
     </script>
 </body>
 </html>
-  

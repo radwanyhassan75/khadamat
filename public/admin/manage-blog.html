@@ -1,71 +1,85 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="../public/output.css" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المدونة - لوحة التحكم</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
     
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        body { font-family: 'Cairo', 'Tahoma', 'Arial', sans-serif; }
+        body { font-family: 'Cairo', sans-serif; }
+        .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .sidebar-link.active .lucide { color: #4f46e5; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50">
 
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75" style="display: none;">
-        </div>
-
-    <div id="dashboard-content" class="hidden h-screen bg-gray-100 md:flex">
-        <aside class="flex flex-col w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-20 shadow-md">
-                <h1 class="text-2xl font-bold text-indigo-600">خدماتك - لوحة التحكم</h1>
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
             </div>
-            <nav class="flex-1 px-4 py-8 space-y-2">
-                <a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i>لوحة التحكم</a>
-                <a href="orders.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i>الطلبات</a>
-                <a href="users.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="users" class="w-5 h-5 ml-3"></i>المستخدمون</a>
-                <a href="manage-blog.html" class="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i>المدونة</a>
-                <a href="manage-services.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i>الخدمات</a>
-                <a href="support-log.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i>الدعم الفني</a>
-                <a href="manage-reviews.html" class="sidebar-link"><i data-lucide="star" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
-                <a href="settings.html" class="flex items-center px-4 py-2 text-gray-700 hover:bg-indigo-100 rounded-md"><i data-lucide="settings" class="w-5 h-5 ml-3"></i>الإعدادات</a>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
+                </a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
+                </a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
+                </a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
+                </a>
+                 <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active">
+                    <i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span>
+                </a>
             </nav>
         </aside>
 
-        <div class="flex flex-col flex-1 overflow-y-auto">
-            <header class="flex items-center justify-between h-20 px-6 bg-white shadow-md">
-                <h2 class="text-xl font-semibold text-gray-800">إدارة المدونة</h2>
-                <a href="edit-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b h-20 flex items-center justify-between px-8">
+                <h1 class="text-xl font-bold text-gray-800">إدارة المقالات</h1>
+                <a href="edit-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm">
                     <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
-                    إنشاء مقال جديد
+                    إضافة مقال جديد
                 </a>
             </header>
-            <main class="p-6 md:p-8">
-                <div class="bg-white rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 p-6 border-b">قائمة المقالات</h3>
+
+            <main class="flex-1 overflow-y-auto p-8">
+                <!-- Table -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="text-right text-sm font-semibold text-gray-500">
-                                    <th class="p-4">عنوان المقال</th>
-                                    <th class="p-4">الكاتب</th>
-                                    <th class="p-4">الحالة</th>
-                                    <th class="p-4">تاريخ الإنشاء</th>
-                                    <th class="p-4">إجراءات</th>
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-4 text-right font-semibold text-gray-600">عنوان المقال</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">الفئة</th>
+                                    <th class="p-4 text-right font-semibold text-gray-600">تاريخ النشر</th>
+                                    <th class="p-4 text-center font-semibold text-gray-600">إجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="posts-list" class="divide-y">
-                                <tr>
-                                    <td colspan="5" class="p-6 text-center text-gray-500">جاري تحميل المقالات...</td>
-                                </tr>
+                            <tbody id="posts-table-body" class="divide-y divide-gray-100">
+                                <!-- Loading State -->
+                                <tr><td colspan="4" class="p-8 text-center text-gray-500">جاري تحميل المقالات...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -74,17 +88,92 @@
         </div>
     </div>
     
-      <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- ✅✅✅ === تم إصلاح ترتيب الـ Scripts هنا === ✅✅✅ -->
-    <!-- 1. تحميل الكود الخاص بالصفحة أولاً -->
-    <script src="manage-blog.js"></script> 
-    <!-- 2. تحميل كود الحماية ثانيًا، ليجد الدالة جاهزة -->
-    <script src="admin-auth.js"></script>
-    
     <script>
-        // هذا السطر ضروري لتفعيل أيقونات Lucide
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
+
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const tableBody = document.getElementById('posts-table-body');
+
+            async function fetchPosts() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('posts')
+                        .select(`
+                            *,
+                            blog_categories ( name )
+                        `)
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    renderTable(data);
+                } catch (error) {
+                    console.error("Error fetching posts:", error);
+                    tableBody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-600">فشل تحميل المقالات.</td></tr>';
+                }
+            }
+
+            function renderTable(posts) {
+                tableBody.innerHTML = '';
+                if (posts.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">لا توجد مقالات مضافة حاليًا.</td></tr>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50';
+                    const formattedDate = new Date(post.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'long', year: 'numeric' });
+
+                    row.innerHTML = `
+                        <td class="p-4">
+                            <div class="flex items-center gap-4">
+                                <img src="${post.image_url || 'https://placehold.co/64x64/e2e8f0/cccccc?text=صورة'}" alt="${post.title}" class="w-16 h-10 object-cover rounded-md">
+                                <span class="font-semibold text-gray-900">${post.title}</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-gray-600">${post.blog_categories ? post.blog_categories.name : 'غير مصنف'}</td>
+                        <td class="p-4 text-gray-600">${formattedDate}</td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center items-center gap-2">
+                                <a href="edit-post.html?id=${post.id}" class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-md transition" title="تعديل">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </a>
+                                <button data-id="${post.id}" class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                lucide.createIcons();
+                addDeleteListeners();
+            }
+
+            function addDeleteListeners() {
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const id = e.currentTarget.dataset.id;
+                        if (confirm('هل أنت متأكد أنك تريد حذف هذا المقال؟')) {
+                            try {
+                                const { error } = await supabaseClient.from('posts').delete().eq('id', id);
+                                if (error) throw error;
+                                fetchPosts(); // Refresh the table
+                            } catch (error) {
+                                console.error('Delete error:', error);
+                                alert('فشل حذف المقال.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            fetchPosts();
+        });
     </script>
 </body>
 </html>

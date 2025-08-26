@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>صفحة اختبار الخدمات</title>
+    <style>
+        body { font-family: Cairo, sans-serif; padding: 20px; }
+        .service { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .service img { max-width: 100px; float: left; margin-left: 15px; }
+    </style>
+</head>
+<body>
+
+    <h1>قائمة الخدمات من Contentful</h1>
+    <div id="services-list">جاري التحميل...</div>
+
+    <script>
+        // 🚧 استبدل هذه القيم بالقيم الحقيقية من حسابك في Contentful
+        const SPACE_ID = 'b7tga4dgq6jm';
+        const ACCESS_TOKEN = 'q2H03KQQh_NwQkOGr0FqbAdFTB6U8FpUOZ09Zssgzsw';
+
+        const url = `https://cdn.contentful.com/spaces/${SPACE_ID}/environments/master/entries?access_token=${ACCESS_TOKEN}&content_type=service`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const servicesListDiv = document.getElementById('services-list');
+                servicesListDiv.innerHTML = ''; // مسح رسالة "جاري التحميل"
+
+                if (data.items && data.items.length > 0) {
+                    // We need to find the matching image assets from the 'includes' array
+                    const assets = data.includes?.Asset || [];
+
+                    data.items.forEach(item => {
+                        const service = item.fields;
+                        let imageUrl = 'https://placehold.co/100x100?text=No+Image';
+
+                        // Find the image URL from the included assets
+                        if (service.image) {
+                            const imageAsset = assets.find(asset => asset.sys.id === service.image.sys.id);
+                            if (imageAsset) {
+                                imageUrl = imageAsset.fields.file.url;
+                            }
+                        }
+
+                        const serviceElement = document.createElement('div');
+                        serviceElement.className = 'service';
+                        serviceElement.innerHTML = `
+                            <img src="${imageUrl}" alt="${service.title}">
+                            <h2>${service.title}</h2>
+                            <p>${service.shortDescription || ''}</p>
+                            <p><strong>الفئة:</strong> ${service.category || 'غير محدد'}</p>
+                        `;
+                        servicesListDiv.appendChild(serviceElement);
+                    });
+                } else {
+                    servicesListDiv.textContent = 'لم يتم العثور على خدمات.';
+                }
+            })
+            .catch(error => {
+                console.error('خطأ في جلب البيانات:', error);
+                document.getElementById('services-list').textContent = 'حدث خطأ أثناء جلب الخدمات.';
+            });
+    </script>
+</body>
+</html>

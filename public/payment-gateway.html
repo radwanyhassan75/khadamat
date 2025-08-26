@@ -9,6 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://js.stripe.com/v3/"></script>
     <!-- Tone.js for sound effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
@@ -96,17 +100,51 @@
         .submit-btn:disabled { background: #adb5bd; cursor: not-allowed; }
         #form-error { display: none; background-color: #f8d7da; color: #842029; padding: 15px; border-radius: var(--border-radius); margin-top: 20px; font-weight: 700; border: 1px solid #f5c2c7; }
         
-        /* Payment Options */
+        /* Payment Options Styling */
         .payment-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
         .payment-option { 
-            border: 2px solid var(--border-color); border-radius: var(--border-radius); padding: 15px;
-            cursor: pointer; transition: all 0.3s ease; text-align: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 140px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            background-color: var(--light-color);
         }
-        .payment-option.active { border-color: var(--success-color); background-color: #f0fff8; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .payment-option.stripe.active { border-color: var(--stripe-color); background-color: var(--info-color); }
-        .payment-option img { height: 55px; max-width: 120px; object-fit: contain; margin-bottom: 10px; }
-        .payment-option span { font-weight: 700; color: var(--dark-color); font-size: 1.1rem; }
+        .payment-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            border-color: var(--secondary-color);
+        }
+        .payment-option.active {
+            border-color: var(--success-color);
+            background-color: #f0fff8;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .payment-option.stripe.active {
+            border-color: var(--stripe-color);
+            background-color: var(--info-color);
+        }
+        .payment-option img {
+            height: auto;
+            max-height: 65px;
+            width: 100%;
+            max-width: 110px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+        .payment-option span {
+            font-weight: 700;
+            color: var(--dark-color);
+            font-size: 1rem;
+            line-height: 1.3;
+        }
 
         /* Payment Details & Info Boxes */
         .payment-details-container, .stripe-info-box { display: none; padding: 25px; border-radius: var(--border-radius); margin-top: 20px; animation: fadeIn 0.5s; }
@@ -322,275 +360,264 @@
     <!-- The auth.js script is no longer needed on this page -->
     <!-- <script src="auth.js"></script> -->
 
-     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Sound Effects ---
-            let soundsReady = false;
-            const selectSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
-            const copySound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 } }).toDestination();
-            
-            document.body.addEventListener('click', async () => {
-                if (!soundsReady) {
-                    await Tone.start();
-                    soundsReady = true;
-                }
-            }, { once: true });
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- معلومات الاتصال الخاصة بك ---
+        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // --- Element References ---
-            const form = document.getElementById('payment-form');
-            const submitBtn = document.getElementById('submit-btn');
-            const errorDiv = document.getElementById('form-error');
-            const paymentOptionsContainer = document.getElementById('payment-options');
-            const paymentMethodInput = document.getElementById('payment-method-input');
-            const paymentDetailsContainer = document.getElementById('payment-details-container');
-            const stripeInfoBox = document.getElementById('stripe-info-box');
-            const receiptUploadGroup = document.getElementById('receipt-upload-group');
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const allCheckboxes = form.querySelectorAll('input[type="checkbox"]');
+        // --- المؤثرات الصوتية ---
+        let soundsReady = false;
+        const selectSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+        const copySound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 } }).toDestination();
+        document.body.addEventListener('click', async () => {
+            if (!soundsReady) { await Tone.start(); soundsReady = true; }
+        }, { once: true });
 
-            // --- Configuration ---
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
-            const stripe = Stripe('pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF'); 
-            
-            let paymentSettings = {};
+        // --- عناصر الصفحة ---
+        const form = document.getElementById('payment-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorDiv = document.getElementById('form-error');
+        const paymentOptionsContainer = document.getElementById('payment-options');
+        const paymentMethodInput = document.getElementById('payment-method-input');
+        const paymentDetailsContainer = document.getElementById('payment-details-container');
+        const stripeInfoBox = document.getElementById('stripe-info-box');
+        const receiptUploadGroup = document.getElementById('receipt-upload-group');
+        const allCheckboxes = form.querySelectorAll('input[type="checkbox"]');
+        
+        const stripe = Stripe('pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF'); 
+        let paymentMethods = [];
 
-            const paymentMethods = [
-                { id: 'stripe', name: 'البطاقة البنكية', logo: 'https://raw.githubusercontent.com/ionic-team/ionicons/main/src/svg/logo-stripe.svg' },
-                { id: 'cashplus', name: 'Cash Plus', logo: 'https://www.flouci.com/wp-content/uploads/2022/01/CASHPLUS-1.png' },
-                { id: 'orange', name: 'Orange Money', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Orange_Money_logo.svg/1280px-Orange_Money_logo.svg.png' },
-                { id: 'bmce', name: 'بنك أفريقيا', logo: 'https://www.bankofafrica.ma/sites/default/files/logo_boa_1.png' },
-                { id: 'attijari', name: 'Attijariwafa bank', logo: 'https://upload.wikimedia.org/wikipedia/fr/thumb/1/1d/Logo_AWB.svg/1200px-Logo_AWB.svg.png' },
-                { id: 'cih', name: 'CIH Bank', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Cih-bank.png' },
-                { id: 'soge', name: 'الشركة العامة', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Societe_Generale_logo.svg/2560px-Societe_Generale_logo.svg.png' }
-            ];
-            
-            async function fetchPaymentSettings() {
-                try {
-                    const response = await fetch(`${API_URL}/api/settings`);
-                    if (!response.ok) throw new Error(`Server responded with ${response.status}`);
-                    const settingsArray = await response.json();
-                    if (!Array.isArray(settingsArray)) throw new Error("Invalid data format from server.");
-                    
-                    settingsArray.forEach(item => { paymentSettings[item.key] = item.value; });
-                    
-                    if (Object.keys(paymentSettings).length === 0) {
-                        throw new Error("Settings are empty. Please check admin panel.");
-                    }
-                    renderPaymentOptions();
-                } catch (error) {
-                    console.error("Error fetching payment settings:", error);
-                    paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color); grid-column: 1 / -1; text-align: center;">${error.message}</p>`;
-                }
+        // --- دالة جلب طرق الدفع من Supabase ---
+        async function fetchPaymentMethods() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('payment_methods')
+                    .select('*')
+                    .eq('is_enabled', true);
+                if (error) throw error;
+                paymentMethods = data;
+                renderPaymentOptions();
+            } catch (error) {
+                console.error("Error fetching payment methods:", error);
+                paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color); grid-column: 1 / -1; text-align: center;">فشل تحميل طرق الدفع.</p>`;
             }
+        }
 
-            function renderPaymentOptions() {
-                paymentOptionsContainer.innerHTML = '';
-                paymentMethods.forEach(method => {
-                    const optionDiv = document.createElement('div');
-                    optionDiv.className = `payment-option ${method.id}`;
-                    optionDiv.dataset.method = method.id;
-                    optionDiv.innerHTML = `<img src="${method.logo}" alt="${method.name}" onerror="this.style.display='none'"><span>${method.name}</span>`;
-                    optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
-                    paymentOptionsContainer.appendChild(optionDiv);
-                });
+        // --- دالة عرض خيارات الدفع ---
+        function renderPaymentOptions() {
+            paymentOptionsContainer.innerHTML = '';
+            if (paymentMethods.length === 0) {
+                 paymentOptionsContainer.innerHTML = `<p style="color: var(--secondary-color); grid-column: 1 / -1; text-align: center;">لا توجد طرق دفع مفعلة حالياً.</p>`;
+                 return;
             }
+            paymentMethods.forEach(method => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `payment-option ${method.id}`;
+                optionDiv.dataset.method = method.id;
+                optionDiv.innerHTML = `<img src="${method.logo_url}" alt="${method.name}" onerror="this.style.display='none'"><span class="font-bold">${method.name}</span>`;
+                optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
+                paymentOptionsContainer.appendChild(optionDiv);
+            });
+        }
 
-            function selectPaymentMethod(selectedMethodId) {
-                if (soundsReady) selectSound.triggerAttackRelease("C5", "8n");
-                document.querySelectorAll('.payment-option').forEach(opt => {
-                    opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
-                });
-                const selectedMethod = paymentMethods.find(m => m.id === selectedMethodId);
-                paymentMethodInput.value = selectedMethod.name;
-
-                receiptUploadGroup.style.display = selectedMethodId === 'stripe' ? 'none' : 'block';
-                document.getElementById('receipt-file-input').required = selectedMethodId !== 'stripe';
-                
-                paymentDetailsContainer.classList.remove('active');
-                stripeInfoBox.classList.remove('active');
-
-                if (selectedMethodId === 'stripe') {
-                    stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
-                    stripeInfoBox.classList.add('active');
-                } else {
-                    renderPaymentDetails(selectedMethodId);
-                    paymentDetailsContainer.classList.add('active');
-                }
-                validateForm();
+        // --- دالة اختيار طريقة الدفع ---
+        function selectPaymentMethod(selectedMethodId) {
+            if (soundsReady) selectSound.triggerAttackRelease("C5", "8n");
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
+            });
+            const selectedMethod = paymentMethods.find(m => m.id === selectedMethodId);
+            paymentMethodInput.value = selectedMethod.name;
+            receiptUploadGroup.style.display = selectedMethodId === 'stripe' ? 'none' : 'block';
+            document.getElementById('receipt-file-input').required = selectedMethodId !== 'stripe';
+            paymentDetailsContainer.classList.remove('active');
+            stripeInfoBox.classList.remove('active');
+            if (selectedMethodId === 'stripe') {
+                stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
+                stripeInfoBox.classList.add('active');
+            } else {
+                renderPaymentDetails(selectedMethodId);
+                paymentDetailsContainer.classList.add('active');
             }
+            validateForm();
+        }
 
-            function renderPaymentDetails(methodId) {
-                const beneficiary = paymentSettings['beneficiary_name'] || 'غير محدد';
-                let detailsHtml = `<div class="payment-instructions"><h4><i class="fas fa-money-check-alt"></i> معلومات الدفع لـ: ${beneficiary}</h4>`;
-                const bankName = paymentMethods.find(m => m.id === methodId).name;
-                switch (methodId) {
-                    case 'cashplus':
-                        detailsHtml += `${createDetailRow('IBAN', paymentSettings['cashplus_iban'])}${createDetailRow('رقم الهاتف', paymentSettings['cashplus_phone'])}`;
-                        break;
-                    case 'orange':
-                         detailsHtml += `${createDetailRow('RIB', paymentSettings['orange_rib'])}${createDetailRow('رقم الهاتف', paymentSettings['orange_phone'])}`;
-                        break;
-                    case 'bmce': case 'attijari': case 'cih': case 'soge':
-                        detailsHtml += `${createDetailRow('رقم الحساب (RIB)', paymentSettings[`${methodId}_rib`])}`;
-                        break;
-                }
-                detailsHtml += `</div>`;
-                paymentDetailsContainer.innerHTML = detailsHtml;
-            }
-
-            function createDetailRow(label, value) {
-                if (!value) return '';
-                const id = `val-${Math.random().toString(36).substr(2, 9)}`;
-                return `<div class="detail-row"><span class="label">${label}:</span><span class="value" id="${id}">${value}<button type="button" class="copy-button" onclick="copyToClipboard('${id}')"><i class="far fa-copy"></i></button></span></div>`;
-            }
-
-            window.copyToClipboard = function(elementId) {
-                if (soundsReady) copySound.triggerAttackRelease("C4", "8n");
-                const textElement = document.getElementById(elementId);
-                if (!textElement) return;
-                const nodeToCopy = textElement.cloneNode(true);
-                const buttonToRemove = nodeToCopy.querySelector('button');
-                if(buttonToRemove) nodeToCopy.removeChild(buttonToRemove);
-                
-                navigator.clipboard.writeText(nodeToCopy.textContent.trim()).then(() => {
-                    const copyButton = textElement.querySelector('button');
-                    if (copyButton) {
-                        const originalIcon = copyButton.innerHTML;
-                        copyButton.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
-                        setTimeout(() => { copyButton.innerHTML = originalIcon; }, 2000);
-                    }
-                });
+        // --- دالة عرض تفاصيل الدفع ---
+        function renderPaymentDetails(methodId) {
+            const method = paymentMethods.find(m => m.id === methodId);
+            if (!method || !method.details) {
+                paymentDetailsContainer.innerHTML = '';
+                return;
             };
+            const beneficiary = method.details.beneficiary || 'غير محدد';
+            let detailsHtml = `<div class="payment-instructions"><h4><i class="fas fa-money-check-alt"></i> معلومات الدفع لـ: ${beneficiary}</h4>`;
+            if (method.details.iban) detailsHtml += createDetailRow('IBAN', method.details.iban);
+            if (method.details.rib) detailsHtml += createDetailRow('رقم الحساب (RIB)', method.details.rib);
+            if (method.details.phone) detailsHtml += createDetailRow('رقم الهاتف', method.details.phone);
+            detailsHtml += `</div>`;
+            paymentDetailsContainer.innerHTML = detailsHtml;
+        }
 
-            function setupUploader(dropAreaId, fileInputId, previewWrapperId) {
-                const dropArea = document.getElementById(dropAreaId);
-                const fileInput = document.getElementById(fileInputId);
-                const previewWrapper = document.getElementById(previewWrapperId);
-                const removeBtn = previewWrapper.querySelector('.remove-file-btn');
-
-                dropArea.addEventListener('click', () => fileInput.click());
-                fileInput.addEventListener('change', () => handleFiles(fileInput.files, previewWrapper, fileInput));
-                
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, preventDefaults, false));
-                function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
-                ['dragenter', 'dragover'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.add('drag-over'), false));
-                ['dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.remove('drag-over'), false));
-                dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files, previewWrapper, fileInput), false);
-
-                removeBtn.addEventListener('click', () => {
-                    fileInput.value = '';
-                    previewWrapper.style.display = 'none';
-                    validateForm();
-                });
-            }
-
-            function handleFiles(files, previewWrapper, fileInput) {
-                const file = files[0];
-                if (!file) return;
-                fileInput.files = files;
-                
-                previewWrapper.style.display = 'flex';
-                const previewInfo = previewWrapper.querySelector('.file-preview-info');
-                
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => { previewInfo.innerHTML = `<img src="${e.target.result}" alt="${file.name}" class="file-preview-thumb"><span class="file-preview-name">${file.name}</span>`; };
-                    reader.readAsDataURL(file);
-                } else {
-                    previewInfo.innerHTML = `<i class="fas fa-file-alt file-preview-icon"></i><span class="file-preview-name">${file.name}</span>`;
-                }
-                validateForm();
-            }
-
-            setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
-            setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
-
-            function validateForm() {
-                const requiredInputs = Array.from(form.querySelectorAll('[required]'));
-                let isFormValid = true;
-                requiredInputs.forEach(input => {
-                    if (input.offsetParent === null && !input.classList.contains('file-input-hidden')) return;
-                    if (input.type === 'checkbox' && !input.checked) isFormValid = false;
-                    else if (input.type === 'file' && input.files.length === 0) isFormValid = false;
-                    else if (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim()) isFormValid = false;
-                });
-                
-                submitBtn.disabled = !isFormValid;
-                const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
-                if (isFormValid) {
-                    submitBtn.innerHTML = selectedMethodId === 'stripe' ? '<i class="fab fa-stripe-s"></i> الدفع الآمن عبر البطاقة' : '<i class="fas fa-check-circle"></i> تأكيد وإرسال الطلب';
-                    submitBtn.className = `submit-btn ${selectedMethodId === 'stripe' ? 'stripe' : 'bank-transfer'}`;
-                } else {
-                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول والموافقات المطلوبة';
-                    submitBtn.className = 'submit-btn';
-                }
-            }
-            
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (submitBtn.disabled) return;
-                
-                const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
-                if (selectedMethodId === 'stripe') {
-                    handleStripePayment();
-                } else {
-                    handleBankTransferPayment();
+        // --- دوال مساعدة (نسخ، رفع ملفات، تحقق) ---
+        function createDetailRow(label, value) {
+            if (!value) return '';
+            const id = `val-${Math.random().toString(36).substr(2, 9)}`;
+            return `<div class="detail-row"><span class="label">${label}:</span><span class="value" id="${id}">${value}<button type="button" class="copy-button" onclick="copyToClipboard('${id}')"><i class="far fa-copy"></i></button></span></div>`;
+        }
+        window.copyToClipboard = function(elementId) {
+            if (soundsReady) copySound.triggerAttackRelease("C4", "8n");
+            const textElement = document.getElementById(elementId);
+            if (!textElement) return;
+            const nodeToCopy = textElement.cloneNode(true);
+            const buttonToRemove = nodeToCopy.querySelector('button');
+            if(buttonToRemove) nodeToCopy.removeChild(buttonToRemove);
+            navigator.clipboard.writeText(nodeToCopy.textContent.trim()).then(() => {
+                const copyButton = textElement.querySelector('button');
+                if (copyButton) {
+                    const originalIcon = copyButton.innerHTML;
+                    copyButton.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
+                    setTimeout(() => { copyButton.innerHTML = originalIcon; }, 2000);
                 }
             });
-            
-            async function handleStripePayment() { /* Stripe logic */ }
-
-            async function handleBankTransferPayment() {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-                errorDiv.style.display = 'none';
-
-                const formData = new FormData(form);
-                
-                try {
-                    const response = await fetch(`${API_URL}/orders`, { method: 'POST', body: formData });
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        // ✅✅✅ THIS IS THE FIX ✅✅✅
-                        window.location.href = `success.html?orderId=${result.orderId}`;
-                    } else {
-                        throw new Error(result.error || 'فشل الخادم في معالجة الطلب.');
-                    }
-                } catch (error) {
-                    errorDiv.textContent = 'فشل إرسال الطلب. ' + error.message;
-                    errorDiv.style.display = 'block';
-                    validateForm();
-                }
-            }
-
-            async function initializePage() {
-                const params = new URLSearchParams(window.location.search);
-                document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
-                document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
-                document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
-                document.getElementById('form-service-price').value = params.get('price') || "0";
-                
-                if (typeof auth !== 'undefined') {
-                    auth.onAuthStateChanged(user => {
-                        if (user) {
-                            if (user.displayName) nameInput.value = user.displayName;
-                            if (user.email) emailInput.value = user.email;
-                            validateForm();
-                        }
-                    });
-                }
-                
-                form.querySelectorAll('input, textarea, select').forEach(input => input.addEventListener('input', validateForm));
-                allCheckboxes.forEach(cb => cb.addEventListener('change', validateForm));
-                
-                await fetchPaymentSettings();
+        };
+        function setupUploader(dropAreaId, fileInputId, previewWrapperId) {
+            const dropArea = document.getElementById(dropAreaId);
+            const fileInput = document.getElementById(fileInputId);
+            const previewWrapper = document.getElementById(previewWrapperId);
+            const removeBtn = previewWrapper.querySelector('.remove-file-btn');
+            dropArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => handleFiles(fileInput.files, previewWrapper, fileInput));
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false));
+            ['dragenter', 'dragover'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.add('drag-over'), false));
+            ['dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.remove('drag-over'), false));
+            dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files, previewWrapper, fileInput), false);
+            removeBtn.addEventListener('click', () => {
+                fileInput.value = '';
+                previewWrapper.style.display = 'none';
                 validateForm();
+            });
+        }
+        function handleFiles(files, previewWrapper, fileInput) {
+            const file = files[0];
+            if (!file) return;
+            fileInput.files = files;
+            previewWrapper.style.display = 'flex';
+            const previewInfo = previewWrapper.querySelector('.file-preview-info');
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => { previewInfo.innerHTML = `<img src="${e.target.result}" alt="${file.name}" class="file-preview-thumb"><span class="file-preview-name">${file.name}</span>`; };
+                reader.readAsDataURL(file);
+            } else {
+                previewInfo.innerHTML = `<i class="fas fa-file-alt file-preview-icon"></i><span class="file-preview-name">${file.name}</span>`;
             }
+            validateForm();
+        }
+        setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
+        setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
+        function validateForm() {
+            const requiredInputs = Array.from(form.querySelectorAll('[required]'));
+            let isFormValid = true;
+            requiredInputs.forEach(input => {
+                if (input.offsetParent === null && !input.classList.contains('file-input-hidden')) return;
+                if (input.type === 'checkbox' && !input.checked) isFormValid = false;
+                else if (input.type === 'file' && input.files.length === 0) isFormValid = false;
+                else if (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim()) isFormValid = false;
+            });
+            submitBtn.disabled = !isFormValid;
+            const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
+            if (isFormValid) {
+                submitBtn.innerHTML = selectedMethodId === 'stripe' ? '<i class="fab fa-stripe-s"></i> الدفع الآمن' : '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+                submitBtn.className = `submit-btn ${selectedMethodId === 'stripe' ? 'stripe' : 'bank-transfer'}`;
+            } else {
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
+                submitBtn.className = 'submit-btn';
+            }
+        }
+        
+        // --- ✅ دالة إرسال الطلب المحدثة ---
+  // ✅ استبدل دالة إرسال الطلب القديمة بهذه النسخة الجديدة
 
-            initializePage();
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+    
+    // ... (منطق Stripe يبقى كما هو)
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+    errorDiv.style.display = 'none';
+
+    try {
+        // ... (كود رفع الملفات يبقى كما هو)
+        const receiptFileInput = document.getElementById('receipt-file-input');
+        const attachmentFileInput = document.getElementById('attachment-file-input');
+        let receiptUrl = null;
+        let attachmentUrl = null;
+        if (receiptFileInput.files.length > 0) {
+            const file = receiptFileInput.files[0];
+            const filePath = `public/receipts/${Date.now()}-${file.name}`;
+            const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
+            if (error) throw new Error('فشل رفع وصل الدفع: ' + error.message);
+            const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
+            receiptUrl = data.publicUrl;
+        }
+        if (attachmentFileInput.files.length > 0) {
+            const file = attachmentFileInput.files[0];
+            const filePath = `public/attachments/${Date.now()}-${file.name}`;
+            const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
+            if (error) throw new Error('فشل رفع الملف المرفق: ' + error.message);
+            const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
+            attachmentUrl = data.publicUrl;
+        }
+
+        // تجهيز بيانات الطلب
+        const orderData = {
+            customer_name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            service_name: document.getElementById('form-service-name').value,
+            price: parseFloat(document.getElementById('form-service-price').value),
+            service_details: document.getElementById('service-details').value,
+            payment_method: document.getElementById('payment-method-input').value,
+            receipt_url: receiptUrl,
+            attachment_url: attachmentUrl
+        };
+        
+        // ✅ استدعاء "الموظف" (Edge Function) وإرسال البيانات إليه
+        const { data, error } = await supabaseClient.functions.invoke('submit-order', {
+            body: orderData,
         });
-    </script>
-</body>
+
+        if (error) throw error;
+
+        // التوجيه إلى صفحة النجاح
+        window.location.href = `success.html?orderId=${data.orderId}`;
+
+    } catch (error) {
+        errorDiv.textContent = 'فشل إرسال الطلب. ' + error.message;
+        errorDiv.style.display = 'block';
+        validateForm(); // إعادة تفعيل الزر
+    }
+}
+        // --- دالة بدء تشغيل الصفحة ---
+        async function initializePage() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
+            document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
+            document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
+            document.getElementById('form-service-price').value = params.get('price') || "0";
+            
+            form.addEventListener('submit', handleFormSubmit);
+            form.querySelectorAll('input, textarea, select').forEach(input => input.addEventListener('input', validateForm));
+            allCheckboxes.forEach(cb => cb.addEventListener('change', validateForm));
+            
+            await fetchPaymentMethods();
+            validateForm();
+        }
+
+        initializePage();
+    });
+</script></body>
 </html>

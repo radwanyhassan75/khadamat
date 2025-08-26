@@ -4,445 +4,233 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الخدمة - لوحة التحكم</title>
-    <!-- Firebase Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="../auth.js"></script>
-    <!-- Tailwind CSS and Font Awesome -->
+
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        body { font-family: 'Cairo', 'Tahoma', sans-serif; }
-        .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s, color 0.2s; }
-        .sidebar-link:hover { background-color: #f3f4f6; }
-        .sidebar-link.active { background-color: #4f46e5; color: white; }
-        .sidebar-link.active .lucide { color: white; }
-        .lucide { color: #6b7280; }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-        /* Toast Notification */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 100;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 30px;
-            font-size: 17px;
-            opacity: 0;
-            transition: visibility 0.5s, opacity 0.5s linear;
-        }
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-        }
-        /* Image Preview Styles */
-        .image-preview-container {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        #image-preview {
-            width: 150px;
-            height: 100px;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-        #image-status {
-            font-weight: bold;
-        }
-        #image-status.compatible {
-            color: #198754; /* Green */
-        }
-        #image-status.incompatible {
-            color: #dc3545; /* Red */
-        }
+        body { font-family: 'Cairo', sans-serif; }
+        .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
+        .sidebar-link.active .lucide { color: #4f46e5; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50">
 
-    <!-- Password Gate -->
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75" style="display: none;">
-        <!-- Password protection code will be injected by admin-auth.js -->
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60 hidden">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">تأكيد الحذف</h3>
-            <p class="text-sm text-gray-600 mb-6">هل أنت متأكد أنك تريد حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.</p>
-            <div class="flex justify-end space-x-reverse space-x-3">
-                <button id="cancel-delete" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">إلغاء</button>
-                <button id="confirm-delete" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">تأكيد الحذف</button>
+    <div class="flex h-screen bg-gray-50">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b">
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
             </div>
-        </div>
-    </div>
-    
-    <!-- Toast Notification -->
-    <div id="toast"></div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
+                </a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
+                </a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
+                </a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg active">
+                    <i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span>
+                </a>
+            </nav>
+        </aside>
 
-    <div id="dashboard-content" class="hidden md:flex h-screen">
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white border-b border-gray-200">
-                <div class="flex items-center justify-between h-20 px-8">
-                    <div>
-                        <h1 id="page-title" class="text-2xl font-bold text-gray-800">إضافة خدمة جديدة</h1>
-                        <p class="text-sm text-gray-500">املأ الحقول أدناه لحفظ الخدمة</p>
-                    </div>
-                    <a href="manage-services.html" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center">
-                        <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
-                        العودة للخدمات
-                    </a>
-                </div>
+            <header class="bg-white border-b h-20 flex items-center justify-between px-8">
+                <h1 id="page-title" class="text-xl font-bold text-gray-800">إضافة خدمة جديدة</h1>
+                <a href="manage-services.html" class="text-gray-600 hover:text-indigo-600 transition">
+                    <i data-lucide="arrow-right-circle" class="w-6 h-6"></i>
+                </a>
             </header>
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
-                <form id="service-form" class="bg-white p-8 rounded-xl shadow-sm space-y-6 max-w-4xl mx-auto">
-                    
-                    <!-- Title -->
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">عنوان الخدمة</label>
-                        <input type="text" id="title" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+
+            <main class="flex-1 overflow-y-auto p-8">
+                <form id="service-form" class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md space-y-6">
+                    <!-- Service Title -->
+                    <div class="form-group">
+                        <label for="title" class="block font-semibold text-gray-700">عنوان الخدمة</label>
+                        <input type="text" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                     </div>
 
-                    <!-- ✅ NEW: Slug and URL Generator -->
-                    <div class="space-y-4 rounded-lg bg-gray-50 p-4 border border-gray-200">
-                        <div>
-                            <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">رابط الخدمة (Slug)</label>
-                            <input type="text" id="slug" class="w-full bg-white border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 ltr text-left">
-                        </div>
-                        <div>
-                             <label for="details_url" class="block text-sm font-medium text-gray-700 mb-2">رابط صفحة التفاصيل (للمشاركة)</label>
-                            <div class="flex gap-2">
-                                <input type="text" id="details_url" class="w-full bg-gray-200 border border-gray-300 rounded-lg py-2 px-3 text-gray-500 ltr text-left" readonly>
-                                <button type="button" id="copy-url-btn" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-200 transition flex items-center">
-                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
+                    <!-- Service Category -->
+                    <div class="form-group">
+                        <label for="category" class="block font-semibold text-gray-700">فئة الخدمة</label>
+                        <select id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                            <option value="">اختر فئة...</option>
+                        </select>
                     </div>
 
-                    <!-- Short Description -->
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">وصف مختصر (للبطاقة)</label>
-                        <textarea id="description" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
-                    </div>
-
-                    <!-- Long Description -->
-                    <div>
-                        <label for="long_description" class="block text-sm font-medium text-gray-700 mb-2">الوصف الكامل (لصفحة التفاصيل)</label>
-                        <textarea id="long_description" rows="8" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                    </div>
-
-                    <!-- Image URL with Preview -->
-                    <div>
-                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">رابط صورة الخدمة (اختياري)</label>
-                        <input type="url" id="image_url" placeholder="https://example.com/image.jpg" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 ltr text-left">
-                        <div class="image-preview-container">
-                            <div id="image-preview">معاينة</div>
-                            <span id="image-status"></span>
+                    <!-- Price & Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-group">
+                            <label for="price" class="block font-semibold text-gray-700">السعر (د.م)</label>
+                            <input type="number" id="price" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label for="price" class="block text-sm font-medium text-gray-700 mb-2">السعر (د.م)</label>
-                            <input type="number" id="price" step="0.01" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                        </div>
-                        <div>
-                            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">فئة الخدمة</label>
-                            <input type="text" id="category" placeholder="مثال: خدمات إدارية" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
-                        </div>
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">حالة الخدمة</label>
-                            <select id="status" class="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="form-group">
+                            <label for="status" class="block font-semibold text-gray-700">الحالة</label>
+                            <select id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="available">متوفر</option>
                                 <option value="unavailable">غير متوفر</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="border-t border-gray-200 pt-6 flex items-center justify-between">
-                        <button type="submit" id="save-btn" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm disabled:bg-indigo-400">
+
+                    <!-- Image URL -->
+                    <div class="form-group">
+                        <label for="image_url" class="block font-semibold text-gray-700">رابط الصورة</label>
+                        <input type="url" id="image_url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="https://example.com/image.png">
+                    </div>
+
+                    <!-- Short Description -->
+                    <div class="form-group">
+                        <label for="description" class="block font-semibold text-gray-700">الوصف القصير</label>
+                        <textarea id="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Long Description -->
+                    <div class="form-group">
+                        <label for="long_description" class="block font-semibold text-gray-700">الوصف الطويل</label>
+                        <textarea id="long_description" rows="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+
+                    <!-- Slug -->
+                    <div class="form-group">
+                        <label for="slug" class="block font-semibold text-gray-700">الرابط (Slug)</label>
+                        <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا إذا ترك فارغًا">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4 border-t">
+                        <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm">
                             <i data-lucide="save" class="w-5 h-5 ml-2"></i>
-                            <span id="save-btn-text">حفظ التغييرات</span>
-                        </button>
-                        <button type="button" id="delete-btn" class="bg-red-100 text-red-700 px-6 py-3 rounded-lg hover:bg-red-200 transition hidden flex items-center">
-                            <i data-lucide="trash-2" class="w-5 h-5 ml-2"></i>
-                            <span>حذف الخدمة</span>
+                            <span id="submit-btn-text">حفظ الخدمة</span>
                         </button>
                     </div>
                 </form>
             </main>
         </div>
-
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
-            <div class="flex items-center justify-center h-20 border-b border-gray-200">
-                <h1 class="text-2xl font-bold text-indigo-600">المسؤول</h1>
-            </div>
-            <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i><span>لوحة التحكم</span></a>
-                <a href="orders.html" class="sidebar-link"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i><span>الطلبات</span></a>
-                <a href="users.html" class="sidebar-link"><i data-lucide="users" class="w-5 h-5 ml-3"></i><span>المستخدمون</span></a>
-                <a href="manage-services.html" class="sidebar-link active"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span></a>
-                <a href="manage-blog.html" class="sidebar-link"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
-                <a href="support-log.html" class="sidebar-link"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i><span>الدعم الفني</span></a>
-                <a href="settings.html" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
-                <a href="settings.html" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span></a>
-            </nav>
-        </aside>
     </div>
 
-    <script src="admin-auth.js"></script>
     <script>
-        function initializePage() {
+        document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
-            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
-            // ✅ FIX: Using your correct domain
-            const SITE_URL = 'https://khadamatmaroc.co.uk'; 
-            
-            // Form Elements
+
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
+            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
             const form = document.getElementById('service-form');
             const pageTitle = document.getElementById('page-title');
-            const saveBtn = document.getElementById('save-btn');
-            const saveBtnText = document.getElementById('save-btn-text');
-            const deleteBtn = document.getElementById('delete-btn');
-            const titleInput = document.getElementById('title');
-            const slugInput = document.getElementById('slug');
-            const detailsUrlInput = document.getElementById('details_url');
-            const copyUrlBtn = document.getElementById('copy-url-btn');
+            const submitBtnText = document.getElementById('submit-btn-text');
+            const categorySelect = document.getElementById('category');
+            
+            const params = new URLSearchParams(window.location.search);
+            const serviceId = params.get('id');
+            const isEditMode = serviceId !== null;
 
-            // Modal & Toast Elements
-            const modal = document.getElementById('confirmation-modal');
-            const confirmDeleteBtn = document.getElementById('confirm-delete');
-            const cancelDeleteBtn = document.getElementById('cancel-delete');
-            const toast = document.getElementById('toast');
-
-            // Image Preview Elements
-            const imageUrlInput = document.getElementById('image_url');
-            const imagePreview = document.getElementById('image-preview');
-            const imageStatus = document.getElementById('image-status');
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const serviceId = urlParams.get('id');
-            let isImageCompatible = false;
-
-            function showToast(message) {
-                toast.textContent = message;
-                toast.className = "show";
-                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-            }
-
-            function generateSlug(text) {
-                return text.toString().toLowerCase().trim()
-                    .replace(/\s+/g, '-')
-                    .replace(/[^\u0621-\u064A\u0660-\u0669a-z0-9\-]/g, '') 
-                    .replace(/-+/g, '-');
-            }
-
-            function updateDetailsUrl() {
-                const slug = slugInput.value;
-                if (slug) {
-                    detailsUrlInput.value = `${SITE_URL}/service-details.html?slug=${slug}`;
-                } else {
-                    detailsUrlInput.value = '';
-                }
-            }
-
-            titleInput.addEventListener('input', () => {
-                const slug = generateSlug(titleInput.value);
-                slugInput.value = slug;
-                updateDetailsUrl();
-            });
-
-            slugInput.addEventListener('input', () => {
-                updateDetailsUrl();
-            });
-
-            copyUrlBtn.addEventListener('click', () => {
-                detailsUrlInput.select();
-                document.execCommand('copy');
-                showToast('تم نسخ الرابط!');
-            });
-
-            function validateImage(url) {
-                if (!url) {
-                    imagePreview.style.backgroundImage = 'none';
-                    imagePreview.textContent = 'معاينة';
-                    imageStatus.textContent = '';
-                    isImageCompatible = true;
+            async function loadCategories() {
+                const { data, error } = await supabaseClient.from('service_categories').select('*');
+                if (error) {
+                    console.error("Error loading categories:", error);
                     return;
                 }
-                imageStatus.textContent = 'جارٍ التحقق...';
-                imageStatus.className = '';
-                const img = new Image();
-                img.onload = () => {
-                    imagePreview.style.backgroundImage = `url(${url})`;
-                    imagePreview.textContent = '';
-                    imageStatus.textContent = 'متوافقة';
-                    imageStatus.className = 'compatible';
-                    isImageCompatible = true;
-                };
-                img.onerror = () => {
-                    imagePreview.style.backgroundImage = 'none';
-                    imagePreview.textContent = 'فشل التحميل';
-                    imageStatus.textContent = 'غير متوافقة (الرابط لا يعمل)';
-                    imageStatus.className = 'incompatible';
-                    isImageCompatible = false;
-                };
-                img.src = url;
+                data.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
+                });
             }
-
-            imageUrlInput.addEventListener('input', (e) => validateImage(e.target.value));
-            imageUrlInput.addEventListener('paste', (e) => {
-                setTimeout(() => validateImage(e.target.value), 0);
-            });
 
             async function loadServiceData() {
-                if (!serviceId) {
-                    pageTitle.textContent = 'إضافة خدمة جديدة';
-                    saveBtnText.textContent = 'إضافة الخدمة';
-                    updateDetailsUrl(); // Initial call
+                if (!isEditMode) return;
+
+                pageTitle.textContent = 'تعديل الخدمة';
+                submitBtnText.textContent = 'حفظ التعديلات';
+
+                const { data, error } = await supabaseClient
+                    .from('services')
+                    .select('*')
+                    .eq('id', serviceId)
+                    .single();
+
+                if (error) {
+                    console.error("Error fetching service data:", error);
+                    alert('فشل تحميل بيانات الخدمة.');
                     return;
                 }
 
-                pageTitle.textContent = 'تعديل الخدمة';
-                saveBtnText.textContent = 'حفظ التغييرات';
-                deleteBtn.classList.remove('hidden');
-
-                try {
-                    const response = await fetch(`${WORKER_URL}/api/admin/services/${serviceId}`);
-                    if (!response.ok) throw new Error('Service not found');
-                    const service = await response.json();
-
-                    titleInput.value = service.title || '';
-                    slugInput.value = service.slug || '';
-                    document.getElementById('description').value = service.description || '';
-                    document.getElementById('long_description').value = service.long_description || '';
-                    document.getElementById('image_url').value = service.image_url || '';
-                    document.getElementById('price').value = service.price;
-                    document.getElementById('category').value = service.category || '';
-                    document.getElementById('status').value = service.status;
-                    
-                    validateImage(service.image_url);
-                    updateDetailsUrl(); // Update URL preview after loading data
-
-                } catch (error) {
-                    console.error("Failed to load service:", error);
-                    showToast('خطأ: لم يتم العثور على الخدمة.');
-                    pageTitle.textContent = 'خطأ';
-                }
+                document.getElementById('title').value = data.title;
+                document.getElementById('category').value = data.category_id;
+                document.getElementById('price').value = data.price;
+                document.getElementById('status').value = data.status;
+                document.getElementById('image_url').value = data.image_url;
+                document.getElementById('description').value = data.description;
+                document.getElementById('long_description').value = data.long_description;
+                document.getElementById('slug').value = data.slug;
             }
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                saveBtn.disabled = true;
-                saveBtnText.textContent = 'جاري الحفظ...';
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = true;
+
+                let slug = document.getElementById('slug').value.trim();
+                if (!slug) {
+                    slug = document.getElementById('title').value.trim().toLowerCase()
+                        .replace(/ /g, '-')
+                        .replace(/[^\w-]+/g, '');
+                }
 
                 const serviceData = {
-                    title: titleInput.value,
-                    slug: slugInput.value,
-                    description: document.getElementById('description').value,
-                    long_description: document.getElementById('long_description').value,
-                    image_url: document.getElementById('image_url').value,
-                    price: parseFloat(document.getElementById('price').value),
-                    category: document.getElementById('category').value,
+                    title: document.getElementById('title').value,
+                    category_id: document.getElementById('category').value,
+                    price: document.getElementById('price').value,
                     status: document.getElementById('status').value,
+                    image_url: document.getElementById('image_url').value || null,
+                    description: document.getElementById('description').value || null,
+                    long_description: document.getElementById('long_description').value || null,
+                    slug: slug
                 };
 
-                const method = serviceId ? 'PUT' : 'POST';
-                const endpoint = serviceId ? `${WORKER_URL}/api/admin/services/${serviceId}` : `${WORKER_URL}/api/admin/services`;
+                let error;
+                if (isEditMode) {
+                    const { error: updateError } = await supabaseClient
+                        .from('services')
+                        .update(serviceData)
+                        .eq('id', serviceId);
+                    error = updateError;
+                } else {
+                    const { error: insertError } = await supabaseClient
+                        .from('services')
+                        .insert(serviceData);
+                    error = insertError;
+                }
 
-                try {
-                    const response = await fetch(endpoint, {
-                        method: method,
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(serviceData)
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('Server error response:', errorData);
-                        throw new Error('فشل حفظ الخدمة');
-                    }
-
-                    showToast('تم حفظ الخدمة بنجاح!');
-                    setTimeout(() => {
-                        window.location.href = 'manage-services.html';
-                    }, 1500);
-
-                } catch (error) {
-                    console.error("Save error:", error);
-                    showToast('حدث خطأ أثناء الحفظ.');
-                    saveBtn.disabled = false;
-                    saveBtnText.textContent = serviceId ? 'حفظ التغييرات' : 'إضافة الخدمة';
+                if (error) {
+                    console.error("Error saving service:", error);
+                    alert('فشل حفظ الخدمة. تحقق من الكونسول.');
+                    submitBtn.disabled = false;
+                } else {
+                    window.location.href = 'manage-services.html';
                 }
             });
 
-            deleteBtn.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-            });
-
-            cancelDeleteBtn.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-
-            confirmDeleteBtn.addEventListener('click', async () => {
-                if (!serviceId) return;
-
-                confirmDeleteBtn.disabled = true;
-                confirmDeleteBtn.textContent = 'جاري الحذف...';
-
-                try {
-                    const response = await fetch(`${WORKER_URL}/api/admin/services/${serviceId}`, { method: 'DELETE' });
-                    if (!response.ok) {
-                        throw new Error('فشل حذف الخدمة');
-                    }
-                    showToast('تم حذف الخدمة بنجاح!');
-                    setTimeout(() => {
-                        window.location.href = 'manage-services.html';
-                    }, 1500);
-                } catch (error) {
-                    console.error("Delete error:", error);
-                    showToast('حدث خطأ أثناء الحذف.');
-                    confirmDeleteBtn.disabled = false;
-                    confirmDeleteBtn.textContent = 'تأكيد الحذف';
-                    modal.classList.add('hidden');
-                }
-            });
-
-            loadServiceData();
-        }
-
-        if (typeof showContent === 'function') {
-            window.initializePage = initializePage;
-        } else {
-            initializePage();
-        }
+            await loadCategories();
+            await loadServiceData();
+        });
     </script>
 </body>
 </html>

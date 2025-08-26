@@ -23,3 +23,4 @@ node_modules/.package-lock.json
 /node_modules
 /node_modules/wrangler/wrangler-dist
 /node_modules
+/node_modules
