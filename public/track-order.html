@@ -25,8 +25,7 @@
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
         .navbar-logo img { height: 50px; }
         .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; }
-        .nav-links a:hover { color: var(--primary-color); }
+        .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; }
         main { max-width: 800px; margin: auto; padding: 40px 2rem; }
         .track-form-card { background: var(--light-color); padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; border: 1px solid var(--border-color); }
         .track-form-card h1 { font-size: 2.2rem; color: var(--dark-color); margin-bottom: 15px; font-weight: 900; }
@@ -75,11 +74,10 @@
         .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
         .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
         .footer-section ul li { margin-bottom: 12px; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
-        .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; }
         .newsletter-form { display: flex; margin-top: 20px; }
         .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
-        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: bold; }
+        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
     </style>
 </head>
@@ -141,17 +139,16 @@
 
     <footer class="main-footer">
         <div class="footer-content">
-            <div class="footer-section"><h3 class="footer-title">المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
-            <div class="footer-section"><h3 class="footer-title">روابط مهمة</h3><ul><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li><li><a href="faq.html">الأسئلة الشائعة</a></li></ul></div>
-            <div class="footer-section"><h3 class="footer-title">قانوني</h3><ul><li><a href="privacy-policy.html">سياسة الخصوصية</a></li><li><a href="terms-and-conditions.html">الشروط والأحكام</a></li></ul></div>
-            <div class="footer-section"><h3 class="footer-title">انضم لنشرتنا الإخبارية</h3><p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p><form id="newsletter-form" class="newsletter-form"><input type="email" placeholder="أدخل بريدك الإلكتروني" required><button type="submit">اشترك</button></form></div>
+            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
+            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li><li><a href="faq.html">الأسئلة الشائعة</a></li></ul></div>
+            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="privacy-policy.html">سياسة الخصوصية</a></li><li><a href="terms-and-conditions.html">الشروط والأحكام</a></li></ul></div>
+            <div class="footer-section"><h3>انضم لنشرتنا الإخبارية</h3><p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p><form id="newsletter-form" class="newsletter-form"><input type="email" placeholder="أدخل بريدك الإلكتروني" required><button type="submit">اشترك</button></form></div>
         </div>
         <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- ⚠️ أدخل معلومات Supabase الخاصة بك هنا ---
         const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -166,7 +163,6 @@
             progressLine: document.getElementById('progress-line'),
         };
         
-        // --- ✅ Updated Status Map ---
         const statusMap = {
             'قيد المراجعة': { text: 'تم الاستلام', icon: 'fa-receipt', className: 'status-default', progress: 0 },
             'جاري التحقق من الدفع': { text: 'جاري التحقق من الدفع', icon: 'fa-credit-card', className: 'status-verifying', progress: 1 },
@@ -220,6 +216,9 @@
                 
                 displayOrderData(order);
                 
+                // ✅ Start listening for REALTIME updates for THIS specific order
+                subscribeToOrderUpdates(order.id);
+
             } catch (error) {
                 console.error('Fetch Error:', error);
                 showMessage(ui.notFoundMessage, error.message);
@@ -248,7 +247,6 @@
             setTimeout(() => ui.resultArea.classList.add('visible'), 50);
         }
         
-        // --- ✅ Updated Progress Tracker Logic ---
         function updateProgressTracker(statusInfo) {
             const steps = [
                 document.getElementById('step1'), 
@@ -285,6 +283,26 @@
                 window.history.pushState({ path: newUrl.href }, '', newUrl.href);
                 await searchForOrder(orderId);
             }
+        }
+
+        // --- ✅ Supabase Realtime Subscription Function ---
+        let channel;
+        function subscribeToOrderUpdates(orderId) {
+            // Unsubscribe from any previous channel to avoid multiple listeners
+            if (channel) {
+                supabaseClient.removeChannel(channel);
+            }
+
+            channel = supabaseClient.channel(`public:orders:id=eq.${orderId}`)
+                .on('postgres_changes', 
+                    { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` }, 
+                    (payload) => {
+                        console.log('Realtime update received!', payload);
+                        // The payload contains the new data, so we can update the UI instantly
+                        displayOrderData(payload.new);
+                    }
+                )
+                .subscribe();
         }
 
         const params = new URLSearchParams(window.location.search);

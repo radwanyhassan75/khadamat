@@ -141,6 +141,66 @@
         .terms-group { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; margin-bottom: 20px; }
         .terms-group input[type='checkbox'] { width: auto; }
         .terms-group label { margin-bottom: 0; }
+        
+        /* --- START: Privacy Notice Styling --- */
+        .privacy-notice-card {
+            background-color: #f0f6ff; /* خلفية فاتحة مميزة */
+            border: 1px solid #bde0fe; /* حدود خفيفة */
+            border-right: 5px solid var(--primary-color); /* تمييز بصري */
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 25px; /* مسافة قبل زر الإرسال */
+            margin-bottom: 25px;
+            text-align: right;
+            line-height: 1.8;
+            font-size: 0.9rem;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+        .privacy-notice-card h4 {
+            font-weight: 900;
+            color: var(--dark-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .privacy-notice-card p {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .privacy-notice-card .contact-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #d0e3ff;
+        }
+        .privacy-notice-card .actions {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .privacy-notice-card .action-btn {
+            background: none;
+            border: 1px solid #bde0fe;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .privacy-notice-card .action-btn:hover {
+            background-color: var(--light-color);
+            transform: scale(1.1);
+        }
+        /* --- END: Privacy Notice Styling --- */
+
         .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
         .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
@@ -220,6 +280,33 @@
                     <div class="form-group"><label for="password">كلمة المرور</label><div class="input-wrapper"><input type="password" id="password" required /><i class="fas fa-lock input-icon"></i></div></div>
                     <div class="form-group"><label for="confirm-password">تأكيد كلمة المرور</label><div class="input-wrapper"><input type="password" id="confirm-password" required /><i class="fas fa-check-circle input-icon"></i></div></div>
                     <div class="form-group terms-group"><input type="checkbox" id="terms" required /><label for="terms">أوافق على <a href="terms.html" target="_blank">شروط الاستخدام</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>.</label></div>
+                    
+                    <!-- START: Privacy Notice Block -->
+                    <!-- هذا القسم يعرض إشعار الخصوصية للمستخدم قبل إنشاء الحساب لضمان الشفافية والامتثال القانوني. -->
+                    <div class="privacy-notice-card" id="privacy-notice">
+                        <div class="actions">
+                            <button type="button" class="action-btn" title="نسخ النص" onclick="copyPrivacyNotice()">
+                                <i class="far fa-copy"></i>
+                            </button>
+                            <button type="button" class="action-btn" title="طباعة الإشعار" onclick="printPrivacyNotice()">
+                                <i class="fas fa-print"></i>
+                            </button>
+                        </div>
+                        <h4><i class="fas fa-shield-alt"></i> إشعار جمع البيانات الشخصية</h4>
+                        <p>
+                            من خلال هذا النموذج، موقع <strong>khadamatmaroc</strong> يقوم بجمع بياناتك الشخصية لغرض تقديم الخدمات الرقمية والإدارية وتسهيل التواصل مع العملاء. وقد كانت هذه المعالجة موضوع إشعار إلى اللجنة الوطنية لمراقبة حماية البيانات تحت رقم <strong>CNDP-2025-001</strong>.
+                        </p>
+                        <p>
+                            يجوز نقل البيانات الشخصية المجمعة إلى شركائنا في المغرب وخارجه، وفقًا لطلب النقل المقدم إلى اللجنة الوطنية لمراقبة حماية البيانات.
+                        </p>
+                        <div class="contact-info">
+                            <p>
+                                يمكنك الاتصال بنا على البريد الإلكتروني <strong style="direction: ltr; display: inline-block;">support@khadamatmaroc.co.uk</strong> لممارسة حقوقك في الوصول والتصحيح والمعارضة وفقًا لأحكام القانون 09-08.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- END: Privacy Notice Block -->
+                    
                     <button type="submit" id="submit-btn" class="btn"><i class="fas fa-user-plus"></i> إنشاء الحساب</button>
                 </form>
                 
@@ -264,6 +351,47 @@
         window.handleCredentialResponse = function(response) {
             window.dispatchEvent(new CustomEvent('google-credential-response', { detail: response }));
         }
+
+        // --- START: Privacy Notice Functions ---
+        // دوال مساعدة لنسخ وطباعة إشعار الخصوصية.
+        function copyPrivacyNotice() {
+            const noticeElement = document.getElementById('privacy-notice');
+            if (!noticeElement) return;
+            // استبعاد نص الأزرار من النسخ
+            const textToCopy = Array.from(noticeElement.querySelectorAll('h4, p')).map(el => el.innerText).join('\n\n');
+            navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+                const copyBtn = noticeElement.querySelector('.action-btn[title="نسخ النص"]');
+                if(copyBtn) {
+                    const originalIcon = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
+                    setTimeout(() => { copyBtn.innerHTML = originalIcon; }, 2500);
+                }
+            }).catch(err => {
+                console.error('فشل في نسخ النص: ', err);
+            });
+        }
+
+        function printPrivacyNotice() {
+            const noticeElement = document.getElementById('privacy-notice').cloneNode(true);
+            if (!noticeElement) return;
+            // إزالة أزرار التحكم من نسخة الطباعة
+            noticeElement.querySelector('.actions').remove();
+            const newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write('<html><head><title>طباعة إشعار الخصوصية</title>');
+            newWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">');
+            newWindow.document.write('<style>body { font-family: "Cairo", sans-serif; direction: rtl; padding: 20px; } h4 { font-weight: bold; font-size: 1.2rem; } p { line-height: 1.7; font-size: 1rem; } strong { font-weight: bold; }</style>');
+            newWindow.document.write('</head><body>');
+            newWindow.document.write('<h1>إشعار جمع البيانات الشخصية</h1>');
+            newWindow.document.write(noticeElement.innerHTML);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.focus();
+            setTimeout(() => { // تأخير بسيط لضمان تحميل الخطوط
+                newWindow.print();
+                newWindow.close();
+            }, 500);
+        }
+        // --- END: Privacy Notice Functions ---
     </script>
     
     <script type="module">
@@ -353,7 +481,7 @@
                 await handleSuccessfulGoogleSignIn(result);
              } catch(error) {
                 if (error.code !== 'auth/popup-closed-by-user') {
-                   showMessage("فشلت عملية التسجيل باستخدام جوجل.", "error");
+                    showMessage("فشلت عملية التسجيل باستخدام جوجل.", "error");
                 }
              } finally {
                 setLoading(false, googleSignupBtn, '');

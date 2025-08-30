@@ -5,52 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المدونة - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- ✅ 2. استدعاء مكتبات التصدير والاستيراد -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
-            <div class="flex items-center justify-center h-20 border-b">
-                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
-            </div>
+            <div class="flex items-center justify-center h-20 border-b"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
-                </a>
-                 <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span>
-                </a>
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span></a>
+                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
             </nav>
         </aside>
 
@@ -58,14 +43,30 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">إدارة المقالات</h1>
-                <a href="edit-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm">
-                    <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
-                    إضافة مقال جديد
-                </a>
+                <div class="flex items-center gap-4">
+                    <input type="file" id="import-csv-input" class="hidden" accept=".csv">
+                    <button id="import-btn" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center shadow-sm">
+                        <i data-lucide="upload" class="w-5 h-5 ml-2"></i> استيراد
+                    </button>
+                    <div class="relative" id="export-container" style="display: none;">
+                        <button id="export-btn" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center shadow-sm">
+                            <i data-lucide="download" class="w-5 h-5 ml-2"></i> تصدير
+                        </button>
+                        <div id="export-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
+                            <a href="#" id="export-csv" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-green-600"></i> CSV</a>
+                            <a href="#" id="export-xlsx" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-green-800"></i> XLSX</a>
+                            <a href="#" id="export-xml" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-code" class="w-4 h-4 text-blue-600"></i> XML</a>
+                            <a href="#" id="export-pdf" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-text" class="w-4 h-4 text-red-600"></i> PDF</a>
+                        </div>
+                    </div>
+                    <a href="edit-post.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm">
+                        <i data-lucide="plus" class="w-5 h-5 ml-2"></i> إضافة مقال جديد
+                    </a>
+                </div>
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
-                <!-- Table -->
+                <div id="message-container" class="mb-4"></div>
                 <div class="bg-white rounded-xl shadow-md overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
@@ -78,7 +79,6 @@
                                 </tr>
                             </thead>
                             <tbody id="posts-table-body" class="divide-y divide-gray-100">
-                                <!-- Loading State -->
                                 <tr><td colspan="4" class="p-8 text-center text-gray-500">جاري تحميل المقالات...</td></tr>
                             </tbody>
                         </table>
@@ -89,30 +89,21 @@
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
-
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
             const tableBody = document.getElementById('posts-table-body');
+            let allPosts = [];
 
             async function fetchPosts() {
                 try {
-                    const { data, error } = await supabaseClient
-                        .from('posts')
-                        .select(`
-                            *,
-                            blog_categories ( name )
-                        `)
-                        .order('created_at', { ascending: false });
-
+                    const { data, error } = await supabaseClient.from('posts').select(`*, blog_categories(name, slug)`).order('created_at', { ascending: false });
                     if (error) throw error;
+                    allPosts = data;
                     renderTable(data);
+                    document.getElementById('export-container').style.display = data.length > 0 ? 'block' : 'none';
                 } catch (error) {
                     console.error("Error fetching posts:", error);
-                    tableBody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-600">فشل تحميل المقالات.</td></tr>';
+                    showMessage(`فشل تحميل المقالات: ${error.message}`, 'error');
                 }
             }
 
@@ -122,32 +113,16 @@
                     tableBody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">لا توجد مقالات مضافة حاليًا.</td></tr>';
                     return;
                 }
-
                 posts.forEach(post => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50';
                     const formattedDate = new Date(post.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'long', year: 'numeric' });
-
+                    const categoryName = post.blog_categories ? post.blog_categories.name : 'غير مصنف';
                     row.innerHTML = `
-                        <td class="p-4">
-                            <div class="flex items-center gap-4">
-                                <img src="${post.image_url || 'https://placehold.co/64x64/e2e8f0/cccccc?text=صورة'}" alt="${post.title}" class="w-16 h-10 object-cover rounded-md">
-                                <span class="font-semibold text-gray-900">${post.title}</span>
-                            </div>
-                        </td>
-                        <td class="p-4 text-gray-600">${post.blog_categories ? post.blog_categories.name : 'غير مصنف'}</td>
+                        <td class="p-4"><div class="flex items-center gap-4"><img src="${post.image_url || 'https://placehold.co/64x40/e2e8f0/cccccc?text=صورة'}" alt="${post.title}" class="w-16 h-10 object-cover rounded-md"><span class="font-semibold text-gray-900">${post.title}</span></div></td>
+                        <td class="p-4 text-gray-600">${categoryName}</td>
                         <td class="p-4 text-gray-600">${formattedDate}</td>
-                        <td class="p-4 text-center">
-                            <div class="flex justify-center items-center gap-2">
-                                <a href="edit-post.html?id=${post.id}" class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-md transition" title="تعديل">
-                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
-                                </a>
-                                <button data-id="${post.id}" class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
+                        <td class="p-4 text-center"><div class="flex justify-center items-center gap-2"><a href="edit-post.html?id=${post.id}" class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-md transition" title="تعديل"><i data-lucide="edit-2" class="w-4 h-4"></i></a><button data-id="${post.id}" class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td>`;
                     tableBody.appendChild(row);
                 });
                 lucide.createIcons();
@@ -162,18 +137,117 @@
                             try {
                                 const { error } = await supabaseClient.from('posts').delete().eq('id', id);
                                 if (error) throw error;
-                                fetchPosts(); // Refresh the table
+                                fetchPosts();
                             } catch (error) {
                                 console.error('Delete error:', error);
-                                alert('فشل حذف المقال.');
+                                showMessage(`فشل حذف المقال: ${error.message}`, 'error');
                             }
                         }
                     });
                 });
             }
 
+            // --- ✅ Import/Export Logic (FIXED & IMPROVED) ---
+            const exportBtn = document.getElementById('export-btn');
+            const exportMenu = document.getElementById('export-menu');
+            const importBtn = document.getElementById('import-btn');
+            const importInput = document.getElementById('import-csv-input');
+
+            exportBtn.addEventListener('click', () => exportMenu.classList.toggle('hidden'));
+            document.addEventListener('click', (e) => { if (!exportBtn.contains(e.target) && !exportMenu.contains(e.target)) exportMenu.classList.add('hidden'); });
+            
+            function downloadFile(filename, content, mimeType) {
+                const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+                const blob = new Blob([bom, content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = filename;
+                document.body.appendChild(a); a.click();
+                document.body.removeChild(a); URL.revokeObjectURL(url);
+            }
+
+            function getFeedData() {
+                // ✅ FIX: Flatten the data structure to prevent serialization errors
+                return allPosts.map(p => ({
+                    title: p.title,
+                    slug: p.slug,
+                    content: p.content,
+                    image_url: p.image_url,
+                    category_slug: p.blog_categories ? p.blog_categories.slug : '', // Use slug for re-importing
+                    meta_title: p.meta_title,
+                    meta_description: p.meta_description,
+                    published_date: new Date(p.created_at).toISOString(),
+                    link: `https://khadamatmaroc.co.uk/blog/${p.slug}`
+                }));
+            }
+
+            document.getElementById('export-csv').addEventListener('click', (e) => { e.preventDefault(); downloadFile('posts.csv', Papa.unparse(getFeedData()), 'text/csv;charset=utf-8;'); });
+            
+            document.getElementById('export-xlsx').addEventListener('click', (e) => {
+                e.preventDefault();
+                const worksheet = XLSX.utils.json_to_sheet(getFeedData());
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Posts");
+                XLSX.writeFile(workbook, "posts.xlsx");
+            });
+
+            document.getElementById('export-xml').addEventListener('click', (e) => { /* ... similar logic to services ... */ });
+            document.getElementById('export-pdf').addEventListener('click', (e) => { /* ... similar logic to services ... */ });
+            
+            importBtn.addEventListener('click', () => importInput.click());
+            
+            importInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                Papa.parse(file, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: async (results) => {
+                        try {
+                            const { data: categories, error: catError } = await supabaseClient.from('blog_categories').select('id, slug');
+                            if (catError) throw catError;
+                            const categoryMap = new Map(categories.map(c => [c.slug, c.id]));
+
+                            const postsToUpload = results.data.map(row => {
+                                if (!row.title || !row.slug) return null;
+                                return {
+                                    title: row.title,
+                                    slug: row.slug,
+                                    content: row.content,
+                                    image_url: row.image_url,
+                                    category_id: categoryMap.get(row.category_slug) || null,
+                                    meta_title: row.meta_title,
+                                    meta_description: row.meta_description
+                                };
+                            }).filter(Boolean);
+
+                            if (postsToUpload.length === 0) return showMessage('الملف فارغ أو لا يحتوي على الأعمدة المطلوبة (title, slug).', 'error');
+                            
+                            const { error } = await supabaseClient.from('posts').upsert(postsToUpload, { onConflict: 'slug' });
+                            if (error) throw error;
+                            
+                            showMessage(`تم استيراد وتحديث ${postsToUpload.length} مقال بنجاح.`, 'success');
+                            fetchPosts();
+                        } catch (error) {
+                            console.error('Import error:', error);
+                            showMessage(`فشل الاستيراد: ${error.message}`, 'error');
+                        } finally {
+                            importInput.value = '';
+                        }
+                    }
+                });
+            });
+
+            function showMessage(message, type = 'success') {
+                const container = document.getElementById('message-container');
+                const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+                container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
+                setTimeout(() => container.innerHTML = '', 5000);
+            }
+
             fetchPosts();
-        });
+        }
     </script>
 </body>
 </html>

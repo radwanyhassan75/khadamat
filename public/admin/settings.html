@@ -5,16 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>الإعدادات - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -22,71 +16,40 @@
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
         /* Custom Toggle Switch */
-        .toggle-checkbox:checked { right: 0; border-color: #4f46e5; }
+        .toggle-checkbox:checked { transform: translateX(100%); border-color: #4f46e5; }
         .toggle-checkbox:checked + .toggle-label { background-color: #4f46e5; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
-        <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
-            <div class="flex items-center justify-center h-20 border-b">
-                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
-            </div>
+            <div class="flex items-center justify-center h-20 border-b"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
-                </a>
-                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="file-text" class="w-5 h-5 ml-3 text-gray-500"></i><span>المدونة</span>
-                </a>
-                <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span>
-                </a>
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span></a>
+                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="file-text" class="w-5 h-5 ml-3 text-gray-500"></i><span>المدونة</span></a>
+                <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span></a>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">إعدادات الموقع</h1>
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
-                <div class="max-w-4xl mx-auto space-y-8">
-                    <!-- General Settings -->
+                <div id="message-container" class="mb-4"></div>
+                <div class="max-w-6xl mx-auto space-y-8">
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h2 class="text-xl font-bold mb-6 border-b pb-4">الإعدادات العامة</h2>
                         <div id="general-settings-container" class="space-y-4">
-                            <div>
-                                <label for="site-name" class="block text-sm font-medium text-gray-700">اسم الموقع</label>
-                                <input type="text" id="site-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                            </div>
-                            <div>
-                                <label for="logo-url" class="block text-sm font-medium text-gray-700">رابط الشعار</label>
-                                <input type="url" id="logo-url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                            </div>
-                            <div class="flex items-center justify-between pt-2">
-                                <span class="text-sm font-medium text-gray-700">وضع الصيانة</span>
-                                <div class="relative inline-block w-14 align-middle select-none transition duration-200 ease-in">
-                                    <input type="checkbox" id="maintenance-mode" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-2 appearance-none cursor-pointer"/>
-                                    <label for="maintenance-mode" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
+                            <p class="text-center text-gray-500">جاري تحميل الإعدادات...</p>
                         </div>
                     </div>
 
-                    <!-- Payment Settings -->
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h2 class="text-xl font-bold mb-6 border-b pb-4">إعدادات طرق الدفع</h2>
                         <div id="payment-settings-container" class="space-y-6">
@@ -94,9 +57,8 @@
                         </div>
                     </div>
                     
-                    <!-- Save Button -->
                     <div class="pt-2">
-                        <button id="save-all-btn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm">
+                        <button id="save-all-btn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm disabled:bg-indigo-400">
                             <i data-lucide="save" class="w-5 h-5 ml-2"></i>
                             <span>حفظ جميع التغييرات</span>
                         </button>
@@ -107,13 +69,9 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
-
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+            const generalContainer = document.getElementById('general-settings-container');
             const paymentContainer = document.getElementById('payment-settings-container');
             const saveAllBtn = document.getElementById('save-all-btn');
 
@@ -132,39 +90,52 @@
 
                 } catch (error) {
                     console.error("Error fetching settings:", error);
-                    alert('فشل تحميل الإعدادات.');
+                    showMessage('فشل تحميل الإعدادات.', 'error');
                 }
             }
 
             function renderGeneralSettings(settings) {
                 if (!settings) return;
-                document.getElementById('site-name').value = settings.site_name || '';
-                document.getElementById('logo-url').value = settings.logo_url || '';
-                document.getElementById('maintenance-mode').checked = settings.maintenance_mode || false;
+                generalContainer.innerHTML = `
+                    <div>
+                        <label for="site-name" class="block text-sm font-medium text-gray-700">اسم الموقع</label>
+                        <input type="text" id="site-name" value="${settings.site_name || ''}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="logo-url" class="block text-sm font-medium text-gray-700">رابط الشعار</label>
+                        <input type="url" id="logo-url" value="${settings.logo_url || ''}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <div>
+                           <span class="text-sm font-medium text-gray-700">وضع الصيانة</span>
+                           <p class="text-xs text-gray-500">عند تفعيله، لن يتمكن الزوار من الوصول للموقع (لا يؤثر على لوحة التحكم).</p>
+                        </div>
+                        <div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" id="maintenance-mode" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transition-transform" ${settings.maintenance_mode ? 'checked' : ''}/>
+                            <label for="maintenance-mode" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>`;
             }
 
             function renderPaymentSettings(methods) {
                 paymentContainer.innerHTML = '';
                 if (methods.length === 0) {
-                    paymentContainer.innerHTML = '<p class="text-center text-gray-500">لا توجد طرق دفع لإعدادها.</p>';
+                    paymentContainer.innerHTML = '<p class="text-center text-gray-500">لا توجد طرق دفع لإعدادها. يمكنك إضافتها من قاعدة البيانات.</p>';
                     return;
                 }
                 methods.forEach(method => {
                     const details = method.details || {};
-                    const isEnabled = method.is_enabled;
                     const methodHtml = `
                         <div class="p-4 border rounded-lg bg-gray-50" data-method-id="${method.id}">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-4"><img src="${method.logo_url || 'https://placehold.co/40x40'}" class="h-8 w-auto object-contain"><h3 class="font-bold text-lg">${method.name}</h3></div>
-                                <div class="relative inline-block w-14 align-middle select-none"><input type="checkbox" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-2 appearance-none cursor-pointer" ${isEnabled ? 'checked' : ''}/><label class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label></div>
+                                <div class="relative inline-block w-12 align-middle select-none"><input type="checkbox" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transition-transform" ${method.is_enabled ? 'checked' : ''}/><label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label></div>
                             </div>
                             <div class="mt-4 pt-4 border-t space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div><label class="block text-sm font-medium text-gray-700">رابط الشعار</label><input type="url" value="${method.logo_url || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="logo_url"></div>
                                     <div><label class="block text-sm font-medium text-gray-700">اسم المستفيد</label><input type="text" value="${details.beneficiary || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.beneficiary"></div>
-                                    <div><label class="block text-sm font-medium text-gray-700">رقم الحساب (RIB)</label><input type="text" value="${details.rib || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.rib"></div>
-                                    <div><label class="block text-sm font-medium text-gray-700">IBAN</label><input type="text" value="${details.iban || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.iban"></div>
                                     <div><label class="block text-sm font-medium text-gray-700">رقم الهاتف</label><input type="tel" value="${details.phone || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.phone"></div>
+                                    <div class="md:col-span-2"><label class="block text-sm font-medium text-gray-700">رقم الحساب (RIB)</label><input type="text" value="${details.rib || ''}" class="data-field mt-1 block w-full rounded-md border-gray-300 shadow-sm" data-key="details.rib"></div>
                                 </div>
                             </div>
                         </div>`;
@@ -176,9 +147,15 @@
                 saveAllBtn.disabled = true;
                 saveAllBtn.querySelector('span').textContent = 'جاري الحفظ...';
 
-                const paymentUpdates = [];
+                const paymentUpserts = [];
                 document.querySelectorAll('[data-method-id]').forEach(div => {
                     const id = div.dataset.methodId;
+                    
+                    // =================== FIX START ===================
+                    // Get the 'name' from the <h3> tag because it's required by the database.
+                    const name = div.querySelector('h3').textContent; 
+                    // =================== FIX END =====================
+
                     const is_enabled = div.querySelector('.toggle-checkbox').checked;
                     const details = {};
                     div.querySelectorAll('.data-field').forEach(input => {
@@ -187,12 +164,11 @@
                             details[keyPath.split('.')[1]] = input.value || null;
                         }
                     });
-                    const updateData = {
-                        is_enabled: is_enabled,
-                        details: details,
-                        logo_url: div.querySelector('[data-key="logo_url"]').value || null
-                    };
-                    paymentUpdates.push(supabaseClient.from('payment_methods').update(updateData).eq('id', id));
+
+                    // =================== FIX START ===================
+                    // Add the 'name' field to the object being pushed.
+                    paymentUpserts.push({ id: id, name: name, is_enabled: is_enabled, details: details });
+                    // =================== FIX END =====================
                 });
 
                 const generalUpdateData = {
@@ -201,27 +177,33 @@
                     logo_url: document.getElementById('logo-url').value,
                     maintenance_mode: document.getElementById('maintenance-mode').checked
                 };
-                const generalUpdate = supabaseClient.from('general_settings').upsert(generalUpdateData);
 
                 try {
-                    const results = await Promise.all([...paymentUpdates, generalUpdate]);
-                    const hasError = results.some(res => res.error);
-                    if (hasError) {
-                        const failedOp = results.find(res => res.error);
-                        throw new Error(`فشل تحديث الإعدادات: ${failedOp.error.message}`);
-                    }
-                    alert('تم حفظ جميع التغييرات بنجاح!');
+                    const { error: paymentError } = await supabaseClient.from('payment_methods').upsert(paymentUpserts);
+                    if (paymentError) throw paymentError;
+
+                    const { error: generalError } = await supabaseClient.from('general_settings').upsert(generalUpdateData);
+                    if (generalError) throw generalError;
+                    
+                    showMessage('تم حفظ جميع التغييرات بنجاح!', 'success');
                 } catch (error) {
                     console.error("Error saving settings:", error);
-                    alert(`حدث خطأ أثناء حفظ التغييرات: ${error.message}`);
+                    showMessage(`حدث خطأ أثناء حفظ التغييرات: ${error.message}`, 'error');
                 } finally {
                     saveAllBtn.disabled = false;
                     saveAllBtn.querySelector('span').textContent = 'حفظ جميع التغييرات';
                 }
             });
 
+            function showMessage(message, type = 'success') {
+                const container = document.getElementById('message-container');
+                const color = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700';
+                container.innerHTML = `<div class="border-l-4 p-4 rounded-lg ${color}" role="alert"><p>${message}</p></div>`;
+                setTimeout(() => container.innerHTML = '', 5000);
+            }
+
             fetchAllSettings();
-        });
+        }
     </script>
 </body>
 </html>

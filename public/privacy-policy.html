@@ -1,15 +1,6 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link href="output.css" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1245242841843828"
-     crossorigin="anonymous"></script>
-    <!-- =================================================================
-         META TAGS, FONTS, AND ICONS
-         This section contains metadata for the page, links to Google Fonts for typography,
-         and Font Awesome for icons, ensuring the page looks professional and modern.
-    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سياسة الخصوصية - المكتب الرقمي</title>
@@ -22,13 +13,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- =================================================================
-         INTERNAL CSS STYLES
-         This extensive style block defines the entire look and feel of the page,
-         from colors and fonts to layout and responsiveness, ensuring a premium user experience.
-    ================================================================== -->
     <style>
-        /* --- متغيرات الألوان والتصميم الأساسية --- */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #0d6efd;
@@ -39,11 +24,11 @@
             --border-color: #dee2e6;
             --border-radius: 12px;
             --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            --success-color: #198754;
         }
 
-        /* --- إعدادات الجسم العامة --- */
         html {
-            scroll-behavior: smooth; /* For smooth scrolling on navigation clicks */
+            scroll-behavior: smooth;
         }
         body {
             font-family: 'Cairo', sans-serif;
@@ -54,7 +39,6 @@
             line-height: 1.8;
         }
 
-        /* --- تصميم الشريط العلوي الاحترافي (للتناسق مع باقي الصفحات) --- */
         .main-header {
             background: var(--light-color);
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
@@ -76,24 +60,8 @@
         .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
         .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
         .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .navbar-actions { position: relative; }
-        .user-menu-button { display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; padding: 6px; border-radius: 50px; transition: background-color 0.3s; }
-        .user-menu-button:hover { background-color: var(--gray-color); }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
-        .user-menu-button span { font-weight: 700; font-size: 1rem; color: var(--dark-color); }
-        .dropdown-menu { display: none; position: absolute; top: 110%; left: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 200px; z-index: 1001; border: 1px solid #eee; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
-        .dropdown-menu.show { display: block; opacity: 1; transform: translateY(0); }
-        .dropdown-menu a { display: flex; align-items: center; gap: 10px; padding: 12px 20px; text-decoration: none; color: var(--dark-color); font-weight: 700; }
-        .dropdown-menu a:hover { background-color: var(--gray-color); }
-        .dropdown-menu a i { width: 20px; color: var(--primary-color); }
-        .dropdown-divider { height: 1px; background-color: #eee; margin: 8px 0; }
-        .btn-header { font-weight:700; padding: 8px 20px; text-decoration: none; border-radius: 8px; transition: all 0.3s ease; }
-        .btn-header.primary { background-color: var(--primary-color); color: white; }
-        .btn-header.light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-header:hover { transform: translateY(-2px); }
         .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
 
-        /* --- تصميم حاوية الصفحة والترويسة --- */
         .page-container {
             max-width: 1200px;
             margin: 40px auto;
@@ -122,7 +90,6 @@
             margin: 0 auto;
         }
 
-        /* --- تصميم تخطيط الصفحة مع قائمة جانبية --- */
         .policy-layout {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -130,10 +97,9 @@
             align-items: flex-start;
         }
         
-        /* --- تصميم القائمة الجانبية للتنقل --- */
         .policy-nav {
             position: sticky;
-            top: 120px; /* Space for the sticky header */
+            top: 120px;
             background: var(--light-color);
             padding: 20px;
             border-radius: var(--border-radius);
@@ -163,9 +129,8 @@
             box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
         }
 
-        /* --- تصميم أقسام السياسة --- */
         .policy-content {
-            scroll-margin-top: 120px; /* Offset for smooth scroll */
+            scroll-margin-top: 120px;
         }
         .policy-section {
             background: var(--light-color);
@@ -210,13 +175,16 @@
         }
         .policy-section .highlight {
             background-color: #e9f5ff;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             border-right: 4px solid var(--secondary-color);
             margin-top: 20px;
         }
+         .policy-section .highlight.success {
+            background-color: #e8f5e9;
+            border-right-color: var(--success-color);
+        }
 
-        /* --- التصميم المتجاوب --- */
         @media (max-width: 992px) {
             .policy-layout {
                 grid-template-columns: 1fr;
@@ -239,7 +207,6 @@
 </head>
 <body>
 
-    <!-- ✅ الشريط العلوي الموحد -->
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo">
@@ -249,47 +216,74 @@
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <div id="mobile-navbar-actions"></div>
             </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا الجزء بواسطة auth.js -->
-            </div>
             <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
     <div class="page-container">
-        <!-- ترويسة الصفحة -->
         <header class="page-header">
             <div class="icon"><i class="fas fa-user-secret"></i></div>
             <h1>سياسة الخصوصية</h1>
-            <p>آخر تحديث: 13 يوليو 2025. خصوصيتكم هي أولويتنا القصوى. توضح هذه السياسة كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتكم الشخصية.</p>
+            <p>آخر تحديث: 27 أغسطس 2025. خصوصيتكم هي أولويتنا القصوى. توضح هذه السياسة كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتكم الشخصية.</p>
         </header>
 
         <div class="policy-layout">
-            <!-- القائمة الجانبية للتنقل -->
             <aside class="policy-nav">
                 <ul id="policy-navigation-links">
                     <li><a href="#introduction" class="active">1. مقدمة والتزام</a></li>
-                    <li><a href="#data-collection">2. البيانات التي نجمعها</a></li>
-                    <li><a href="#data-usage">3. كيف نستخدم بياناتكم</a></li>
-                    <li><a href="#data-sharing">4. مشاركة وكشف البيانات</a></li>
-                    <li><a href="#data-security">5. أمن البيانات</a></li>
-                    <li><a href="#data-retention">6. الاحتفاظ بالبيانات</a></li>
-                    <li><a href="#user-rights">7. حقوقكم</a></li>
-                    <li><a href="#contact">8. التواصل معنا</a></li>
+                    <li><a href="#data-collection-notice">2. إشعار جمع البيانات والتزامات الأمان</a></li>
+                    <li><a href="#data-collection">3. البيانات التي نجمعها</a></li>
+                    <li><a href="#data-usage">4. كيف نستخدم بياناتكم</a></li>
+                    <li><a href="#data-sharing">5. مشاركة وكشف البيانات</a></li>
+                    <li><a href="#data-security">6. أمن البيانات</a></li>
+                    <li><a href="#data-retention">7. الاحتفاظ بالبيانات</a></li>
+                    <li><a href="#user-rights">8. حقوقكم</a></li>
+                    <li><a href="#contact">9. التواصل معنا</a></li>
                 </ul>
             </aside>
 
-            <!-- محتوى سياسة الخصوصية -->
             <main class="policy-content">
                 <section id="introduction" class="policy-section">
                     <h2><i class="fas fa-info-circle"></i> 1. مقدمة والتزام</h2>
                     <p>يلتزم "المكتب الرقمي" بحماية خصوصية زواره وعملائه. تم إعداد سياسة الخصوصية هذه لتوضيح الممارسات التي نتبعها فيما يتعلق بجمع واستخدام وحماية المعلومات الشخصية التي تقدمونها لنا عبر موقعنا الإلكتروني. إن استخدامكم لخدماتنا يعني موافقتكم على البنود الواردة في هذه السياسة، والتي تتوافق مع القانون المغربي رقم 09-08 المتعلق بحماية الأشخاص الذاتيين تجاه معالجة المعطيات ذات الطابع الشخصي.</p>
                 </section>
 
+                <!-- START: New Section Added -->
+                <section id="data-collection-notice" class="policy-section">
+                    <h2><i class="fas fa-shield-alt"></i> 2. إشعار جمع البيانات والتزامات الأمان</h2>
+                    <h3>جمع البيانات الشخصية</h3>
+                    <p>من خلال النماذج الورقية أو الإلكترونية المتاحة على موقع <strong>KhadamatMaroc</strong>، يتم جمع البيانات الشخصية لغرض معالجة طلبات الخدمات والتواصل مع المستخدمين. وقد تم الإعلان عن هذا المعالجة لدى اللجنة الوطنية لمراقبة حماية البيانات الشخصية (CNDP) تحت الرقم: <strong>CNDP-2025-001</strong>.</p>
+                    <p>قد يتم نقل البيانات الشخصية المجمعة إلى أطراف أخرى وفق الحاجة، داخل المغرب أو خارجه، وفقًا للضوابط القانونية وطلبات النقل المصرح بها لدى CNDP.</p>
+                    <div class="highlight">
+                        <p>لتمارس حقوقك في الوصول إلى بياناتك، تصحيحها أو الاعتراض على معالجتها، يمكنك التواصل معنا عبر البريد الإلكتروني: <strong style="direction: ltr; display: inline-block;">support@khadamatmaroc.co.uk</strong>.</p>
+                    </div>
+
+                    <h3>التزامات الأمان وحماية البيانات</h3>
+                    <p>لضمان سرية وأمان البيانات الشخصية، يلتزم الموقع بما يلي:</p>
+                    <ul>
+                        <li>اتخاذ جميع الاحتياطات اللازمة لمنع أي وصول غير مصرح به أو تشويه أو فقدان للبيانات.</li>
+                        <li>معالجة البيانات فقط وفق التعليمات المصرح بها وعدم استخدامها لأغراض أخرى.</li>
+                        <li>الحفاظ على البيانات داخليًا ضمن نطاق الموقع وعدم مشاركتها إلا وفق ما يسمح به القانون.</li>
+                        <li>التأكد من قانونية جميع عمليات المعالجة المنفذة.</li>
+                        <li>عدم الاستعانة بمقاولين فرعيين إلا بعد موافقة صريحة، ويجب أن يكونوا ملتزمين بالتزامات سرية وأمن البيانات.</li>
+                        <li>تطبيق جميع التدابير الأمنية اللازمة، مادية ولوجية، لضمان سلامة البيانات.</li>
+                        <li>في نهاية معالجة البيانات أو إنهاء أي خدمة، يتم حذف جميع البيانات المحفوظة بشكل آمن.</li>
+                    </ul>
+                    <p>كما يتعهد الموقع بعدم:</p>
+                    <ul>
+                        <li>كشف أو استخدام البيانات لأي غرض غير مصرح به.</li>
+                        <li>نسخ أو تخزين البيانات لأغراض شخصية أو تجارية خارج نطاق معالجة الموقع.</li>
+                    </ul>
+                    <h3>المسؤولية القانونية:</h3>
+                    <div class="highlight success">
+                        <p>في حال عدم الالتزام بهذه الالتزامات، يمكن تحميل الموقع المسؤولية قانونيًا وتعويض أي ضرر ينشأ نتيجة أي خرق للسرية أو الأمن أو الخصوصية.</p>
+                    </div>
+                </section>
+                <!-- END: New Section Added -->
+
                 <section id="data-collection" class="policy-section">
-                    <h2><i class="fas fa-database"></i> 2. البيانات التي نجمعها</h2>
+                    <h2><i class="fas fa-database"></i> 3. البيانات التي نجمعها</h2>
                     <p>نقوم بجمع أنواع مختلفة من المعلومات لتقديم وتحسين خدماتنا لكم:</p>
                     <h3>المعلومات التي تقدمونها مباشرة:</h3>
                     <ul>
@@ -305,7 +299,7 @@
                 </section>
 
                 <section id="data-usage" class="policy-section">
-                    <h2><i class="fas fa-cogs"></i> 3. كيف نستخدم بياناتكم</h2>
+                    <h2><i class="fas fa-cogs"></i> 4. كيف نستخدم بياناتكم</h2>
                     <p>تُستخدم المعلومات التي نجمعها للأغراض التالية:</p>
                     <ul>
                         <li><strong>لتقديم وتنفيذ الخدمات:</strong> استخدام معلوماتكم الشخصية وتفاصيل الطلب لإنجاز الخدمة التي طلبتموها بدقة.</li>
@@ -316,7 +310,7 @@
                 </section>
                 
                 <section id="data-sharing" class="policy-section">
-                    <h2><i class="fas fa-share-alt"></i> 4. مشاركة وكشف البيانات</h2>
+                    <h2><i class="fas fa-share-alt"></i> 5. مشاركة وكشف البيانات</h2>
                     <p>نحن لا نبيع أو نؤجر معلوماتكم الشخصية لأي طرف ثالث. تتم مشاركة بياناتكم فقط في الحالات التالية:</p>
                     <ul>
                         <li><strong>مع مزودي الخدمات:</strong> قد نشارك البيانات مع أطراف ثالثة تساعدنا في تشغيل أعمالنا (مثل خدمات الاستضافة Cloudflare، قواعد البيانات Firebase، ومنصات التشغيل الآلي Make.com). نضمن أن هؤلاء المزودين يلتزمون بمعايير حماية بيانات صارمة.</li>
@@ -325,17 +319,17 @@
                 </section>
 
                 <section id="data-security" class="policy-section">
-                    <h2><i class="fas fa-shield-alt"></i> 5. أمن البيانات</h2>
+                    <h2><i class="fas fa-shield-alt"></i> 6. أمن البيانات</h2>
                     <p>نتخذ تدابير أمنية تقنية وتنظيمية معقولة لحماية معلوماتكم الشخصية من الوصول غير المصرح به، أو التعديل، أو الكشف، أو الإتلاف. تشمل هذه التدابير استخدام بروتوكولات آمنة (HTTPS)، وتشفير البيانات، وتقييد الوصول إلى المعلومات الشخصية للموظفين المصرح لهم فقط.</p>
                 </section>
                 
                 <section id="data-retention" class="policy-section">
-                    <h2><i class="fas fa-hourglass-half"></i> 6. الاحتفاظ بالبيانات</h2>
+                    <h2><i class="fas fa-hourglass-half"></i> 7. الاحتفاظ بالبيانات</h2>
                     <p>نحتفظ ببياناتكم الشخصية فقط للمدة اللازمة لتحقيق الأغراض التي تم جمعها من أجلها، بما في ذلك الامتثال لأي متطلبات قانونية أو محاسبية. يتم الاحتفاظ بسجلات الطلبات لفترة معقولة لخدمة العملاء وتتبع الطلبات.</p>
                 </section>
 
                 <section id="user-rights" class="policy-section">
-                    <h2><i class="fas fa-user-check"></i> 7. حقوقكم</h2>
+                    <h2><i class="fas fa-user-check"></i> 8. حقوقكم</h2>
                     <p>وفقاً للقانون 09-08، لديكم الحقوق التالية فيما يتعلق ببياناتكم الشخصية:</p>
                     <div class="highlight">
                         <ul>
@@ -348,33 +342,22 @@
                 </section>
                 
                 <section id="contact" class="policy-section">
-                    <h2><i class="fas fa-envelope-open-text"></i> 8. التواصل معنا</h2>
+                    <h2><i class="fas fa-envelope-open-text"></i> 9. التواصل معنا</h2>
                     <p>إذا كانت لديكم أي أسئلة أو استفسارات حول سياسة الخصوصية هذه، أو ترغبون في ممارسة حقوقكم، يرجى عدم التردد في التواصل معنا عبر صفحة <a href="contact.html" style="font-weight: bold; color: var(--primary-color);">اتصل بنا</a>.</p>
                 </section>
             </main>
         </div>
     </div>
 
-    <!-- ✅ السكريبتات المطلوبة في نهاية الصفحة -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="auth.js"></script>
-
     <script>
-        // =================================================================
-        //          السكريبت الخاص بصفحة سياسة الخصوصية
-        // =================================================================
         document.addEventListener('DOMContentLoaded', () => {
-            // هذا الكود يجعل القائمة الجانبية تفاعلية وتتتبع التمرير
             const navLinks = document.querySelectorAll('#policy-navigation-links a');
             const sections = document.querySelectorAll('.policy-section');
 
-            // دالة لتحديد القسم النشط أثناء التمرير
             function onScroll() {
                 let currentSectionId = '';
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    // 150 هو إزاحة لتفعيل الرابط قبل وصول القسم إلى الأعلى تماماً
                     if (window.scrollY >= sectionTop - 150) {
                         currentSectionId = section.getAttribute('id');
                     }
@@ -387,9 +370,13 @@
                     }
                 });
             }
-
-            // ربط دالة التمرير بحدث التمرير في الصفحة
             window.addEventListener('scroll', onScroll);
+
+            const hamburger = document.querySelector('.hamburger-menu');
+            const navMenu = document.querySelector('.navbar-menu');
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('mobile-active');
+            });
         });
     </script>
 </body>

@@ -5,50 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الطلبات - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
-        /* For custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        .order-item.active { background-color: #eef2ff; border-right-color: #4f46e5; }
+        .status-select {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: left 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em;
+            padding-left: 2.5rem;
+        }
+        .status-badge { border: 2px solid transparent; }
+        .status-قيد-المراجعة { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+        .status-جاري-التحقق-من-الدفع { background-color: #cffafe; color: #0e7490; border-color: #a5f3fc; }
+        .status-تم-التحقق-من-الدفع, .status-جاري-المعالجة { background-color: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+        .status-مكتمل { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
+        .status-ملغي { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
-            <div class="flex items-center justify-center h-20 border-b">
-                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
-            </div>
+            <div class="flex items-center justify-center h-20 border-b"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
-                </a>
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span></a>
+                <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="settings" class="w-5 h-5 ml-3 text-gray-500"></i><span>الإعدادات</span></a>
             </nav>
         </aside>
 
@@ -56,48 +50,29 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">إدارة الطلبات</h1>
-                <!-- Header actions can go here -->
             </header>
 
-            <main class="flex-1 overflow-y-auto p-8">
-                <!-- Filters and Search -->
-                <div class="bg-white p-4 rounded-xl shadow-md mb-6 flex items-center justify-between gap-4">
-                    <div class="relative flex-grow">
-                        <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
-                        <input type="text" id="search-input" placeholder="ابحث برقم الطلب أو اسم العميل..." class="w-full bg-gray-100 border-transparent rounded-lg py-2 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <main class="flex-1 flex overflow-hidden">
+                <!-- Orders List -->
+                <div class="w-1/3 bg-white border-l border-gray-200 flex flex-col">
+                    <div class="p-4 border-b">
+                        <div class="relative"><i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i><input type="text" id="search-input" placeholder="ابحث برقم الطلب أو اسم العميل..." class="w-full bg-gray-100 border-transparent rounded-lg py-2 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                        <div class="flex items-center gap-2 mt-3"><label for="status-filter" class="font-semibold text-gray-600 text-sm">الحالة:</label><select id="status-filter" class="flex-grow bg-gray-100 border-transparent rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"><option value="all">الكل</option><option value="قيد المراجعة">قيد المراجعة</option><option value="جاري التحقق من الدفع">جاري التحقق من الدفع</option><option value="تم التحقق من الدفع">تم التحقق من الدفع</option><option value="جاري المعالجة">جاري المعالجة</option><option value="مكتمل">مكتمل</option><option value="ملغي">ملغي</option></select></div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <label for="status-filter" class="font-semibold text-gray-600">الحالة:</label>
-                        <select id="status-filter" class="bg-gray-100 border-transparent rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            <option value="all">الكل</option>
-                            <option value="قيد المراجعة">قيد المراجعة</option>
-                            <option value="جاري التحقق من الدفع">جاري التحقق من الدفع</option>
-                            <option value="تم التحقق من الدفع">تم التحقق من الدفع</option>
-                            <option value="جاري المعالجة">جاري المعالجة</option>
-                            <option value="مكتمل">مكتمل</option>
-                            <option value="ملغي">ملغي</option>
-                        </select>
+                    <div id="orders-list-container" class="overflow-y-auto flex-1">
+                        <p class="p-4 text-center text-gray-500">جاري تحميل الطلبات...</p>
                     </div>
                 </div>
 
-                <!-- Orders Table -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="p-4 text-right font-semibold text-gray-600">رقم الطلب</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">العميل</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">الخدمة</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">التاريخ</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">الحالة</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orders-table-body" class="divide-y divide-gray-100">
-                                <!-- Loading state -->
-                                <tr><td colspan="5" class="p-8 text-center text-gray-500">جاري تحميل الطلبات...</td></tr>
-                            </tbody>
-                        </table>
+                <!-- Order Details Viewer -->
+                <div id="order-details-viewer" class="flex-1 p-8 overflow-y-auto">
+                    <div id="viewer-default-state" class="flex flex-col items-center justify-center h-full text-gray-500">
+                        <i data-lucide="inbox" class="w-24 h-24 mb-4"></i>
+                        <h2 class="text-xl font-bold">اختر طلبًا لعرض تفاصيله</h2>
+                        <p>سيتم عرض جميع معلومات الطلب هنا.</p>
+                    </div>
+                    <div id="viewer-content-state" class="hidden">
+                        <!-- Order details will be injected here -->
                     </div>
                 </div>
             </main>
@@ -105,97 +80,160 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
 
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-            const tableBody = document.getElementById('orders-table-body');
+            const listContainer = document.getElementById('orders-list-container');
             const searchInput = document.getElementById('search-input');
             const statusFilter = document.getElementById('status-filter');
+            const viewerDefaultState = document.getElementById('viewer-default-state');
+            const viewerContentState = document.getElementById('viewer-content-state');
+            
             let allOrders = [];
-
-            const orderStatuses = [
-                'قيد المراجعة',
-                'جاري التحقق من الدفع',
-                'تم التحقق من الدفع',
-                'جاري المعالجة',
-                'مكتمل',
-                'ملغي'
-            ];
+            const orderStatuses = ['قيد المراجعة', 'جاري التحقق من الدفع', 'تم التحقق من الدفع', 'جاري المعالجة', 'مكتمل', 'ملغي'];
 
             async function fetchOrders() {
                 try {
-                    const { data, error } = await supabaseClient
-                        .from('orders')
-                        .select('*')
-                        .order('created_at', { ascending: false });
-
+                    const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
                     if (error) throw error;
                     allOrders = data;
-                    renderTable(allOrders);
+                    renderOrderList(allOrders);
                 } catch (error) {
                     console.error("Error fetching orders:", error);
-                    tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-600">فشل تحميل الطلبات.</td></tr>';
+                    listContainer.innerHTML = '<p class="p-4 text-center text-red-600">فشل تحميل الطلبات.</p>';
                 }
             }
 
-            function renderTable(orders) {
-                tableBody.innerHTML = '';
+            function renderOrderList(orders) {
+                listContainer.innerHTML = '';
                 if (orders.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">لا توجد طلبات تطابق البحث.</td></tr>';
+                    listContainer.innerHTML = '<p class="p-4 text-center text-gray-500">لا توجد طلبات تطابق البحث.</p>';
                     return;
                 }
-
                 orders.forEach(order => {
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50';
-                    
-                    const formattedDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short', year: 'numeric' });
-
-                    // Create status dropdown
-                    const statusOptions = orderStatuses.map(status => 
-                        `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`
-                    ).join('');
-                    
-                    const statusDropdown = `<select data-order-id="${order.id}" class="status-dropdown bg-transparent font-semibold border-none focus:ring-0">
-                        ${statusOptions}
-                    </select>`;
-
-                    row.innerHTML = `
-                        <td class="p-4 font-semibold text-indigo-600">${order.public_order_id}</td>
-                        <td class="p-4">${order.customer_name}</td>
-                        <td class="p-4 text-gray-600">${order.service_name}</td>
-                        <td class="p-4 text-gray-600">${formattedDate}</td>
-                        <td class="p-4">${statusDropdown}</td>
-                    `;
-                    tableBody.appendChild(row);
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'order-item p-4 border-b border-r-4 border-transparent cursor-pointer hover:bg-gray-50';
+                    orderItem.dataset.orderId = order.id;
+                    const formattedDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short' });
+                    orderItem.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="font-bold text-gray-800 truncate">${order.customer_name}</h3>
+                            <span class="text-sm font-bold text-indigo-600">${order.public_order_id}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <p class="text-gray-600 truncate">${order.service_name}</p>
+                            <span class="text-xs text-gray-500">${formattedDate}</span>
+                        </div>`;
+                    orderItem.addEventListener('click', () => displayOrderDetails(order.id));
+                    listContainer.appendChild(orderItem);
                 });
+            }
 
-                // Add event listeners to the new dropdowns
-                document.querySelectorAll('.status-dropdown').forEach(dropdown => {
-                    dropdown.addEventListener('change', handleStatusChange);
-                });
+            function displayOrderDetails(orderId) {
+                document.querySelectorAll('.order-item').forEach(item => item.classList.toggle('active', item.dataset.orderId == orderId));
+                const order = allOrders.find(o => o.id == orderId);
+                if (!order) return;
+
+                viewerDefaultState.style.display = 'none';
+                viewerContentState.classList.remove('hidden');
+                
+                const statusOptions = orderStatuses.map(status => `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`).join('');
+                const statusClass = `status-${(order.status || '').replace(/ /g, '-')}`;
+
+                const paymentDetails = order.payment_details || {};
+                const customerDetails = order.customer_details || {};
+                const location = order.location || {};
+
+                viewerContentState.innerHTML = `
+                    <div class="space-y-6">
+                        <!-- Customer Info Card -->
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="user-circle" class="w-6 h-6 text-indigo-600"></i> معلومات العميل</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <p><strong>الاسم:</strong> ${order.customer_name || 'غير متوفر'}</p>
+                                <p><strong>البريد الإلكتروني:</strong> ${customerDetails.email || 'غير متوفر'}</p>
+                                <p><strong>رقم الهاتف:</strong> ${customerDetails.phone || 'غير متوفر'}</p>
+                                <p><strong>عنوان IP:</strong> ${customerDetails.ip_address || 'غير متوفر'}</p>
+                            </div>
+                        </div>
+
+                        <!-- Order Details Card -->
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="shopping-basket" class="w-6 h-6 text-indigo-600"></i> تفاصيل الطلب</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                <p><strong>الخدمة:</strong> ${order.service_name || 'غير متوفر'}</p>
+                                <p><strong>السعر الإجمالي:</strong> ${order.price || 0} د.م</p>
+                                <p><strong>رقم الطلب:</strong> ${order.public_order_id || '-'}</p>
+                                <p><strong>تاريخ الطلب:</strong> ${new Date(order.created_at).toLocaleString('ar-EG')}</p>
+                                <div class="md:col-span-2 flex items-center gap-4">
+                                    <strong>الحالة:</strong>
+                                    <select data-order-id="${order.id}" class="status-select status-badge ${statusClass} p-2 rounded-full font-semibold border-none focus:ring-2 focus:ring-indigo-400">
+                                        ${statusOptions}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment and Location Card -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="credit-card" class="w-6 h-6 text-indigo-600"></i> معلومات الدفع</h3>
+                                <div class="space-y-2 text-sm">
+                                    <p><strong>طريقة الدفع:</strong> ${paymentDetails.method || 'غير محدد'}</p>
+                                    <p><strong>معرف العملية:</strong> ${paymentDetails.transaction_id || '-'}</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="map-pin" class="w-6 h-6 text-indigo-600"></i> الموقع الجغرافي</h3>
+                                <div class="space-y-2 text-sm">
+                                    <p><strong>المدينة:</strong> ${location.city || 'غير محدد'}</p>
+                                    <p><strong>الدولة:</strong> ${location.country || 'غير محدد'}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Map -->
+                        ${location.latitude && location.longitude ? `
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                             <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude-0.1},${location.latitude-0.1},${location.longitude+0.1},${location.latitude+0.1}&layer=mapnik&marker=${location.latitude},${location.longitude}" style="border: 1px solid black"></iframe>
+                        </div>` : ''}
+
+                        <!-- ✅  Raw Data Card for Debugging -->
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="database" class="w-6 h-6 text-indigo-600"></i> البيانات الأولية (للتحقق)</h3>
+                            <div class="space-y-4 text-sm font-mono text-left dir-ltr bg-gray-100 p-4 rounded-lg overflow-x-auto">
+                                <div>
+                                    <p class="font-semibold text-gray-700">customer_details:</p>
+                                    <pre><code>${JSON.stringify(customerDetails, null, 2)}</code></pre>
+                                </div>
+                                <div class="pt-4 border-t border-gray-200">
+                                    <p class="font-semibold text-gray-700">payment_details:</p>
+                                    <pre><code>${JSON.stringify(paymentDetails, null, 2)}</code></pre>
+                                </div>
+                                <div class="pt-4 border-t border-gray-200">
+                                    <p class="font-semibold text-gray-700">location:</p>
+                                    <pre><code>${JSON.stringify(location, null, 2)}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+                document.querySelector('.status-select').addEventListener('change', handleStatusChange);
             }
 
             async function handleStatusChange(event) {
                 const newStatus = event.target.value;
                 const orderId = event.target.dataset.orderId;
-
+                const selectElement = event.target;
                 try {
-                    const { error } = await supabaseClient
-                        .from('orders')
-                        .update({ status: newStatus })
-                        .eq('id', orderId);
-                    
+                    const { error } = await supabaseClient.from('orders').update({ status: newStatus }).eq('id', orderId);
                     if (error) throw error;
                     
-                    // Optional: Add a visual confirmation
-                    event.target.style.color = '#198754';
-                    setTimeout(() => { event.target.style.color = ''; }, 1500);
-
+                    const orderIndex = allOrders.findIndex(order => order.id == orderId);
+                    if (orderIndex !== -1) allOrders[orderIndex].status = newStatus;
+                    
+                    selectElement.className = `status-select status-badge p-2 rounded-full font-semibold border-none focus:ring-2 focus:ring-indigo-400 status-${newStatus.replace(/ /g, '-')}`;
                 } catch (error) {
                     console.error("Error updating status:", error);
                     alert('فشل تحديث حالة الطلب.');
@@ -205,21 +243,19 @@
             function filterAndSearch() {
                 const searchTerm = searchInput.value.toLowerCase();
                 const selectedStatus = statusFilter.value;
-
                 const filteredOrders = allOrders.filter(order => {
-                    const matchesSearch = order.public_order_id.toLowerCase().includes(searchTerm) ||
-                                          order.customer_name.toLowerCase().includes(searchTerm);
+                    const matchesSearch = (order.public_order_id || '').toLowerCase().includes(searchTerm) || (order.customer_name || '').toLowerCase().includes(searchTerm);
                     const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
                     return matchesSearch && matchesStatus;
                 });
-                renderTable(filteredOrders);
+                renderOrderList(filteredOrders);
             }
 
             searchInput.addEventListener('input', filterAndSearch);
             statusFilter.addEventListener('change', filterAndSearch);
 
             fetchOrders();
-        });
+        }
     </script>
 </body>
 </html>

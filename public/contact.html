@@ -31,7 +31,7 @@
     <style>
         /* Custom styles to complement Tailwind */
         :root {
-            --primary-color: #0d6efd;
+            --primary-color: #0056b3;
             --dark-color: #1d2d3d;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
@@ -42,13 +42,13 @@
             font-family: 'Cairo', sans-serif;
             direction: rtl;
         }
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
         }
         .btn-submit:disabled {
-            background-color: #a5b4fc;
+            background-color: #93c5fd; /* Lighter blue for disabled state */
             cursor: not-allowed;
         }
         .optional-field {
@@ -58,7 +58,7 @@
         }
         .optional-field.visible {
             max-height: 100px; /* Adjust as needed */
-            margin-top: 1rem;
+            margin-top: 1.25rem; /* Equivalent to space-y-5 */
         }
         .footer-title::after {
             content: '';
@@ -75,30 +75,26 @@
 
     <!-- Header -->
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="h-12">
+                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="h-16 transition-transform duration-300 hover:scale-105">
             </a>
             <ul class="hidden md:flex items-center space-x-8 space-x-reverse">
-                <li><a href="index.html" class="text-gray-700 font-bold hover:text-blue-600">الرئيسية</a></li>
-                <li><a href="services.html" class="text-gray-700 font-bold hover:text-blue-600">الخدمات</a></li>
-                <li><a href="blog.html" class="text-gray-700 font-bold hover:text-blue-600">المدونة</a></li>
-                <li><a href="prices.html" class="text-gray-700 font-bold hover:text-blue-600">الأسعار</a></li>
-                <li><a href="payment.html" class="text-gray-700 font-bold hover:text-blue-600">طرق الدفع</a></li>
-                <li><a href="faq.html" class="text-gray-700 font-bold hover:text-blue-600">الأسئلة الشائعة</a></li>
-                <li><a href="contact.html" class="text-blue-600 font-bold">اتصل بنا</a></li>
+                <li><a href="index.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الرئيسية</a></li>
+                <li><a href="services.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الخدمات</a></li>
+                <li><a href="blog.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">المدونة</a></li>
+                <li><a href="faq.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الأسئلة الشائعة</a></li>
+                <li><a href="contact.html" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">اتصل بنا</a></li>
             </ul>
              <button class="md:hidden text-2xl" id="menu-btn"><i class="fas fa-bars"></i></button>
         </nav>
          <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white py-4">
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 border-t border-gray-200">
             <a href="index.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الرئيسية</a>
             <a href="services.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الخدمات</a>
             <a href="blog.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">المدونة</a>
-            <a href="prices.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الأسعار</a>
-            <a href="payment.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">طرق الدفع</a>
             <a href="faq.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الأسئلة الشائعة</a>
-            <a href="contact.html" class="block text-center py-2 text-blue-600 font-bold mx-4 rounded-lg">اتصل بنا</a>
+            <a href="contact.html" class="block text-center py-2 text-blue-600 font-bold bg-blue-50 mx-4 rounded-lg">اتصل بنا</a>
         </div>
     </header>
 
@@ -129,7 +125,7 @@
                             <i class="fas fa-envelope fa-fw text-2xl text-blue-400"></i>
                             <div class="mr-4">
                                 <h3 class="font-bold">البريد الإلكتروني</h3>
-                                <a href="mailto:support@digitaloffice.com?subject=استفسار من الموقع" class="text-gray-300 hover:text-white transition-colors">support@digitaloffice.com</a>
+                                <a href="mailto:support@khadamatmaroc.co.uk?subject=استفسار من الموقع" class="text-gray-300 hover:text-white transition-colors">support@khadamatmaroc.co.uk</a>
                             </div>
                         </div>
                     </div>
@@ -164,23 +160,39 @@
                     </div>
                     <div>
                         <label for="inquiry-type" class="font-bold text-gray-700 block mb-2">نوع الاستفسار</label>
-                        <select id="inquiry-type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input transition-all bg-white">
+                        <select id="inquiry-type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg form-select transition-all bg-white">
                             <option value="استفسار عام">استفسار عام</option>
                             <option value="استفسار عن طلب">استفسار عن طلب</option>
                             <option value="شكوى">شكوى</option>
                             <option value="اقتراح">اقتراح</option>
                         </select>
                     </div>
-                    <div id="order-id-field" class="form-group optional-field">
-                        <label for="order-id" class="font-bold text-gray-700 block mb-2">رقم الطلب</label>
+                    <div id="order-id-field" class="optional-field">
+                        <label for="order-id" class="font-bold text-gray-700 block mb-2">رقم الطلب (اختياري)</label>
                         <input type="text" id="order-id" placeholder="مثال: KH-1234567890" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input transition-all">
                     </div>
                     <div>
                         <label for="message" class="font-bold text-gray-700 block mb-2">رسالتك</label>
                         <textarea id="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input transition-all"></textarea>
                     </div>
+                    
+                    <!-- Privacy Consent Checkbox -->
+                    <div class="pt-2">
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input id="privacy-consent" name="privacy-consent" type="checkbox" required class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                            </div>
+                            <div class="mr-3 text-sm">
+                                <label for="privacy-consent" class="font-bold text-gray-800">أوافق على معالجة بياناتي</label>
+                                <p class="text-gray-500 text-xs mt-1">
+                                    بالنقر على "إرسال"، فإنك توافق على <a href="privacy.html" target="_blank" class="font-bold text-blue-600 hover:underline">سياسة الخصوصية</a> الخاصة بنا. بياناتك ستستخدم فقط للرد على استفسارك.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
-                        <button type="submit" id="submit-btn" class="w-full py-4 px-6 bg-blue-600 text-white font-bold rounded-lg text-lg hover:bg-blue-700 transition-all btn-submit">
+                        <button type="submit" id="submit-btn" class="w-full py-4 px-6 bg-blue-600 text-white font-bold rounded-lg text-lg hover:bg-blue-700 transition-all duration-300 btn-submit transform hover:-translate-y-1 disabled:opacity-50 disabled:transform-none">
                             إرسال الرسالة
                         </button>
                     </div>
@@ -201,25 +213,25 @@
                 <div class="footer-section">
                     <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">روابط مهمة</h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="index.html" class="hover:text-white">الرئيسية</a></li>
-                        <li><a href="services.html" class="hover:text-white">الخدمات</a></li>
-                        <li><a href="contact.html" class="hover:text-white">اتصل بنا</a></li>
-                        <li><a href="faq.html" class="hover:text-white">الأسئلة الشائعة</a></li>
+                        <li><a href="index.html" class="hover:text-white transition-colors">الرئيسية</a></li>
+                        <li><a href="services.html" class="hover:text-white transition-colors">الخدمات</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">اتصل بنا</a></li>
+                        <li><a href="faq.html" class="hover:text-white transition-colors">الأسئلة الشائعة</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">قانوني</h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="privacy-policy.html" class="hover:text-white">سياسة الخصوصية</a></li>
-                        <li><a href="terms-and-conditions.html" class="hover:text-white">الشروط والأحكام</a></li>
+                        <li><a href="privacy.html" class="hover:text-white transition-colors">سياسة الخصوصية</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors">الشروط والأحكام</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">انضم لنشرتنا الإخبارية</h3>
                     <p class="text-sm mb-4">كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
                     <form id="newsletter-form" class="flex">
-                        <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required class="w-full p-2 rounded-r-md border-none text-gray-800">
-                        <button type="submit" class="bg-blue-600 text-white px-4 rounded-l-md hover:bg-blue-700">اشترك</button>
+                        <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required class="w-full p-2 rounded-r-md border-none text-gray-800 focus:ring-2 focus:ring-blue-500">
+                        <button type="submit" class="bg-blue-600 text-white px-4 rounded-l-md hover:bg-blue-700 transition-colors">اشترك</button>
                     </form>
                     <div id="newsletter-message" class="mt-2 text-sm"></div>
                 </div>
@@ -234,7 +246,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- Supabase Configuration ---
             const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk1dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
             const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // --- Element Selectors ---
@@ -247,6 +259,22 @@
             const newsletterMessage = document.getElementById('newsletter-message');
             const menuBtn = document.getElementById('menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+            
+            const requiredInputs = contactForm.querySelectorAll('[required]');
+            const privacyConsentCheckbox = document.getElementById('privacy-consent');
+
+            // --- Form Validation ---
+            const validateForm = () => {
+                let isValid = true;
+                requiredInputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        if (!input.checked) isValid = false;
+                    } else {
+                        if (!input.value.trim()) isValid = false;
+                    }
+                });
+                submitBtn.disabled = !isValid;
+            };
 
             // --- Event Listeners ---
 
@@ -255,7 +283,7 @@
                 mobileMenu.classList.toggle('hidden');
             });
 
-            // Show/Hide Order ID field based on inquiry type
+            // Show/Hide Order ID field
             inquiryTypeSelect.addEventListener('change', () => {
                 const selectedValue = inquiryTypeSelect.value;
                 if (selectedValue === 'استفسار عن طلب' || selectedValue === 'شكوى') {
@@ -264,13 +292,21 @@
                     orderIdField.classList.remove('visible');
                 }
             });
+            
+            // Real-time validation
+            requiredInputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
 
             // Contact Form Submission
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                if (submitBtn.disabled) return;
+
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-                formMessage.style.display = 'none';
+                formMessage.classList.add('hidden');
 
                 const ticketData = {
                     customer_name: document.getElementById('name').value,
@@ -282,14 +318,12 @@
                 };
 
                 try {
-                    // Using Supabase Edge Function to handle the submission
                     const { data, error } = await supabaseClient.functions.invoke('submit-ticket', {
                         body: ticketData,
                     });
 
                     if (error) throw error;
                     
-                    // Redirect to a success page with the new ticket ID
                     window.location.href = `contact-success.html?ticketId=${data.ticketId}`;
 
                 } catch (error) {
@@ -310,7 +344,6 @@
                 newsletterMessage.className = 'mt-2 text-sm text-yellow-400';
 
                 try {
-                    // Insert the email into a 'subscribers' table in Supabase
                     const { error } = await supabaseClient
                         .from('subscribers')
                         .insert({ email: email });
@@ -326,6 +359,9 @@
                     newsletterMessage.className = 'mt-2 text-sm text-red-400';
                 }
             });
+
+            // Initial validation check
+            validateForm();
         });
     </script>
 </body>

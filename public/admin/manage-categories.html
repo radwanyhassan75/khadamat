@@ -5,16 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الفئات - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -23,7 +18,7 @@
         .sidebar-link.active .lucide { color: #4f46e5; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
@@ -32,19 +27,11 @@
                 <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span>
-                </a>
-                 <a href="manage-categories.html" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-100 font-semibold"> <!-- Highlighted as sub-item -->
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span></a>
+                <a href="manage-categories.html" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-100 font-semibold ml-4"> <!-- Indented and highlighted -->
                     <i data-lucide="folder" class="w-5 h-5 ml-3 text-gray-500"></i><span>إدارة الفئات</span>
                 </a>
             </nav>
@@ -73,7 +60,7 @@
                                     <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا">
                                 </div>
                                 <div class="pt-2 flex gap-2">
-                                    <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
+                                    <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center disabled:bg-indigo-400">
                                         <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
                                         <span>إضافة</span>
                                     </button>
@@ -108,12 +95,8 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
-
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             const tableBody = document.getElementById('categories-table-body');
             const form = document.getElementById('category-form');
@@ -131,7 +114,7 @@
                     renderTable(data);
                 } catch (error) {
                     console.error("Error fetching categories:", error);
-                    tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-red-600">فشل تحميل الفئات.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-red-600">فشل تحميل الفئات. تحقق من صلاحيات RLS.</td></tr>';
                 }
             }
 
@@ -145,14 +128,13 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="p-4 font-semibold text-gray-800">${cat.name}</td>
-                        <td class="p-4 text-gray-600">${cat.slug}</td>
+                        <td class="p-4 text-gray-600 font-mono">${cat.slug}</td>
                         <td class="p-4 text-center">
                             <div class="flex justify-center items-center gap-2">
-                                <button data-id="${cat.id}" data-name="${cat.name}" data-slug="${cat.slug}" class="edit-btn p-2 text-gray-500 hover:text-indigo-600 rounded-md transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                                <button data-id="${cat.id}" class="delete-btn p-2 text-gray-500 hover:text-red-600 rounded-md transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                <button data-id="${cat.id}" data-name="${cat.name}" data-slug="${cat.slug}" class="edit-btn p-2 text-gray-500 hover:text-indigo-600 rounded-md transition" title="تعديل"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                <button data-id="${cat.id}" class="delete-btn p-2 text-gray-500 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                             </div>
-                        </td>
-                    `;
+                        </td>`;
                     tableBody.appendChild(row);
                 });
                 lucide.createIcons();
@@ -168,10 +150,12 @@
                 const btn = e.currentTarget;
                 formTitle.textContent = 'تعديل الفئة';
                 submitBtn.querySelector('span').textContent = 'حفظ التعديلات';
+                submitBtn.querySelector('i').dataset.lucide = 'save';
                 cancelEditBtn.classList.remove('hidden');
                 categoryIdInput.value = btn.dataset.id;
                 nameInput.value = btn.dataset.name;
                 slugInput.value = btn.dataset.slug;
+                lucide.createIcons();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
@@ -193,8 +177,10 @@
                 form.reset();
                 formTitle.textContent = 'إضافة فئة جديدة';
                 submitBtn.querySelector('span').textContent = 'إضافة';
+                submitBtn.querySelector('i').dataset.lucide = 'plus';
                 cancelEditBtn.classList.add('hidden');
                 categoryIdInput.value = '';
+                lucide.createIcons();
             }
 
             cancelEditBtn.addEventListener('click', resetForm);
@@ -205,17 +191,17 @@
                 
                 let slug = slugInput.value.trim();
                 if (!slug) {
-                    slug = nameInput.value.trim().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+                    slug = nameInput.value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
                 }
 
                 const categoryData = { name: nameInput.value, slug: slug };
                 const id = categoryIdInput.value;
 
                 let error;
-                if (id) { // Edit mode
+                if (id) {
                     const { error: updateError } = await supabaseClient.from('service_categories').update(categoryData).eq('id', id);
                     error = updateError;
-                } else { // Add mode
+                } else {
                     const { error: insertError } = await supabaseClient.from('service_categories').insert(categoryData);
                     error = insertError;
                 }
@@ -231,7 +217,7 @@
             });
 
             fetchCategories();
-        });
+        }
     </script>
 </body>
 </html>

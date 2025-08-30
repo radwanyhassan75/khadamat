@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>دخول المدير - لوحة التحكم</title>
+    <title>لوحة التحكم - المكتب الرقمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
@@ -23,21 +23,36 @@
                 <label for="password" class="block font-semibold">كلمة المرور</label>
                 <input type="password" id="password" class="mt-1 w-full rounded-md border-gray-300" required />
             </div>
-            <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700">
+             <div class="text-sm text-left">
+                <a href="forgot-password.html" class="font-semibold text-indigo-600 hover:text-indigo-500">نسيت كلمة المرور؟</a>
+            </div>
+            <button type="submit" id="login-btn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700">
                 تسجيل الدخول
             </button>
         </form>
     </div>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+        // --- ✅ 1. استيراد مكتبات Firebase ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
-        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // --- ⚠️ 2. معلومات Firebase الخاصة بك ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+            authDomain: "khadamatukdigital.firebaseapp.com",
+            projectId: "khadamatukdigital",
+            storageBucket: "khadamatukdigital.appspot.com",
+            messagingSenderId: "690661888019",
+            appId: "1:690661888019:web:8770076b69beda7d2d6fe6"
+        };
 
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- 3. منطق تسجيل الدخول باستخدام Firebase ---
         const form = document.getElementById('login-form');
-        const submitBtn = document.getElementById('submit-btn');
+        const submitBtn = document.getElementById('login-btn');
         const messageBox = document.getElementById('message-box');
 
         form.addEventListener('submit', async (e) => {
@@ -48,17 +63,20 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                // عند النجاح، قم بالتوجيه إلى لوحة المعلومات الرئيسية
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                let friendlyMessage = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    friendlyMessage = "البريد الإلكتروني أو كلمة المرور التي أدخلتها غير صحيحة.";
+                }
+                messageBox.textContent = friendlyMessage;
                 messageBox.className = 'p-3 mb-4 text-center rounded-md bg-red-100 text-red-700';
                 messageBox.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'تسجيل الدخول';
-            } else if (data.session) {
-                // Redirect to the dashboard on successful login
-                window.location.href = 'dashboard.html';
             }
         });
     </script>

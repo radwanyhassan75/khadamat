@@ -5,48 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المقال - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- ✅ 2. استدعاء محرر النصوص الاحترافي TinyMCE مع مفتاح API -->
+    <script src="https://cdn.tiny.cloud/1/zpmhp4q38jsl57jo0umqh4phj26r1u24ihzl99ks14x6j7dt/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
+        .tox-tinymce { border-radius: 0.375rem !important; border-color: #d1d5db !important; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
-            <div class="flex items-center justify-center h-20 border-b">
-                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
-            </div>
+            <div class="flex items-center justify-center h-20 border-b"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
-                </a>
-                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span>
-                </a>
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span></a>
+                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
             </nav>
         </aside>
 
@@ -54,51 +41,68 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 id="page-title" class="text-xl font-bold text-gray-800">إضافة مقال جديد</h1>
-                <a href="manage-blog.html" class="text-gray-600 hover:text-indigo-600 transition">
-                    <i data-lucide="arrow-right-circle" class="w-6 h-6"></i>
-                </a>
+                <div class="flex items-center gap-4">
+                     <a href="manage-blog.html" class="text-gray-600 hover:text-indigo-600 transition" title="العودة إلى قائمة المقالات"><i data-lucide="arrow-right-circle" class="w-6 h-6"></i></a>
+                     <button type="submit" form="post-form" id="submit-btn" class="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm disabled:bg-indigo-400">
+                        <i data-lucide="save" class="w-5 h-5 ml-2"></i>
+                        <span id="submit-btn-text">نشر المقال</span>
+                    </button>
+                </div>
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
-                <form id="post-form" class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md space-y-6">
-                    <!-- Post Title -->
-                    <div class="form-group">
-                        <label for="title" class="block font-semibold text-gray-700">عنوان المقال</label>
-                        <input type="text" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    </div>
+                <form id="post-form" class="mx-auto opacity-0 transition-opacity duration-500">
+                     <!-- Loading Spinner -->
+                    <div id="form-loader" class="text-center py-20"><p>جاري تحميل البيانات...</p></div>
+                    
+                    <div id="form-fields" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Main Content Column -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <label for="title" class="block font-semibold text-gray-700 mb-1">عنوان المقال</label>
+                                <input type="text" id="title" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-lg" required>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <label for="content" class="block font-semibold text-gray-700 mb-1">محتوى المقال</label>
+                                <textarea id="content"></textarea>
+                            </div>
+                        </div>
 
-                    <!-- Post Category -->
-                    <div class="form-group">
-                        <label for="category" class="block font-semibold text-gray-700">فئة المقال</label>
-                        <select id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                            <option value="">اختر فئة...</option>
-                        </select>
-                    </div>
-
-                    <!-- Image URL -->
-                    <div class="form-group">
-                        <label for="image_url" class="block font-semibold text-gray-700">رابط الصورة الرئيسية</label>
-                        <input type="url" id="image_url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="https://example.com/image.png">
-                    </div>
-
-                    <!-- Content -->
-                    <div class="form-group">
-                        <label for="content" class="block font-semibold text-gray-700">محتوى المقال</label>
-                        <textarea id="content" rows="12" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                    </div>
-
-                    <!-- Slug -->
-                    <div class="form-group">
-                        <label for="slug" class="block font-semibold text-gray-700">الرابط (Slug)</label>
-                        <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا إذا ترك فارغًا">
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="pt-4 border-t">
-                        <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center shadow-sm">
-                            <i data-lucide="save" class="w-5 h-5 ml-2"></i>
-                            <span id="submit-btn-text">نشر المقال</span>
-                        </button>
+                        <!-- Sidebar Column -->
+                        <div class="lg:col-span-1 space-y-6">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="flex justify-between items-center border-b pb-2 mb-4">
+                                    <h3 class="font-bold text-gray-800">إعدادات النشر</h3>
+                                    <a href="manage-blog-categories.html" class="text-xs text-indigo-600 hover:underline" title="إدارة فئات المدونة">إدارة الفئات</a>
+                                </div>
+                                <label for="category" class="block font-semibold text-gray-700">فئة المقال</label>
+                                <select id="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                    <option value="">اختر فئة...</option>
+                                </select>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="font-bold text-gray-800 border-b pb-2 mb-4">الصورة الرئيسية</h3>
+                                <label for="image_url" class="block font-semibold text-gray-700">رابط الصورة</label>
+                                <input type="url" id="image_url" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="https://example.com/image.png">
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="font-bold text-gray-800 border-b pb-2 mb-4">تحسينات SEO</h3>
+                                <div>
+                                    <label for="meta_title" class="block font-semibold text-gray-700">عنوان SEO</label>
+                                    <input type="text" id="meta_title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <p id="meta_title_counter" class="text-xs text-gray-500 mt-1 text-left">0 / 60</p>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="meta_description" class="block font-semibold text-gray-700">وصف SEO</label>
+                                    <textarea id="meta_description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                                    <p id="meta_description_counter" class="text-xs text-gray-500 mt-1 text-left">0 / 160</p>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="slug" class="block font-semibold text-gray-700">الرابط (Slug)</label>
+                                    <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </main>
@@ -106,15 +110,14 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
 
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
             const form = document.getElementById('post-form');
+            const formLoader = document.getElementById('form-loader');
+            const formFields = document.getElementById('form-fields');
             const pageTitle = document.getElementById('page-title');
+            const submitBtn = document.getElementById('submit-btn');
             const submitBtnText = document.getElementById('submit-btn-text');
             const categorySelect = document.getElementById('category');
             
@@ -122,10 +125,43 @@
             const postId = params.get('id');
             const isEditMode = postId !== null;
 
+            async function setupPage() {
+                let initialContent = '';
+                await loadCategories();
+                if (isEditMode) {
+                    initialContent = await loadPostData();
+                }
+                
+                formLoader.style.display = 'none';
+                formFields.classList.remove('hidden');
+                form.classList.add('opacity-100');
+                
+                initializeEditor(initialContent);
+                setupSeoCounters();
+                setupAutoSlug();
+            }
+
+            function initializeEditor(initialContent) {
+                tinymce.remove('textarea#content');
+                tinymce.init({
+                    selector: 'textarea#content',
+                    plugins: 'directionality lists link image code help wordcount',
+                    toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | ltr rtl | bullist numlist | link image | code | help',
+                    height: 500,
+                    content_style: 'body { font-family: Cairo, sans-serif; font-size: 16px; }',
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            editor.setContent(initialContent || '');
+                        });
+                    }
+                });
+            }
+
             async function loadCategories() {
-                const { data, error } = await supabaseClient.from('blog_categories').select('*');
+                const { data, error } = await supabaseClient.from('blog_categories').select('*').order('name');
                 if (error) {
                     console.error("Error loading blog categories:", error);
+                    alert('فشل تحميل فئات المدونة.');
                     return;
                 }
                 data.forEach(category => {
@@ -137,77 +173,110 @@
             }
 
             async function loadPostData() {
-                if (!isEditMode) return;
-
                 pageTitle.textContent = 'تعديل المقال';
                 submitBtnText.textContent = 'حفظ التعديلات';
 
-                const { data, error } = await supabaseClient
-                    .from('posts')
-                    .select('*')
-                    .eq('id', postId)
-                    .single();
-
+                const { data, error } = await supabaseClient.from('posts').select('*').eq('id', postId).single();
                 if (error) {
                     console.error("Error fetching post data:", error);
                     alert('فشل تحميل بيانات المقال.');
-                    return;
+                    return '';
                 }
 
                 document.getElementById('title').value = data.title;
                 document.getElementById('category').value = data.category_id;
                 document.getElementById('image_url').value = data.image_url;
-                document.getElementById('content').value = data.content;
                 document.getElementById('slug').value = data.slug;
+                document.getElementById('meta_title').value = data.meta_title;
+                document.getElementById('meta_description').value = data.meta_description;
+                
+                return data.content || '';
+            }
+            
+            function setupSeoCounters() {
+                const metaTitle = document.getElementById('meta_title');
+                const metaDesc = document.getElementById('meta_description');
+                const titleCounter = document.getElementById('meta_title_counter');
+                const descCounter = document.getElementById('meta_description_counter');
+
+                const updateCounter = (input, counter, max) => {
+                    const length = input.value.length;
+                    counter.textContent = `${length} / ${max}`;
+                    counter.style.color = length > max ? 'red' : '';
+                };
+                
+                metaTitle.addEventListener('input', () => updateCounter(metaTitle, titleCounter, 60));
+                metaDesc.addEventListener('input', () => updateCounter(metaDesc, descCounter, 160));
+                
+                updateCounter(metaTitle, titleCounter, 60);
+                updateCounter(metaDesc, descCounter, 160);
+            }
+            
+            function setupAutoSlug() {
+                const titleInput = document.getElementById('title');
+                const slugInput = document.getElementById('slug');
+                let slugManuallyEdited = isEditMode && !!slugInput.value;
+
+                slugInput.addEventListener('input', () => {
+                    slugManuallyEdited = slugInput.value.trim() !== '';
+                });
+
+                titleInput.addEventListener('input', () => {
+                    if (!slugManuallyEdited) {
+                        const slug = titleInput.value.trim().toLowerCase()
+                            .replace(/\s+/g, '-')
+                            .replace(/[^\p{L}\p{N}-]+/gu, '')
+                            .replace(/--+/g, '-');
+                        slugInput.value = slug;
+                    }
+                });
             }
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const submitBtn = document.getElementById('submit-btn');
                 submitBtn.disabled = true;
+                const originalBtnText = submitBtnText.textContent;
+                submitBtnText.textContent = 'جاري الحفظ...';
 
                 let slug = document.getElementById('slug').value.trim();
                 if (!slug) {
                     slug = document.getElementById('title').value.trim().toLowerCase()
-                        .replace(/ /g, '-')
-                        .replace(/[^\w-]+/g, '');
+                        .replace(/\s+/g, '-')
+                        .replace(/[^\p{L}\p{N}-]+/gu, '');
                 }
 
                 const postData = {
                     title: document.getElementById('title').value,
                     category_id: document.getElementById('category').value,
                     image_url: document.getElementById('image_url').value || null,
-                    content: document.getElementById('content').value || null,
-                    slug: slug
-                    // author_id will be handled by Supabase policies/triggers in a real app
+                    content: tinymce.get('content').getContent(),
+                    slug: slug,
+                    meta_title: document.getElementById('meta_title').value || null,
+                    meta_description: document.getElementById('meta_description').value || null,
                 };
 
                 let error;
                 if (isEditMode) {
-                    const { error: updateError } = await supabaseClient
-                        .from('posts')
-                        .update(postData)
-                        .eq('id', postId);
+                    const { error: updateError } = await supabaseClient.from('posts').update(postData).eq('id', postId);
                     error = updateError;
                 } else {
-                    const { error: insertError } = await supabaseClient
-                        .from('posts')
-                        .insert(postData);
+                    const { error: insertError } = await supabaseClient.from('posts').insert([postData]);
                     error = insertError;
                 }
 
                 if (error) {
                     console.error("Error saving post:", error);
-                    alert('فشل حفظ المقال. تحقق من الكونسول.');
+                    alert(`فشل حفظ المقال: ${error.message}`);
                     submitBtn.disabled = false;
+                    submitBtnText.textContent = originalBtnText;
                 } else {
+                    alert('تم حفظ المقال بنجاح!');
                     window.location.href = 'manage-blog.html';
                 }
             });
 
-            await loadCategories();
-            await loadPostData();
-        });
+            setupPage();
+        }
     </script>
 </body>
 </html>

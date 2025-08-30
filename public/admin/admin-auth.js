@@ -1,47 +1,53 @@
 ﻿// File: admin-auth.js
-// This script acts as a security guard for all admin pages.
+// ✅ النسخة النهائية والمصححة بالكامل
 
-(async function() {
-    // These must be defined before this script is included
-    if (typeof supabase === 'undefined' || typeof supabase.createClient === 'undefined') {
-        console.error("Supabase client is not initialized. Make sure to include the Supabase library first.");
-        return;
-    }
+// --- ⚠️ 1. معلومات Firebase الخاصة بك ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBfuVxOgengj2b1JBdt9V3u5WAnyYWsd78",
+    authDomain: "khadamatukdigital.firebaseapp.com",
+    projectId: "khadamatukdigital",
+    storageBucket: "khadamatukdigital.appspot.com",
+    messagingSenderId: "690661888019",
+    appId: "1:690661888019:web:8770076b69beda7d2d6fe6"
+};
 
-    const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// --- ✅ 2. معلومات Supabase الصحيحة ---
+const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
 
-    // ✅ تحديث: التحقق أولاً مما إذا كان هذا رابط لإعادة تعيين كلمة المرور
-    const hash = window.location.hash;
-    const isPasswordRecovery = hash.includes('access_token=') && hash.includes('type=recovery');
+// --- 3. الكود الخاص بالحماية ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    if (isPasswordRecovery) {
-        // هذا رابط إعادة تعيين كلمة مرور.
-        // يجب أن تحتوي الصفحة الحالية (مثل admin-login.html) على نموذج لتحديث كلمة المرور.
-        // سنتوقف هنا لمنع إعادة التوجيه.
-        console.log("Password recovery link detected. Auth script will not redirect.");
+// تهيئة الخدمات مرة واحدة
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// إخفاء محتوى الصفحة مؤقتًا حتى يتم التحقق
+document.body.style.display = 'none';
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // المستخدم مسجل دخوله...
         
-        // استدعاء دالة خاصة لإعادة التعيين إذا كانت موجودة
-        if (typeof handlePasswordRecovery === 'function') {
-            handlePasswordRecovery(supabaseClient);
-        }
-        return; 
-    }
+        // ربط هوية Firebase مع Supabase
+        user.getIdToken().then((token) => {
+            // نسلم "الهوية" إلى Supabase ليعرف من هو المستخدم
+            supabaseClient.auth.setSession({ access_token: token });
 
-    const { data: { session } } = await supabaseClient.auth.getSession();
-
-    if (!session) {
-        // إذا لم يكن المستخدم مسجلاً للدخول، ولم يكن رابط إعادة تعيين، قم بإعادة التوجيه.
+            // الآن، بعد أن عرف Supabase هوية المدير، نقوم بإظهار الصفحة
+            document.body.style.display = 'flex';
+            
+            // ✅ الأهم: نعطي الأمر للصفحة لتبدأ عملها وتحميل البيانات
+            if (typeof initializePage === 'function') {
+                initializePage(supabaseClient); 
+            }
+        });
+    
+    } else {
+        // المستخدم ليس مسجلاً للدخول، قم بإعادة التوجيه فورًا
         window.location.href = 'admin-login.html';
-        return;
     }
-    
-    // إذا كان المستخدم مسجلاً، نفترض أنه المدير.
-    // الحماية الحقيقية تتم عبر قوانين RLS في قاعدة البيانات.
-    
-    // إذا كانت الصفحة تحتوي على دالة تهيئة، قم باستدعائها.
-    if (typeof initializePage === 'function') {
-        initializePage(supabaseClient);
-    }
-})();
+});

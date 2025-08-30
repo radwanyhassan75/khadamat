@@ -13,9 +13,12 @@
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
     <!-- Tone.js for sound effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <!-- Google Pay API -->
+    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
 
     <style>
         :root {
@@ -77,9 +80,9 @@
         label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
         .required-star { color: var(--danger-color); }
         .input-wrapper { position: relative; }
-        .input-icon { position: absolute; top: 15px; left: 18px; color: #adb5bd; }
+        .input-icon { position: absolute; top: 50%; transform: translateY(-50%); right: 18px; color: #adb5bd; }
         input, textarea {
-            width: 100%; padding: 14px 18px 14px 50px; border: 1px solid #ced4da;
+            width: 100%; padding: 14px 50px 14px 18px; border: 1px solid #ced4da;
             border-radius: 10px; font-size: 1rem; font-family: 'Cairo', sans-serif;
             box-sizing: border-box; transition: all 0.3s ease;
         }
@@ -100,71 +103,31 @@
         .submit-btn:disabled { background: #adb5bd; cursor: not-allowed; }
         #form-error { display: none; background-color: #f8d7da; color: #842029; padding: 15px; border-radius: var(--border-radius); margin-top: 20px; font-weight: 700; border: 1px solid #f5c2c7; }
         
-        /* Payment Options Styling */
         .payment-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
         .payment-option { 
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 20px 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 150px;
-            background-color: var(--light-color);
+            border: 2px solid var(--border-color); border-radius: var(--border-radius); padding: 20px 10px;
+            cursor: pointer; transition: all 0.3s ease; text-align: center; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; height: 150px; background-color: var(--light-color);
         }
-        .payment-option:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            border-color: var(--secondary-color);
-        }
-        .payment-option.active {
-            border-color: var(--success-color);
-            background-color: #f0fff8;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-        .payment-option.stripe.active {
-            border-color: var(--stripe-color);
-            background-color: var(--info-color);
-        }
-        .payment-option img {
-            height: auto;
-            max-height: 65px;
-            width: 100%;
-            max-width: 110px;
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-        .payment-option span {
-            font-weight: 700;
-            color: var(--dark-color);
-            font-size: 1rem;
-            line-height: 1.3;
-        }
+        .payment-option:hover { transform: translateY(-5px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-color: var(--secondary-color); }
+        .payment-option.active { border-color: var(--success-color); background-color: #f0fff8; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .payment-option.stripe.active, .payment-option.google-pay.active { border-color: var(--stripe-color); background-color: var(--info-color); }
+        .payment-option img { height: auto; max-height: 65px; width: 100%; max-width: 110px; object-fit: contain; margin-bottom: 15px; }
+        .payment-option span { font-weight: 700; color: var(--dark-color); font-size: 1rem; line-height: 1.3; }
 
-        /* Payment Details & Info Boxes */
         .payment-details-container, .stripe-info-box { display: none; padding: 25px; border-radius: var(--border-radius); margin-top: 20px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .payment-details-container.active, .stripe-info-box.active { display: block; }
         .payment-details-container { background: #e9f5ff; border: 1px solid #bde0fe; }
-        .stripe-info-box { background-color: var(--info-color); border-left: 6px solid var(--stripe-color); }
+        .stripe-info-box { background-color: var(--info-color); border-right: 6px solid var(--stripe-color); }
         .payment-instructions h4, .stripe-info-box h4 { font-size: 1.4rem; font-weight: 900; color: var(--dark-color); margin-top: 0; margin-bottom: 20px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .instruction-card { background-color: var(--light-color); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-        .instruction-card h5 { margin: 0 0 15px 0; font-size: 1.1rem; font-weight: 700; color: var(--primary-color); display: flex; align-items: center; gap: 10px; }
         .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e9ecef; }
         .detail-row:last-child { border-bottom: none; }
         .detail-row .label { font-weight: 700; color: #6c757d; }
-        .detail-row .value { font-weight: 700; color: var(--dark-color); direction: ltr; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .detail-row .value { font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
         .copy-button { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 1.1rem; }
 
-        /* File Uploader */
-        .file-drop-area {
-            border: 2px dashed var(--border-color); border-radius: var(--border-radius);
-            padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease;
-        }
+        .file-drop-area { border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
         .file-drop-area.drag-over { border-color: var(--primary-color); background-color: #f0f6ff; }
         .file-drop-area .upload-icon { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px; }
         .file-drop-area p { margin: 0; font-weight: 700; }
@@ -175,9 +138,8 @@
         .file-preview-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
         .file-preview-icon { font-size: 2.5rem; color: var(--secondary-color); flex-shrink: 0; }
         .file-preview-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .remove-file-btn { background: none; border: none; font-size: 1.2rem; color: var(--danger-color); cursor: pointer; flex-shrink: 0; }
+        .remove-file-btn { background: none; border: none; font-size: 1.2rem; color: var(--danger-color); cursor: pointer; flex-shrink: 0; margin-right: auto; }
 
-        /* Legal Agreements */
         .legal-agreements { margin-top: 30px; padding: 20px; border-top: 1px solid var(--border-color); background-color: #fcfdff; border-radius: 10px; }
         .checkbox-group { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; }
         .checkbox-group:last-child { margin-bottom: 0; }
@@ -188,15 +150,17 @@
         .checkbox-group a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
         .checkbox-group a:hover { text-decoration: underline; }
         
-        /* Footer */
         .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
         .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
         .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
         .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
         .footer-section ul li { margin-bottom: 12px; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
         .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { font-size: 1.5rem; color: #bdc3c7; transition: color 0.3s ease; }
+        .social-links a:hover { color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
 
         @media (max-width: 768px) {
@@ -243,17 +207,14 @@
                 <div class="form-group">
                     <label for="name">الاسم الكامل <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fas fa-user input-icon"></i><input type="text" name="customerName" id="name" required /></div>
-                    <p class="field-note">الرجاء إدخال اسمك كما هو في وثائقك الرسمية.</p>
                 </div>
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fas fa-envelope input-icon"></i><input type="email" name="email" id="email" required /></div>
-                    <p class="field-note">سوف نستخدم هذا البريد لإرسال تأكيد الطلب والتواصل معك.</p>
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fab fa-whatsapp input-icon"></i><input type="tel" name="phone" id="phone" required /></div>
-                    <p class="field-note">ضروري لمتابعة حالة طلبك والتواصل السريع.</p>
                 </div>
             </div>
 
@@ -262,7 +223,10 @@
                 <div class="form-group">
                     <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
                     <textarea name="serviceDetails" id="service-details" rows="4" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية احترافية باللغة الإنجليزية..."></textarea>
-                    <p class="field-note">كلما كانت التفاصيل أوضح، كانت الخدمة أفضل. أذكر كل ما تحتاجه هنا.</p>
+                </div>
+                <div class="form-group">
+                    <label for="optional-link">رابط إضافي (اختياري)</label>
+                    <div class="input-wrapper"><i class="fas fa-link input-icon"></i><input type="url" name="optionalLink" id="optional-link" placeholder="https://example.com" /></div>
                 </div>
                 <div class="form-group">
                     <label for="attachment-file-input">إرفاق ملف (اختياري)</label>
@@ -270,13 +234,11 @@
                         <input type="file" id="attachment-file-input" name="attachmentFile" class="file-input-hidden">
                         <i class="fas fa-cloud-upload-alt upload-icon"></i>
                         <p>اسحب وأفلت الملف هنا، أو انقر للاختيار</p>
-                        <span>يمكنك إرفاق جميع أنواع الملفات (صور، مستندات، PDF...)</span>
                     </div>
                     <div class="file-preview-wrapper" id="attachment-preview-wrapper">
                         <div class="file-preview-info"></div>
                         <button type="button" class="remove-file-btn" aria-label="إزالة الملف"><i class="fas fa-times"></i></button>
                     </div>
-                    <p class="field-note">ملاحظة: تحميل الملفات الكبيرة قد يستغرق بعض الوقت.</p>
                 </div>
             </div>
 
@@ -292,6 +254,8 @@
                 
                 <div id="payment-details-container" class="payment-details-container"></div>
                 <div id="stripe-info-box" class="stripe-info-box"></div>
+                <!-- Google Pay Button Container -->
+                <div id="google-pay-button-container" style="display: none; margin-top: 20px; justify-content: center;"></div>
                 
                 <div class="form-group" id="receipt-upload-group" style="display: none;">
                     <label for="receipt-file-input">أرفق وصل الدفع (صورة أو PDF) <span class="required-star">*</span></label>
@@ -309,15 +273,11 @@
                 <div class="legal-agreements">
                     <div class="checkbox-group">
                         <input type="checkbox" id="terms-agree" required>
-                        <label for="terms-agree">
-                            أقر بأنني قرأت ووافقت على <a href="terms.html" target="_blank">الشروط والأحكام</a>، <a href="privacy.html" target="_blank">سياسة الخصوصية</a>، و<a href="refund.html" target="_blank">سياسة الاسترجاع</a> الخاصة بالموقع.
-                        </label>
+                        <label for="terms-agree">أقر بأنني قرأت ووافقت على <a href="terms.html" target="_blank">الشروط والأحكام</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>.</label>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="data-consent" required>
-                        <label for="data-consent">
-                            أوافق على أن بياناتي الشخصية، بما في ذلك أي ملفات مرفقة، قد تتم معالجتها ومشاركتها مع أطراف ثالثة (مثل مقدمي الخدمات) بالقدر الضروري لإنجاز طلبي. أقر بأن هذه الموافقة تعتبر تنازلاً عن أي متابعة قانونية مستقبلية تتعلق باستخدام هذه البيانات ضمن نطاق معالجة هذا الطلب.
-                        </label>
+                        <label for="data-consent">أوافق على جمع بياناتي الشخصية لمعالجة طلبي وفقًا للقانون 09-08.</label>
                     </div>
                 </div>
 
@@ -331,22 +291,36 @@
         <div class="footer-content">
              <div class="footer-section">
                 <h3 class="footer-title">المكتب الرقمي</h3>
-                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية في المغرب.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
              </div>
              <div class="footer-section">
                 <h3 class="footer-title">روابط مهمة</h3>
                 <ul>
-                    <li><a href="services.html">الخدمات</a></li>
-                    <li><a href="tracking.html">تتبع الطلب</a></li>
-                    <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="services.html"><i class="fas fa-cogs"></i> جميع الخدمات</a></li>
+                    <li><a href="tracking.html"><i class="fas fa-search-location"></i> تتبع طلبك</a></li>
+                    <li><a href="blog.html"><i class="fas fa-newspaper"></i> المدونة</a></li>
+                    <li><a href="contact.html"><i class="fas fa-headset"></i> اتصل بنا</a></li>
                 </ul>
              </div>
              <div class="footer-section">
                 <h3 class="footer-title">قانوني</h3>
                 <ul>
-                    <li><a href="privacy.html">سياسة الخصوصية</a></li>
-                    <li><a href="terms.html">الشروط والأحكام</a></li>
-                    <li><a href="refund.html">سياسة الاسترجاع</a></li>
+                    <li><a href="privacy.html"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a></li>
+                    <li><a href="terms.html"><i class="fas fa-file-contract"></i> الشروط والأحكام</a></li>
+                    <li><a href="refund.html"><i class="fas fa-undo-alt"></i> سياسة الاسترجاع</a></li>
+                </ul>
+             </div>
+             <div class="footer-section">
+                <h3 class="footer-title">تواصل معنا</h3>
+                <ul>
+                    <li><a href="mailto:contact@example.com"><i class="fas fa-envelope"></i> contact@example.com</a></li>
+                    <li><a href="tel:+212000000000"><i class="fas fa-phone"></i> +212 000 000 000</a></li>
+                    <li><p><i class="fas fa-map-marker-alt"></i> الرباط، المغرب</p></li>
                 </ul>
              </div>
         </div>
@@ -354,270 +328,415 @@
             <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-    
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <!-- The auth.js script is no longer needed on this page -->
-    <!-- <script src="auth.js"></script> -->
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- معلومات الاتصال الخاصة بك ---
-        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+document.addEventListener('DOMContentLoaded', () => {
+    // --- ✅ CONFIGURATION ---
+    const IS_PRODUCTION = true;
 
-        // --- المؤثرات الصوتية ---
-        let soundsReady = false;
-        const selectSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
-        const copySound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 } }).toDestination();
-        document.body.addEventListener('click', async () => {
-            if (!soundsReady) { await Tone.start(); soundsReady = true; }
-        }, { once: true });
+    // --- Supabase Configuration ---
+    const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
 
-        // --- عناصر الصفحة ---
-        const form = document.getElementById('payment-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorDiv = document.getElementById('form-error');
-        const paymentOptionsContainer = document.getElementById('payment-options');
-        const paymentMethodInput = document.getElementById('payment-method-input');
-        const paymentDetailsContainer = document.getElementById('payment-details-container');
-        const stripeInfoBox = document.getElementById('stripe-info-box');
-        const receiptUploadGroup = document.getElementById('receipt-upload-group');
-        const allCheckboxes = form.querySelectorAll('input[type="checkbox"]');
-        
-        const stripe = Stripe('pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF'); 
-        let paymentMethods = [];
-
-        // --- دالة جلب طرق الدفع من Supabase ---
-        async function fetchPaymentMethods() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('payment_methods')
-                    .select('*')
-                    .eq('is_enabled', true);
-                if (error) throw error;
-                paymentMethods = data;
-                renderPaymentOptions();
-            } catch (error) {
-                console.error("Error fetching payment methods:", error);
-                paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color); grid-column: 1 / -1; text-align: center;">فشل تحميل طرق الدفع.</p>`;
-            }
+    // --- Payment Provider Keys ---
+    const PAYMENT_CONFIG = {
+        PRODUCTION: {
+            STRIPE_PUBLISHABLE_KEY: 'pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF',
+            GOOGLE_PAY_MERCHANT_ID: 'BCR2DN7T6DV6N4KO',
+            GOOGLE_PAY_MERCHANT_NAME: 'khadamatmaroc',
+            GOOGLE_PAY_ENVIRONMENT: 'PRODUCTION'
+        },
+        TEST: {
+            STRIPE_PUBLISHABLE_KEY: 'pk_test_YOUR_TEST_KEY_HERE', 
+            GOOGLE_PAY_MERCHANT_ID: '12345678901234567890',
+            GOOGLE_PAY_MERCHANT_NAME: 'Example Merchant (Test)',
+            GOOGLE_PAY_ENVIRONMENT: 'TEST'
         }
-
-        // --- دالة عرض خيارات الدفع ---
-        function renderPaymentOptions() {
-            paymentOptionsContainer.innerHTML = '';
-            if (paymentMethods.length === 0) {
-                 paymentOptionsContainer.innerHTML = `<p style="color: var(--secondary-color); grid-column: 1 / -1; text-align: center;">لا توجد طرق دفع مفعلة حالياً.</p>`;
-                 return;
-            }
-            paymentMethods.forEach(method => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = `payment-option ${method.id}`;
-                optionDiv.dataset.method = method.id;
-                optionDiv.innerHTML = `<img src="${method.logo_url}" alt="${method.name}" onerror="this.style.display='none'"><span class="font-bold">${method.name}</span>`;
-                optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
-                paymentOptionsContainer.appendChild(optionDiv);
-            });
-        }
-
-        // --- دالة اختيار طريقة الدفع ---
-        function selectPaymentMethod(selectedMethodId) {
-            if (soundsReady) selectSound.triggerAttackRelease("C5", "8n");
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
-            });
-            const selectedMethod = paymentMethods.find(m => m.id === selectedMethodId);
-            paymentMethodInput.value = selectedMethod.name;
-            receiptUploadGroup.style.display = selectedMethodId === 'stripe' ? 'none' : 'block';
-            document.getElementById('receipt-file-input').required = selectedMethodId !== 'stripe';
-            paymentDetailsContainer.classList.remove('active');
-            stripeInfoBox.classList.remove('active');
-            if (selectedMethodId === 'stripe') {
-                stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
-                stripeInfoBox.classList.add('active');
-            } else {
-                renderPaymentDetails(selectedMethodId);
-                paymentDetailsContainer.classList.add('active');
-            }
-            validateForm();
-        }
-
-        // --- دالة عرض تفاصيل الدفع ---
-        function renderPaymentDetails(methodId) {
-            const method = paymentMethods.find(m => m.id === methodId);
-            if (!method || !method.details) {
-                paymentDetailsContainer.innerHTML = '';
-                return;
-            };
-            const beneficiary = method.details.beneficiary || 'غير محدد';
-            let detailsHtml = `<div class="payment-instructions"><h4><i class="fas fa-money-check-alt"></i> معلومات الدفع لـ: ${beneficiary}</h4>`;
-            if (method.details.iban) detailsHtml += createDetailRow('IBAN', method.details.iban);
-            if (method.details.rib) detailsHtml += createDetailRow('رقم الحساب (RIB)', method.details.rib);
-            if (method.details.phone) detailsHtml += createDetailRow('رقم الهاتف', method.details.phone);
-            detailsHtml += `</div>`;
-            paymentDetailsContainer.innerHTML = detailsHtml;
-        }
-
-        // --- دوال مساعدة (نسخ، رفع ملفات، تحقق) ---
-        function createDetailRow(label, value) {
-            if (!value) return '';
-            const id = `val-${Math.random().toString(36).substr(2, 9)}`;
-            return `<div class="detail-row"><span class="label">${label}:</span><span class="value" id="${id}">${value}<button type="button" class="copy-button" onclick="copyToClipboard('${id}')"><i class="far fa-copy"></i></button></span></div>`;
-        }
-        window.copyToClipboard = function(elementId) {
-            if (soundsReady) copySound.triggerAttackRelease("C4", "8n");
-            const textElement = document.getElementById(elementId);
-            if (!textElement) return;
-            const nodeToCopy = textElement.cloneNode(true);
-            const buttonToRemove = nodeToCopy.querySelector('button');
-            if(buttonToRemove) nodeToCopy.removeChild(buttonToRemove);
-            navigator.clipboard.writeText(nodeToCopy.textContent.trim()).then(() => {
-                const copyButton = textElement.querySelector('button');
-                if (copyButton) {
-                    const originalIcon = copyButton.innerHTML;
-                    copyButton.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
-                    setTimeout(() => { copyButton.innerHTML = originalIcon; }, 2000);
-                }
-            });
-        };
-        function setupUploader(dropAreaId, fileInputId, previewWrapperId) {
-            const dropArea = document.getElementById(dropAreaId);
-            const fileInput = document.getElementById(fileInputId);
-            const previewWrapper = document.getElementById(previewWrapperId);
-            const removeBtn = previewWrapper.querySelector('.remove-file-btn');
-            dropArea.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', () => handleFiles(fileInput.files, previewWrapper, fileInput));
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false));
-            ['dragenter', 'dragover'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.add('drag-over'), false));
-            ['dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.remove('drag-over'), false));
-            dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files, previewWrapper, fileInput), false);
-            removeBtn.addEventListener('click', () => {
-                fileInput.value = '';
-                previewWrapper.style.display = 'none';
-                validateForm();
-            });
-        }
-        function handleFiles(files, previewWrapper, fileInput) {
-            const file = files[0];
-            if (!file) return;
-            fileInput.files = files;
-            previewWrapper.style.display = 'flex';
-            const previewInfo = previewWrapper.querySelector('.file-preview-info');
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => { previewInfo.innerHTML = `<img src="${e.target.result}" alt="${file.name}" class="file-preview-thumb"><span class="file-preview-name">${file.name}</span>`; };
-                reader.readAsDataURL(file);
-            } else {
-                previewInfo.innerHTML = `<i class="fas fa-file-alt file-preview-icon"></i><span class="file-preview-name">${file.name}</span>`;
-            }
-            validateForm();
-        }
-        setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
-        setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
-        function validateForm() {
-            const requiredInputs = Array.from(form.querySelectorAll('[required]'));
-            let isFormValid = true;
-            requiredInputs.forEach(input => {
-                if (input.offsetParent === null && !input.classList.contains('file-input-hidden')) return;
-                if (input.type === 'checkbox' && !input.checked) isFormValid = false;
-                else if (input.type === 'file' && input.files.length === 0) isFormValid = false;
-                else if (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim()) isFormValid = false;
-            });
-            submitBtn.disabled = !isFormValid;
-            const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
-            if (isFormValid) {
-                submitBtn.innerHTML = selectedMethodId === 'stripe' ? '<i class="fab fa-stripe-s"></i> الدفع الآمن' : '<i class="fas fa-check-circle"></i> تأكيد الطلب';
-                submitBtn.className = `submit-btn ${selectedMethodId === 'stripe' ? 'stripe' : 'bank-transfer'}`;
-            } else {
-                submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
-                submitBtn.className = 'submit-btn';
-            }
-        }
-        
-        // --- ✅ دالة إرسال الطلب المحدثة ---
-  // ✅ استبدل دالة إرسال الطلب القديمة بهذه النسخة الجديدة
-
-async function handleFormSubmit(e) {
-    e.preventDefault();
-    if (submitBtn.disabled) return;
+    };
     
-    // ... (منطق Stripe يبقى كما هو)
+    const currentConfig = IS_PRODUCTION ? PAYMENT_CONFIG.PRODUCTION : PAYMENT_CONFIG.TEST;
 
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-    errorDiv.style.display = 'none';
+    // --- INITIALIZATION ---
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const stripe = Stripe(currentConfig.STRIPE_PUBLISHABLE_KEY); 
+    let googlePaymentsClient;
 
-    try {
-        // ... (كود رفع الملفات يبقى كما هو)
-        const receiptFileInput = document.getElementById('receipt-file-input');
-        const attachmentFileInput = document.getElementById('attachment-file-input');
-        let receiptUrl = null;
-        let attachmentUrl = null;
-        if (receiptFileInput.files.length > 0) {
-            const file = receiptFileInput.files[0];
-            const filePath = `public/receipts/${Date.now()}-${file.name}`;
-            const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
-            if (error) throw new Error('فشل رفع وصل الدفع: ' + error.message);
-            const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
-            receiptUrl = data.publicUrl;
+    // --- SOUND EFFECTS ---
+    let soundsReady = false;
+    const selectSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
+    const copySound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 } }).toDestination();
+    document.body.addEventListener('click', async () => {
+        if (!soundsReady) { await Tone.start(); soundsReady = true; }
+    }, { once: true });
+
+    // --- DOM ELEMENTS ---
+    const form = document.getElementById('payment-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorDiv = document.getElementById('form-error');
+    const paymentOptionsContainer = document.getElementById('payment-options');
+    const paymentMethodInput = document.getElementById('payment-method-input');
+    const paymentDetailsContainer = document.getElementById('payment-details-container');
+    const stripeInfoBox = document.getElementById('stripe-info-box');
+    const receiptUploadGroup = document.getElementById('receipt-upload-group');
+    const googlePayContainer = document.getElementById('google-pay-button-container');
+    
+    let paymentMethods = [];
+
+    // --- PAYMENT METHODS LOGIC ---
+    async function fetchPaymentMethods() {
+        try {
+            const { data, error } = await supabaseClient.from('payment_methods').select('*').eq('is_enabled', true);
+            if (error) throw error;
+            
+            // Filter out stripe if it comes from the DB to avoid duplication
+            let filteredMethods = data.filter(method => method.id !== 'stripe');
+            paymentMethods = filteredMethods;
+            
+            // Manually add digital payment methods with new images
+            paymentMethods.push({ 
+                id: 'stripe', 
+                name: 'البطاقة البنكية', 
+                logo_url: 'https://www.uwo.ca/finance/images/visamastercard.png' 
+            });
+            paymentMethods.push({ 
+                id: 'google-pay', 
+                name: 'Google Pay', 
+                logo_url: 'https://www.mastercard.com.au/content/dam/public/mastercardcom/au/en/consumers/icons/google-pay-logo_1280x531.png' 
+            });
+
+            renderPaymentOptions();
+        } catch (error) {
+            console.error("Error fetching payment methods:", error);
+            paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color);">فشل تحميل طرق الدفع.</p>`;
         }
-        if (attachmentFileInput.files.length > 0) {
-            const file = attachmentFileInput.files[0];
-            const filePath = `public/attachments/${Date.now()}-${file.name}`;
-            const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
-            if (error) throw new Error('فشل رفع الملف المرفق: ' + error.message);
-            const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
-            attachmentUrl = data.publicUrl;
-        }
+    }
 
-        // تجهيز بيانات الطلب
-        const orderData = {
-            customer_name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            service_name: document.getElementById('form-service-name').value,
-            price: parseFloat(document.getElementById('form-service-price').value),
-            service_details: document.getElementById('service-details').value,
-            payment_method: document.getElementById('payment-method-input').value,
-            receipt_url: receiptUrl,
-            attachment_url: attachmentUrl
-        };
+    function renderPaymentOptions() {
+        paymentOptionsContainer.innerHTML = '';
+        paymentMethods.forEach(method => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = `payment-option ${method.id}`;
+            optionDiv.dataset.method = method.id;
+            optionDiv.innerHTML = `<img src="${method.logo_url}" alt="${method.name}"><span>${method.name}</span>`;
+            optionDiv.addEventListener('click', () => selectPaymentMethod(method.id));
+            paymentOptionsContainer.appendChild(optionDiv);
+        });
+    }
+
+    function selectPaymentMethod(selectedMethodId) {
+        if (soundsReady) selectSound.triggerAttackRelease("C5", "8n");
         
-        // ✅ استدعاء "الموظف" (Edge Function) وإرسال البيانات إليه
-        const { data, error } = await supabaseClient.functions.invoke('submit-order', {
-            body: orderData,
+        document.querySelectorAll('.payment-option').forEach(opt => {
+            opt.classList.toggle('active', opt.dataset.method === selectedMethodId);
         });
 
-        if (error) throw error;
+        const selectedMethod = paymentMethods.find(m => m.id === selectedMethodId);
+        paymentMethodInput.value = selectedMethod.name;
 
-        // التوجيه إلى صفحة النجاح
-        window.location.href = `success.html?orderId=${data.orderId}`;
-
-    } catch (error) {
-        errorDiv.textContent = 'فشل إرسال الطلب. ' + error.message;
-        errorDiv.style.display = 'block';
-        validateForm(); // إعادة تفعيل الزر
-    }
-}
-        // --- دالة بدء تشغيل الصفحة ---
-        async function initializePage() {
-            const params = new URLSearchParams(window.location.search);
-            document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
-            document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
-            document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
-            document.getElementById('form-service-price').value = params.get('price') || "0";
-            
-            form.addEventListener('submit', handleFormSubmit);
-            form.querySelectorAll('input, textarea, select').forEach(input => input.addEventListener('input', validateForm));
-            allCheckboxes.forEach(cb => cb.addEventListener('change', validateForm));
-            
-            await fetchPaymentMethods();
-            validateForm();
+        const isBankTransfer = !['stripe', 'google-pay'].includes(selectedMethodId);
+        
+        receiptUploadGroup.style.display = isBankTransfer ? 'block' : 'none';
+        document.getElementById('receipt-file-input').required = isBankTransfer;
+        
+        paymentDetailsContainer.classList.toggle('active', isBankTransfer);
+        
+        // Show Stripe info box
+        stripeInfoBox.classList.toggle('active', selectedMethodId === 'stripe');
+        if(selectedMethodId === 'stripe') {
+            stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
         }
 
-        initializePage();
-    });
-</script></body>
+        googlePayContainer.style.display = selectedMethodId === 'google-pay' ? 'flex' : 'none';
+        submitBtn.style.display = selectedMethodId === 'google-pay' ? 'none' : 'flex';
+
+        if (isBankTransfer) {
+            renderPaymentDetails(selectedMethodId);
+        }
+        
+        validateForm();
+    }
+
+    function renderPaymentDetails(methodId) {
+        const method = paymentMethods.find(m => m.id === methodId);
+        if (!method || !method.details) return;
+        const beneficiary = method.details.beneficiary || 'غير محدد';
+        let detailsHtml = `<h4><i class="fas fa-money-check-alt"></i> معلومات الدفع لـ: ${beneficiary}</h4>`;
+        if (method.details.iban) detailsHtml += createDetailRow('IBAN', method.details.iban);
+        if (method.details.rib) detailsHtml += createDetailRow('رقم الحساب (RIB)', method.details.rib);
+        if (method.details.phone) detailsHtml += createDetailRow('رقم الهاتف', method.details.phone);
+        paymentDetailsContainer.innerHTML = detailsHtml;
+    }
+
+    // --- GOOGLE PAY LOGIC ---
+    window.onGooglePayLoaded = () => {
+        googlePaymentsClient = new google.payments.api.PaymentsClient({ environment: currentConfig.GOOGLE_PAY_ENVIRONMENT });
+        const button = googlePaymentsClient.createButton({
+            onClick: onGooglePayClicked,
+            buttonType: 'pay',
+            buttonSizeMode: 'fill',
+        });
+        googlePayContainer.appendChild(button);
+    };
+
+    function getGooglePaymentDataRequest() {
+        const price = document.getElementById('form-service-price').value;
+        return {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: [{
+                type: 'CARD',
+                parameters: {
+                    allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+                    allowedCardNetworks: ["VISA", "MASTERCARD"]
+                },
+                tokenizationSpecification: {
+                    type: 'PAYMENT_GATEWAY',
+                    parameters: {
+                        'gateway': 'stripe',
+                        'stripe:version': '2020-08-27',
+                        'stripe:publishableKey': currentConfig.STRIPE_PUBLISHABLE_KEY
+                    }
+                }
+            }],
+            transactionInfo: {
+                totalPriceStatus: 'FINAL',
+                totalPrice: price,
+                currencyCode: 'MAD'
+            },
+            merchantInfo: {
+                merchantId: currentConfig.GOOGLE_PAY_MERCHANT_ID,
+                merchantName: currentConfig.GOOGLE_PAY_MERCHANT_NAME
+            }
+        };
+    }
+
+    async function onGooglePayClicked() {
+        if (!validateForm(true)) {
+            showError('الرجاء ملء جميع الحقول المطلوبة والموافقة على الشروط قبل الدفع.');
+            return;
+        }
+        
+        try {
+            const paymentDataRequest = getGooglePaymentDataRequest();
+            const paymentData = await googlePaymentsClient.loadPaymentData(paymentDataRequest);
+            await processGooglePayOrder(paymentData);
+        } catch (err) {
+            console.error(err);
+            showError('فشل الدفع عبر Google Pay. ' + (err.statusMessage || 'تأكد من أن حسابك مفعّل.'));
+        }
+    }
+
+    async function processGooglePayOrder(paymentData) {
+        showLoadingState(true, 'جاري معالجة الدفع...');
+        try {
+            const attachmentUrl = await uploadFile(document.getElementById('attachment-file-input').files[0], 'attachments');
+            const orderData = {
+                customer_name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                service_name: document.getElementById('form-service-name').value,
+                price: parseFloat(document.getElementById('form-service-price').value),
+                service_details: document.getElementById('service-details').value,
+                optional_link: document.getElementById('optional-link').value,
+                payment_method: 'Google Pay',
+                attachment_url: attachmentUrl,
+                google_pay_token: paymentData.paymentMethodData.tokenizationData.token
+            };
+
+            const { data, error } = await supabaseClient.functions.invoke('process-google-pay-order', { body: orderData });
+            if (error) throw error;
+            window.location.href = `success.html?orderId=${data.orderId}`;
+        } catch (error) {
+            showError('فشل إرسال الطلب بعد الدفع. ' + error.message);
+            showLoadingState(false);
+        }
+    }
+
+    // --- FORM SUBMISSION & VALIDATION ---
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        if (submitBtn.disabled) return;
+        
+        showLoadingState(true);
+        const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
+
+        try {
+            if (selectedMethodId === 'stripe') {
+                const stripeMetadata = {
+                    customer_name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    service_details: document.getElementById('service-details').value,
+                    optional_link: document.getElementById('optional-link').value || 'N/A',
+                    payment_method: 'Stripe'
+                };
+
+                const { data, error } = await supabaseClient.functions.invoke('create-stripe-checkout', {
+                    body: {
+                        serviceName: document.getElementById('form-service-name').value,
+                        price: parseFloat(document.getElementById('form-service-price').value),
+                        customerEmail: document.getElementById('email').value,
+                        metadata: stripeMetadata
+                    }
+                });
+
+                if (error) throw new Error('فشل إنشاء جلسة الدفع: ' + error.message);
+                
+                const { sessionId } = data;
+                if (!sessionId) throw new Error('لم يتم استلام معرف جلسة الدفع.');
+
+                const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+                if (stripeError) throw new Error('فشل التوجيه لصفحة الدفع: ' + stripeError.message);
+
+            } else { // Bank Transfer Logic
+                const receiptUrl = await uploadFile(document.getElementById('receipt-file-input').files[0], 'receipts');
+                const attachmentUrl = await uploadFile(document.getElementById('attachment-file-input').files[0], 'attachments');
+
+                const orderData = {
+                    customer_name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    service_name: document.getElementById('form-service-name').value,
+                    price: parseFloat(document.getElementById('form-service-price').value),
+                    service_details: document.getElementById('service-details').value,
+                    optional_link: document.getElementById('optional-link').value,
+                    payment_method: document.getElementById('payment-method-input').value,
+                    receipt_url: receiptUrl,
+                    attachment_url: attachmentUrl,
+                };
+                const { data, error } = await supabaseClient.functions.invoke('submit-order', { body: orderData });
+                if (error) throw error;
+                window.location.href = `success.html?orderId=${data.orderId}`;
+            }
+        } catch (error) {
+            showError('حدث خطأ. ' + error.message);
+            showLoadingState(false);
+        }
+    }
+
+    function validateForm(silent = false) {
+        const requiredInputs = Array.from(form.querySelectorAll('[required]'));
+        let isFormValid = true;
+        requiredInputs.forEach(input => {
+            if (input.offsetParent === null && !input.classList.contains('file-input-hidden')) return;
+            if ((input.type === 'checkbox' && !input.checked) ||
+                (input.type === 'file' && input.files.length === 0) ||
+                (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim())) {
+                isFormValid = false;
+            }
+        });
+        
+        if (silent) return isFormValid;
+
+        submitBtn.disabled = !isFormValid;
+        const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
+        if (isFormValid) {
+            submitBtn.innerHTML = selectedMethodId === 'stripe' ? '<i class="fab fa-stripe-s"></i> الدفع الآمن' : '<i class="fas fa-check-circle"></i> تأكيد الطلب';
+            submitBtn.className = `submit-btn ${selectedMethodId === 'stripe' ? 'stripe' : 'bank-transfer'}`;
+        } else {
+            submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
+            submitBtn.className = 'submit-btn';
+        }
+        return isFormValid;
+    }
+
+    // --- UTILITY FUNCTIONS ---
+    async function uploadFile(file, folder) {
+        if (!file) return null;
+        const filePath = `public/${folder}/${Date.now()}-${file.name}`;
+        const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
+        if (error) throw new Error(`فشل رفع الملف: ${error.message}`);
+        const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
+        return data.publicUrl;
+    }
+    
+    function showLoadingState(isLoading, text = 'جاري الإرسال...') {
+        if (isLoading) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
+            errorDiv.style.display = 'none';
+        } else {
+            validateForm();
+        }
+    }
+
+    function showError(message) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+    
+    function createDetailRow(label, value) {
+        if (!value) return '';
+        const id = `val-${Math.random().toString(36).substr(2, 9)}`;
+        return `<div class="detail-row"><span class="label">${label}:</span><span class="value" id="${id}">${value}<button type="button" class="copy-button" onclick="copyToClipboard('${id}')"><i class="far fa-copy"></i></button></span></div>`;
+    }
+    window.copyToClipboard = function(elementId) {
+        if (soundsReady) copySound.triggerAttackRelease("C4", "8n");
+        const textElement = document.getElementById(elementId);
+        if (!textElement) return;
+        const nodeToCopy = textElement.cloneNode(true);
+        const buttonToRemove = nodeToCopy.querySelector('button');
+        if(buttonToRemove) nodeToCopy.removeChild(buttonToRemove);
+        navigator.clipboard.writeText(nodeToCopy.textContent.trim()).then(() => {
+            const copyButton = textElement.querySelector('button');
+            if (copyButton) {
+                const originalIcon = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check" style="color: var(--success-color);"></i>';
+                setTimeout(() => { copyButton.innerHTML = originalIcon; }, 2000);
+            }
+        });
+    };
+    function setupUploader(dropAreaId, fileInputId, previewWrapperId) {
+        const dropArea = document.getElementById(dropAreaId);
+        const fileInput = document.getElementById(fileInputId);
+        const previewWrapper = document.getElementById(previewWrapperId);
+        const removeBtn = previewWrapper.querySelector('.remove-file-btn');
+        dropArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => handleFiles(fileInput.files, previewWrapper, fileInput));
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, (ev) => { ev.preventDefault(); ev.stopPropagation(); }, false));
+        ['dragenter', 'dragover'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.add('drag-over'), false));
+        ['dragleave', 'drop'].forEach(e => dropArea.addEventListener(e, () => dropArea.classList.remove('drag-over'), false));
+        dropArea.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files, previewWrapper, fileInput), false);
+        removeBtn.addEventListener('click', () => {
+            fileInput.value = '';
+            previewWrapper.style.display = 'none';
+            validateForm();
+        });
+    }
+    function handleFiles(files, previewWrapper, fileInput) {
+        const file = files[0];
+        if (!file) return;
+        fileInput.files = files;
+        previewWrapper.style.display = 'flex';
+        const previewInfo = previewWrapper.querySelector('.file-preview-info');
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => { previewInfo.innerHTML = `<img src="${e.target.result}" alt="${file.name}" class="file-preview-thumb"><span class="file-preview-name">${file.name}</span>`; };
+            reader.readAsDataURL(file);
+        } else {
+            previewInfo.innerHTML = `<i class="fas fa-file-alt file-preview-icon"></i><span class="file-preview-name">${file.name}</span>`;
+        }
+        validateForm();
+    }
+    setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
+    setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
+
+    // --- PAGE INITIALIZATION ---
+    async function initializePage() {
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
+        document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
+        document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
+        document.getElementById('form-service-price').value = params.get('price') || "0";
+        
+        form.addEventListener('submit', handleFormSubmit);
+        form.querySelectorAll('input, textarea, select').forEach(input => input.addEventListener('input', () => validateForm()));
+        
+        await fetchPaymentMethods();
+        validateForm();
+    }
+
+    initializePage();
+});
+</script>
+</body>
 </html>

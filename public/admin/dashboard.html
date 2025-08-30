@@ -5,25 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>لوحة التحكم - المكتب الرقمي</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
+        .modal-content { animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
@@ -44,7 +41,9 @@
                 <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
                     <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
                 </a>
-                <!-- Add other links as you build them -->
+                <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
+                    <i data-lucide="settings" class="w-5 h-5 ml-3 text-gray-500"></i><span>الإعدادات</span>
+                </a>
             </nav>
         </aside>
 
@@ -52,166 +51,166 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">نظرة عامة</h1>
-                <!-- Header actions can go here -->
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
                 <!-- Stat Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <!-- Total Revenue Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6">
-                        <div class="bg-green-100 text-green-600 p-4 rounded-full"><i data-lucide="dollar-sign" class="w-8 h-8"></i></div>
-                        <div>
-                            <p class="text-gray-500 font-semibold">إجمالي الأرباح</p>
-                            <p id="total-revenue" class="text-3xl font-bold text-gray-900">... د.م.</p>
-                        </div>
-                    </div>
-                    <!-- New Orders Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6">
-                        <div class="bg-blue-100 text-blue-600 p-4 rounded-full"><i data-lucide="shopping-cart" class="w-8 h-8"></i></div>
-                        <div>
-                            <p class="text-gray-500 font-semibold">الطلبات الجديدة</p>
-                            <p id="new-orders" class="text-3xl font-bold text-gray-900">...</p>
-                        </div>
-                    </div>
-                    <!-- Open Tickets Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6">
-                        <div class="bg-yellow-100 text-yellow-600 p-4 rounded-full"><i data-lucide="life-buoy" class="w-8 h-8"></i></div>
-                        <div>
-                            <p class="text-gray-500 font-semibold">تذاكر مفتوحة</p>
-                            <p id="open-tickets" class="text-3xl font-bold text-gray-900">...</p>
-                        </div>
-                    </div>
-                    <!-- Total Users Card -->
-                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6">
-                        <div class="bg-indigo-100 text-indigo-600 p-4 rounded-full"><i data-lucide="users" class="w-8 h-8"></i></div>
-                        <div>
-                            <p class="text-gray-500 font-semibold">إجمالي المستخدمين</p>
-                            <p id="total-users" class="text-3xl font-bold text-gray-900">...</p>
-                        </div>
-                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6"><div class="bg-green-100 text-green-600 p-4 rounded-full"><i data-lucide="dollar-sign" class="w-8 h-8"></i></div><div><p class="text-gray-500 font-semibold">إجمالي الأرباح</p><p id="total-revenue" class="text-3xl font-bold text-gray-900">...</p></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6"><div class="bg-blue-100 text-blue-600 p-4 rounded-full"><i data-lucide="shopping-cart" class="w-8 h-8"></i></div><div><p class="text-gray-500 font-semibold">الطلبات الجديدة</p><p id="new-orders" class="text-3xl font-bold text-gray-900">...</p></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6"><div class="bg-yellow-100 text-yellow-600 p-4 rounded-full"><i data-lucide="life-buoy" class="w-8 h-8"></i></div><div><p class="text-gray-500 font-semibold">تذاكر مفتوحة</p><p id="open-tickets" class="text-3xl font-bold text-gray-900">...</p></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md flex items-center gap-6"><div class="bg-indigo-100 text-indigo-600 p-4 rounded-full"><i data-lucide="users" class="w-8 h-8"></i></div><div><p class="text-gray-500 font-semibold">إجمالي المستخدمين</p><p id="total-users" class="text-3xl font-bold text-gray-900">...</p></div></div>
                 </div>
 
                 <!-- Recent Activities -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Recent Orders Table -->
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-lg font-bold mb-4">آخر الطلبات</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-3 text-right font-semibold text-gray-600">رقم الطلب</th>
-                                        <th class="p-3 text-right font-semibold text-gray-600">العميل</th>
-                                        <th class="p-3 text-right font-semibold text-gray-600">الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-orders-body">
-                                    <!-- Loading state -->
-                                    <tr><td colspan="3" class="p-4 text-center text-gray-500">جاري التحميل...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- Recent Tickets Table -->
-                    <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h3 class="text-lg font-bold mb-4">آخر تذاكر الدعم</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-3 text-right font-semibold text-gray-600">رقم التذكرة</th>
-                                        <th class="p-3 text-right font-semibold text-gray-600">العميل</th>
-                                        <th class="p-3 text-right font-semibold text-gray-600">الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-tickets-body">
-                                     <!-- Loading state -->
-                                     <tr><td colspan="3" class="p-4 text-center text-gray-500">جاري التحميل...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="text-lg font-bold mb-4">آخر الطلبات</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-gray-50"><tr><th class="p-3 text-right font-semibold text-gray-600">رقم الطلب</th><th class="p-3 text-right font-semibold text-gray-600">العميل</th><th class="p-3 text-right font-semibold text-gray-600">الحالة</th></tr></thead><tbody id="recent-orders-body"><tr><td colspan="3" class="p-4 text-center text-gray-500">جاري التحميل...</td></tr></tbody></table></div></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><h3 class="text-lg font-bold mb-4">آخر تذاكر الدعم</h3><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="bg-gray-50"><tr><th class="p-3 text-right font-semibold text-gray-600">رقم التذكرة</th><th class="p-3 text-right font-semibold text-gray-600">العميل</th><th class="p-3 text-right font-semibold text-gray-600">الحالة</th></tr></thead><tbody id="recent-tickets-body"><tr><td colspan="3" class="p-4 text-center text-gray-500">جاري التحميل...</td></tr></tbody></table></div></div>
                 </div>
             </main>
         </div>
     </div>
+    
+    <!-- ✅ Modal for displaying details -->
+    <div id="details-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="modal-content bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-auto">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modal-title" class="text-xl font-bold"></h3>
+                <button id="modal-close-btn" class="text-gray-500 hover:text-red-600">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6 max-h-[60vh] overflow-y-auto"></div>
+            <div class="p-4 bg-gray-50 border-t flex justify-end">
+                <a href="#" id="modal-details-link" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">عرض التفاصيل الكاملة</a>
+            </div>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
 
-            // --- ⚠️ أدخل معلومات Supabase الخاصة بك هنا ---
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk1dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            let allRecentOrders = [];
+            let allRecentTickets = [];
 
-            // --- Fetching Data ---
+            const modal = document.getElementById('details-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalDetailsLink = document.getElementById('modal-details-link');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
             async function fetchDashboardData() {
                 try {
-                    // Fetch all data in parallel for better performance
                     const [
-                        revenueData,
-                        ordersData,
-                        ticketsData,
-                        usersData,
-                        recentOrdersData,
-                        recentTicketsData
+                        revenueData, ordersData, ticketsData, usersData, 
+                        recentOrdersData, recentTicketsData
                     ] = await Promise.all([
                         supabaseClient.from('orders').select('price', { count: 'exact' }).eq('status', 'مكتمل'),
                         supabaseClient.from('orders').select('id', { count: 'exact' }).eq('status', 'قيد المراجعة'),
                         supabaseClient.from('tickets').select('id', { count: 'exact' }).eq('status', 'مفتوحة'),
-                        supabaseClient.rpc('get_total_users_count'), // Calling the database function
+                        supabaseClient.rpc('get_total_users_count'),
                         supabaseClient.from('orders').select('*').order('created_at', { ascending: false }).limit(5),
                         supabaseClient.from('tickets').select('*').order('created_at', { ascending: false }).limit(5)
                     ]);
 
-                    // --- Update Stat Cards ---
-                    document.getElementById('total-revenue').textContent = `${revenueData.data.reduce((sum, row) => sum + row.price, 0)} د.م.`;
-                    document.getElementById('new-orders').textContent = ordersData.count;
-                    document.getElementById('open-tickets').textContent = ticketsData.count;
-                    document.getElementById('total-users').textContent = usersData.data;
+                    document.getElementById('total-revenue').textContent = `${(revenueData.data || []).reduce((sum, row) => sum + (row.price || 0), 0)} د.م.`;
+                    document.getElementById('new-orders').textContent = ordersData.count || 0;
+                    document.getElementById('open-tickets').textContent = ticketsData.count || 0;
+                    document.getElementById('total-users').textContent = usersData.data || 0;
 
-                    // --- Update Recent Orders Table ---
-                    const recentOrdersBody = document.getElementById('recent-orders-body');
-                    recentOrdersBody.innerHTML = '';
-                    if (recentOrdersData.data.length > 0) {
-                        recentOrdersData.data.forEach(order => {
-                            recentOrdersBody.innerHTML += `
-                                <tr class="border-b">
-                                    <td class="p-3 font-semibold text-indigo-600">${order.public_order_id}</td>
-                                    <td class="p-3">${order.customer_name}</td>
-                                    <td class="p-3"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">${order.status}</span></td>
-                                </tr>`;
-                        });
-                    } else {
-                        recentOrdersBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center">لا توجد طلبات حديثة.</td></tr>';
-                    }
+                    allRecentOrders = recentOrdersData.data || [];
+                    renderRecentOrders(allRecentOrders);
 
-                    // --- Update Recent Tickets Table ---
-                    const recentTicketsBody = document.getElementById('recent-tickets-body');
-                    recentTicketsBody.innerHTML = '';
-                    if (recentTicketsData.data.length > 0) {
-                        recentTicketsData.data.forEach(ticket => {
-                             recentTicketsBody.innerHTML += `
-                                <tr class="border-b">
-                                    <td class="p-3 font-semibold text-indigo-600">${ticket.public_ticket_id}</td>
-                                    <td class="p-3">${ticket.customer_name}</td>
-                                    <td class="p-3"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">${ticket.status}</span></td>
-                                </tr>`;
-                        });
-                    } else {
-                         recentTicketsBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center">لا توجد تذاكر دعم حديثة.</td></tr>';
-                    }
+                    allRecentTickets = recentTicketsData.data || [];
+                    renderRecentTickets(allRecentTickets);
 
                 } catch (error) {
                     console.error("Error fetching dashboard data:", error);
-                    // You can add error messages to the UI here
+                    document.querySelector('main').innerHTML = '<p class="text-center text-red-600 font-bold">فشل تحميل بيانات لوحة التحكم.</p>';
                 }
             }
 
+            function renderRecentOrders(orders) {
+                const tbody = document.getElementById('recent-orders-body');
+                tbody.innerHTML = '';
+                if (orders.length > 0) {
+                    orders.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.className = 'border-b hover:bg-gray-50 cursor-pointer';
+                        row.dataset.id = order.id;
+                        row.innerHTML = `<td class="p-3 font-semibold text-indigo-600">${order.public_order_id}</td><td class="p-3">${order.customer_name}</td><td class="p-3"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">${order.status}</span></td>`;
+                        row.addEventListener('click', () => showDetailsModal(order.id, 'order'));
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center">لا توجد طلبات حديثة.</td></tr>';
+                }
+            }
+
+            function renderRecentTickets(tickets) {
+                const tbody = document.getElementById('recent-tickets-body');
+                tbody.innerHTML = '';
+                if (tickets.length > 0) {
+                    tickets.forEach(ticket => {
+                        const row = document.createElement('tr');
+                        row.className = 'border-b hover:bg-gray-50 cursor-pointer';
+                        row.dataset.id = ticket.id;
+                        row.innerHTML = `<td class="p-3 font-semibold text-indigo-600">${ticket.public_ticket_id}</td><td class="p-3">${ticket.customer_name}</td><td class="p-3"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">${ticket.status}</span></td>`;
+                        row.addEventListener('click', () => showDetailsModal(ticket.id, 'ticket'));
+                        tbody.appendChild(row);
+                    });
+                } else {
+                     tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center">لا توجد تذاكر دعم حديثة.</td></tr>';
+                }
+            }
+
+            function showDetailsModal(id, type) {
+                let item, title, detailsHtml, link;
+                if (type === 'order') {
+                    item = allRecentOrders.find(o => o.id === id);
+                    if (!item) return;
+                    title = `تفاصيل الطلب: ${item.public_order_id}`;
+                    link = `orders.html?id=${item.id}`;
+                    detailsHtml = `
+                        <p><strong>العميل:</strong> ${item.customer_name}</p>
+                        <p><strong>البريد الإلكتروني:</strong> ${item.email}</p>
+                        <p><strong>الهاتف:</strong> ${item.phone || 'غير متوفر'}</p>
+                        <hr class="my-4">
+                        <p><strong>الخدمة:</strong> ${item.service_name}</p>
+                        <p><strong>السعر:</strong> ${item.price} د.م.</p>
+                        <p><strong>الحالة:</strong> ${item.status}</p>
+                        <p><strong>تاريخ الطلب:</strong> ${new Date(item.created_at).toLocaleString()}</p>
+                    `;
+                } else { // ticket
+                    item = allRecentTickets.find(t => t.id === id);
+                    if (!item) return;
+                    title = `تفاصيل التذكرة: ${item.public_ticket_id}`;
+                    link = `tickets.html?id=${item.id}`;
+                     detailsHtml = `
+                        <p><strong>العميل:</strong> ${item.customer_name}</p>
+                        <p><strong>البريد الإلكتروني:</strong> ${item.email}</p>
+                        <p><strong>الموضوع:</strong> ${item.subject}</p>
+                        <hr class="my-4">
+                        <p><strong>الرسالة:</strong><br>${item.message}</p>
+                    `;
+                }
+                
+                modalTitle.textContent = title;
+                modalBody.innerHTML = detailsHtml;
+                modalDetailsLink.href = link;
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
             fetchDashboardData();
-        });
+        }
     </script>
 </body>
 </html>

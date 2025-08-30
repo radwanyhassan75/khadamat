@@ -5,16 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة فئات المدونة - لوحة التحكم</title>
 
-    <!-- Supabase Client Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
+    <script type="module" src="admin-auth.js" defer></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -23,7 +18,7 @@
         .sidebar-link.active .lucide { color: #4f46e5; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
         <!-- Sidebar -->
@@ -32,22 +27,12 @@
                 <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span>
-                </a>
-                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span>
-                </a>
-                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span>
-                </a>
-                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100">
-                    <i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span>
-                </a>
-                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active">
-                    <i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span>
-                </a>
-                <a href="manage-blog-categories.html" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-100 font-semibold">
+                <a href="dashboard.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3 text-gray-500"></i><span>نظرة عامة</span></a>
+                <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
+                <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
+                <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="briefcase" class="w-5 h-5 ml-3 text-gray-500"></i><span>الخدمات</span></a>
+                <a href="manage-blog.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
+                <a href="manage-blog-categories.html" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-100 font-semibold ml-4">
                     <i data-lucide="folder" class="w-5 h-5 ml-3 text-gray-500"></i><span>إدارة الفئات</span>
                 </a>
             </nav>
@@ -57,75 +42,87 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">إدارة فئات المدونة</h1>
+                <button id="add-category-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm">
+                    <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
+                    إضافة فئة جديدة
+                </button>
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Add/Edit Category Form -->
-                    <div class="lg:col-span-1">
-                        <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 id="form-title" class="text-lg font-bold mb-4">إضافة فئة جديدة</h3>
-                            <form id="category-form" class="space-y-4">
-                                <input type="hidden" id="category-id">
-                                <div>
-                                    <label for="name" class="block font-semibold text-gray-700">اسم الفئة</label>
-                                    <input type="text" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                </div>
-                                <div>
-                                    <label for="slug" class="block font-semibold text-gray-700">الرابط (Slug)</label>
-                                    <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا">
-                                </div>
-                                <div class="pt-2 flex gap-2">
-                                    <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
-                                        <i data-lucide="plus" class="w-5 h-5 ml-2"></i>
-                                        <span>إضافة</span>
-                                    </button>
-                                    <button type="button" id="cancel-edit-btn" class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition hidden">
-                                        إلغاء التعديل
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Categories List -->
-                    <div class="lg:col-span-2">
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                            <table class="w-full text-sm">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="p-4 text-right font-semibold text-gray-600">اسم الفئة</th>
-                                        <th class="p-4 text-right font-semibold text-gray-600">الرابط (Slug)</th>
-                                        <th class="p-4 text-center font-semibold text-gray-600">إجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="categories-table-body" class="divide-y divide-gray-100">
-                                    <tr><td colspan="3" class="p-8 text-center text-gray-500">جاري تحميل الفئات...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="p-4 text-right font-semibold text-gray-600">اسم الفئة</th>
+                                <th class="p-4 text-right font-semibold text-gray-600">الرابط (Slug)</th>
+                                <th class="p-4 text-center font-semibold text-gray-600">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body" class="divide-y divide-gray-100">
+                            <tr><td colspan="3" class="p-8 text-center text-gray-500">جاري تحميل الفئات...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- Add/Edit Category Modal -->
+    <div id="category-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-auto">
+            <h3 id="form-title" class="text-lg font-bold mb-4">إضافة فئة جديدة</h3>
+            <form id="category-form" class="space-y-4">
+                <input type="hidden" id="category-id">
+                <div>
+                    <label for="name" class="block font-semibold text-gray-700">اسم الفئة</label>
+                    <input type="text" id="name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                </div>
+                <div>
+                    <label for="slug" class="block font-semibold text-gray-700">الرابط (Slug)</label>
+                    <input type="text" id="slug" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="سيتم إنشاؤه تلقائيًا">
+                </div>
+                <div class="pt-4 flex justify-end gap-3">
+                    <button type="button" id="cancel-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">إلغاء</button>
+                    <button type="submit" id="submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center justify-center disabled:bg-indigo-400">
+                        <i data-lucide="save" class="w-5 h-5 ml-2"></i>
+                        <span>حفظ</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        function initializePage(supabaseClient) {
             lucide.createIcons();
-
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk0_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
             const tableBody = document.getElementById('categories-table-body');
+            const modal = document.getElementById('category-modal');
+            const addCategoryBtn = document.getElementById('add-category-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
             const form = document.getElementById('category-form');
             const formTitle = document.getElementById('form-title');
             const submitBtn = document.getElementById('submit-btn');
-            const cancelEditBtn = document.getElementById('cancel-edit-btn');
             const categoryIdInput = document.getElementById('category-id');
             const nameInput = document.getElementById('name');
             const slugInput = document.getElementById('slug');
+
+            function openModal(mode = 'add', category = null) {
+                form.reset();
+                categoryIdInput.value = '';
+                if (mode === 'edit') {
+                    formTitle.textContent = 'تعديل الفئة';
+                    categoryIdInput.value = category.id;
+                    nameInput.value = category.name;
+                    slugInput.value = category.slug;
+                } else {
+                    formTitle.textContent = 'إضافة فئة جديدة';
+                }
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
 
             async function fetchCategories() {
                 try {
@@ -133,8 +130,8 @@
                     if (error) throw error;
                     renderTable(data);
                 } catch (error) {
-                    console.error("Error fetching blog categories:", error);
-                    tableBody.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-red-600">فشل تحميل الفئات.</td></tr>';
+                    console.error("Error fetching categories:", error);
+                    tableBody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-red-600">فشل تحميل الفئات: ${error.message}</td></tr>`;
                 }
             }
 
@@ -146,16 +143,7 @@
                 }
                 categories.forEach(cat => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="p-4 font-semibold text-gray-800">${cat.name}</td>
-                        <td class="p-4 text-gray-600">${cat.slug}</td>
-                        <td class="p-4 text-center">
-                            <div class="flex justify-center items-center gap-2">
-                                <button data-id="${cat.id}" data-name="${cat.name}" data-slug="${cat.slug}" class="edit-btn p-2 text-gray-500 hover:text-indigo-600 rounded-md transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                                <button data-id="${cat.id}" class="delete-btn p-2 text-gray-500 hover:text-red-600 rounded-md transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                            </div>
-                        </td>
-                    `;
+                    row.innerHTML = `<td class="p-4 font-semibold text-gray-800">${cat.name}</td><td class="p-4 text-gray-600 font-mono">${cat.slug}</td><td class="p-4 text-center"><div class="flex justify-center items-center gap-2"><button data-id="${cat.id}" data-name="${cat.name}" data-slug="${cat.slug}" class="edit-btn p-2 text-gray-500 hover:text-indigo-600 rounded-md transition" title="تعديل"><i data-lucide="edit-2" class="w-4 h-4"></i></button><button data-id="${cat.id}" class="delete-btn p-2 text-gray-500 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td>`;
                     tableBody.appendChild(row);
                 });
                 lucide.createIcons();
@@ -163,19 +151,11 @@
             }
 
             function addEventListeners() {
-                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditClick));
+                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => {
+                    const { id, name, slug } = e.currentTarget.dataset;
+                    openModal('edit', { id, name, slug });
+                }));
                 document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDeleteClick));
-            }
-
-            function handleEditClick(e) {
-                const btn = e.currentTarget;
-                formTitle.textContent = 'تعديل الفئة';
-                submitBtn.querySelector('span').textContent = 'حفظ التعديلات';
-                cancelEditBtn.classList.remove('hidden');
-                categoryIdInput.value = btn.dataset.id;
-                nameInput.value = btn.dataset.name;
-                slugInput.value = btn.dataset.slug;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
             async function handleDeleteClick(e) {
@@ -192,50 +172,55 @@
                 }
             }
 
-            function resetForm() {
-                form.reset();
-                formTitle.textContent = 'إضافة فئة جديدة';
-                submitBtn.querySelector('span').textContent = 'إضافة';
-                cancelEditBtn.classList.add('hidden');
-                categoryIdInput.value = '';
+            function generateSlug(text) {
+                return text.toString().toLowerCase().trim()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\p{L}\p{N}-]+/gu, '')
+                    .replace(/--+/g, '-');
             }
 
-            cancelEditBtn.addEventListener('click', resetForm);
+            nameInput.addEventListener('input', () => {
+                slugInput.value = generateSlug(nameInput.value);
+            });
+
+            addCategoryBtn.addEventListener('click', () => openModal('add'));
+            cancelBtn.addEventListener('click', closeModal);
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 submitBtn.disabled = true;
                 
-                let slug = slugInput.value.trim();
-                if (!slug) {
-                    slug = nameInput.value.trim().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
-                }
-
-                const categoryData = { name: nameInput.value, slug: slug };
+                const categoryData = { 
+                    name: nameInput.value, 
+                    slug: slugInput.value || generateSlug(nameInput.value) 
+                };
                 const id = categoryIdInput.value;
 
                 let error;
-                if (id) { // Edit mode
+                if (id) {
                     const { error: updateError } = await supabaseClient.from('blog_categories').update(categoryData).eq('id', id);
                     error = updateError;
-                } else { // Add mode
+                } else {
                     const { error: insertError } = await supabaseClient.from('blog_categories').insert(categoryData);
                     error = insertError;
                 }
 
                 if (error) {
                     console.error("Error saving category:", error);
-                    alert('فشل حفظ الفئة. تحقق من أن الرابط (Slug) فريد.');
+                    if (error.code === '23505') {
+                        alert('فشل حفظ الفئة: اسم الفئة أو الرابط (Slug) مستخدم بالفعل.');
+                    } else {
+                        alert(`فشل حفظ الفئة: ${error.message}`);
+                    }
                 } else {
-                    resetForm();
+                    closeModal();
                     fetchCategories();
                 }
                 submitBtn.disabled = false;
             });
 
             fetchCategories();
-        });
+        }
     </script>
 </body>
 </html>
-
