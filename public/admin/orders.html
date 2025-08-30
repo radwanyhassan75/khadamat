@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الطلبات - لوحة التحكم</title>
 
-    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
     <script type="module" src="admin-auth.js" defer></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,7 +15,8 @@
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
-        .order-item.active { background-color: #eef2ff; border-right-color: #4f46e5; }
+        .order-item.active { background-color: #f0f3ff; border-right-color: #4f46e5; }
+        .order-item.selected { background-color: #eef2ff; }
         .status-select {
             -webkit-appearance: none; -moz-appearance: none; appearance: none;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -25,10 +25,12 @@
         }
         .status-badge { border: 2px solid transparent; }
         .status-قيد-المراجعة { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-        .status-جاري-التحقق-من-الدفع { background-color: #cffafe; color: #0e7490; border-color: #a5f3fc; }
-        .status-تم-التحقق-من-الدفع, .status-جاري-المعالجة { background-color: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+        .status-جاري-التنفيذ { background-color: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
         .status-مكتمل { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
         .status-ملغي { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        /* Modal styles */
+        .modal-backdrop { transition: opacity 0.3s ease; }
+        #bulk-actions-header { transition: opacity 0.3s ease, transform 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50" style="display: none;">
@@ -57,8 +59,18 @@
                 <div class="w-1/3 bg-white border-l border-gray-200 flex flex-col">
                     <div class="p-4 border-b">
                         <div class="relative"><i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i><input type="text" id="search-input" placeholder="ابحث برقم الطلب أو اسم العميل..." class="w-full bg-gray-100 border-transparent rounded-lg py-2 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
-                        <div class="flex items-center gap-2 mt-3"><label for="status-filter" class="font-semibold text-gray-600 text-sm">الحالة:</label><select id="status-filter" class="flex-grow bg-gray-100 border-transparent rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"><option value="all">الكل</option><option value="قيد المراجعة">قيد المراجعة</option><option value="جاري التحقق من الدفع">جاري التحقق من الدفع</option><option value="تم التحقق من الدفع">تم التحقق من الدفع</option><option value="جاري المعالجة">جاري المعالجة</option><option value="مكتمل">مكتمل</option><option value="ملغي">ملغي</option></select></div>
+                        <div class="flex items-center gap-2 mt-3"><label for="status-filter" class="font-semibold text-gray-600 text-sm">الحالة:</label><select id="status-filter" class="flex-grow bg-gray-100 border-transparent rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"><option value="all">الكل</option><option value="قيد المراجعة">قيد المراجعة</option><option value="جاري التنفيذ">جاري التنفيذ</option><option value="مكتمل">مكتمل</option><option value="ملغي">ملغي</option></select></div>
                     </div>
+                    
+                    <!-- ✅ Bulk Actions Header -->
+                    <div id="bulk-actions-header" class="p-4 border-b h-[60px] flex items-center justify-between bg-indigo-50 hidden opacity-0 transform -translate-y-full">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="select-all-checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="select-all-checkbox" class="font-bold text-gray-700"><span id="selected-count">0</span> طلبات محددة</label>
+                        </div>
+                        <button id="delete-selected-btn" class="text-red-600 hover:text-red-800 font-bold flex items-center gap-2" title="حذف الطلبات المحددة"><i data-lucide="trash-2" class="w-5 h-5"></i><span>حذف</span></button>
+                    </div>
+
                     <div id="orders-list-container" class="overflow-y-auto flex-1">
                         <p class="p-4 text-center text-gray-500">جاري تحميل الطلبات...</p>
                     </div>
@@ -78,26 +90,53 @@
             </main>
         </div>
     </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <div class="text-center">
+                <i data-lucide="alert-triangle" class="mx-auto w-16 h-16 text-red-500"></i>
+                <h3 class="text-2xl font-bold text-gray-800 mt-4">هل أنت متأكد؟</h3>
+                <p id="delete-modal-text" class="text-gray-600 mt-2">لا يمكن التراجع عن هذا الإجراء.</p>
+            </div>
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="confirm-delete-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-700">نعم، احذف</button>
+                <button id="cancel-delete-btn" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         function initializePage(supabaseClient) {
             lucide.createIcons();
 
+            // DOM Elements
             const listContainer = document.getElementById('orders-list-container');
             const searchInput = document.getElementById('search-input');
             const statusFilter = document.getElementById('status-filter');
             const viewerDefaultState = document.getElementById('viewer-default-state');
             const viewerContentState = document.getElementById('viewer-content-state');
-            
+            const deleteModal = document.getElementById('delete-modal');
+            const deleteModalText = document.getElementById('delete-modal-text');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            const bulkActionsHeader = document.getElementById('bulk-actions-header');
+            const selectAllCheckbox = document.getElementById('select-all-checkbox');
+            const selectedCountSpan = document.getElementById('selected-count');
+            const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+
+            // State
             let allOrders = [];
-            const orderStatuses = ['قيد المراجعة', 'جاري التحقق من الدفع', 'تم التحقق من الدفع', 'جاري المعالجة', 'مكتمل', 'ملغي'];
+            let selectedOrders = new Set();
+            let orderToDeleteId = null;
+            const orderStatuses = ['قيد المراجعة', 'جاري التنفيذ', 'مكتمل', 'ملغي'];
 
             async function fetchOrders() {
                 try {
                     const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
                     if (error) throw error;
                     allOrders = data;
-                    renderOrderList(allOrders);
+                    filterAndSearch(); // Use filter to render initially
                 } catch (error) {
                     console.error("Error fetching orders:", error);
                     listContainer.innerHTML = '<p class="p-4 text-center text-red-600">فشل تحميل الطلبات.</p>';
@@ -112,27 +151,36 @@
                 }
                 orders.forEach(order => {
                     const orderItem = document.createElement('div');
-                    orderItem.className = 'order-item p-4 border-b border-r-4 border-transparent cursor-pointer hover:bg-gray-50';
+                    const isSelected = selectedOrders.has(order.id);
+                    orderItem.className = `order-item p-4 border-b border-r-4 border-transparent flex items-center gap-4 ${isSelected ? 'selected' : ''}`;
                     orderItem.dataset.orderId = order.id;
-                    const formattedDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short' });
+                    const formattedDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: '2-digit', month: 'short', year: 'numeric', numberingSystem: 'latn' });
+                    
                     orderItem.innerHTML = `
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="font-bold text-gray-800 truncate">${order.customer_name}</h3>
-                            <span class="text-sm font-bold text-indigo-600">${order.public_order_id}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <p class="text-gray-600 truncate">${order.service_name}</p>
-                            <span class="text-xs text-gray-500">${formattedDate}</span>
+                        <input type="checkbox" data-id="${order.id}" class="order-checkbox h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0" ${isSelected ? 'checked' : ''}>
+                        <div class="flex-grow min-w-0 cursor-pointer" data-view-id="${order.id}">
+                            <div class="flex justify-between items-center mb-1">
+                                <h3 class="font-bold text-gray-800 truncate">${order.customer_name}</h3>
+                                <span class="text-sm font-bold text-indigo-600">#${order.public_order_id || order.id}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <p class="text-gray-600 truncate">${order.service_name}</p>
+                                <span class="text-xs text-gray-500">${formattedDate}</span>
+                            </div>
                         </div>`;
-                    orderItem.addEventListener('click', () => displayOrderDetails(order.id));
                     listContainer.appendChild(orderItem);
                 });
+                updateBulkActionsUI();
             }
 
             function displayOrderDetails(orderId) {
                 document.querySelectorAll('.order-item').forEach(item => item.classList.toggle('active', item.dataset.orderId == orderId));
                 const order = allOrders.find(o => o.id == orderId);
-                if (!order) return;
+                if (!order) {
+                    viewerDefaultState.style.display = 'flex';
+                    viewerContentState.classList.add('hidden');
+                    return;
+                };
 
                 viewerDefaultState.style.display = 'none';
                 viewerContentState.classList.remove('hidden');
@@ -140,122 +188,193 @@
                 const statusOptions = orderStatuses.map(status => `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`).join('');
                 const statusClass = `status-${(order.status || '').replace(/ /g, '-')}`;
 
-                const paymentDetails = order.payment_details || {};
-                const customerDetails = order.customer_details || {};
-                const location = order.location || {};
-
                 viewerContentState.innerHTML = `
                     <div class="space-y-6">
-                        <!-- Customer Info Card -->
                         <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="user-circle" class="w-6 h-6 text-indigo-600"></i> معلومات العميل</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <p><strong>الاسم:</strong> ${order.customer_name || 'غير متوفر'}</p>
-                                <p><strong>البريد الإلكتروني:</strong> ${customerDetails.email || 'غير متوفر'}</p>
-                                <p><strong>رقم الهاتف:</strong> ${customerDetails.phone || 'غير متوفر'}</p>
-                                <p><strong>عنوان IP:</strong> ${customerDetails.ip_address || 'غير متوفر'}</p>
-                            </div>
-                        </div>
-
-                        <!-- Order Details Card -->
-                        <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="shopping-basket" class="w-6 h-6 text-indigo-600"></i> تفاصيل الطلب</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <p><strong>الخدمة:</strong> ${order.service_name || 'غير متوفر'}</p>
-                                <p><strong>السعر الإجمالي:</strong> ${order.price || 0} د.م</p>
-                                <p><strong>رقم الطلب:</strong> ${order.public_order_id || '-'}</p>
-                                <p><strong>تاريخ الطلب:</strong> ${new Date(order.created_at).toLocaleString('ar-EG')}</p>
-                                <div class="md:col-span-2 flex items-center gap-4">
-                                    <strong>الحالة:</strong>
+                            <div class="flex justify-between items-center border-b pb-3 mb-4 flex-wrap gap-4">
+                                <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800"><i data-lucide="shopping-basket" class="w-6 h-6 text-indigo-600"></i> تفاصيل الطلب #${order.public_order_id || order.id}</h3>
+                                <div class="flex items-center gap-2">
                                     <select data-order-id="${order.id}" class="status-select status-badge ${statusClass} p-2 rounded-full font-semibold border-none focus:ring-2 focus:ring-indigo-400">
                                         ${statusOptions}
                                     </select>
+                                    <button data-delete-id="${order.id}" class="single-delete-btn text-gray-400 hover:text-red-600" title="حذف الطلب"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                                <p><strong>الخدمة:</strong> ${order.service_name || 'غير متوفر'}</p>
+                                <p><strong>السعر الإجمالي:</strong> ${order.price || 0} د.م</p>
+                                <p><strong>طريقة الدفع:</strong> ${order.payment_method || 'غير محدد'}</p>
+                                <p><strong>تاريخ الطلب:</strong> ${new Date(order.created_at).toLocaleString('ar-EG', { numberingSystem: 'latn' })}</p>
+                                <div class="md:col-span-2 pt-2">
+                                    <strong>تفاصيل إضافية من العميل:</strong>
+                                    <p class="text-gray-600 whitespace-pre-wrap">${order.service_details || 'لا يوجد'}</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Payment and Location Card -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-xl shadow-md">
-                                <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="credit-card" class="w-6 h-6 text-indigo-600"></i> معلومات الدفع</h3>
-                                <div class="space-y-2 text-sm">
-                                    <p><strong>طريقة الدفع:</strong> ${paymentDetails.method || 'غير محدد'}</p>
-                                    <p><strong>معرف العملية:</strong> ${paymentDetails.transaction_id || '-'}</p>
-                                </div>
-                            </div>
-                            <div class="bg-white p-6 rounded-xl shadow-md">
-                                <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="map-pin" class="w-6 h-6 text-indigo-600"></i> الموقع الجغرافي</h3>
-                                <div class="space-y-2 text-sm">
-                                    <p><strong>المدينة:</strong> ${location.city || 'غير محدد'}</p>
-                                    <p><strong>الدولة:</strong> ${location.country || 'غير محدد'}</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Map -->
-                        ${location.latitude && location.longitude ? `
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                             <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=${location.longitude-0.1},${location.latitude-0.1},${location.longitude+0.1},${location.latitude+0.1}&layer=mapnik&marker=${location.latitude},${location.longitude}" style="border: 1px solid black"></iframe>
-                        </div>` : ''}
-
-                        <!-- ✅  Raw Data Card for Debugging -->
                         <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="database" class="w-6 h-6 text-indigo-600"></i> البيانات الأولية (للتحقق)</h3>
-                            <div class="space-y-4 text-sm font-mono text-left dir-ltr bg-gray-100 p-4 rounded-lg overflow-x-auto">
-                                <div>
-                                    <p class="font-semibold text-gray-700">customer_details:</p>
-                                    <pre><code>${JSON.stringify(customerDetails, null, 2)}</code></pre>
-                                </div>
-                                <div class="pt-4 border-t border-gray-200">
-                                    <p class="font-semibold text-gray-700">payment_details:</p>
-                                    <pre><code>${JSON.stringify(paymentDetails, null, 2)}</code></pre>
-                                </div>
-                                <div class="pt-4 border-t border-gray-200">
-                                    <p class="font-semibold text-gray-700">location:</p>
-                                    <pre><code>${JSON.stringify(location, null, 2)}</code></pre>
-                                </div>
+                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="user-circle" class="w-6 h-6 text-indigo-600"></i> معلومات العميل</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                                <p><strong>الاسم:</strong> ${order.customer_name || 'غير متوفر'}</p>
+                                <p><strong>البريد الإلكتروني:</strong> <a href="mailto:${order.email}" class="text-indigo-600 hover:underline">${order.email || 'غير متوفر'}</a></p>
+                                <p><strong>رقم الهاتف:</strong> <a href="https://wa.me/${(order.phone || '').replace(/\+/g, '')}" target="_blank" class="text-indigo-600 hover:underline">${order.phone || 'غير متوفر'}</a></p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="flex items-center gap-3 text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i data-lucide="paperclip" class="w-6 h-6 text-indigo-600"></i> المرفقات</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                                <div><strong>إيصال الدفع:</strong> ${order.receipt_url ? `<a href="${order.receipt_url}" target="_blank" class="block text-indigo-600 hover:underline">عرض الإيصال <i data-lucide="external-link" class="inline w-4 h-4"></i></a>` : '<p class="text-gray-500">لا يوجد</p>'}</div>
+                                <div><strong>ملف مرفق:</strong> ${order.attachment_url ? `<a href="${order.attachment_url}" target="_blank" class="block text-indigo-600 hover:underline">عرض الملف <i data-lucide="external-link" class="inline w-4 h-4"></i></a>` : '<p class="text-gray-500">لا يوجد</p>'}</div>
+                                <div><strong>رابط إضافي:</strong> ${order.optional_link ? `<a href="${order.optional_link}" target="_blank" class="block text-indigo-600 hover:underline">فتح الرابط <i data-lucide="external-link" class="inline w-4 h-4"></i></a>` : '<p class="text-gray-500">لا يوجد</p>'}</div>
                             </div>
                         </div>
                     </div>
                 `;
                 lucide.createIcons();
                 document.querySelector('.status-select').addEventListener('change', handleStatusChange);
+                document.querySelector('.single-delete-btn').addEventListener('click', (e) => showDeleteModal(e.currentTarget.dataset.deleteId));
+            }
+            
+            function showDeleteModal(orderId = null) {
+                orderToDeleteId = orderId;
+                if (orderId) {
+                    deleteModalText.textContent = 'لا يمكن التراجع عن هذا الإجراء. سيتم حذف الطلب المحدد بشكل نهائي.';
+                } else {
+                    deleteModalText.textContent = `سيتم حذف ${selectedOrders.size} طلبات بشكل نهائي. لا يمكن التراجع عن هذا الإجراء.`;
+                }
+                deleteModal.classList.remove('hidden');
             }
 
+            function hideDeleteModal() {
+                orderToDeleteId = null;
+                deleteModal.classList.add('hidden');
+            }
+            
+            async function handleConfirmDelete() {
+                const idsToDelete = orderToDeleteId ? [orderToDeleteId] : Array.from(selectedOrders);
+                if (idsToDelete.length === 0) return;
+
+                try {
+                    const { error } = await supabaseClient.from('orders').delete().in('id', idsToDelete);
+                    if (error) throw error;
+                    
+                    allOrders = allOrders.filter(o => !idsToDelete.includes(o.id));
+                    selectedOrders.clear();
+                    filterAndSearch();
+
+                    const currentActive = document.querySelector('.order-item.active');
+                    if(currentActive && idsToDelete.includes(parseInt(currentActive.dataset.orderId))) {
+                        displayOrderDetails(null);
+                    }
+                    
+                    hideDeleteModal();
+
+                } catch(error) {
+                    console.error("Error deleting order(s):", error);
+                    alert('فشل حذف الطلب/الطلبات. قد تكون مرتبطة ببيانات أخرى.');
+                }
+            }
+            
             async function handleStatusChange(event) {
                 const newStatus = event.target.value;
                 const orderId = event.target.dataset.orderId;
-                const selectElement = event.target;
                 try {
                     const { error } = await supabaseClient.from('orders').update({ status: newStatus }).eq('id', orderId);
                     if (error) throw error;
-                    
-                    const orderIndex = allOrders.findIndex(order => order.id == orderId);
-                    if (orderIndex !== -1) allOrders[orderIndex].status = newStatus;
-                    
-                    selectElement.className = `status-select status-badge p-2 rounded-full font-semibold border-none focus:ring-2 focus:ring-indigo-400 status-${newStatus.replace(/ /g, '-')}`;
                 } catch (error) {
                     console.error("Error updating status:", error);
                     alert('فشل تحديث حالة الطلب.');
                 }
             }
-
+            
             function filterAndSearch() {
                 const searchTerm = searchInput.value.toLowerCase();
                 const selectedStatus = statusFilter.value;
                 const filteredOrders = allOrders.filter(order => {
-                    const matchesSearch = (order.public_order_id || '').toLowerCase().includes(searchTerm) || (order.customer_name || '').toLowerCase().includes(searchTerm);
+                    const matchesSearch = (order.public_order_id || String(order.id)).toLowerCase().includes(searchTerm) || (order.customer_name || '').toLowerCase().includes(searchTerm);
                     const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
                     return matchesSearch && matchesStatus;
                 });
                 renderOrderList(filteredOrders);
             }
 
+            function updateBulkActionsUI() {
+                const count = selectedOrders.size;
+                if (count > 0) {
+                    bulkActionsHeader.classList.remove('hidden', 'opacity-0', '-translate-y-full');
+                    selectedCountSpan.textContent = count;
+                } else {
+                    bulkActionsHeader.classList.add('opacity-0', '-translate-y-full');
+                    setTimeout(() => bulkActionsHeader.classList.add('hidden'), 300);
+                }
+                const displayedCheckboxes = [...listContainer.querySelectorAll('.order-checkbox')];
+                const allDisplayedSelected = displayedCheckboxes.length > 0 && displayedCheckboxes.every(cb => cb.checked);
+                selectAllCheckbox.checked = allDisplayedSelected;
+            }
+
+            // Event Delegation for List Container
+            listContainer.addEventListener('click', (e) => {
+                const checkbox = e.target.closest('.order-checkbox');
+                const viewTrigger = e.target.closest('[data-view-id]');
+                if (checkbox) {
+                    const orderId = parseInt(checkbox.dataset.id);
+                    if (checkbox.checked) {
+                        selectedOrders.add(orderId);
+                        checkbox.closest('.order-item').classList.add('selected');
+                    } else {
+                        selectedOrders.delete(orderId);
+                        checkbox.closest('.order-item').classList.remove('selected');
+                    }
+                    updateBulkActionsUI();
+                } else if (viewTrigger) {
+                     displayOrderDetails(parseInt(viewTrigger.dataset.viewId));
+                }
+            });
+
+            // Other Event Listeners
             searchInput.addEventListener('input', filterAndSearch);
             statusFilter.addEventListener('change', filterAndSearch);
+            confirmDeleteBtn.addEventListener('click', handleConfirmDelete);
+            cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+            deleteSelectedBtn.addEventListener('click', () => showDeleteModal(null));
+            selectAllCheckbox.addEventListener('change', () => {
+                const visibleCheckboxes = listContainer.querySelectorAll('.order-checkbox');
+                visibleCheckboxes.forEach(checkbox => {
+                    const orderId = parseInt(checkbox.dataset.id);
+                    checkbox.checked = selectAllCheckbox.checked;
+                    if (selectAllCheckbox.checked) {
+                        selectedOrders.add(orderId);
+                        checkbox.closest('.order-item').classList.add('selected');
+                    } else {
+                        selectedOrders.delete(orderId);
+                         checkbox.closest('.order-item').classList.remove('selected');
+                    }
+                });
+                updateBulkActionsUI();
+            });
 
+            // Initial Fetch
             fetchOrders();
+            
+            // Real-time Subscription
+            supabaseClient.channel('public:orders')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
+                    console.log('Change received!', payload);
+                    const changedRecord = payload.new.id ? payload.new : payload.old;
+                    if (!changedRecord) { fetchOrders(); return; }
+
+                    const activeId = document.querySelector('.order-item.active')?.dataset.orderId;
+                    
+                    fetchOrders().then(() => {
+                        if (activeId && !allOrders.find(o => o.id == activeId)) {
+                            displayOrderDetails(null);
+                        } else if (activeId) {
+                            displayOrderDetails(activeId);
+                        }
+                    });
+                })
+                .subscribe();
         }
     </script>
 </body>
 </html>
+

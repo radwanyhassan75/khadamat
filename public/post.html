@@ -3,165 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جاري تحميل المقال...</title>
-    
+    <title>قراءة المقال - المكتب الرقمي</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <style>
         :root {
-            --primary-color: #0056b3;
-            --dark-color: #2c3e50;
-            --light-color: #ffffff;
-            --gray-color: #f8f9fa;
-            --text-color: #343a40;
-            --border-color: #e9ecef;
-            --border-radius: 12px;
+            --primary-color: #0d6efd; --dark-color: #212529; --light-color: #ffffff;
+            --gray-color: #f8f9fa; --text-color: #343a40; --border-color: #dee2e6;
+            --border-radius: 12px; --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--light-color); direction: rtl; color: var(--text-color); line-height: 1.8; }
-        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.08); position: sticky; top: 0; width: 100%; z-index: 1000; }
-        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--light-color); color: var(--text-color); line-height: 1.8; }
+        .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.07); position: sticky; top: 0; width: 100%; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1400px; margin: 0 auto; }
         .navbar-logo img { height: 60px; }
-        .navbar-menu { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; }
-        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1.1rem; }
+        .navbar-menu { list-style: none; display: flex; gap: 40px; margin: 0; padding: 0; }
+        .navbar-menu a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; position: relative; padding: 5px 0; transition: color 0.3s ease; }
+        .navbar-menu a::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 0; height: 3px; background-color: var(--primary-color); transition: width 0.3s ease; }
+        .navbar-menu a:hover, .navbar-menu a.active { color: var(--primary-color); }
+        .navbar-menu a:hover::after, .navbar-menu a.active::after { width: 100%; }
+        .navbar-actions { display: flex; align-items: center; gap: 15px; }
+
+        .btn { padding: 10px 24px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-block; border: 2px solid transparent; cursor: pointer; font-size: 0.9rem; }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
+        .btn-primary:hover { background-color: #0b5ed7; box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3); transform: translateY(-2px); }
+        .btn-secondary { background-color: transparent; color: var(--primary-color); border-color: var(--primary-color); }
+        .btn-secondary:hover { background-color: var(--primary-color); color: var(--light-color); }
+
+        .user-menu { position: relative; }
+        .user-avatar-button { display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; padding: 5px; border-radius: 50px; transition: background-color 0.2s; }
+        .user-avatar-button:hover { background-color: var(--gray-color); }
+        .user-avatar-button span { font-weight: 700; font-size: 0.95rem; }
+        .user-avatar { width: 45px; height: 45px; border-radius: 50%; background-color: var(--primary-color); color: var(--light-color); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
+        .dropdown-menu { display: none; position: absolute; left: 0; top: 115%; background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; width: 240px; z-index: 1010; opacity: 0; transform: translateY(10px); transition: opacity 0.2s ease, transform 0.2s ease; }
+        .user-menu:hover .dropdown-menu { display: block; opacity: 1; transform: translateY(0); }
+        .dropdown-menu li a, .dropdown-menu button { display: flex; align-items: center; gap: 12px; width: 100%; text-align: right; padding: 12px 20px; color: var(--dark-color); text-decoration: none; background: none; border: none; cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 1rem; transition: background-color 0.2s; }
+        .dropdown-menu li a:hover, .dropdown-menu button:hover { background-color: var(--gray-color); color: var(--primary-color); }
+        .dropdown-menu .user-email { padding: 10px 20px; color: #6c757d; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
+        .dropdown-menu i.fa-fw { width: 20px; }
+        .dropdown-menu .separator { height: 1px; background-color: var(--border-color); margin: 8px 0; }
+
+        .post-container { max-width: 800px; margin: 60px auto; padding: 0 20px; }
+        .post-header h1 { font-size: 3rem; font-weight: 900; color: var(--dark-color); margin-bottom: 15px; line-height: 1.4; }
+        .post-meta { color: #6c757d; margin-bottom: 30px; }
+        .post-featured-image { width: 100%; height: auto; max-height: 450px; object-fit: cover; border-radius: var(--border-radius); margin-bottom: 40px; box-shadow: var(--box-shadow); }
+        .post-content { font-size: 1.15rem; line-height: 2; color: #343a40; }
+        .post-content h2, .post-content h3 { color: var(--dark-color); margin-top: 40px; }
         
-        .post-hero {
-            padding: 60px 20px;
-            background-color: var(--gray-color);
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .post-hero h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--dark-color);
-            line-height: 1.3;
-            margin: 0 0 15px 0;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .post-meta { color: #6c757d; font-size: 1rem; }
-        
-        .post-container { display: flex; max-width: 1200px; margin: 40px auto; padding: 0 20px; gap: 40px; }
-        .post-main { flex: 3; }
-        .post-sidebar { flex: 1; position: sticky; top: 120px; height: fit-content; }
-        
-        .featured-image { width: 100%; height: auto; border-radius: var(--border-radius); margin-bottom: 30px; }
-        .post-content { font-size: 1.1rem; }
-        .post-content h2, .post-content h3 { color: var(--dark-color); font-weight: 700; margin-top: 2.5em; }
-        .post-content p { margin-bottom: 1.5em; }
-        .post-content a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
-        .post-content blockquote { border-right: 4px solid var(--primary-color); padding-right: 20px; margin: 2em 0; font-style: italic; color: #555; background-color: var(--gray-color); padding: 20px; border-radius: 8px; }
-        
-        .sidebar-widget { background: var(--gray-color); padding: 25px; border-radius: var(--border-radius); margin-bottom: 30px; }
-        .sidebar-widget h3 { margin-top: 0; font-size: 1.3rem; color: var(--dark-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; }
-        .share-buttons a {
-            display: inline-block;
-            margin: 5px;
-            font-size: 1.5rem;
-            color: var(--secondary-color);
-            transition: color 0.3s ease;
-        }
-        .share-buttons a:hover { color: var(--primary-color); }
-        
-        .loading-container, .error-container { text-align: center; padding: 80px 20px; font-size: 1.2rem; }
+        .skeleton { background-color: #e2e8f0; animation: skeleton-loading 1.5s linear infinite alternate; }
+        @keyframes skeleton-loading { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        .main-footer { background-color: var(--dark-color); color: #adb5bd; padding: 80px 0 20px; margin-top: 80px; }
+        .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .footer-top { text-align: center; margin-bottom: 60px; }
+        .footer-top h2 { font-size: 2rem; font-weight: 700; color: var(--light-color); margin-bottom: 15px; }
+        .footer-top p { max-width: 500px; margin: 0 auto 25px; }
+        .newsletter-form { display: flex; max-width: 450px; margin: 0 auto; border-radius: 50px; background: rgba(255,255,255,0.1); padding: 5px; position: relative; }
+        .newsletter-form input { flex-grow: 1; background: transparent; border: none; padding: 10px 20px; color: white; outline: none; }
+        .newsletter-form input::placeholder { color: #adb5bd; }
+        .newsletter-form button { background-color: var(--primary-color); color: white; border: none; padding: 10px 30px; border-radius: 50px; cursor: pointer; font-weight: 700; transition: background-color 0.3s; }
+        .newsletter-form button.success { background-color: #198754; } 
+        .newsletter-form button.error { background-color: #dc3545; } 
+
+        .footer-main { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; border-bottom: 1px solid #343a40; padding-bottom: 40px; }
+        .footer-section h3 { color: var(--light-color); margin-bottom: 20px; font-size: 1.2rem; }
+        .footer-section ul { list-style: none; padding: 0; }
+        .footer-section ul li a { color: #adb5bd; text-decoration: none; display: block; padding: 8px 0; transition: color 0.3s, padding-right 0.3s; }
+        .footer-section ul li a:hover { color: var(--light-color); padding-right: 10px; }
+        .footer-section .social-links a { display: inline-block; color: #adb5bd; margin-left: 15px; font-size: 1.2rem; }
+        .footer-bottom { text-align: center; padding-top: 20px; margin-top: 20px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo"><img id="site-logo" src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
             <ul class="navbar-menu">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
-                <li><a href="blog.html">المدونة</a></li>
+                <li><a href="blog.html" class="active">المدونة</a></li>
+                <li><a href="pricing.html">الأسعار</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="about.html">من نحن</a></li>
             </ul>
+            <div id="navbar-actions" class="navbar-actions"></div>
         </nav>
     </header>
 
-    <main id="main-content">
-        <div class="loading-container">
-            <p>جاري تحميل المقال...</p>
+    <main>
+        <div id="post-container" style="display:none;" class="post-container">
+            <header class="post-header">
+                <h1 id="post-title"></h1>
+                <p class="post-meta">نشر بتاريخ <span id="post-date"></span></p>
+            </header>
+            <img id="post-image" src="" alt="" class="post-featured-image">
+            <div id="post-content" class="post-content"></div>
+            <div class="share-section">
+                <h3>شارك هذا المقال</h3>
+                <div class="share-buttons">
+                    <a href="#" class="share-btn facebook" id="share-facebook" target="_blank" title="مشاركة على فيسبوك"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="share-btn twitter" id="share-twitter" target="_blank" title="مشاركة على تويتر"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-btn whatsapp" id="share-whatsapp" target="_blank" title="مشاركة على واتساب"><i class="fab fa-whatsapp"></i></a>
+                    <button class="share-btn copy-link" id="copy-link-btn" title="نسخ الرابط"><i class="fas fa-link"></i></button>
+                </div>
+            </div>
         </div>
+        
+        <div id="loader" class="post-container">
+            <div class="skeleton" style="width: 70%; height: 3rem; margin-bottom: 1rem; border-radius: 8px;"></div>
+            <div class="skeleton" style="width: 30%; height: 1rem; margin-bottom: 2rem; border-radius: 6px;"></div>
+            <div class="skeleton" style="width: 100%; height: 450px; border-radius: var(--border-radius); margin-bottom: 40px;"></div>
+            <div class="skeleton" style="width: 100%; height: 1.15rem; margin-bottom: 1rem; border-radius: 6px;"></div>
+        </div>
+
+        <div id="error-state" style="display: none;"><p>عفواً، لم نتمكن من العثور على هذا المقال.</p></div>
     </main>
     
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <h2>انضم إلى قائمتنا البريدية</h2>
+                <p>كن أول من يعرف عن خدماتنا الجديدة، العروض الحصرية، وآخر المستجدات مباشرة في بريدك الإلكتروني.</p>
+                <form class="newsletter-form" id="newsletter-form">
+                    <input type="email" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit">اشترك</button>
+                </form>
+            </div>
+            <div class="footer-main">
+                <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
+                <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="about.html">من نحن</a></li><li><a href="services.html">الخدمات</a></li></ul></div>
+                <div class="footer-section"><h3>قانوني</h3><ul><li><a href="privacy.html">سياسة الخصوصية</a></li><li><a href="terms.html">الشروط والأحكام</a></li></ul></div>
+                <div class="footer-section"><h3>تواصل معنا</h3><div class="social-links"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; <span id="current-year"></span> المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" type="module"></script>
+    <script src="auth.js" type="module"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const mainContent = document.getElementById('main-content');
-            const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
+            const container = document.getElementById('post-container');
+            const loader = document.getElementById('loader');
+            const errorEl = document.getElementById('error-state');
             
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get('slug');
-
-            if (!slug) {
-                mainContent.innerHTML = `<div class="error-container"><p>خطأ: رابط المقال غير صحيح.</p></div>`;
-                return;
-            }
-
-            try {
-                // ✅ This is the corrected fetch URL that matches the worker
-                const response = await fetch(`${WORKER_URL}/api/posts/slug/${slug}`);
-                
-                if (!response.ok) {
-                    throw new Error('لم يتم العثور على المقال أو أنه غير منشور.');
+            const initializeUserFeatures = async () => {
+                const { data: { session } } = await window.supabase.auth.getSession();
+                const emailInput = document.querySelector('#newsletter-form input[type="email"]');
+                if (session && session.user && emailInput) {
+                    emailInput.value = session.user.email;
+                    emailInput.readOnly = true;
                 }
-                
-                const post = await response.json();
-                
-                document.title = post.meta_title || post.title;
-                const metaDesc = document.createElement('meta');
-                metaDesc.name = 'description';
-                metaDesc.content = post.meta_description || '';
-                document.head.appendChild(metaDesc);
+            };
+            
+            const handlePostLoad = async () => {
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const postSlug = params.get('slug');
+                    if (!postSlug) throw new Error('Slug not found');
 
-                const postDate = new Date(post.created_at).toLocaleDateString('ar-EG', {
-                    day: 'numeric', month: 'long', year: 'numeric'
-                });
+                    const { data, error } = await window.supabase.from('posts').select('*').eq('slug', postSlug).single();
+                    if (error || !data) throw new Error('Post not found');
 
-                const postURL = window.location.href;
+                    document.title = data.title;
+                    document.getElementById('post-title').textContent = data.title;
+                    document.getElementById('post-image').src = data.image_url;
+                    document.getElementById('post-content').innerHTML = data.content;
+                    document.getElementById('post-date').textContent = new Date(data.created_at).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    loader.style.display = 'none';
+                    container.style.display = 'block';
 
-                const postHTML = `
-                    <div class="post-hero">
-                        <h1>${post.title}</h1>
-                        <div class="post-meta">
-                            <span>نُشر في: ${postDate}</span>
-                        </div>
-                    </div>
-                    <div class="post-container">
-                        <div class="post-main">
-                            <img src="${post.featured_image_url || 'https://placehold.co/800x400/e2e8f0/cccccc?text=صورة+المقال'}" alt="${post.title}" class="featured-image">
-                            <div class="post-content">
-                                ${post.content}
-                            </div>
-                        </div>
-                        <aside class="post-sidebar">
-                            <div class="sidebar-widget">
-                                <h3>شارك المقال</h3>
-                                <div class="share-buttons">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postURL)}" target="_blank" title="مشاركة على فيسبوك"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="https://twitter.com/intent/tweet?url=${encodeURIComponent(postURL)}&text=${encodeURIComponent(post.title)}" target="_blank" title="مشاركة على تويتر"><i class="fab fa-twitter"></i></a>
-                                    <a href="https://wa.me/?text=${encodeURIComponent(post.title + ' ' + postURL)}" target="_blank" title="مشاركة على واتساب"><i class="fab fa-whatsapp"></i></a>
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(postURL)}&title=${encodeURIComponent(post.title)}" target="_blank" title="مشاركة على لينكدإن"><i class="fab fa-linkedin-in"></i></a>
-                                </div>
-                            </div>
-                        </aside>
-                    </div>
-                `;
-                
-                mainContent.innerHTML = postHTML;
+                } catch (err) {
+                    loader.style.display = 'none';
+                    errorEl.style.display = 'block';
+                }
+            };
 
-            } catch (error) {
-                console.error('Error fetching post:', error);
-                mainContent.innerHTML = `<div class="error-container"><p>${error.message}</p></div>`;
-            }
+            await handlePostLoad();
+            await initializeUserFeatures(); // تفعيل ميزات المستخدم بعد محاولة تحميل المقال
         });
     </script>
-
 </body>
 </html>
+
