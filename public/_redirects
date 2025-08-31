@@ -1,2 +1,8 @@
-/admin/*              /admin/admin.html    200
-/*                   /index.html           200
+/admin/*              /admin/admin-login.html    200
+/*    /index.html   200
+!/*.js
+!/*.css
+!/*.png
+!/*.jpg
+!/*.svg
+!/*.ico
