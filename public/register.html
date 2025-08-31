@@ -59,53 +59,54 @@
     <script src="layout.js"></script>
     <script type="module" src="auth.js"></script>
     
-    <script type="module">
-        document.addEventListener('DOMContentLoaded', () => {
-            const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
-            providerButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const provider = button.getAttribute('data-provider');
-                    window.signInWithProvider(provider);
-                });
-            });
-
-            const registerForm = document.getElementById('register-form');
-            const messageBox = document.getElementById('message-box');
-            const submitButton = registerForm.querySelector('button[type="submit"]');
-
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                submitButton.disabled = true;
-                submitButton.textContent = 'جارٍ الإنشاء...';
-
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const fullName = document.getElementById('full_name').value;
-                
-                const { data, error } = await window.supabase.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { full_name: fullName } }
-                });
-
-                messageBox.style.display = 'block';
-                if (error) {
-                    messageBox.className = 'error';
-                    if (error.message.includes("User already registered")) {
-                        messageBox.textContent = 'هذا البريد الإلكتروني مسجل بالفعل.';
-                    } else {
-                        messageBox.textContent = 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
-                    }
-                } else {
-                    messageBox.className = 'success';
-                    // الرسالة تعتمد على إذا كان تأكيد البريد مفعلاً أم لا
-                    messageBox.textContent = 'تم إنشاء الحساب بنجاح! تحقق من بريدك الإلكتروني للتفعيل.';
-                    registerForm.reset();
-                }
-                submitButton.disabled = false;
-                submitButton.textContent = 'إنشاء الحساب';
+ <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+        const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
+        providerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const provider = button.getAttribute('data-provider');
+                window.signInWithProvider(provider); // أزرار المزودين تعمل هنا أيضًا
             });
         });
-    </script>
+
+        const registerForm = document.getElementById('register-form');
+        const messageBox = document.getElementById('message-box');
+        const submitButton = registerForm.querySelector('button[type="submit"]');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'جارٍ الإنشاء...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('full_name').value;
+            
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { full_name: fullName } }
+            });
+
+            if (error) {
+                messageBox.style.display = 'block';
+                messageBox.className = 'error';
+                messageBox.textContent = 'حدث خطأ ما أو أن البريد مسجل بالفعل.';
+            } else {
+                messageBox.style.display = 'block';
+                messageBox.className = 'success';
+                // التحقق إذا كان المستخدم يحتاج لتأكيد البريد أم تم تسجيل دخوله مباشرة
+                if (data.session) {
+                    messageBox.textContent = 'تم إنشاء الحساب بنجاح! جارٍ توجيهك...';
+                } else {
+                    messageBox.textContent = 'تم إنشاء الحساب بنجاح! الرجاء التحقق من بريدك الإلكتروني للتفعيل.';
+                }
+                registerForm.reset();
+            }
+            submitButton.disabled = false;
+            submitButton.textContent = 'إنشاء الحساب';
+        });
+    });
+</script>
 </body>
 </html>

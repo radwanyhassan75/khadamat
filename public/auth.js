@@ -15,11 +15,16 @@ window.supabase = supabase;
 
 // --- دالة تسجيل الدخول عبر المزودين ---
 window.signInWithProvider = async function(provider) {
-    const options = { redirectTo: `${window.location.origin}/dashboard.html` };
-    if (provider === 'google') {
-        options.queryParams = { prompt: 'select_account' };
+    const { error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+            redirectTo: `${window.location.origin}/dashboard.html`,
+            queryParams: provider === 'google' ? { prompt: 'select_account' } : {}
+        }
+    });
+    if (error) {
+        alert("فشل تسجيل الدخول: " + error.message);
     }
-    await supabase.auth.signInWithOAuth({ provider: provider, options: options });
 };
 
 // --- المستمع الرئيسي لحالة المصادقة (المسؤول عن كل شيء) ---
@@ -39,12 +44,18 @@ supabase.auth.onAuthStateChange((event, session) => {
         navbarActions.innerHTML = `<a href="login.html" class="btn btn-secondary">تسجيل الدخول</a><a href="register.html" class="btn btn-primary">إنشاء حساب</a>`;
     }
 
-    // 2. منطق إعادة التوجيه المركزي
+    // 2. منطق إعادة التوجيه المركزي (هذا هو الحل لمشكلة الحلقة اللانهائية)
     const currentPage = window.location.pathname.split('/').pop();
     const isAuthPage = ['login.html', 'register.html', 'forgot-password.html'].includes(currentPage);
+    const isProtectedPage = ['dashboard.html'].includes(currentPage);
 
-    // إذا نجحت عملية تسجيل الدخول (من أي مكان) وكان المستخدم في صفحة تسجيل دخول، وجهه للوحة التحكم
+    // إذا كان المستخدم مسجلاً وهو في صفحة تسجيل دخول، وجهه للوحة التحكم
     if (user && isAuthPage) {
-        window.location.href = '/dashboard.html';
+        // استخدام replace يمنع المستخدم من العودة للصفحة السابقة بالضغط على زر "الخلف"
+        window.location.replace('/dashboard.html');
+    }
+    // إذا كان المستخدم غير مسجل ويحاول دخول صفحة محمية، وجهه لصفحة تسجيل الدخول
+    else if (!user && isProtectedPage) {
+        window.location.replace('/login.html');
     }
 });

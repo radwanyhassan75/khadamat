@@ -102,35 +102,31 @@
 
         const loginForm = document.getElementById('login-form');
         const messageBox = document.getElementById('message-box');
+        const submitButton = loginForm.querySelector('button[type="submit"]');
 
-        if(loginForm) {
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                
-                // ✅ تحديث: إظهار رسالة "جارٍ التحقق..."
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitButton.disabled = true;
+            submitButton.textContent = 'جارٍ التحقق...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+            if (error) {
                 messageBox.style.display = 'block';
-                messageBox.className = 'info'; // فئة جديدة للرسائل المعلوماتية
-                messageBox.textContent = 'جارٍ التحقق من بياناتك...';
-
-                const { data, error } = await window.supabase.auth.signInWithPassword({ email, password });
-
-                if (error) {
-                    messageBox.className = 'error';
-                    if (error.message.includes("Invalid login credentials")) {
-                        messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                    } else {
-                        messageBox.textContent = 'حدث خطأ ما، يرجى المحاولة مرة أخرى.';
-                    }
-                } else {
-                    // ✅ تحديث: إظهار رسالة النجاح قبل أن يقوم auth.js بإعادة التوجيه
-                    messageBox.className = 'success';
-                    messageBox.textContent = 'تم تسجيل الدخول بنجاح! جارٍ توجيهك...';
-                    // لا حاجة لإعادة التوجيه هنا، auth.js سيتكفل بذلك
-                }
-            });
-        }
+                messageBox.className = 'error';
+                messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                submitButton.disabled = false;
+                submitButton.textContent = 'تسجيل الدخول';
+            } else {
+                messageBox.style.display = 'block';
+                messageBox.className = 'success';
+                messageBox.textContent = 'تم تسجيل الدخول بنجاح! جارٍ توجيهك...';
+                // لا نضع كود توجيه هنا، auth.js سيقوم بالمهمة
+            }
+        });
     });
 </script>
 </body>
