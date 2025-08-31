@@ -27,22 +27,18 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); margin-bottom: 20px; }
         .card h2 { border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-top: 0; font-size: 1.6rem; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .info-item label { display: block; color: #888; margin-bottom: 5px; font-size: 0.9rem; }
+        .info-item p { margin: 0; font-weight: 700; color: #333; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: #333; }
         .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th, .table td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
-        .table thead th { background-color: #f8f9fa; font-weight: 700; color: #333; }
-        .status-badge { padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; text-align: center; color: white; }
-        .status-pending { background-color: #ffc107; }
-        .status-completed { background-color: #198754; }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
 
     <main class="dashboard-wrapper">
-        <h1>لوحة التحكم</h1>
         <div class="dashboard-layout">
             <aside class="sidebar">
                 <div class="sidebar-header">
@@ -51,34 +47,45 @@
                 </div>
                 <nav class="sidebar-nav">
                     <ul>
-                        <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
-                        <li><a data-target="orders"><i class="fas fa-list-alt"></i> طلباتي</a></li>
+                        <li><a data-target="view-profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
+                        <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل البيانات</a></li>
+                        <li><a href="my-orders.html"><i class="fas fa-list-alt"></i> طلباتي</a></li>
                         <li><a href="contact.html"><i class="fas fa-headset"></i> تواصل معنا</a></li>
-                        <li><a href="delete-account.html"><i class="fas fa-user-cog"></i> إعدادات الحساب</a></li>
+                        <li><a href="delete-account.html"><i class="fas fa-trash-alt"></i> حذف الحساب</a></li>
                     </ul>
                 </nav>
             </aside>
             <div class="main-content">
-                <div id="profile" class="content-pane active">
+                <div id="view-profile" class="content-pane active">
                     <div class="card">
-                        <h2>تعديل الملف الشخصي</h2>
-                        <form id="profile-form">
-                            <div class="form-group"><label for="full_name">الاسم الكامل</label><input type="text" id="full_name"></div>
-                            <div class="form-group"><label for="phone_number">رقم الهاتف</label><input type="tel" id="phone_number"></div>
-                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
-                            <div id="profile-message" style="margin-top: 15px;"></div>
-                        </form>
+                        <h2>تفاصيل معلوماتي الشخصية</h2>
+                        <div class="info-grid">
+                            <div class="info-item"><label>الاسم الكامل</label><p id="view-name">...</p></div>
+                            <div class="info-item"><label>البريد الإلكتروني</label><p id="view-email">...</p></div>
+                            <div class="info-item"><label>رقم الهاتف</label><p id="view-phone">...</p></div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="orders" class="content-pane">
+                <div id="edit-profile" class="content-pane">
                     <div class="card">
-                        <h2>طلباتي</h2>
-                        <table class="table">
-                            <thead><tr><th>اسم الخدمة</th><th>الحالة</th><th>تاريخ الطلب</th></tr></thead>
-                            <tbody id="orders-tbody">
-                                </tbody>
-                        </table>
+                        <h2>تعديل البيانات</h2>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="edit-name">الاسم الكامل</label>
+                                <input type="text" id="edit-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-email">البريد الإلكتروني</label>
+                                <input type="email" id="edit-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-phone">رقم الهاتف</label>
+                                <input type="tel" id="edit-phone">
+                            </div>
+                            <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                            <div id="profile-message" style="margin-top: 15px;"></div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -90,71 +97,81 @@
     <script type="module">
         let currentUser = null;
 
-        // --- تحميل البيانات الرئيسية عند فتح الصفحة ---
+        // --- تحميل وعرض البيانات عند فتح الصفحة ---
         async function initializeDashboard() {
-            const { data: { session }, error } = await window.supabase.auth.getSession();
-            if (error || !session) {
-                window.location.href = '/login.html'; // حماية الصفحة
+            const { data: { session } } = await window.supabase.auth.getSession();
+            if (!session) {
+                window.location.href = '/login.html';
                 return;
             }
             currentUser = session.user;
             
             // ملء بيانات الشريط الجانبي
-            const userName = currentUser.user_metadata.full_name || currentUser.email;
-            document.getElementById('sidebar-user-name').textContent = userName;
-            document.getElementById('sidebar-user-avatar').src = currentUser.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=0056b3&color=fff`;
-
-            // تحميل بيانات نموذج الملف الشخصي
+            updateSidebar(currentUser);
+            
+            // ملء بيانات قسم عرض الملف الشخصي وقسم التعديل
             loadProfileData();
         }
 
-        // --- دوال خاصة بكل قسم ---
+        function updateSidebar(user) {
+            const userName = user.user_metadata.full_name || user.email;
+            document.getElementById('sidebar-user-name').textContent = userName;
+            document.getElementById('sidebar-user-avatar').src = user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=0056b3&color=fff`;
+        }
+
         async function loadProfileData() {
-            const { data: profile, error } = await supabase.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
-            if (profile) {
-                document.getElementById('full_name').value = profile.full_name || currentUser.user_metadata.full_name || '';
-                document.getElementById('phone_number').value = profile.phone_number || '';
-            }
+            // ملء البيانات من نظام المصادقة مباشرة
+            document.getElementById('view-email').textContent = currentUser.email;
+            document.getElementById('edit-email').value = currentUser.email;
+            
+            // جلب البيانات الإضافية من جدول 'users'
+            const { data: profile } = await supabase.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
+            
+            const fullName = profile?.full_name || currentUser.user_metadata.full_name || 'لا يوجد';
+            const phone = profile?.phone_number || 'لم يتم إضافته';
+
+            // ملء قسم العرض
+            document.getElementById('view-name').textContent = fullName;
+            document.getElementById('view-phone').textContent = phone;
+            
+            // ملء نموذج التعديل
+            document.getElementById('edit-name').value = fullName;
+            document.getElementById('edit-phone').value = profile?.phone_number || '';
         }
 
-        async function loadOrders() {
-            const { data: orders, error } = await supabase.from('orders').select('*').eq('user_id', currentUser.id);
-            const tableBody = document.getElementById('orders-tbody');
-            tableBody.innerHTML = ''; 
-            if (orders && orders.length > 0) {
-                orders.forEach(order => {
-                    const statusClass = order.status === 'مكتمل' ? 'status-completed' : 'status-pending';
-                    tableBody.innerHTML += `
-                        <tr>
-                            <td>${order.service_name}</td>
-                            <td><span class="status-badge ${statusClass}">${order.status}</span></td>
-                            <td>${new Date(order.created_at).toLocaleDateString('ar-MA')}</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                tableBody.innerHTML = '<tr><td colspan="3">لا توجد لديك طلبات حالياً.</td></tr>';
-            }
-        }
-
-        // --- ربط الأحداث ---
+        // --- ربط نموذج تعديل البيانات ---
         document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const newName = document.getElementById('full_name').value;
-            const newPhone = document.getElementById('phone_number').value;
             const messageDiv = document.getElementById('profile-message');
+            messageDiv.textContent = 'جارٍ الحفظ...';
+            messageDiv.style.color = 'gray';
 
-            // تحديث البيانات في جدول public.users و auth.users
+            const newName = document.getElementById('edit-name').value;
+            const newEmail = document.getElementById('edit-email').value;
+            const newPhone = document.getElementById('edit-phone').value;
+
+            // 1. تحديث البيانات في جدول public.users (الاسم ورقم الهاتف)
             const { error: profileError } = await supabase.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
-            const { error: authError } = await supabase.auth.updateUser({ data: { full_name: newName } });
+
+            // 2. تحديث بيانات المصادقة (الاسم والبريد الإلكتروني)
+            const { data: { user: updatedUser }, error: authError } = await supabase.auth.updateUser({ 
+                email: newEmail,
+                data: { full_name: newName } 
+            });
 
             if (profileError || authError) {
                 messageDiv.textContent = 'حدث خطأ أثناء تحديث البيانات.';
                 messageDiv.style.color = 'red';
+                console.error(profileError || authError);
             } else {
                 messageDiv.textContent = 'تم تحديث بياناتك بنجاح!';
+                if (newEmail !== currentUser.email) {
+                    messageDiv.textContent += ' الرجاء التحقق من بريدك الإلكتروني الجديد لتأكيده.';
+                }
                 messageDiv.style.color = 'green';
-                document.getElementById('sidebar-user-name').textContent = newName; // تحديث فوري للاسم
+                currentUser = updatedUser; // تحديث بيانات المستخدم الحالية
+                updateSidebar(currentUser); // تحديث الشريط الجانبي بالاسم الجديد
+                loadProfileData(); // إعادة تحميل البيانات في الأقسام
             }
         });
 
@@ -171,13 +188,6 @@
                 
                 link.classList.add('active');
                 document.getElementById(targetId).classList.add('active');
-
-                // تحميل البيانات الخاصة بالقسم عند فتحه
-                if (targetId === 'orders') {
-                    loadOrders();
-                } else if (targetId === 'profile') {
-                    loadProfileData();
-                }
             });
         });
 

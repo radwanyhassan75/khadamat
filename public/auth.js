@@ -13,43 +13,38 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 window.supabase = supabase;
 
-// --- دالة تسجيل الدخول البسيطة ---
+// --- دالة تسجيل الدخول عبر المزودين (تبقى كما هي) ---
 window.signInWithProvider = async function(provider) {
-    const { error } = await supabase.auth.signInWithOAuth({
-        provider: provider,
-        options: {
-            redirectTo: `${window.location.origin}/dashboard.html`
-        }
-    });
-
-    if (error) {
-        alert("فشل تسجيل الدخول: " + error.message);
-        console.error("OAuth Error:", error);
+    const options = { redirectTo: `${window.location.origin}/dashboard.html` };
+    if (provider === 'google') {
+        options.queryParams = { prompt: 'select_account' };
     }
-}
+    await supabase.auth.signInWithOAuth({ provider: provider, options: options });
+};
 
-// --- بقية الكود تبقى كما هي ---
+// --- المستمع الرئيسي لحالة المصادقة (✅ تم تحسينه) ---
 supabase.auth.onAuthStateChange((event, session) => {
-    const user = session?.user || null;
+    const user = session?.user;
     const navbarActions = document.getElementById('navbar-actions');
     if (!navbarActions) return;
 
+    // تحديث أزرار الهيدر
     if (user) {
         navbarActions.innerHTML = `<a href="dashboard.html" class="btn btn-primary">لوحة التحكم</a> <button id="logout-button" class="btn btn-secondary">تسجيل الخروج</button>`;
         const logoutButton = document.getElementById('logout-button');
         if(logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                supabase.auth.signOut().then(() => window.location.href = "/index.html");
-            });
+            logoutButton.addEventListener('click', () => supabase.auth.signOut().then(() => window.location.href = "/index.html"));
         }
     } else {
         navbarActions.innerHTML = `<a href="login.html" class="btn btn-secondary">تسجيل الدخول</a><a href="register.html" class="btn btn-primary">إنشاء حساب</a>`;
     }
 
+    // --- منطق إعادة التوجيه المحسّن ---
     const currentPage = window.location.pathname.split('/').pop();
-    const isProtectedPage = ['dashboard.html'].includes(currentPage);
     const isAuthPage = ['login.html', 'register.html'].includes(currentPage);
 
-    if (user && isAuthPage) window.location.href = '/dashboard.html';
-    if (!user && isProtectedPage) window.location.href = '/login.html';
+    // هذا هو الشرط الأهم: إذا نجحت عملية تسجيل الدخول، وجه المستخدم فورًا
+    if (event === 'SIGNED_IN' && isAuthPage) {
+        window.location.href = '/dashboard.html';
+    }
 });
