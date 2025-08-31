@@ -5,50 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إنشاء حساب جديد - المكتب الرقمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <script type="module" src="auth.js"></script>
-    <style>
-        /* ... نفس كود الـ CSS الخاص بك ... */
-        :root { --primary-color: #0056b3; --success-color: #28a745; --error-color: #dc3545; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: #f7f9fc; direction: rtl; }
-        .main-content { display: flex; align-items: center; justify-content: center; padding: 40px 20px; min-height: 80vh; }
-        .main-container { display: flex; width: 100%; max-width: 1100px; background: white; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; }
-        .form-section { flex: 1.2; padding: 40px 50px; }
-        .branding-section { flex: 1; background: linear-gradient(135deg, rgba(0, 86, 179, 0.9), rgba(0, 58, 117, 0.95)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1080') center/cover; color: white; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 40px; }
-        #message-box { padding: 15px; margin-bottom: 20px; border-radius: 12px; font-weight: 600; text-align: center; display: none; }
-        #message-box.success { background-color: #e9f7ef; color: var(--success-color); }
-        #message-box.error { background-color: #fdecea; color: var(--error-color); }
-        .social-btn { /* ... */ } .divider { /* ... */ } .form-group { /* ... */ } .btn { /* ... */ }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="header-placeholder"></div>
 
     <main class="main-content">
-        <div class="main-container">
-            <div class="branding-section">
-                <h1>انضم إلى الآلاف من العملاء السعداء</h1>
-                <p>أنشئ حسابك الآن وابدأ في إنجاز معاملاتك الرقمية بكل سهولة وأمان.</p>
+        <div class="auth-container">
+            <div class="branding-section" style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop');">
+                 <div class="branding-overlay">
+                    <h1>انضم إلى الآلاف من العملاء السعداء</h1>
+                    <p>أنشئ حسابك الآن وابدأ في إنجاز معاملاتك الرقمية بكل سهولة وأمان.</p>
+                </div>
             </div>
+
             <div class="form-section">
-                <header style="text-align: center;">
+                <div class="form-box">
                     <h1>إنشاء حساب جديد</h1>
                     <p>انضم إلينا وابدأ رحلتك الرقمية.</p>
-                </header>
-                <div id="message-box"></div>
 
-                <div class="social-login-grid">
-                    <button class="social-btn" data-provider="google"><i class="fab fa-google"></i> Google</button>
-                    <button class="social-btn" data-provider="facebook"><i class="fab fa-facebook"></i> Facebook</button>
-                </div>
-                <div class="divider">أو أكمل بالبريد الإلكتروني</div>
-                <form id="register-form">
-                    <div class="form-group"><label for="full_name">الاسم الكامل</label><input type="text" id="full_name" required></div>
-                    <div class="form-group"><label for="email">البريد الإلكتروني</label><input type="email" id="email" required></div>
-                    <div class="form-group"><label for="password">كلمة المرور</label><input type="password" id="password" minlength="6" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%;">إنشاء الحساب</button>
-                </form>
-                <div style="text-align: center; margin-top: 20px;">
-                    <p>لديك حساب بالفعل؟ <a href="login.html" style="font-weight: bold; color: #0056b3;">سجل الدخول</a></p>
+                    <div id="message-box"></div>
+
+                     <div class="social-login-grid">
+                        <button class="social-btn" data-provider="google"><i class="fab fa-google"></i> Google</button>
+                        <button class="social-btn" data-provider="facebook"><i class="fab fa-facebook"></i> Facebook</button>
+                        <button class="social-btn" data-provider="twitter"><i class="fab fa-twitter"></i> Twitter</button>
+                        <button class="social-btn" data-provider="spotify"><i class="fab fa-spotify"></i> Spotify</button>
+                    </div>
+
+                    <div class="divider">أو أكمل بالبريد الإلكتروني</div>
+                    
+                    <form id="register-form" novalidate>
+                        <div class="form-group">
+                            <label for="full_name">الاسم الكامل</label>
+                            <input type="text" id="full_name" required autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" required autocomplete="email">
+                        </div>
+                         <div class="form-group">
+                            <label for="phone">رقم الهاتف (اختياري)</label>
+                            <input type="tel" id="phone" autocomplete="tel">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">كلمة المرور</label>
+                            <input type="password" id="password" minlength="8" required autocomplete="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">تأكيد كلمة المرور</label>
+                            <input type="password" id="confirm_password" minlength="8" required autocomplete="new-password">
+                        </div>
+                        <div class="form-group terms">
+                             <input type="checkbox" id="terms" required>
+                             <label for="terms">أوافق على <a href="/terms.html" target="_blank">الشروط والأحكام</a> و <a href="/privacy.html" target="_blank">سياسة الخصوصية</a>.</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">إنشاء الحساب</button>
+                    </form>
+                    <div class="form-footer">
+                        <p>لديك حساب بالفعل؟ <a href="login.html">سجل الدخول</a></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,57 +72,104 @@
 
     <div id="footer-placeholder"></div>
 
-    <script src="layout.js"></script>
     <script type="module" src="auth.js"></script>
-    
- <script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
-        const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
-        providerButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const provider = button.getAttribute('data-provider');
-                window.signInWithProvider(provider); // أزرار المزودين تعمل هنا أيضًا
-            });
-        });
+    <script src="layout.js"></script>
+    <script type="module">
+        import { supabase } from './auth.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerForm = document.getElementById('register-form');
+            const messageBox = document.getElementById('message-box');
+            const submitButton = registerForm.querySelector('button[type="submit"]');
 
-        const registerForm = document.getElementById('register-form');
-        const messageBox = document.getElementById('message-box');
-        const submitButton = registerForm.querySelector('button[type="submit"]');
-
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitButton.disabled = true;
-            submitButton.textContent = 'جارٍ الإنشاء...';
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const fullName = document.getElementById('full_name').value;
-            
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
-                options: { data: { full_name: fullName } }
+            // --- Social Login Handlers ---
+            const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
+            providerButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const provider = button.getAttribute('data-provider');
+                    window.signInWithProvider(provider);
+                });
             });
 
-            if (error) {
-                messageBox.style.display = 'block';
-                messageBox.className = 'error';
-                messageBox.textContent = 'حدث خطأ ما أو أن البريد مسجل بالفعل.';
-            } else {
-                messageBox.style.display = 'block';
-                messageBox.className = 'success';
-                // التحقق إذا كان المستخدم يحتاج لتأكيد البريد أم تم تسجيل دخوله مباشرة
-                if (data.session) {
-                    messageBox.textContent = 'تم إنشاء الحساب بنجاح! جارٍ توجيهك...';
-                } else {
-                    messageBox.textContent = 'تم إنشاء الحساب بنجاح! الرجاء التحقق من بريدك الإلكتروني للتفعيل.';
+            // --- Form Submission Handler ---
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ الإنشاء...';
+
+                // --- Client-side Validation ---
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                const terms = document.getElementById('terms').checked;
+
+                if (password.length < 8) {
+                    showMessage('error', 'يجب أن تكون كلمة المرور 8 أحرف على الأقل.');
+                    resetSubmitButton();
+                    return;
                 }
-                registerForm.reset();
+                if (password !== confirmPassword) {
+                    showMessage('error', 'كلمتا المرور غير متطابقتين.');
+                    resetSubmitButton();
+                    return;
+                }
+                if (!terms) {
+                    showMessage('error', 'يجب الموافقة على الشروط والأحكام.');
+                    resetSubmitButton();
+                    return;
+                }
+
+                const email = document.getElementById('email').value;
+                const fullName = document.getElementById('full_name').value;
+                const phone = document.getElementById('phone').value;
+                
+                // --- Supabase Sign Up ---
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { 
+                        data: { 
+                            full_name: fullName,
+                            phone: phone
+                        } 
+                    }
+                });
+
+                if (error) {
+                     // Smart error handling
+                    if (error.message.includes("already registered")) {
+                         showMessage('error', 'هذا البريد الإلكتروني مسجل بالفعل. <a href=\'login.html\'>حاول تسجيل الدخول</a>.');
+                    } else if (error.message.includes("weak password")) {
+                         showMessage('error', 'كلمة المرور ضعيفة جدًا. حاول استخدام مزيج من الأحرف والأرقام والرموز.');
+                    }
+                    else {
+                         showMessage('error', 'حدث خطأ ما. الرجاء المحاولة مرة أخرى.');
+                    }
+                    resetSubmitButton();
+                } else {
+                    // If email confirmation is disabled, user is logged in directly.
+                    if (data.session) {
+                        showMessage('success', 'تم إنشاء الحساب بنجاح! جارٍ توجيهك...');
+                        setTimeout(() => {
+                           window.location.href = '/dashboard.html';
+                        }, 1500);
+                    } else {
+                        showMessage('info', 'تم إنشاء الحساب بنجاح! الرجاء التحقق من بريدك الإلكتروني للتفعيل.');
+                        resetSubmitButton();
+                    }
+                }
+            });
+
+            function showMessage(type, html) {
+                messageBox.style.display = 'block';
+                messageBox.className = type;
+                messageBox.innerHTML = html; // Use innerHTML to render links
             }
-            submitButton.disabled = false;
-            submitButton.textContent = 'إنشاء الحساب';
+            
+            function resetSubmitButton() {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'إنشاء الحساب';
+            }
         });
-    });
-</script>
+    </script>
 </body>
 </html>

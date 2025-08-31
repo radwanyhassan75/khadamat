@@ -5,82 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>تسجيل الدخول - المكتب الرقمي</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link href="output.css" rel="stylesheet">
-    <style>
-        /* أنماط خاصة بشكل النموذج لضمان ظهوره بشكل جيد */
-        .form-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        .form-box {
-            width: 100%;
-            max-width: 450px;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .form-box h1 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
-        .form-box p {
-            margin-bottom: 30px;
-            color: #555;
-        }
-        .social-login-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .social-btn { padding: 12px; border: 1px solid #e0e0e0; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background-color 0.3s; }
-        .divider { display: flex; align-items: center; text-align: center; color: #aaa; margin: 25px 0; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e0e0e0; }
-        .form-group { margin-bottom: 18px; text-align: right; }
-        .form-group input { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 12px; box-sizing: border-box; }
-        .options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; margin-bottom: 20px; }
-        .options a { color: #0056b3; font-weight: 700; text-decoration: none; }
-        #message-box { padding: 15px; margin-bottom: 20px; border-radius: 12px; font-weight: 600; text-align: center; display: none; }
-        #message-box.success { background-color: #d1e7dd; color: #0f5132; }
-#message-box.info { background-color: #cff4fc; color: #055160; }
-        #message-box.error { background-color: #fdecea; color: #dc3545; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div id="header-placeholder"></div>
 
-    <main class="form-container">
-        <div class="form-box">
-            <h1>تسجيل الدخول</h1>
-            <p>مرحباً بعودتك! أدخل بياناتك للمتابعة.</p>
-            
-            <div id="message-box"></div>
-
-           <div class="social-login-grid">
-    <button class="social-btn" data-provider="google"><i class="fab fa-google" style="color:#DB4437;"></i> Google</button>
-    <button class="social-btn" data-provider="facebook"><i class="fab fa-facebook" style="color:#4267B2;"></i> Facebook</button>
-    <button class="social-btn" data-provider="twitter"><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter</button>
-    <button class="social-btn" data-provider="spotify"><i class="fab fa-spotify" style="color:#1DB954;"></i> Spotify</button>
-</div>
-
-            <div class="divider">أو</div>
-
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">البريد الإلكتروني</label>
-                    <input type="email" id="email" required>
+    <main class="main-content">
+        <div class="auth-container">
+            <div class="branding-section" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop');">
+                <div class="branding-overlay">
+                    <h1>مرحباً بعودتك!</h1>
+                    <p>لحظات تفصلك عن إدارة أعمالك بكل كفاءة.</p>
                 </div>
-                <div class="form-group">
-                    <label for="password">كلمة المرور</label>
-                    <input type="password" id="password" required>
+            </div>
+
+            <div class="form-section">
+                <div class="form-box">
+                    <h1>تسجيل الدخول</h1>
+                    <p>أدخل بياناتك للمتابعة.</p>
+                    
+                    <div id="message-box"></div>
+
+                    <div class="social-login-grid">
+                        <button class="social-btn" data-provider="google"><i class="fab fa-google"></i> Google</button>
+                        <button class="social-btn" data-provider="facebook"><i class="fab fa-facebook"></i> Facebook</button>
+                        <button class="social-btn" data-provider="twitter"><i class="fab fa-twitter"></i> Twitter</button>
+                        <button class="social-btn" data-provider="spotify"><i class="fab fa-spotify"></i> Spotify</button>
+                    </div>
+
+                    <div class="divider">أو سجل الدخول بالبريد الإلكتروني</div>
+
+                    <form id="login-form" novalidate>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">كلمة المرور</label>
+                            <input type="password" id="password" required autocomplete="current-password">
+                        </div>
+                        <div class="options">
+                            <a href="forgot-password.html">نسيت كلمة المرور؟</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+                    </form>
+                    <div class="form-footer">
+                        <p>ليس لديك حساب؟ <a href="register.html">أنشئ حسابًا الآن</a></p>
+                    </div>
                 </div>
-                <div class="options">
-                    <a href="forgot-password.html">نسيت كلمة المرور؟</a>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width:100%;">تسجيل الدخول</button>
-            </form>
-            <div style="text-align: center; margin-top: 20px;">
-                <p>ليس لديك حساب؟ <a href="register.html" style="font-weight: bold; color: #0056b3;">أنشئ حسابًا الآن</a></p>
             </div>
         </div>
     </main>
@@ -90,44 +63,54 @@
     <script type="module" src="auth.js"></script>
     <script src="layout.js"></script>
     
-<script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
-        const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
-        providerButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const provider = button.getAttribute('data-provider');
-                window.signInWithProvider(provider);
+    <script type="module">
+        import { supabase } from './auth.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            const messageBox = document.getElementById('message-box');
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+
+            // --- Social Login Handlers ---
+            const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
+            providerButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const provider = button.getAttribute('data-provider');
+                    window.signInWithProvider(provider);
+                });
             });
-        });
 
-        const loginForm = document.getElementById('login-form');
-        const messageBox = document.getElementById('message-box');
-        const submitButton = loginForm.querySelector('button[type="submit"]');
+            // --- Form Submission Handler ---
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارٍ التحقق...';
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitButton.disabled = true;
-            submitButton.textContent = 'جارٍ التحقق...';
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    showMessage('error', 'البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'تسجيل الدخول';
+                } else {
+                    showMessage('success', 'تم تسجيل الدخول بنجاح! جارٍ توجيهك...');
+                    // The redirection is handled by onAuthStateChange in auth.js,
+                    // but we add a timeout here for a better user experience.
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1500);
+                }
+            });
 
-            if (error) {
+            function showMessage(type, text) {
                 messageBox.style.display = 'block';
-                messageBox.className = 'error';
-                messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                submitButton.disabled = false;
-                submitButton.textContent = 'تسجيل الدخول';
-            } else {
-                messageBox.style.display = 'block';
-                messageBox.className = 'success';
-                messageBox.textContent = 'تم تسجيل الدخول بنجاح! جارٍ توجيهك...';
-                // لا نضع كود توجيه هنا، auth.js سيقوم بالمهمة
+                messageBox.className = type;
+                messageBox.textContent = text;
             }
         });
-    });
-</script>
+    </script>
 </body>
 </html>
