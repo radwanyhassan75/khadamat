@@ -13,7 +13,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 window.supabase = supabase;
 
-// --- دالة تسجيل الدخول عبر المزودين (تبقى كما هي) ---
+// --- دالة تسجيل الدخول عبر المزودين ---
 window.signInWithProvider = async function(provider) {
     const options = { redirectTo: `${window.location.origin}/dashboard.html` };
     if (provider === 'google') {
@@ -22,13 +22,13 @@ window.signInWithProvider = async function(provider) {
     await supabase.auth.signInWithOAuth({ provider: provider, options: options });
 };
 
-// --- المستمع الرئيسي لحالة المصادقة (✅ تم تحسينه) ---
+// --- المستمع الرئيسي لحالة المصادقة (المسؤول عن كل شيء) ---
 supabase.auth.onAuthStateChange((event, session) => {
     const user = session?.user;
     const navbarActions = document.getElementById('navbar-actions');
     if (!navbarActions) return;
 
-    // تحديث أزرار الهيدر
+    // 1. تحديث أزرار الهيدر
     if (user) {
         navbarActions.innerHTML = `<a href="dashboard.html" class="btn btn-primary">لوحة التحكم</a> <button id="logout-button" class="btn btn-secondary">تسجيل الخروج</button>`;
         const logoutButton = document.getElementById('logout-button');
@@ -39,12 +39,12 @@ supabase.auth.onAuthStateChange((event, session) => {
         navbarActions.innerHTML = `<a href="login.html" class="btn btn-secondary">تسجيل الدخول</a><a href="register.html" class="btn btn-primary">إنشاء حساب</a>`;
     }
 
-    // --- منطق إعادة التوجيه المحسّن ---
+    // 2. منطق إعادة التوجيه المركزي
     const currentPage = window.location.pathname.split('/').pop();
-    const isAuthPage = ['login.html', 'register.html'].includes(currentPage);
+    const isAuthPage = ['login.html', 'register.html', 'forgot-password.html'].includes(currentPage);
 
-    // هذا هو الشرط الأهم: إذا نجحت عملية تسجيل الدخول، وجه المستخدم فورًا
-    if (event === 'SIGNED_IN' && isAuthPage) {
+    // إذا نجحت عملية تسجيل الدخول (من أي مكان) وكان المستخدم في صفحة تسجيل دخول، وجهه للوحة التحكم
+    if (user && isAuthPage) {
         window.location.href = '/dashboard.html';
     }
 });
