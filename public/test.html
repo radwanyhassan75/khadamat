@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة اختبار تسجيل الدخول</title>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('test-login-form');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    alert('فشل تسجيل الدخول: ' + error.message);
+                } else {
+                    alert('نجاح! تم تسجيل الدخول بنجاح. المستخدم هو: ' + data.user.email);
+                    console.log('User data:', data.user);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>اختبار تسجيل الدخول</h1>
+    <form id="test-login-form">
+        <label for="email">البريد الإلكتروني:</label><br>
+        <input type="email" id="email" required><br><br>
+        
+        <label for="password">كلمة المرور:</label><br>
+        <input type="password" id="password" required><br><br>
+        
+        <button type="submit">تسجيل الدخول</button>
+    </form>
+</body>
+</html>
