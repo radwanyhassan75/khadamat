@@ -5,60 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - المكتب الرقمي</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script type="module" src="auth.js"></script>
-
+    <script src="layout.js"></script>
+    
     <style>
-        :root { /* ... نفس كود الـ CSS الذي لديك ... */ }
-        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: #f8f9fa; direction: rtl; }
-        .main-header { /* ... */ } .navbar { /* ... */ } .btn { /* ... */ }
+        /* أنماط خاصة بتصميم لوحة التحكم */
         .dashboard-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .dashboard-layout { display: grid; grid-template-columns: 300px 1fr; gap: 30px; align-items: flex-start; }
+        .dashboard-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; align-items: flex-start; }
         .sidebar { background-color: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); padding: 25px; position: sticky; top: 120px; }
         .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-        .avatar-wrapper img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #0056b3; object-fit: cover; }
-        .sidebar-header h3 { margin: 10px 0 0; }
+        .avatar-wrapper img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #0056b3; object-fit: cover; background-color: #eee; }
+        .sidebar-header h3 { margin: 10px 0 0; font-size: 1.4rem; color: #2c3e50; }
         .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-        .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; color: #555; text-decoration: none; border-radius: 12px; transition: all 0.3s ease; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
-        .sidebar-nav a.active, .sidebar-nav a:hover { background-color: #0056b3; color: white; transform: translateX(-5px); }
-        .content-pane { display: none; } .content-pane.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; text-decoration: none; border-radius: 12px; transition: all 0.3s ease; font-weight: 700; margin-bottom: 8px; cursor: pointer; color: #555; }
+        .sidebar-nav a.active, .sidebar-nav a:hover { background-color: #0056b3; color: white; transform: translateX(-5px); box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2); }
+        .sidebar-nav a i { width: 20px; text-align: center; }
+        .content-pane { display: none; }
+        .content-pane.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.07); margin-bottom: 20px; }
-        .card h2 { border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-top: 0; }
-        .form-group { margin-bottom: 20px; } .form-group label { display: block; margin-bottom: 8px; font-weight: 700; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        table { width: 100%; border-collapse: collapse; } th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
-        .status { padding: 5px 10px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
-        .status.completed { background-color: #d1e7dd; color: #0f5132; }
-        .status.pending { background-color: #fff3cd; color: #664d03; }
-        #delete-account-btn { background-color: #dc3545; color: white; }
+        .card h2 { border-bottom: 2px solid #0056b3; padding-bottom: 15px; margin-top: 0; font-size: 1.6rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: #333; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        .table thead th { background-color: #f8f9fa; font-weight: 700; color: #333; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; text-align: center; color: white; }
+        .status-pending { background-color: #ffc107; }
+        .status-completed { background-color: #198754; }
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" style="height: 60px;"></a>
-            <div id="navbar-actions" class="navbar-actions"></div>
-        </nav>
-    </header>
+    <div id="header-placeholder"></div>
 
     <main class="dashboard-wrapper">
+        <h1>لوحة التحكم</h1>
         <div class="dashboard-layout">
             <aside class="sidebar">
                 <div class="sidebar-header">
-                    <div class="avatar-wrapper"><img src="https://placehold.co/150x150" alt="صورة المستخدم" id="sidebar-user-avatar"></div>
+                    <div class="avatar-wrapper"><img id="sidebar-user-avatar" src="https://placehold.co/150x150" alt="Avatar"></div>
                     <h3 id="sidebar-user-name">...</h3>
                 </div>
                 <nav class="sidebar-nav">
                     <ul>
                         <li><a data-target="profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
                         <li><a data-target="orders"><i class="fas fa-list-alt"></i> طلباتي</a></li>
-                        <li><a data-target="support"><i class="fas fa-headset"></i> تواصل معنا</a></li>
-                        <li><a data-target="account"><i class="fas fa-user-cog"></i> إعدادات الحساب</a></li>
+                        <li><a href="contact.html"><i class="fas fa-headset"></i> تواصل معنا</a></li>
+                        <li><a href="delete-account.html"><i class="fas fa-user-cog"></i> إعدادات الحساب</a></li>
                     </ul>
                 </nav>
             </aside>
@@ -66,138 +62,127 @@
                 <div id="profile" class="content-pane active">
                     <div class="card">
                         <h2>تعديل الملف الشخصي</h2>
-                        <form id="profile-form" class="form-group">
+                        <form id="profile-form">
                             <div class="form-group"><label for="full_name">الاسم الكامل</label><input type="text" id="full_name"></div>
                             <div class="form-group"><label for="phone_number">رقم الهاتف</label><input type="tel" id="phone_number"></div>
                             <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                            <div id="profile-message" style="margin-top: 15px;"></div>
                         </form>
                     </div>
                 </div>
+
                 <div id="orders" class="content-pane">
                     <div class="card">
                         <h2>طلباتي</h2>
-                        <table id="orders-table">
+                        <table class="table">
                             <thead><tr><th>اسم الخدمة</th><th>الحالة</th><th>تاريخ الطلب</th></tr></thead>
-                            <tbody></tbody>
+                            <tbody id="orders-tbody">
+                                </tbody>
                         </table>
-                    </div>
-                </div>
-                <div id="support" class="content-pane">
-                    <div class="card">
-                        <h2>تواصل معنا</h2>
-                        <p>إذا واجهت أي مشكلة، لا تتردد في التواصل معنا عبر البريد الإلكتروني:</p>
-                        <a href="mailto:support@khadamatmaroc.co.uk" style="font-weight: bold;">support@khadamatmaroc.co.uk</a>
-                    </div>
-                </div>
-                <div id="account" class="content-pane">
-                    <div class="card">
-                        <h2>إعدادات الحساب</h2>
-                        <p>لحذف حسابك بشكل نهائي، اضغط على الزر أدناه. هذا الإجراء لا يمكن التراجع عنه.</p>
-                        <button id="delete-account-btn" class="btn">حذف حسابي نهائياً</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <div id="footer-placeholder"></div>
     
-<script type="module">
-    let currentUser = null;
+    <script type="module">
+        let currentUser = null;
 
-    // --- تحميل وعرض البيانات ---
-    async function loadUserData(user) {
-        currentUser = user;
-        document.getElementById('sidebar-user-name').textContent = user.user_metadata.full_name || user.email;
-        document.getElementById('sidebar-user-avatar').src = user.user_metadata.avatar_url || 'https://placehold.co/150x150';
+        // --- تحميل البيانات الرئيسية عند فتح الصفحة ---
+        async function initializeDashboard() {
+            const { data: { session }, error } = await window.supabase.auth.getSession();
+            if (error || !session) {
+                window.location.href = '/login.html'; // حماية الصفحة
+                return;
+            }
+            currentUser = session.user;
+            
+            // ملء بيانات الشريط الجانبي
+            const userName = currentUser.user_metadata.full_name || currentUser.email;
+            document.getElementById('sidebar-user-name').textContent = userName;
+            document.getElementById('sidebar-user-avatar').src = currentUser.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=0056b3&color=fff`;
 
-        const { data: profile, error } = await supabase.from('users').select('full_name, phone_number').eq('id', user.id).single();
-        
-        if (profile) {
-            document.getElementById('full_name').value = profile.full_name || '';
-            document.getElementById('phone_number').value = profile.phone_number || '';
+            // تحميل بيانات نموذج الملف الشخصي
+            loadProfileData();
         }
-    }
 
-    async function loadOrders(userId) {
-        const { data: orders, error } = await supabase.from('orders').select('*').eq('user_id', userId);
-        const tableBody = document.getElementById('orders-table').querySelector('tbody');
-        tableBody.innerHTML = ''; // تفريغ الجدول قبل ملئه
-        if (orders && orders.length > 0) {
-            orders.forEach(order => {
-                const statusClass = order.status === 'مكتمل' ? 'completed' : 'pending';
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${order.service_name}</td>
-                        <td><span class="status ${statusClass}">${order.status}</span></td>
-                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
-                    </tr>
-                `;
-            });
-        } else {
-            tableBody.innerHTML = '<tr><td colspan="3">لا توجد لديك طلبات حالياً.</td></tr>';
-        }
-    }
-
-    // --- التفاعل مع النماذج والأزرار ---
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const newName = document.getElementById('full_name').value;
-        const newPhone = document.getElementById('phone_number').value;
-
-        // 1. تحديث الجدول العام
-        const { error: profileError } = await supabase.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
-        
-        // 2. تحديث بيانات المصادقة
-        const { error: authError } = await supabase.auth.updateUser({ data: { full_name: newName } });
-
-        if (profileError || authError) {
-            alert('حدث خطأ أثناء تحديث البيانات.');
-        } else {
-            alert('تم تحديث بياناتك بنجاح!');
-            document.getElementById('sidebar-user-name').textContent = newName; // تحديث الاسم في الشريط الجانبي
-        }
-    });
-
-    document.getElementById('delete-account-btn').addEventListener('click', async () => {
-        if (confirm('هل أنت متأكد من رغبتك في حذف حسابك نهائياً؟ لا يمكن التراجع عن هذا الإجراء.')) {
-            // لحذف الحساب، يجب استدعاء Edge Function بصلاحيات المسؤول
-            const { error } = await supabase.functions.invoke('delete-user');
-            if (error) {
-                alert('حدث خطأ أثناء حذف الحساب: ' + error.message);
-            } else {
-                alert('تم حذف حسابك بنجاح. سنقوم بتسجيل خروجك الآن.');
-                await supabase.auth.signOut();
-                window.location.href = '/index.html';
+        // --- دوال خاصة بكل قسم ---
+        async function loadProfileData() {
+            const { data: profile, error } = await supabase.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
+            if (profile) {
+                document.getElementById('full_name').value = profile.full_name || currentUser.user_metadata.full_name || '';
+                document.getElementById('phone_number').value = profile.phone_number || '';
             }
         }
-    });
 
-    // --- التنقل بين الأقسام ---
-    const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
-    const contentPanes = document.querySelectorAll('.main-content .content-pane');
-    navLinks.forEach(link => {
-        link.addEventListener('click', e => {
+        async function loadOrders() {
+            const { data: orders, error } = await supabase.from('orders').select('*').eq('user_id', currentUser.id);
+            const tableBody = document.getElementById('orders-tbody');
+            tableBody.innerHTML = ''; 
+            if (orders && orders.length > 0) {
+                orders.forEach(order => {
+                    const statusClass = order.status === 'مكتمل' ? 'status-completed' : 'status-pending';
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${order.service_name}</td>
+                            <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+                            <td>${new Date(order.created_at).toLocaleDateString('ar-MA')}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="3">لا توجد لديك طلبات حالياً.</td></tr>';
+            }
+        }
+
+        // --- ربط الأحداث ---
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const targetId = link.getAttribute('data-target');
-            
-            navLinks.forEach(item => item.classList.remove('active'));
-            contentPanes.forEach(pane => pane.classList.remove('active'));
-            
-            link.classList.add('active');
-            document.getElementById(targetId).classList.add('active');
+            const newName = document.getElementById('full_name').value;
+            const newPhone = document.getElementById('phone_number').value;
+            const messageDiv = document.getElementById('profile-message');
 
-            if (targetId === 'orders') {
-                loadOrders(currentUser.id);
+            // تحديث البيانات في جدول public.users و auth.users
+            const { error: profileError } = await supabase.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
+            const { error: authError } = await supabase.auth.updateUser({ data: { full_name: newName } });
+
+            if (profileError || authError) {
+                messageDiv.textContent = 'حدث خطأ أثناء تحديث البيانات.';
+                messageDiv.style.color = 'red';
+            } else {
+                messageDiv.textContent = 'تم تحديث بياناتك بنجاح!';
+                messageDiv.style.color = 'green';
+                document.getElementById('sidebar-user-name').textContent = newName; // تحديث فوري للاسم
             }
         });
-    });
 
-    // --- نقطة البداية ---
-    document.addEventListener('DOMContentLoaded', async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            loadUserData(session.user);
-        }
-    });
-</script>
+        // --- نظام التنقل بين الأقسام ---
+        const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+        const contentPanes = document.querySelectorAll('.main-content .content-pane');
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-target');
+                
+                navLinks.forEach(item => item.classList.remove('active'));
+                contentPanes.forEach(pane => pane.classList.remove('active'));
+                
+                link.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+
+                // تحميل البيانات الخاصة بالقسم عند فتحه
+                if (targetId === 'orders') {
+                    loadOrders();
+                } else if (targetId === 'profile') {
+                    loadProfileData();
+                }
+            });
+        });
+
+        // --- تشغيل كل شيء ---
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
 </body>
 </html>
