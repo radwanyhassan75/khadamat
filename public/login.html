@@ -10,10 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- ✅ الإصلاح الرئيسي: تم نقل استدعاء auth.js إلى هنا لضمان تحميله أولاً -->
     <script type="module" src="auth.js"></script>
 
     <style>
+        /* ... نفس كود الـ CSS الخاص بك، لا حاجة لتغييره ... */
         :root {
             --primary-color: #0056b3; --dark-color: #1d2d3d; --light-color: #ffffff;
             --gray-color: #f7f9fc; --text-color: #555; --border-color: #e0e0e0; 
@@ -50,13 +50,11 @@
     </style>
 </head>
 <body>
-
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img id="site-logo" src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
             <div id="navbar-actions" class="navbar-actions">
-                <!-- سيتم ملء هذا القسم بواسطة auth.js -->
-            </div>
+                </div>
         </nav>
     </header>
 
@@ -75,11 +73,10 @@
                 <div id="message-box"></div>
 
                 <div class="social-login-grid">
-                    <!-- ✅ الإصلاح: إزالة onclick وإضافة IDs للأزرار -->
-                    <button id="google-signin-btn" class="social-btn"><i class="fab fa-google" style="color:#DB4437;"></i> Google</button>
-                    <button id="facebook-signin-btn" class="social-btn"><i class="fab fa-facebook" style="color:#4267B2;"></i> Facebook</button>
-                    <button id="twitter-signin-btn" class="social-btn"><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter</button>
-                    <button id="spotify-signin-btn" class="social-btn"><i class="fab fa-spotify" style="color:#1DB954;"></i> Spotify</button>
+                    <button class="social-btn" data-provider="google"><i class="fab fa-google" style="color:#DB4437;"></i> Google</button>
+                    <button class="social-btn" data-provider="facebook"><i class="fab fa-facebook" style="color:#4267B2;"></i> Facebook</button>
+                    <button class="social-btn" data-provider="twitter"><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter</button>
+                    <button class="social-btn" data-provider="spotify"><i class="fab fa-spotify" style="color:#1DB954;"></i> Spotify</button>
                 </div>
                 <div class="divider">أو</div>
                 <form id="login-form">
@@ -92,44 +89,49 @@
         </div>
     </main>
     
-    <!-- ✅ التنظيف: إزالة استدعاء auth.js المكرر من هنا -->
     <script type="module">
-        // ✅ استيراد الدالة من الملف المركزي auth.js
-        import { signInWithProvider } from './auth.js';
+        // انتظر حتى يتم تحميل كل محتوى الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            // ✅ تحديث: ربط جميع أزرار تسجيل الدخول الاجتماعي بكود واحد
+            const providerButtons = document.querySelectorAll('.social-btn[data-provider]');
+            providerButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const provider = button.getAttribute('data-provider');
+                    // استدعاء الدالة العامة الموجودة في auth.js
+                    window.signInWithProvider(provider);
+                });
+            });
 
-        // ✅ ربط الأزرار بالكود بالطريقة الحديثة والآمنة
-        document.getElementById('google-signin-btn').addEventListener('click', () => signInWithProvider('google'));
-        document.getElementById('facebook-signin-btn').addEventListener('click', () => signInWithProvider('facebook'));
-        document.getElementById('twitter-signin-btn').addEventListener('click', () => signInWithProvider('twitter'));
-        document.getElementById('spotify-signin-btn').addEventListener('click', () => signInWithProvider('spotify'));
+            const loginForm = document.getElementById('login-form');
+            const messageBox = document.getElementById('message-box');
 
-        const loginForm = document.getElementById('login-form');
-        const messageBox = document.getElementById('message-box');
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // window.supabase يتم تهيئته في auth.js
-            if (!window.supabase) return;
-
-            const { error } = await window.supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                messageBox.style.display = 'block';
-                if (error.message.includes("Invalid login credentials")) {
-                    messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
-                } else if (error.message.includes("Email not confirmed")) {
-                    messageBox.textContent = 'الرجاء تأكيد بريدك الإلكتروني أولاً. تحقق من صندوق الوارد.';
-                } else {
-                    messageBox.textContent = 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (!window.supabase) {
+                    console.error("Supabase client not initialized.");
+                    return;
                 }
-                messageBox.className = 'error';
-            }
-            // التوجيه إلى لوحة التحكم يتم تلقائياً بواسطة onAuthStateChange في auth.js عند النجاح
+
+                // استدعاء دالة تسجيل الدخول بالبريد وكلمة المرور
+                const { error } = await window.supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    messageBox.style.display = 'block';
+                    messageBox.className = 'error'; // استخدام فئة CSS للخطأ
+                    if (error.message.includes("Invalid login credentials")) {
+                        messageBox.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                    } else if (error.message.includes("Email not confirmed")) {
+                        messageBox.textContent = 'الرجاء تأكيد بريدك الإلكتروني أولاً. تحقق من صندوق الوارد.';
+                    } else {
+                        messageBox.textContent = 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+                    }
+                }
+                // في حالة النجاح، سيقوم onAuthStateChange في auth.js بإعادة التوجيه تلقائياً
+            });
         });
     </script>
 </body>
 </html>
-
