@@ -1,5 +1,5 @@
 ﻿// =================================================================
-// ملف المصادقة المركزي auth.js - النسخة النهائية مع إصلاح التوجيه
+// ملف المصادقة المركزي auth.js - النسخة النهائية (معالجة حلقة التوجيه)
 // =================================================================
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -11,7 +11,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // --- 2. تهيئة العميل ---
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
-        detectSessionInUrl: true, // This is crucial for email confirmation
+        detectSessionInUrl: true,
         autoRefreshToken: true,
         persistSession: true
     }
@@ -19,7 +19,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 // --- 3. جعل الدوال متاحة عالميًا ---
 window.supabase = supabase;
-window.currentUser = null;
 
 // --- 4. تحديث واجهة المستخدم (الهيدر) ---
 function updateHeaderUI(user) {
@@ -33,6 +32,7 @@ function updateHeaderUI(user) {
         `;
         const logoutButton = document.getElementById('logout-button');
         if (logoutButton) {
+            // استبدال الزر بنسخة منه لإزالة أي مستمعين قدامى ومنع تكرارهم
             logoutButton.replaceWith(logoutButton.cloneNode(true));
             document.getElementById('logout-button').addEventListener('click', () => {
                 supabase.auth.signOut().then(() => {
@@ -50,38 +50,35 @@ function updateHeaderUI(user) {
 
 // --- 5. دالة تسجيل الدخول عبر مزود خدمة ---
 export async function signInWithProvider(provider) {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
-        options: {
-            redirectTo: `${window.location.origin}/dashboard.html`
-        }
+        options: { redirectTo: `${window.location.origin}/dashboard.html` }
     });
-
-    if (error) {
-        alert("فشل في بدء عملية تسجيل الدخول: " + error.message);
-        console.error("Supabase OAuth Error:", error);
-    }
+    if (error) alert("فشل تسجيل الدخول: " + error.message);
 }
 
 // --- 6. المستمع الرئيسي لحالة المصادقة (✅ تم إصلاحه بالكامل) ---
 supabase.auth.onAuthStateChange((event, session) => {
     const user = session?.user || null;
-    window.currentUser = user;
     updateHeaderUI(user);
-    
-    const currentPage = window.location.pathname.split('/').pop();
-    const isProtectedPage = ['dashboard.html', 'my-orders.html'].includes(currentPage);
 
-    // الحالة الأولى: المستخدم قام بتسجيل الدخول بنجاح
-    // هذا سيتم تفعيله عند الضغط على رابط التأكيد في البريد الإلكتروني
-    if (event === 'SIGNED_IN' && currentPage !== 'dashboard.html') {
+    const currentPage = window.location.pathname.split('/').pop();
+    const isProtectedPage = ['dashboard.html', 'my-orders.html', 'complete-profile.html'].includes(currentPage);
+    const isAuthPage = ['login.html', 'register.html'].includes(currentPage);
+
+    // الحالة الأولى: المستخدم مسجل دخوله وهو في صفحة تسجيل الدخول أو إنشاء حساب
+    // الحل: وجهه إلى لوحة التحكم
+    if (user && isAuthPage) {
         window.location.href = '/dashboard.html';
-        return; 
+        return;
     }
 
     // الحالة الثانية: المستخدم غير مسجل ويحاول الوصول لصفحة محمية
+    // الحل: وجهه إلى صفحة تسجيل الدخول
     if (!user && isProtectedPage) {
         window.location.href = '/login.html';
         return;
     }
+
+    // في جميع الحالات الأخرى، لا تفعل شيئًا لمنع حلقة التوجيه
 });
