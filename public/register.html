@@ -137,7 +137,7 @@
                 if (error) {
                      // Smart error handling
                     if (error.message.includes("already registered")) {
-                         showMessage('error', 'هذا البريد الإلكتروني مسجل بالفعل. <a href=\'login.html\'>حاول تسجيل الدخول</a>.');
+                         showMessage('error', 'هذا البريد الإلكتروني مسجل بالفعل. <a href=\\\'login.html\\\'>حاول تسجيل الدخول</a>.');
                     } else if (error.message.includes("weak password")) {
                          showMessage('error', 'كلمة المرور ضعيفة جدًا. حاول استخدام مزيج من الأحرف والأرقام والرموز.');
                     }
