@@ -15,9 +15,11 @@
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
-        /* Custom Toggle Switch */
         .toggle-checkbox:checked { transform: translateX(100%); border-color: #4f46e5; }
         .toggle-checkbox:checked + .toggle-label { background-color: #4f46e5; }
+        /* Modal styles */
+        .modal { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50" style="display: none;">
@@ -43,6 +45,7 @@
             <main class="flex-1 overflow-y-auto p-8">
                 <div id="message-container" class="mb-4"></div>
                 <div class="max-w-6xl mx-auto space-y-8">
+                    
                     <div class="bg-white p-6 rounded-xl shadow-md">
                         <h2 class="text-xl font-bold mb-6 border-b pb-4">الإعدادات العامة</h2>
                         <div id="general-settings-container" class="space-y-4">
@@ -51,7 +54,13 @@
                     </div>
 
                     <div class="bg-white p-6 rounded-xl shadow-md">
-                        <h2 class="text-xl font-bold mb-6 border-b pb-4">إعدادات طرق الدفع</h2>
+                        <div class="flex justify-between items-center mb-6 border-b pb-4">
+                            <h2 class="text-xl font-bold">إعدادات طرق الدفع</h2>
+                            <button id="add-payment-method-btn" class="bg-indigo-100 text-indigo-700 font-bold py-2 px-4 rounded-lg hover:bg-indigo-200 transition text-sm flex items-center gap-2">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                إضافة طريقة دفع
+                            </button>
+                        </div>
                         <div id="payment-settings-container" class="space-y-6">
                             <p class="text-center text-gray-500">جاري تحميل الإعدادات...</p>
                         </div>
@@ -68,13 +77,60 @@
         </div>
     </div>
 
+    <!-- Add Payment Method Modal -->
+    <div id="add-payment-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 hidden opacity-0 z-50">
+        <div class="modal-content bg-white rounded-xl shadow-2xl p-8 w-full max-w-2xl transform transition-transform scale-95">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                <h2 class="text-2xl font-bold text-gray-800">إضافة طريقة دفع جديدة</h2>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <form id="add-payment-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="new-method-name" class="block text-sm font-medium text-gray-700">اسم العرض (مثال: البطاقة البنكية)</label>
+                        <input type="text" id="new-method-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="new-method-id" class="block text-sm font-medium text-gray-700">المعرّف البرمجي (ID) (مثال: stripe)</label>
+                        <input type="text" id="new-method-id" required placeholder="english_and_lowercase" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div>
+                    <label for="new-method-logo" class="block text-sm font-medium text-gray-700">رابط صورة الشعار (Logo URL)</label>
+                    <input type="url" id="new-method-logo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                 <div class="border-t pt-4 space-y-3">
+                    <p class="font-medium text-gray-700">تفاصيل الحساب (اختياري للبنوك)</p>
+                     <div><label class="block text-xs font-medium text-gray-600">اسم المستفيد</label><input type="text" id="new-details-beneficiary" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"></div>
+                     <div><label class="block text-xs font-medium text-gray-600">رقم الهاتف</label><input type="tel" id="new-details-phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"></div>
+                     <div><label class="block text-xs font-medium text-gray-600">رقم الحساب (RIB)</label><input type="text" id="new-details-rib" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-sm"></div>
+                </div>
+                <div class="pt-4 flex justify-end gap-4">
+                    <button type="button" id="cancel-modal-btn" class="bg-gray-200 text-gray-800 py-2 px-5 rounded-lg hover:bg-gray-300 font-semibold">إلغاء</button>
+                    <button type="submit" class="bg-indigo-600 text-white py-2 px-5 rounded-lg hover:bg-indigo-700 font-semibold flex items-center">
+                        <span id="add-btn-text">إضافة الطريقة</span>
+                        <i id="add-btn-spinner" data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin hidden"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        function initializePage(supabaseClient) {
+        window.initializePage = function(supabaseClient) {
             lucide.createIcons();
+            
+            // --- Element Selectors ---
             const generalContainer = document.getElementById('general-settings-container');
             const paymentContainer = document.getElementById('payment-settings-container');
             const saveAllBtn = document.getElementById('save-all-btn');
+            const modal = document.getElementById('add-payment-modal');
+            const addPaymentBtn = document.getElementById('add-payment-method-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelModalBtn = document.getElementById('cancel-modal-btn');
+            const addPaymentForm = document.getElementById('add-payment-form');
 
+            // --- Main Fetch Function ---
             async function fetchAllSettings() {
                 try {
                     const [paymentMethods, generalSettings] = await Promise.all([
@@ -87,13 +143,14 @@
 
                     renderPaymentSettings(paymentMethods.data);
                     renderGeneralSettings(generalSettings.data);
-
+                    lucide.createIcons();
                 } catch (error) {
                     console.error("Error fetching settings:", error);
-                    showMessage('فشل تحميل الإعدادات.', 'error');
+                    showMessage('فشل تحميل الإعدادات. تأكد من تفعيل RLS للجداول.', 'error');
                 }
             }
 
+            // --- Render Functions ---
             function renderGeneralSettings(settings) {
                 if (!settings) return;
                 generalContainer.innerHTML = `
@@ -108,7 +165,7 @@
                     <div class="flex items-center justify-between pt-2">
                         <div>
                            <span class="text-sm font-medium text-gray-700">وضع الصيانة</span>
-                           <p class="text-xs text-gray-500">عند تفعيله، لن يتمكن الزوار من الوصول للموقع (لا يؤثر على لوحة التحكم).</p>
+                           <p class="text-xs text-gray-500">عند تفعيله، لن يتمكن الزوار من الوصول للموقع.</p>
                         </div>
                         <div class="relative inline-block w-12 align-middle select-none transition duration-200 ease-in">
                             <input type="checkbox" id="maintenance-mode" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transition-transform" ${settings.maintenance_mode ? 'checked' : ''}/>
@@ -119,8 +176,8 @@
 
             function renderPaymentSettings(methods) {
                 paymentContainer.innerHTML = '';
-                if (methods.length === 0) {
-                    paymentContainer.innerHTML = '<p class="text-center text-gray-500">لا توجد طرق دفع لإعدادها. يمكنك إضافتها من قاعدة البيانات.</p>';
+                if (!methods || methods.length === 0) {
+                    paymentContainer.innerHTML = '<p class="text-center text-gray-500">لا توجد طرق دفع. أضف واحدة جديدة!</p>';
                     return;
                 }
                 methods.forEach(method => {
@@ -128,8 +185,14 @@
                     const methodHtml = `
                         <div class="p-4 border rounded-lg bg-gray-50" data-method-id="${method.id}">
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-4"><img src="${method.logo_url || 'https://placehold.co/40x40'}" class="h-8 w-auto object-contain"><h3 class="font-bold text-lg">${method.name}</h3></div>
-                                <div class="relative inline-block w-12 align-middle select-none"><input type="checkbox" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transition-transform" ${method.is_enabled ? 'checked' : ''}/><label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label></div>
+                                <div class="flex items-center gap-4">
+                                    <img src="${method.logo_url || 'https://placehold.co/40x40'}" class="h-8 w-auto object-contain">
+                                    <h3 class="font-bold text-lg">${method.name}</h3>
+                                </div>
+                                <div class="relative inline-block w-12 align-middle select-none">
+                                    <input type="checkbox" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transition-transform" ${method.is_enabled ? 'checked' : ''}/>
+                                    <label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                </div>
                             </div>
                             <div class="mt-4 pt-4 border-t space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -143,6 +206,7 @@
                 });
             }
 
+            // --- Save All Logic ---
             saveAllBtn.addEventListener('click', async () => {
                 saveAllBtn.disabled = true;
                 saveAllBtn.querySelector('span').textContent = 'جاري الحفظ...';
@@ -150,12 +214,7 @@
                 const paymentUpserts = [];
                 document.querySelectorAll('[data-method-id]').forEach(div => {
                     const id = div.dataset.methodId;
-                    
-                    // =================== FIX START ===================
-                    // Get the 'name' from the <h3> tag because it's required by the database.
-                    const name = div.querySelector('h3').textContent; 
-                    // =================== FIX END =====================
-
+                    const name = div.querySelector('h3').textContent;
                     const is_enabled = div.querySelector('.toggle-checkbox').checked;
                     const details = {};
                     div.querySelectorAll('.data-field').forEach(input => {
@@ -164,11 +223,7 @@
                             details[keyPath.split('.')[1]] = input.value || null;
                         }
                     });
-
-                    // =================== FIX START ===================
-                    // Add the 'name' field to the object being pushed.
-                    paymentUpserts.push({ id: id, name: name, is_enabled: is_enabled, details: details });
-                    // =================== FIX END =====================
+                    paymentUpserts.push({ id, name, is_enabled, details });
                 });
 
                 const generalUpdateData = {
@@ -179,7 +234,7 @@
                 };
 
                 try {
-                    const { error: paymentError } = await supabaseClient.from('payment_methods').upsert(paymentUpserts);
+                    const { error: paymentError } = await supabaseClient.from('payment_methods').upsert(paymentUpserts, { onConflict: 'id' });
                     if (paymentError) throw paymentError;
 
                     const { error: generalError } = await supabaseClient.from('general_settings').upsert(generalUpdateData);
@@ -202,8 +257,77 @@
                 setTimeout(() => container.innerHTML = '', 5000);
             }
 
+            // --- Modal Logic ---
+            function openModal() {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.querySelector('.modal-content').classList.remove('scale-95');
+                }, 10);
+            }
+
+            function closeModal() {
+                modal.classList.add('opacity-0');
+                modal.querySelector('.modal-content').classList.add('scale-95');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            addPaymentBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelModalBtn.addEventListener('click', closeModal);
+
+            addPaymentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitButton = addPaymentForm.querySelector('button[type="submit"]');
+                const btnText = document.getElementById('add-btn-text');
+                const btnSpinner = document.getElementById('add-btn-spinner');
+
+                btnText.textContent = 'جاري الإضافة...';
+                btnSpinner.classList.remove('hidden');
+                submitButton.disabled = true;
+
+                const newMethodData = {
+                    id: document.getElementById('new-method-id').value.trim().toLowerCase().replace(/\s+/g, '-'),
+                    name: document.getElementById('new-method-name').value.trim(),
+                    logo_url: document.getElementById('new-method-logo').value.trim(),
+                    is_enabled: true,
+                    details: {
+                        beneficiary: document.getElementById('new-details-beneficiary').value.trim() || null,
+                        phone: document.getElementById('new-details-phone').value.trim() || null,
+                        rib: document.getElementById('new-details-rib').value.trim() || null,
+                    }
+                };
+                
+                if (!newMethodData.id || !newMethodData.name || !newMethodData.logo_url) {
+                    showMessage('الرجاء ملء حقول الاسم والمعرف ورابط الشعار.', 'error');
+                    btnText.textContent = 'إضافة الطريقة';
+                    btnSpinner.classList.add('hidden');
+                    submitButton.disabled = false;
+                    return;
+                }
+
+                try {
+                    const { error } = await supabaseClient.from('payment_methods').insert(newMethodData);
+                    if (error) throw error;
+                    
+                    showMessage('تمت إضافة طريقة الدفع بنجاح!', 'success');
+                    addPaymentForm.reset();
+                    closeModal();
+                    fetchAllSettings(); // Refresh the list
+                } catch (error) {
+                    console.error("Error adding payment method:", error);
+                    showMessage(`فشل إضافة الطريقة: ${error.message}`, 'error');
+                } finally {
+                    btnText.textContent = 'إضافة الطريقة';
+                    btnSpinner.classList.add('hidden');
+                    submitButton.disabled = false;
+                }
+            });
+
+            // --- Initial Load ---
             fetchAllSettings();
         }
     </script>
 </body>
 </html>
+

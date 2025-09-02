@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>اتصل بنا - المكتب الرقمي</title>
 
-    <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind CSS for utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
+            <link rel="stylesheet" href="layout.css">
+
     <script>
         tailwind.config = {
             theme: {
@@ -29,14 +26,8 @@
     </script>
 
     <style>
-        /* Custom styles to complement Tailwind */
         :root {
             --primary-color: #0056b3;
-            --dark-color: #1d2d3d;
-            --light-color: #ffffff;
-            --gray-color: #f8f9fa;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
         body {
             font-family: 'Cairo', sans-serif;
@@ -48,8 +39,9 @@
             box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
         }
         .btn-submit:disabled {
-            background-color: #93c5fd; /* Lighter blue for disabled state */
+            background-color: #93c5fd;
             cursor: not-allowed;
+            transform: none !important;
         }
         .optional-field {
             max-height: 0;
@@ -57,52 +49,35 @@
             transition: max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out;
         }
         .optional-field.visible {
-            max-height: 100px; /* Adjust as needed */
-            margin-top: 1.25rem; /* Equivalent to space-y-5 */
+            max-height: 100px;
+            margin-top: 1.25rem;
         }
-        .footer-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-color);
+        /* Style for the legal notice box */
+        .legal-notice {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-align: right;
+            line-height: 1.6;
+        }
+        .legal-notice h4 {
+            color: #343a40;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <a href="index.html" class="navbar-logo">
-                <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="h-16 transition-transform duration-300 hover:scale-105">
-            </a>
-            <ul class="hidden md:flex items-center space-x-8 space-x-reverse">
-                <li><a href="index.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الرئيسية</a></li>
-                <li><a href="services.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الخدمات</a></li>
-                <li><a href="blog.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">المدونة</a></li>
-                <li><a href="faq.html" class="text-gray-700 font-bold hover:text-blue-600 transition-colors">الأسئلة الشائعة</a></li>
-                <li><a href="contact.html" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">اتصل بنا</a></li>
-            </ul>
-             <button class="md:hidden text-2xl" id="menu-btn"><i class="fas fa-bars"></i></button>
-        </nav>
-         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 border-t border-gray-200">
-            <a href="index.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الرئيسية</a>
-            <a href="services.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الخدمات</a>
-            <a href="blog.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">المدونة</a>
-            <a href="faq.html" class="block text-center py-2 text-gray-700 font-bold hover:bg-gray-100">الأسئلة الشائعة</a>
-            <a href="contact.html" class="block text-center py-2 text-blue-600 font-bold bg-blue-50 mx-4 rounded-lg">اتصل بنا</a>
-        </div>
-    </header>
+    <div id="header-placeholder"></div>
 
-    <!-- Main Content -->
     <main class="container mx-auto px-6 py-12">
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden lg:grid lg:grid-cols-12">
             
-            <!-- Contact Info & Image Section -->
             <div class="relative lg:col-span-5">
               <img src="https://images.pexels.com/photos/8867241/pexels-photo-8867241.jpeg?cs=srgb&dl=pexels-yankrukov-8867241.jpg&fm=jpg"
                    onerror="this.onerror=null;this.src='https://placehold.co/600x800/374151/ffffff?text=Support+Team';"
@@ -110,37 +85,35 @@
                    class="absolute h-full w-full object-cover">
               <div class="relative bg-gray-900 bg-opacity-70 h-full p-8 md:p-12 text-white flex flex-col justify-between">
                 <div>
-                    <h2 class="text-3xl font-extrabold mb-4">معلومات التواصل</h2>
-                    <p class="mb-8 text-gray-300">نحن هنا لمساعدتك. تواصل معنا عبر القنوات التالية أو املأ النموذج وسنعاود الاتصال بك.</p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-clock fa-fw text-2xl text-blue-400"></i>
-                            <div class="mr-4">
-                                <h3 class="font-bold">أوقات العمل</h3>
-                                <p class="text-gray-300">8:00 صباحًا - 8:00 مساءً</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-envelope fa-fw text-2xl text-blue-400"></i>
-                            <div class="mr-4">
-                                <h3 class="font-bold">البريد الإلكتروني</h3>
-                                <a href="mailto:support@khadamatmaroc.co.uk?subject=استفسار من الموقع" class="text-gray-300 hover:text-white transition-colors">support@khadamatmaroc.co.uk</a>
-                            </div>
-                        </div>
+                  <h2 class="text-3xl font-extrabold mb-4">معلومات التواصل</h2>
+                  <p class="mb-8 text-gray-300">نحن هنا لمساعدتك. تواصل معنا عبر القنوات التالية أو املأ النموذج وسنعاود الاتصال بك.</p>
+                  
+                  <div class="space-y-6">
+                    <div class="flex items-center">
+                      <i class="fas fa-clock fa-fw text-2xl text-blue-400"></i>
+                      <div class="mr-4">
+                        <h3 class="font-bold">أوقات العمل</h3>
+                        <p class="text-gray-300">8:00 صباحًا - 8:00 مساءً</p>
+                      </div>
                     </div>
+                    <div class="flex items-center">
+                      <i class="fas fa-envelope fa-fw text-2xl text-blue-400"></i>
+                      <div class="mr-4">
+                        <h3 class="font-bold">البريد الإلكتروني</h3>
+                        <a href="mailto:support@khadamatmaroc.co.uk?subject=استفسار من الموقع" class="text-gray-300 hover:text-white transition-colors">support@khadamatmaroc.co.uk</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
                 <div class="mt-12">
-                    <h3 class="text-xl font-bold mb-4">تتبع تذكرة الدعم</h3>
-                    <p class="text-gray-300">
-                       لتتبع حالة تذكرتك، <a href="track-ticket.html" class="text-blue-400 font-bold hover:underline">اضغط هنا</a>.
-                    </p>
+                  <h3 class="text-xl font-bold mb-4">تتبع تذكرة الدعم</h3>
+                  <p class="text-gray-300">
+                    لتتبع حالة تذكرتك، <a href="track-ticket.html" class="text-blue-400 font-bold hover:underline">اضغط هنا</a>.
+                  </p>
                 </div>
               </div>
             </div>
 
-            <!-- Form Section -->
             <div class="p-8 md:p-12 lg:col-span-7">
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-6">أرسل لنا رسالة</h2>
                 <form id="contact-form" class="space-y-5">
@@ -161,6 +134,7 @@
                     <div>
                         <label for="inquiry-type" class="font-bold text-gray-700 block mb-2">نوع الاستفسار</label>
                         <select id="inquiry-type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg form-select transition-all bg-white">
+                            <option value="" disabled selected>اختر نوع الاستفسار...</option>
                             <option value="استفسار عام">استفسار عام</option>
                             <option value="استفسار عن طلب">استفسار عن طلب</option>
                             <option value="شكوى">شكوى</option>
@@ -168,7 +142,7 @@
                         </select>
                     </div>
                     <div id="order-id-field" class="optional-field">
-                        <label for="order-id" class="font-bold text-gray-700 block mb-2">رقم الطلب (اختياري)</label>
+                        <label for="order-id" class="font-bold text-gray-700 block mb-2">رقم الطلب (إن وجد)</label>
                         <input type="text" id="order-id" placeholder="مثال: KH-1234567890" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input transition-all">
                     </div>
                     <div>
@@ -176,18 +150,21 @@
                         <textarea id="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input transition-all"></textarea>
                     </div>
                     
-                    <!-- Privacy Consent Checkbox -->
-                    <div class="pt-2">
+                    <div class="legal-notice">
+                        <h4>إشعار حماية البيانات الشخصية</h4>
+                        <p>
+                            باستخدامك هذا النموذج، فإنك توافق على قيام **المكتب الرقمي (Khadamat Maroc)** بجمع بياناتك الشخصية بهدف الرد على استفسارك ومعالجة طلبك بفعالية. تخضع هذه المعالجة لمقتضيات القانون رقم 09-08. لممارسة حقوقك في الوصول والتصحيح والاعتراض، يرجى التواصل معنا عبر <a href="mailto:support@khadamatmaroc.co.uk" class="text-blue-600 font-bold">support@khadamatmaroc.co.uk</a>.
+                        </p>
+                    </div>
+
+                    <div class="pt-2 space-y-3">
                         <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="privacy-consent" name="privacy-consent" type="checkbox" required class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                            </div>
-                            <div class="mr-3 text-sm">
-                                <label for="privacy-consent" class="font-bold text-gray-800">أوافق على معالجة بياناتي</label>
-                                <p class="text-gray-500 text-xs mt-1">
-                                    بالنقر على "إرسال"، فإنك توافق على <a href="privacy.html" target="_blank" class="font-bold text-blue-600 hover:underline">سياسة الخصوصية</a> الخاصة بنا. بياناتك ستستخدم فقط للرد على استفسارك.
-                                </p>
-                            </div>
+                            <div class="flex items-center h-5"><input id="terms-consent" type="checkbox" required class="mandatory-consent focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"></div>
+                            <div class="mr-3 text-sm"><label for="terms-consent" class="font-bold text-gray-800">أوافق على <a href="terms.html" target="_blank" class="text-blue-600 hover:underline">الشروط والأحكام</a> و <a href="privacy.html" target="_blank" class="text-blue-600 hover:underline">سياسة الخصوصية</a>.</label></div>
+                        </div>
+                        <div class="flex items-start">
+                             <div class="flex items-center h-5"><input id="data-consent" type="checkbox" required class="mandatory-consent focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"></div>
+                            <div class="mr-3 text-sm"><label for="data-consent" class="font-bold text-gray-800">أقر بأنني قرأت وفهمت إشعار حماية البيانات الشخصية.</label></div>
                         </div>
                     </div>
 
@@ -202,66 +179,42 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 mt-12">
-        <div class="container mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <div class="footer-section">
-                    <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">المكتب الرقمي</h3>
-                    <p class="text-sm">منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية، نقدم حلولاً مبتكرة للأفراد والشركات.</p>
-                </div>
-                <div class="footer-section">
-                    <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">روابط مهمة</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="index.html" class="hover:text-white transition-colors">الرئيسية</a></li>
-                        <li><a href="services.html" class="hover:text-white transition-colors">الخدمات</a></li>
-                        <li><a href="contact.html" class="hover:text-white transition-colors">اتصل بنا</a></li>
-                        <li><a href="faq.html" class="hover:text-white transition-colors">الأسئلة الشائعة</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">قانوني</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="privacy.html" class="hover:text-white transition-colors">سياسة الخصوصية</a></li>
-                        <li><a href="terms.html" class="hover:text-white transition-colors">الشروط والأحكام</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3 class="text-white text-xl font-bold mb-4 relative pb-2 footer-title">انضم لنشرتنا الإخبارية</h3>
-                    <p class="text-sm mb-4">كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
-                    <form id="newsletter-form" class="flex">
-                        <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required class="w-full p-2 rounded-r-md border-none text-gray-800 focus:ring-2 focus:ring-blue-500">
-                        <button type="submit" class="bg-blue-600 text-white px-4 rounded-l-md hover:bg-blue-700 transition-colors">اشترك</button>
-                    </form>
-                    <div id="newsletter-message" class="mt-2 text-sm"></div>
-                </div>
-            </div>
-            <div class="mt-10 border-t border-gray-700 pt-6 text-center text-sm">
-                <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Supabase Configuration ---
-            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk1dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <script type="module">
+        import { supabase } from './auth.js'; // Assuming auth.js exports the supabase client
 
+        document.addEventListener('DOMContentLoaded', async () => {
             // --- Element Selectors ---
             const contactForm = document.getElementById('contact-form');
             const submitBtn = document.getElementById('submit-btn');
             const formMessage = document.getElementById('form-message');
             const inquiryTypeSelect = document.getElementById('inquiry-type');
             const orderIdField = document.getElementById('order-id-field');
-            const newsletterForm = document.getElementById('newsletter-form');
-            const newsletterMessage = document.getElementById('newsletter-message');
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
             const requiredInputs = contactForm.querySelectorAll('[required]');
-            const privacyConsentCheckbox = document.getElementById('privacy-consent');
+            
+            // --- Smart Form Pre-filling for Logged-in Users ---
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user) {
+                    const user = session.user;
+                    // Pre-fill name and email
+                    if (user.user_metadata.full_name) {
+                        nameInput.value = user.user_metadata.full_name;
+                        nameInput.readOnly = true;
+                        nameInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    }
+                    if (user.email) {
+                        emailInput.value = user.email;
+                        emailInput.readOnly = true;
+                        emailInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+                    }
+                }
+            } catch (error) {
+                console.error("Error getting user session:", error);
+            }
 
             // --- Form Validation ---
             const validateForm = () => {
@@ -277,13 +230,6 @@
             };
 
             // --- Event Listeners ---
-
-            // Mobile Menu Toggle
-            menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-
-            // Show/Hide Order ID field
             inquiryTypeSelect.addEventListener('change', () => {
                 const selectedValue = inquiryTypeSelect.value;
                 if (selectedValue === 'استفسار عن طلب' || selectedValue === 'شكوى') {
@@ -293,13 +239,11 @@
                 }
             });
             
-            // Real-time validation
             requiredInputs.forEach(input => {
                 input.addEventListener('input', validateForm);
                 input.addEventListener('change', validateForm);
             });
 
-            // Contact Form Submission
             contactForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (submitBtn.disabled) return;
@@ -309,8 +253,8 @@
                 formMessage.classList.add('hidden');
 
                 const ticketData = {
-                    customer_name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
+                    customer_name: nameInput.value,
+                    email: emailInput.value,
                     phone: document.getElementById('phone').value,
                     inquiry_type: inquiryTypeSelect.value,
                     related_order_id: document.getElementById('order-id').value || null,
@@ -318,51 +262,28 @@
                 };
 
                 try {
-                    const { data, error } = await supabaseClient.functions.invoke('submit-ticket', {
+                    // Assuming you have a Supabase Edge Function named 'submit-ticket'
+                    const { data, error } = await supabase.functions.invoke('submit-ticket', {
                         body: ticketData,
                     });
 
                     if (error) throw error;
                     
+                    // Redirect to a success page with the ticket ID
                     window.location.href = `contact-success.html?ticketId=${data.ticketId}`;
 
                 } catch (error) {
-                    formMessage.textContent = `فشل إرسال الرسالة: ${error.message}`;
+                    formMessage.textContent = `فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.`;
                     formMessage.className = 'mt-5 p-4 rounded-lg text-center font-bold block bg-red-100 text-red-700';
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = 'إرسال الرسالة';
                 }
             });
 
-            // Newsletter Form Submission
-            newsletterForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const emailInput = document.getElementById('newsletter-email');
-                const email = emailInput.value;
-                
-                newsletterMessage.textContent = 'جاري التسجيل...';
-                newsletterMessage.className = 'mt-2 text-sm text-yellow-400';
-
-                try {
-                    const { error } = await supabaseClient
-                        .from('subscribers')
-                        .insert({ email: email });
-
-                    if (error) throw error;
-
-                    newsletterMessage.textContent = 'شكراً لاشتراكك!';
-                    newsletterMessage.className = 'mt-2 text-sm text-green-400';
-                    emailInput.value = '';
-
-                } catch (error) {
-                    newsletterMessage.textContent = 'حدث خطأ. قد يكون البريد مسجلاً بالفعل.';
-                    newsletterMessage.className = 'mt-2 text-sm text-red-400';
-                }
-            });
-
-            // Initial validation check
+            // Initial validation check to set button state on page load
             validateForm();
         });
     </script>
+    <script src="layout.js"></script>
 </body>
 </html>

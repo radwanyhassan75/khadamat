@@ -1,0 +1,141 @@
+/* =================================================================
+   ✅ STYLES FOR PROFESSIONAL USER PROFILE DROPDOWN
+   ================================================================== */
+
+/* The main container for the user profile menu */
+.user-profile-dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+/* The visible part: avatar and maybe a small arrow */
+.user-avatar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-avatar .avatar-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color, #0d6efd);
+    padding: 2px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--primary-color, #0d6efd);
+    transition: box-shadow 0.3s ease;
+}
+
+.user-profile-dropdown:hover .user-avatar .avatar-icon {
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+.user-avatar .fa-chevron-down {
+    font-size: 0.8em;
+    color: var(--text-muted, #6c757d);
+    transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when the menu is open */
+.user-profile-dropdown.open .user-avatar .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* The dropdown menu itself */
+.dropdown-content {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background-color: white;
+    min-width: 220px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 10px 0;
+    z-index: 1100;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Show the menu when the 'open' class is added */
+.user-profile-dropdown.open .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Header section inside the dropdown for user info */
+.dropdown-header {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
+}
+
+.dropdown-header .user-name {
+    font-weight: 700;
+    color: var(--text-dark, #212529);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Find this rule in public/layout.css */
+.dropdown-header .user-email {
+    font-size: 0.8rem;
+    color: var(--text-muted, #6c757d);
+    margin: 0;
+    
+    /* ✅ Add these three lines for professional text truncation */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Links and buttons inside the dropdown */
+.dropdown-content a,
+.dropdown-content button {
+    font-weight: 600;
+    color: #334155;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
+    font-size: 0.9rem;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: right;
+    cursor: pointer;
+}
+
+.dropdown-content a i,
+.dropdown-content button i {
+    width: 20px;
+    text-align: center;
+    color: var(--text-muted, #6c757d);
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+    background-color: #f1f5f9;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.dropdown-content .logout-button {
+    color: #dc3545;
+}
+
+.dropdown-content .logout-button i {
+    color: #dc3545;
+}

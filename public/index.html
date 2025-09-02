@@ -1,252 +1,182 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="output.css" rel="stylesheet">
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7294470661528854"
-     crossorigin="anonymous"></script>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-54LWRL4T');</script>
-<!-- End Google Tag Manager -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MPPD2NSF38"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-MPPD2NSF38');
-</script>
-    <!-- =================================================================
-        META TAGS, FONTS, AND ICONS
-    ================================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Favicon links -->
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link rel="icon" href="/favicon.png">
-
-    <!-- SEO & Social Sharing Tags -->
     <title>المكتب الرقمي | بوابتك الأولى للخدمات المتكاملة</title>
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/site.webmanifest" />
-
+    
     <meta name="description" content="أول منصة رقمية في المغرب تجمع كل خدماتك المكتبية، الإدارية، والتقنية في مكان واحد. جودة، سرعة، وأسعار تنافسية.">
-    <meta id="og-title" property="og:title" content="المكتب الرقمي | جميع خدماتك في مكان واحد">
+    <meta property="og:title" content="المكتب الرقمي | جميع خدماتك في مكان واحد">
     <meta property="og:description" content="خدمات مكتبية، إدارية، تعليمية ورقمية باحترافية وبأسعار مناسبة.">
-    <meta id="og-image" property="og:image" content="https://raw.githubusercontent.com/radwanyhassan75/logo.png/refs/heads/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png">
-    <meta name="twitter:card" content="summary_large_image">
-
-    <!-- Google Fonts & Icons -->
+    <meta property="og:image" content="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- =================================================================
-        INTERNAL CSS STYLES
-    ================================================================== -->
+    
+    <link rel="stylesheet" href="layout.css">
     <style>
         :root {
             --primary-color: #0056b3;
-            --secondary-color: #0d6efd;
             --dark-color: #2c3e50;
             --light-color: #ffffff;
             --gray-color: #f8f9fa;
             --text-color: #555;
-            --border-color: #dee2e6;
             --border-radius: 12px;
             --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--light-color); }
+        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--light-color); overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .btn { padding: 12px 28px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; border: 2px solid transparent; }
-        .btn-primary { background-color: var(--primary-color); color: var(--light-color); border-color: var(--primary-color); }
-        .btn-primary:hover { background-color: #00458e; border-color: #00458e; transform: translateY(-2px); }
-        .btn-light { background-color: rgba(255, 255, 255, 0.9); color: var(--dark-color); }
-        .main-header.scrolled .btn-light { background-color: #e7f1ff; color: var(--primary-color); }
-        .btn-lg { padding: 15px 40px; font-size: 1.1rem; }
-        .main-header { position: absolute; width: 100%; top: 0; left: 0; z-index: 1000; transition: background-color 0.4s ease, box-shadow 0.4s ease; box-sizing: border-box; }
-        .main-header.scrolled { position: sticky; background-color: var(--light-color); box-shadow: 0 2px 15px rgba(0,0,0,0.1); }
+        .section-padding { padding: 100px 0; }
+        .section-title { font-size: 2.8rem; font-weight: 900; color: var(--dark-color); text-align: center; margin-bottom: 60px; }
+        .btn { text-decoration: none; padding: 14px 35px; border-radius: 50px; font-weight: 700; transition: all 0.3s ease; border: none; font-size: 1.1rem; text-align: center; display: inline-block; }
+        .btn-primary { background-color: var(--primary-color); color: var(--light-color); box-shadow: 0 5px 15px rgba(0, 86, 179, 0.3); }
+        .btn-primary:hover { background-color: #004494; transform: translateY(-3px); }
+        .btn-secondary { background-color: rgba(255, 255, 255, 0.15); color: var(--light-color); border: 2px solid var(--light-color); backdrop-filter: blur(5px); }
+        .btn-secondary:hover { background-color: var(--light-color); color: var(--primary-color); }
+        .btn-outline { background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); padding: 10px 25px; text-decoration: none; border-radius: 50px; font-weight: 700; display: inline-block; margin-top: auto; transition: all 0.3s ease; }
+        .btn-outline:hover { background: var(--primary-color); color: var(--light-color); }
+
+        /* Header & Navbar */
+        .main-header { position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; transition: background-color 0.4s ease, box-shadow 0.4s ease; box-sizing: border-box; }
+        .main-header.scrolled { background-color: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 15px rgba(0,0,0,0.1); backdrop-filter: blur(10px); }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; padding: 0 5%; }
-        .navbar-logo img { height: 80px; transition: transform 0.3s ease; }
-        .navbar-logo:hover img { transform: scale(1.05); }
-        .navbar-menu { display: none; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
-        .main-header.transparent .navbar-menu a { color: var(--light-color); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .main-header.scrolled .navbar-menu a { color: var(--dark-color); }
-        .navbar-menu a { text-decoration: none; font-weight: 700; font-size: 1.1rem; padding-bottom: 5px; position: relative; }
+        .navbar-logo img { height: 70px; transition: transform 0.3s ease; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { color: var(--dark-color); text-decoration: none; font-weight: 700; font-size: 1rem; padding-bottom: 5px; position: relative; }
+        .main-header:not(.scrolled) .navbar-menu a { text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .navbar-menu a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 3px; background-color: var(--primary-color); transition: width 0.3s ease; }
         .navbar-menu a:hover::after, .navbar-menu a.active::after { width: 100%; }
-        .navbar-actions { display: flex; align-items: center; gap: 15px; min-width: 210px; justify-content: flex-end; }
-        .hamburger-menu { display: block; font-size: 1.8rem; cursor: pointer; z-index: 1002; }
-        .main-header.scrolled .hamburger-menu { color: var(--dark-color); }
-        .main-header.transparent .hamburger-menu { color: var(--light-color); }
-        .hero-section { position: relative; height: 90vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
+        .hamburger-menu { display: none; font-size: 1.8rem; cursor: pointer; z-index: 1002; color: var(--dark-color); }
+        .navbar-actions { min-width: 200px; text-align: left; }
+        .dropdown { position: relative; }
+        .dropdown-toggle { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .dropdown-menu { display: none; position: absolute; top: 150%; left: 50%; transform: translateX(-50%); background-color: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 20px; width: 500px; z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, top 0.3s ease; }
+        .dropdown:hover .dropdown-menu { display: block; opacity: 1; visibility: visible; top: 100%; }
+        .dropdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px 30px; list-style: none; padding: 0; margin: 0; }
+        .dropdown-grid a { font-size: 1rem; font-weight: 600; padding: 8px 12px; border-radius: 8px; transition: background-color 0.2s; }
+        .dropdown-grid a:hover { background-color: var(--gray-color); color: var(--primary-color); }
+        .dropdown-grid a::after { display: none; }
+
+        /* Hero Section */
+        .hero-section { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 5%; overflow: hidden; }
         .hero-video-background { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); z-index: 1; }
         .hero-video-background video { min-width: 100%; min-height: 100%; object-fit: cover; }
         .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.4)); z-index: 2; }
-        .hero-content { position: relative; z-index: 3; color: var(--light-color); width: 100%; max-width: 800px; }
-        .hero-title { font-size: 3.8rem; font-weight: 900; margin-bottom: 20px; line-height: 1.3; }
-        .hero-subtitle { font-size: 1.4rem; color: #e0e0e0; max-width: 700px; margin: 0 auto 40px; }
-        .search-container { max-width: 600px; margin: 40px auto 0; position: relative; }
-        .search-box { display: flex; background: rgba(255,255,255,0.95); border-radius: 50px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-        #hero-search-input { flex-grow: 1; border: none; background: transparent; padding: 15px 25px; font-size: 1.1rem; font-family: 'Cairo', sans-serif; outline: none; }
-        .search-box button { background: var(--primary-color); color: white; border: none; padding: 0 30px; border-radius: 50px 0 0 50px; cursor: pointer; font-size: 1.2rem; }
-        #search-suggestions { position: absolute; top: 110%; left: 0; right: 0; background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); list-style: none; padding: 10px 0; margin: 0; z-index: 4; max-height: 250px; overflow-y: auto; display: none; }
-        #search-suggestions li a { display: block; padding: 12px 20px; color: var(--dark-color); text-decoration: none; }
-        #search-suggestions li a:hover { background-color: var(--gray-color); }
-        .features-section { padding: 80px 0; }
-        .section-title { font-size: 2.8rem; font-weight: 800; color: var(--dark-color); text-align: center; margin-bottom: 50px; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .hero-content { position: relative; z-index: 3; color: var(--light-color); max-width: 850px; }
+        .hero-title { font-size: 4rem; font-weight: 900; margin-bottom: 20px; line-height: 1.3; }
+        .hero-subtitle { font-size: 1.4rem; color: #e0e0e0; max-width: 700px; margin: 0 auto 50px; }
+        .hero-cta-buttons { display: flex; justify-content: center; gap: 20px; }
+
+        /* Features Section */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .feature-card { text-align: center; padding: 20px; }
         .feature-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
         .feature-card h3 { font-size: 1.5rem; color: var(--dark-color); margin-bottom: 10px; }
-        .feature-card p { color: var(--text-color); line-height: 1.7; }
-        .service-categories-section { padding: 80px 0; background-color: var(--gray-color); }
+        
+        /* Service Categories Section */
+        .service-categories-section { background-color: var(--gray-color); }
         .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
         .category-card { background-color: #fff; padding: 30px; border-radius: var(--border-radius); text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s ease; display: flex; flex-direction: column; }
         .category-card:hover { transform: translateY(-10px); box-shadow: var(--box-shadow); }
         .category-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
         .category-card-title { font-size: 1.5rem; font-weight: 800; color: var(--dark-color); margin-bottom: 15px; }
-        .category-card-desc { font-size: 1rem; color: var(--text-color); line-height: 1.7; margin-bottom: 30px; flex-grow: 1; }
-        .btn-outline { background: transparent; color: var(--primary-color); border-color: var(--primary-color); }
-        .btn-outline:hover { background: var(--primary-color); color: var(--light-color); }
+        .category-card-desc { flex-grow: 1; }
         
-        /* --- ✅ NEW: Newsletter Section Styles --- */
-        .newsletter-section {
-            padding: 80px 0;
-            background-color: var(--dark-color);
-            background-image: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://placehold.co/1920x500/2c3e50/ffffff?text=BG');
-            background-size: cover;
-            background-position: center;
-            color: var(--light-color);
-        }
-        .newsletter-content {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .newsletter-content h2 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-        }
-        .newsletter-content p {
-            font-size: 1.1rem;
-            color: #bdc3c7;
-            margin-bottom: 30px;
-        }
-        .newsletter-form {
-            display: flex;
-            max-width: 500px;
-            margin: 0 auto;
-            background: var(--light-color);
-            border-radius: 50px;
-            padding: 5px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        .newsletter-form input {
-            flex-grow: 1;
-            border: none;
-            background: transparent;
-            padding: 15px 25px;
-            font-size: 1rem;
-            font-family: 'Cairo', sans-serif;
-            outline: none;
-            color: var(--dark-color);
-        }
-        .newsletter-form button {
-            padding: 10px 30px;
-            border-radius: 50px;
-            border: none;
-            background-color: var(--primary-color);
-            color: var(--light-color);
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .newsletter-form button:hover {
-            background-color: #00458e;
-        }
-        #newsletter-message {
-            margin-top: 15px;
-            font-weight: 700;
-            height: 20px; /* Reserve space to prevent layout shift */
-        }
+        /* How It Works Section */
+        .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; text-align: center; }
+        .step-card .step-number { font-size: 4rem; font-weight: 900; color: #e9ecef; margin-bottom: -20px; }
+        .step-card .step-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+        .step-card h3 { font-size: 1.5rem; color: var(--dark-color); margin-bottom: 10px; }
+        
+        /* Counters Section */
+        .counters-section { background-color: var(--dark-color); color: var(--light-color); }
+        .counters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center; }
+        .counter-item i { font-size: 3rem; margin-bottom: 15px; color: var(--primary-color); }
+        .counter-number { font-size: 3.5rem; font-weight: 900; }
+        .counter-title { font-size: 1.2rem; color: #bdc3c7; }
+
+        /* Testimonials Section */
+        .testimonials-section { background-color: var(--gray-color); }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .testimonial-card { background: var(--light-color); padding: 30px; border-radius: var(--border-radius); box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .stars { color: #ffc107; margin-bottom: 15px; }
+        .testimonial-quote { font-size: 1.1rem; color: var(--text-color); line-height: 1.8; margin-bottom: 20px; border-right: 4px solid var(--primary-color); padding-right: 15px; flex-grow: 1; }
+        .testimonial-author { display: flex; align-items: center; }
+        .testimonial-avatar { width: 50px; height: 50px; border-radius: 50%; margin-left: 15px; background-color: var(--primary-color); color: var(--light-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .author-info h4, .author-info p { margin: 0; color: var(--dark-color); }
+        .author-info p { font-size: 0.9rem; color: var(--text-color); }
+        
+        /* Newsletter Section */
+        .newsletter-section { padding: 80px 0; background-color: var(--dark-color); background-image: linear-gradient(rgba(44, 62, 80, 0.95), rgba(44, 62, 80, 0.95)), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; background-attachment: fixed; color: var(--light-color); }
+        .newsletter-content { text-align: center; max-width: 600px; margin: 0 auto; }
+        .newsletter-content h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 15px; }
+        .newsletter-form { display: flex; max-width: 500px; margin: 0 auto; background: var(--light-color); border-radius: 50px; padding: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .newsletter-form input { flex-grow: 1; border: none; background: transparent; padding: 15px 25px; font-size: 1rem; font-family: 'Cairo', sans-serif; outline: none; color: var(--dark-color); }
+        .newsletter-form button { padding: 10px 30px; border-radius: 50px; border: none; background-color: var(--primary-color); color: var(--light-color); font-weight: 700; cursor: pointer; transition: background-color 0.3s; }
+        #newsletter-message { margin-top: 15px; font-weight: 700; height: 20px; }
         #newsletter-message.success { color: #28a745; }
         #newsletter-message.error { color: #dc3545; }
 
-        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-title { color: var(--light-color); font-size: 1.5rem; margin-bottom: 20px; font-weight: 700; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
-        .footer-section ul { list-style: none; padding: 0; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; transition: color 0.3s; }
-        .footer-section a:hover { color: var(--light-color); }
-        .social-links a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border-radius: 50%; background-color: #34495e; color: var(--light-color); margin-left: 10px; font-size: 1rem; transition: all 0.3s; }
-        .social-links a:hover { background-color: var(--primary-color); transform: translateY(-3px); }
-        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
-        .footer-bottom a { color: #777; text-decoration: none; }
+        /* Footer */
+        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 80px 5% 30px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 50px; }
+        .footer-section .footer-logo { max-width: 180px; margin-bottom: 20px; filter: brightness(0) invert(1); }
+        .footer-section p { line-height: 1.8; margin: 0; }
+        .footer-title { color: var(--light-color); font-size: 1.3rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
+        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 40px; height: 3px; background-color: var(--primary-color); }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; }
+        .footer-section ul a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
+        .footer-section ul a:hover { color: var(--light-color); padding-right: 8px; }
+        .footer-bottom { text-align: center; border-top: 1px solid #3e5268; padding-top: 30px; font-size: 0.9rem; }
+
+        /* Responsive */
         @media (max-width: 992px) {
             .navbar-menu { display: none; }
             .hamburger-menu { display: block; }
-            .navbar-menu.mobile-active { display: flex; flex-direction: column; position: fixed; top: 0; right: 0; background-color: var(--light-color); width: 100%; height: 100%; padding-top: 100px; text-align: center; gap: 20px; }
-            .navbar-menu.mobile-active li { padding: 15px 0; }
-            .navbar-menu.mobile-active a { color: var(--dark-color) !important; text-shadow: none; font-size: 1.5rem; }
-            .hero-title { font-size: 2.8rem; }
         }
-        @media (min-width: 993px) {
-            .hamburger-menu { display: none; }
-            .navbar-menu { display: flex; }
-        }
-        
     </style>
-<meta name="google-site-verification" content="KYDEfQkQaggzmn08YgLyvZZsfLAc5iulP327VqoisFs" /></head>
+</head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-54LWRL4T"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
-    <header class="main-header transparent">
+    
+    <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img id="site-logo" src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
             <ul class="navbar-menu">
                 <li><a href="index.html" class="active">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
-                <!-- ✅ UPDATED: Blog link added -->
                 <li><a href="blog.html">المدونة</a></li>
-                <li><a href="track-order.html">تتبع طلباتك</a></li>
-                <li><a href="prices.html">الأسعار</a></li>
-                <li><a href="payment.html">طرق الدفع</a></li>
-                <div id="mobile-navbar-actions"></div>
-                <li><a href="faq.html">الأسئلة الشائعة</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <div id="navbar-actions" class="navbar-actions"></div>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">القائمة <i class="fas fa-chevron-down fa-xs"></i></a>
+                    <div class="dropdown-menu">
+                        <ul class="dropdown-grid">
+                            <li><a href="about.html">من نحن</a></li>
+                            <li><a href="services.html">جميع الخدمات</a></li>
+                            <li><a href="prices.html">قائمة الأسعار</a></li>
+                            <li><a href="payment.html">طرق الدفع</a></li>
+                            <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                            <li><a href="contact.html">اتصل بنا</a></li>
+                            <li><a href="my-orders.html">طلباتي</a></li>
+                            <li><a href="track-order.html">تتبع طلبك</a></li>
+                            <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                            <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
+                            <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
-            
-                <!-- Populated by auth.js -->
-            </div>
-            <div class="hamburger-menu"><i class="fas fa-bars"></i></div>
+            <div id="navbar-actions" class="navbar-actions"></div>
+            <button class="hamburger-menu" aria-label="Toggle Menu"><i class="fas fa-bars"></i></button>
         </nav>
     </header>
 
     <main>
         <section class="hero-section">
             <div class="hero-video-background">
-                <video autoplay muted loop playsinline preload="auto" poster="https://placehold.co/1920x1080/2c3e50/ffffff?text=...">
+                <video autoplay muted loop playsinline preload="auto">
                     <source src="https://github.com/radwanyhassan75/media/raw/refs/heads/main/%D8%AA%D8%B5%D9%85%D9%8A%D9%85%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%B9%D9%86%D9%88%D8%A7%D9%86.mp4" type="video/mp4">
                 </video>
             </div>
@@ -254,94 +184,155 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="hero-content">
                 <h1 class="hero-title">المكتب الرقمي: كل خدماتك في مكان واحد</h1>
                 <p class="hero-subtitle">جودة، سرعة، وأسعار تنافسية لإنجاز جميع معاملاتك الإدارية والتقنية بكل سهولة واحترافية.</p>
-                <div class="search-container">
-                    <div class="search-box">
-                        <input type="text" id="hero-search-input" placeholder="ابحث عن خدمة (مثال: سيرة ذاتية، تسجيل...)">
-                        <button type="button"><i class="fas fa-search"></i></button>
-                    </div>
-                    <ul id="search-suggestions"></ul>
+                <div class="hero-cta-buttons">
+                    <a href="services.html" class="btn btn-primary">اطلب خدمتك الآن</a>
+                    <a href="track-order.html" class="btn btn-secondary">تتبع طلبك</a>
                 </div>
             </div>
         </section>
 
-        <section class="features-section">
-            <div class="container">
+        <section class="features-section section-padding">
+             <div class="container">
                 <h2 class="section-title">لماذا تختار المكتب الرقمي؟</h2>
                 <div class="features-grid">
-                    <div class="feature-card"><i class="fas fa-rocket feature-icon"></i><h3>سرعة في الإنجاز</h3><p>نلتزم بتقديم خدماتنا في أسرع وقت ممكن مع الحفاظ على أعلى معايير الجودة والدقة.</p></div>
-                    <div class="feature-card"><i class="fas fa-shield-alt feature-icon"></i><h3>سرية وأمان</h3><p>نتعامل مع جميع معلوماتك وبياناتك الشخصية بسرية تامة وأمان مطلق وفقاً لأعلى المعايير.</p></div>
-                    <div class="feature-card"><i class="fas fa-tags feature-icon"></i><h3>أسعار تنافسية</h3><p>نقدم لك أفضل الخدمات بأسعار مدروسة وشفافة لتناسب جميع احتياجاتك وميزانيتك.</p></div>
-                    <div class="feature-card"><i class="fas fa-users feature-icon"></i><h3>دعم فني متواصل</h3><p>فريقنا جاهز دائماً لمساعدتك والإجابة على استفساراتك عبر الواتساب أو البريد الإلكتروني.</p></div>
-                    <div class="feature-card"><i class="fas fa-thumbs-up feature-icon"></i><h3>رضا العملاء</h3><p>نحن ملتزمون بتقديم تجربة مستخدم متميزة وضمان رضاك التام عن خدماتنا.</p></div>
-                    <div class="feature-card"><i class="fas fa-globe feature-icon"></i><h3>خدمات متنوعة</h3><p>من الخدمات الإدارية إلى الرقمية، نقدم لك كل ما تحتاجه في مكان واحد لتسهيل حياتك اليومية.</p></div>
+                    <div class="feature-card"><i class="fas fa-rocket feature-icon"></i><h3>سرعة في الإنجاز</h3><p>نلتزم بتقديم خدماتنا في أسرع وقت ممكن مع الحفاظ على أعلى معايير الجودة.</p></div>
+                    <div class="feature-card"><i class="fas fa-shield-alt feature-icon"></i><h3>سرية وأمان</h3><p>نتعامل مع جميع معلوماتك وبياناتك الشخصية بسرية تامة وأمان مطلق.</p></div>
+                    <div class="feature-card"><i class="fas fa-tags feature-icon"></i><h3>أسعار تنافسية</h3><p>نقدم لك أفضل الخدمات بأسعار مدروسة وشفافة لتناسب جميع احتياجاتك.</p></div>
                 </div>
             </div>
         </section>
 
-        <section class="service-categories-section">
+        <section class="service-categories-section section-padding">
             <div class="container">
                 <h2 class="section-title">فئات خدماتنا</h2>
                 <div class="category-grid">
-                    <div class="category-card"><i class="fas fa-file-signature category-icon"></i><h3 class="category-card-title">خدمات إدارية</h3><p class="category-card-desc">من تحرير الطلبات وصياغة العقود البسيطة إلى إعداد السيرة الذاتية، ننجز جميع معاملاتك الورقية والرسمية بدقة واحترافية لتسهيل علاقتك مع الإدارات المغربية.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-user-graduate category-icon"></i><h3 class="category-card-title">خدمات التعليم</h3><p class="category-card-desc">نرافقك في مسارك الدراسي عبر التسجيل في الجامعات، المدارس العليا، والتكوين المهني، بالإضافة إلى طلبات المنح لضمان مستقبل أكاديمي ناجح.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-briefcase category-icon"></i><h3 class="category-card-title">خدمات التوظيف</h3><p class="category-card-desc">نعزز فرصك الوظيفية عبر التسجيل في المباريات العمومية، إعداد ملفات ترشح متكاملة، وكتابة رسائل تحفيزية مقنعة باللغتين العربية والفرنسية.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-laptop-code category-icon"></i><h3 class="category-card-title">خدمات رقمية</h3><p class="category-card-desc">نقدم حلولاً تقنية مبتكرة من إنشاء مواقع تعريفية وتصميم الشعارات إلى إدارة البيانات وتصاميم احترافية لمنصات التواصل الاجتماعي.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-tools category-icon"></i><h3 class="category-card-title">خدمات الدعم التقني</h3><p class="category-card-desc">نساعدك في حل مشاكل CNSS وAMO، التسجيل في السجل الوطني للسكان والسجل الاجتماعي الموحد، بالإضافة إلى الدعم الاجتماعي المباشر.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
-                    <div class="category-card"><i class="fas fa-comments category-icon"></i><h3 class="category-card-title">خدمات التواصل</h3><p class="category-card-desc">نقدم خدمات إرسال الشكايات، ملء الاستمارات، وتصحيح النصوص لضمان تواصل فعال مع الإدارات والمواطنين.</p><a href="services.html" class="btn btn-outline">اطلع على المزيد</a></div>
+                     <div class="category-card"><i class="fas fa-file-signature category-icon"></i><h3 class="category-card-title">خدمات إدارية</h3><p class="category-card-desc">من تحرير الطلبات وصياغة العقود إلى إعداد السيرة الذاتية، ننجز جميع معاملاتك الورقية والرسمية بدقة.</p><a href="services.html" class="btn-outline">اطلع على المزيد</a></div>
+                     <div class="category-card"><i class="fas fa-user-graduate category-icon"></i><h3 class="category-card-title">خدمات التعليم</h3><p class="category-card-desc">نرافقك في مسارك الدراسي عبر التسجيل في الجامعات، المدارس العليا، والتكوين المهني لضمان مستقبل أكاديمي ناجح.</p><a href="services.html" class="btn-outline">اطلع على المزيد</a></div>
+                     <div class="category-card"><i class="fas fa-laptop-code category-icon"></i><h3 class="category-card-title">خدمات رقمية</h3><p class="category-card-desc">نقدم حلولاً تقنية مبتكرة من إنشاء مواقع وتصميم الشعارات إلى إدارة البيانات وتصاميم احترافية.</p><a href="services.html" class="btn-outline">اطلع على المزيد</a></div>
                 </div>
             </div>
         </section>
-    </main>
 
-    <!-- ✅ NEW: Newsletter Section -->
-    <section class="newsletter-section">
-        <div class="container">
-            <div class="newsletter-content">
-                <h2>انضم إلى قائمتنا البريدية</h2>
-                <p>كن أول من يعرف عن خدماتنا الجديدة، العروض الحصرية، وآخر المستجدات مباشرة في بريدك الإلكتروني.</p>
-                <form id="newsletter-form" class="newsletter-form">
-                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
-                    <button type="submit">اشتراك</button>
-                </form>
-                <div id="newsletter-message"></div>
+        <section class="how-it-works-section section-padding">
+            <div class="container">
+                <h2 class="section-title">كيف نعمل؟</h2>
+                <div class="how-it-works-grid">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <div class="step-icon"><i class="fas fa-tasks"></i></div>
+                        <h3>اطلب خدمتك</h3>
+                        <p>تصفح خدماتنا المتنوعة واختر الخدمة التي تناسب احتياجك ثم املأ نموذج الطلب.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <div class="step-icon"><i class="fas fa-headset"></i></div>
+                        <h3>نتواصل معك</h3>
+                        <p>سيقوم فريقنا بمراجعة طلبك والتواصل معك لتأكيد التفاصيل والإجابة على استفساراتك.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                        <h3>استلم خدمتك</h3>
+                        <p>نعمل على إنجاز طلبك باحترافية وسرعة، ثم نسلمه لك جاهزًا ونضمن رضاك التام.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <section class="counters-section section-padding">
+            <div class="container">
+                <h2 class="section-title" style="color: var(--light-color);">أرقامنا تتحدث</h2>
+                <div class="counters-grid">
+                    <div class="counter-item"><i class="fas fa-users"></i><div class="counter-number" data-target="260">0</div><div class="counter-title">عميل راضٍ</div></div>
+                    <div class="counter-item"><i class="fas fa-briefcase"></i><div class="counter-number" data-target="300">0</div><div class="counter-title">خدمة منجزة</div></div>
+                    <div class="counter-item"><i class="fas fa-desktop"></i><div class="counter-number" data-target="49">0</div><div class="counter-title">مشروع رقمي</div></div>
+                    <div class="counter-item"><i class="fas fa-star"></i><div class="counter-number" data-target="4.9">0.0</div><div class="counter-title">تقييم إيجابي</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials-section section-padding">
+            <div class="container">
+                <h2 class="section-title">ماذا يقول عملاؤنا؟</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="testimonial-quote">"كنت بحاجة ماسة لسيرة ذاتية احترافية. فريق المكتب الرقمي أنجزها في وقت قياسي وبجودة فاقت توقعاتي. حصلت على المقابلة بفضلهم!"</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar"><i class="fas fa-user-tie"></i></div>
+                            <div class="author-info"><h4>أحمد الغزالي</h4><p>مدير تسويق</p></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p class="testimonial-quote">"عملية التسجيل في الجامعة كانت معقدة. تواصلت معهم وقاموا بكل شيء من الألف إلى الياء بكل سهولة وسلاسة. خدمة لا تقدر بثمن للطلاب."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar"><i class="fas fa-user-graduate"></i></div>
+                            <div class="author-info"><h4>مريم بناني</h4><p>طالبة جامعية</p></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                        <p class="testimonial-quote">"واجهتني مشكلة تقنية معقدة في ملفي على CNSS ولم أجد لها حلاً. الدعم التقني الذي قدموه كان ممتازًا، وتابعوا معي حتى تم حل المشكلة نهائيًا."</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar"><i class="fas fa-user-cog"></i></div>
+                            <div class="author-info"><h4>كريم العلمي</h4><p>صاحب مقاولة</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>انضم إلى قائمتنا البريدية</h2>
+                    <p>كن أول من يعرف عن خدماتنا الجديدة، العروض الحصرية، وآخر المستجدات مباشرة في بريدك الإلكتروني.</p>
+                    <form id="newsletter-form" class="newsletter-form">
+                        <input type="email" id="newsletter-email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
+                        <button type="submit">اشتراك</button>
+                    </form>
+                    <div id="newsletter-message"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <footer class="main-footer">
         <div class="container">
-            <div class="footer-content">
+            <div class="footer-grid">
                 <div class="footer-section">
-                    <h3 class="footer-title">المكتب الرقمي</h3>
+                    <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="footer-logo">
                     <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية، مصممة لتلبية احتياجاتك اليومية.</p>
                 </div>
                 <div class="footer-section">
                     <h3 class="footer-title">روابط مهمة</h3>
                     <ul>
-                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="index.html">الرئيسية</a></li>
                         <li><a href="services.html">جميع الخدمات</a></li>
                         <li><a href="prices.html">قائمة الأسعار</a></li>
-                        <li><a href="payment-methods.html">طرق الدفع</a></li>
-                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                        <li><a href="blog.html">المدونة</a></li>
+                         <li><a href="about.html">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">خدمة العملاء</h3>
+                    <ul>
                         <li><a href="contact.html">اتصل بنا</a></li>
+                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                        <li><a href="track-order.html">تتبع طلبك</a></li>
                         <li><a href="my-orders.html">طلباتي</a></li>
+                        <li><a href="payment.html">طرق الدفع</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3 class="footer-title">قانوني</h3>
                     <ul>
                         <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
-                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
                         <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                        <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
                     </ul>
-                </div>
-                <div class="footer-section">
-                    <h3 class="footer-title">تواصل معنا</h3>
-                    <div class="social-links">
-    <a id="social-link-facebook" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-    <a id="social-link-whatsapp" href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    <a id="social-link-instagram" href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-</div>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -349,144 +340,117 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </div>
     </footer>
-
-   
+    
     <script type="module" src="auth.js"></script>
-    
-    <!-- =================================================================
-         ✅ START: UPDATED SCRIPT FOR HOMEPAGE FUNCTIONALITY
-    ================================================================== -->
+    <script src="layout.js"></script>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Header scroll effect ---
-            const header = document.querySelector('.main-header');
-            if (header) {
-                window.addEventListener('scroll', () => {
-                    if (window.scrollY > 50) {
-                        header.classList.remove('transparent');
-                        header.classList.add('scrolled');
-                    } else {
-                        header.classList.add('transparent');
-                        header.classList.remove('scrolled');
-                    }
-                });
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Header Scroll Effect ---
+        const header = document.querySelector('.main-header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 50);
+            });
+        }
 
-            // --- Enhanced Search Functionality ---
-            const searchInput = document.getElementById('hero-search-input');
-            const suggestionsBox = document.getElementById('search-suggestions');
-            
-            // 💡 Data is now structured with a 'name' for display and a 'slug' for the URL
-            const servicesData = [
-                { name: 'تحرير الطلبات الخطية', slug: 'request-writing' },
-                { name: 'التصريحات بالشرف', slug: 'honor-declarations' },
-                { name: 'صياغة العقود', slug: 'contract-drafting' },
-                { name: 'السيرة الذاتية', slug: 'cv-services' },
-                { name: 'ملء الاستمارات', slug: 'form-filling' },
-                { name: 'ترجمة بسيطة', slug: 'simple-translation' },
-                { name: 'تصحيح لغوي', slug: 'proofreading' },
-                { name: 'إنشاء حسابات إلكترونية', slug: 'account-creation' },
-                { name: 'تعديل PDF', slug: 'pdf-editing' },
-                { name: 'صياغة فواتير', slug: 'invoice-drafting' },
-                { name: 'إرسال شكايات', slug: 'complaint-submission' },
-                { name: 'التسجيل في منحتي', slug: 'minhaty-registration' },
-                { name: 'التسجيل في التكوين المهني', slug: 'vocational-training-registration' },
-                { name: 'التسجيل في الجامعات', slug: 'university-registration' },
-                { name: 'تسجيل في مباريات عمومية', slug: 'public-competitions-registration' },
-                { name: 'إعداد ملفات الترشح', slug: 'application-file-preparation' },
-                { name: 'التسجيل في ANAPEC', slug: 'anapec-registration' },
-                { name: 'رسالة تحفيزية', slug: 'motivation-letter' },
-                { name: 'التسجيل في السجل الوطني للسكان', slug: 'rnp-registration' },
-                { name: 'التسجيل في السجل الاجتماعي الموحد', slug: 'rsu-registration' },
-                { name: 'الدعم الاجتماعي المباشر', slug: 'direct-social-support' },
-                { name: 'مشاكل CNSS و AMO', slug: 'cnss-amo-issues' },
-                { name: 'إنشاء مواقع إلكترونية', slug: 'website-creation' },
-                { name: 'تصميم الشعارات', slug: 'logo-design' },
-                { name: 'تصاميم السوشيال ميديا', slug: 'social-media-design' }
-            ];
+        // --- Animated Counters Logic ---
+        const counters = document.querySelectorAll('.counter-number');
+        const speed = 200; 
 
-            searchInput.addEventListener('input', () => {
-                const query = searchInput.value.toLowerCase().trim();
-                suggestionsBox.innerHTML = '';
-                
-                if (query.length < 2) {
-                    suggestionsBox.style.display = 'none';
-                    return;
-                }
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const isDecimal = target % 1 !== 0;
+                        const increment = target / speed;
 
-                const filteredServices = servicesData.filter(service => service.name.toLowerCase().includes(query));
-
-                if (filteredServices.length > 0) {
-                    filteredServices.forEach(service => {
-                        const li = document.createElement('li');
-                        const a = document.createElement('a');
-                        // 💡 The link now points to the specific service on the services page
-                        a.href = `services.html#${service.slug}`; 
-                        a.textContent = service.name;
-                        li.appendChild(a);
-                        suggestionsBox.appendChild(li);
-                    });
-                    suggestionsBox.style.display = 'block';
-                } else {
-                    suggestionsBox.style.display = 'none';
+                        if (count < target) {
+                            let newCount = count + increment;
+                            counter.innerText = isDecimal ? newCount.toFixed(1) : Math.ceil(newCount);
+                            setTimeout(updateCount, 15);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                    observer.unobserve(counter);
                 }
             });
+        }, { threshold: 0.5 });
 
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', (e) => {
-                if (e.target !== searchInput) {
-                    suggestionsBox.style.display = 'none';
-                }
-            });
-
-            // --- Newsletter Form Logic ---
-            const newsletterForm = document.getElementById('newsletter-form');
-            const newsletterEmail = document.getElementById('newsletter-email');
-            const newsletterMessage = document.getElementById('newsletter-message');
-            const workerUrl = 'https://orders-worker.radwanyhassan75.workers.dev'; // Your worker URL
-
-            newsletterForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = newsletterEmail.value.trim();
-                
-                if (!email) {
-                    newsletterMessage.textContent = 'الرجاء إدخال بريد إلكتروني.';
-                    newsletterMessage.className = 'error';
-                    return;
-                }
-
-                newsletterMessage.textContent = 'جارٍ الإرسال...';
-                newsletterMessage.className = '';
-
-                fetch(`${workerUrl}/api/subscribe`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        newsletterMessage.textContent = 'شكراً لاشتراكك! تم إرسال رسالة تأكيد.';
-                        newsletterMessage.className = 'success';
-                        newsletterEmail.value = '';
-                    } else {
-                        newsletterMessage.textContent = data.error || 'حدث خطأ ما.';
-                        newsletterMessage.className = 'error';
-                    }
-                })
-                .catch(err => {
-                    console.error('Subscription error:', err);
-                    newsletterMessage.textContent = 'فشل الاتصال بالخادم. حاول مرة أخرى.';
-                    newsletterMessage.className = 'error';
-                });
-            });
+        counters.forEach(counter => {
+            observer.observe(counter);
         });
+
+        // --- Newsletter Form Logic ---
+        const newsletterForm = document.getElementById('newsletter-form');
+        const newsletterEmail = document.getElementById('newsletter-email');
+        const newsletterMessage = document.getElementById('newsletter-message');
+        
+        // This function will run once the Supabase client from auth.js is available
+        const initializeNewsletterForm = () => {
+            // Check if the Supabase client from auth.js is ready
+            if (window.supabase) {
+                const supabaseClient = window.supabase; // Use the existing client
+
+                newsletterForm.addEventListener('submit', async (e) => {
+                    // Prevent the form from refreshing the page
+                    e.preventDefault(); 
+                    
+                    const email = newsletterEmail.value.trim();
+                    const submitButton = newsletterForm.querySelector('button');
+
+                    if (!email) {
+                        newsletterMessage.textContent = 'الرجاء إدخال بريد إلكتروني صحيح.';
+                        newsletterMessage.className = 'error';
+                        return;
+                    }
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'جارٍ التحقق...';
+                    newsletterMessage.textContent = '';
+                    newsletterMessage.className = '';
+
+                    try {
+                        const { data, error } = await supabaseClient
+                            .from('subscribers') 
+                            .insert([{ email: email }]);
+
+                        if (error) {
+                            if (error.code === '23505') { // Unique constraint violation
+                                newsletterMessage.textContent = 'أنت مسجل بالفعل في نشراتنا البريدية.';
+                            } else {
+                                newsletterMessage.textContent = 'حدث خطأ. يرجى المحاولة مرة أخرى.';
+                                console.error('Supabase Error:', error.message);
+                            }
+                            newsletterMessage.className = 'error';
+                        } else {
+                            newsletterMessage.textContent = 'تم اشتراكك بنجاح!';
+                            newsletterMessage.className = 'success';
+                            newsletterEmail.value = '';
+                        }
+                    } catch (err) {
+                        newsletterMessage.textContent = 'فشل الاتصال بالخادم.';
+                        newsletterMessage.className = 'error';
+                        console.error('Network or JS Error:', err);
+                    } finally {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'اشتراك';
+                    }
+                });
+            } else {
+                // If auth.js hasn't loaded Supabase yet, wait a moment and try again.
+                setTimeout(initializeNewsletterForm, 100);
+            }
+        };
+
+        // Start the process
+        initializeNewsletterForm();
+    });
     </script>
-    <!-- =================================================================
-         ✅ END: UPDATED SCRIPT
-    ================================================================== -->
-    <script src="cookie-consent.js" defer></script>
-    <script src="chatbot.js"></script>
-    
 </body>
 </html>
