@@ -37,13 +37,12 @@ window.signInWithProvider = async function(provider) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-            redirectTo: `${window.location.origin}/dashboard.html`,
+            redirectTo: `${window.location.origin}/auth-callback.html`, // ✅ === التعديل هنا ===
             queryParams: provider === 'google' ? { prompt: 'select_account' } : {}
         }
     });
     if (error) alert("فشل تسجيل الدخول: " + error.message);
 };
-
 // --- المستمع الرئيسي الذكي (المسؤول عن كل شيء) ---
 supabase.auth.onAuthStateChange((event, session) => {
     const user = session?.user;
