@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --primary-color: #0d6efd;
@@ -41,11 +44,6 @@
         .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
         .nav-links a.active::after { width: 100%; }
         .navbar-actions { display: flex; align-items: center; gap: 10px; }
-        .auth-btn { text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s ease; border: 1px solid transparent; }
-        .btn-login { background-color: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
-        .btn-login:hover { background-color: #dbe9ff; }
-        .btn-signup { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-signup:hover { background-color: #0b5ed7; }
         .hamburger { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
         @media (min-width: 1024px) { .hamburger { display: none; } }
 
@@ -140,13 +138,7 @@
         .footer-section ul li { margin-bottom: 12px; }
         .footer-section a { color: #bdc3c7; text-decoration: none; transition: all 0.3s ease; }
         .footer-section a:hover { color: var(--light-color); padding-right: 5px; }
-        .footer-socials { display: flex; gap: 15px; margin-top: 20px; }
-        .footer-socials a { color: #bdc3c7; font-size: 1.5rem; }
-        .footer-socials a:hover { color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
-        .newsletter-form { display: flex; margin-top: 20px; }
-        .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
-        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -157,11 +149,10 @@
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="blog.html">المدونة</a></li>
-                <li><a href="faq.html">الأسئلة الشائعة</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
             <div id="navbar-actions" class="navbar-actions">
-                 <!-- Auth buttons will be dynamically inserted here by auth.js -->
+                <!-- Auth buttons will be dynamically inserted here -->
             </div>
             <div class="hamburger"><i class="fas fa-bars"></i></div>
         </nav>
@@ -172,7 +163,7 @@
             <h1><i class="fas fa-ticket-alt"></i> متابعة تذكرة الدعم</h1>
             <p>أدخل رقم التذكرة الذي استلمته في بريدك الإلكتروني لعرض المحادثة والرد على فريق الدعم.</p>
             <form id="search-form" class="search-form">
-                <input type="text" id="ticketIdInput" placeholder="مثال: ticket_1234567890" required>
+                <input type="text" id="ticketIdInput" placeholder="مثال: TICKET-175..." required>
                 <button type="submit">بحث</button>
             </form>
         </div>
@@ -200,19 +191,12 @@
             <div class="footer-section">
                 <h3 class="footer-title">المكتب الرقمي</h3>
                 <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
-                <div class="footer-socials">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                </div>
             </div>
             <div class="footer-section">
                 <h3 class="footer-title">روابط مهمة</h3>
                 <ul>
-                    <li><a href="about.html">من نحن</a></li>
                     <li><a href="services.html">جميع الخدمات</a></li>
-                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
-                    <li><a href="contact.html">اتصل بنا</a></li>
+                     <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -222,159 +206,205 @@
                     <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h3 class="footer-title">انضم إلى قائمتنا البريدية</h3>
-                <p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
-                <form id="newsletter-form" class="newsletter-form">
-                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
-                    <button type="submit">اشترك</button>
-                </form>
-            </div>
         </div>
         <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
     
-    <!-- ✅ Load Firebase Libraries FIRST -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
-    <!-- ✅ Then load your auth.js script that USES Firebase -->
-    <script src="auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const API_URL = "https://orders-worker.radwanyhassan75.workers.dev";
-            
-            const searchForm = document.getElementById('search-form');
-            const ticketIdInput = document.getElementById('ticketIdInput');
-            const chatInterface = document.getElementById('chat-interface');
-            const ticketSummary = document.getElementById('ticket-summary');
-            const messagesHistory = document.getElementById('messages-history');
-            const replyForm = document.getElementById('reply-form');
-            const replyMessage = document.getElementById('reply-message');
-            const replyAttachment = document.getElementById('reply-attachment');
-            const closeTicketBtn = document.getElementById('close-ticket-btn');
-            const statusMessage = document.getElementById('status-message');
+    const searchForm = document.getElementById('search-form');
+    const ticketIdInput = document.getElementById('ticketIdInput');
+    const chatInterface = document.getElementById('chat-interface');
+    const ticketSummary = document.getElementById('ticket-summary');
+    const messagesHistory = document.getElementById('messages-history');
+    const replyForm = document.getElementById('reply-form');
+    const replyMessage = document.getElementById('reply-message');
+    const replyAttachment = document.getElementById('reply-attachment');
+    const closeTicketBtn = document.getElementById('close-ticket-btn');
+    const statusMessage = document.getElementById('status-message');
 
-            let currentTicketId = null;
+    let currentTicketDbId = null;
 
-            searchForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                currentTicketId = ticketIdInput.value.trim();
-                if (!currentTicketId) return;
-                
-                statusMessage.textContent = 'جاري البحث...';
-                statusMessage.style.display = 'block';
-                chatInterface.style.display = 'none';
+    // --- طلب إذن للإشعارات ---
+    if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
 
-                try {
-                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}`);
-                    const data = await response.json();
+    // --- بحث التذكرة ---
+    searchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const publicTicketId = ticketIdInput.value.trim();
+        if (!publicTicketId) return;
 
-                    if (!response.ok) throw new Error(data.error || 'فشل جلب بيانات التذكرة.');
+        showStatus('جاري البحث عن التذكرة...', false);
+        chatInterface.style.display = 'none';
 
-                    renderChat(data.ticket, data.messages);
-                    statusMessage.style.display = 'none';
-                    chatInterface.style.display = 'block';
+        try {
+            const { data: ticket, error: ticketError } = await supabaseClient
+                .from('tickets')
+                .select('*')
+                .eq('public_ticket_id', publicTicketId)
+                .single();
 
-                } catch (error) {
-                    statusMessage.textContent = `خطأ: ${error.message}`;
-                    console.error("Search Error:", error);
-                }
-            });
+            if (ticketError || !ticket) throw new Error('لم يتم العثور على تذكرة بهذا الرقم.');
+            currentTicketDbId = ticket.id;
 
-            function renderChat(ticket, messages) {
-                const statusClass = ticket.status === 'open' ? 'open' : 'closed';
-                const statusText = ticket.status === 'open' ? 'مفتوحة' : 'مغلقة';
-                ticketSummary.innerHTML = `
-                    <div class="summary-item"><span class="label">الموضوع</span><span class="value">${ticket.subject}</span></div>
-                    <div class="summary-item"><span class="label">تاريخ الإنشاء</span><span class="value">${new Date(ticket.createdAt).toLocaleDateString('ar-EG')}</span></div>
-                    <div class="summary-item"><span class="label">آخر تحديث</span><span class="value">${new Date(ticket.updatedAt).toLocaleString('ar-EG')}</span></div>
-                    <div class="summary-item"><span class="label">الحالة</span><span class="value status ${statusClass}">${statusText}</span></div>
-                `;
+            const { data: messages, error: messagesError } = await supabaseClient
+                .from('ticket_replies')
+                .select('*')
+                .eq('ticket_id', currentTicketDbId)
+                .order('created_at', { ascending: true });
 
-                messagesHistory.innerHTML = '';
-                messages.forEach(msg => {
-                    appendMessage(msg);
-                });
-                messagesHistory.scrollTop = messagesHistory.scrollHeight;
+            if (messagesError) throw new Error('فشل في تحميل الرسائل.');
 
-                if (ticket.status === 'closed') {
-                    replyMessage.disabled = true;
-                    replyAttachment.disabled = true;
-                    replyForm.querySelector('button[type="submit"]').disabled = true;
-                    closeTicketBtn.disabled = true;
-                    replyMessage.placeholder = 'تم إغلاق هذه المحادثة.';
-                } else {
-                    replyMessage.disabled = false;
-                    replyAttachment.disabled = false;
-                    replyForm.querySelector('button[type="submit"]').disabled = false;
-                    closeTicketBtn.disabled = false;
-                    replyMessage.placeholder = 'اكتب رسالتك هنا...';
-                }
+            renderChat(ticket, messages);
+            statusMessage.style.display = 'none';
+            chatInterface.style.display = 'block';
+
+            // ✅ الاشتراك في التحديثات الفورية
+            subscribeToMessages(ticket.id);
+
+        } catch (error) {
+            showStatus(`خطأ: ${error.message}`, true);
+        }
+    });
+
+    // --- عرض الرسائل ---
+    function renderChat(ticket, messages) {
+        const statusClass = ticket.status === 'open' ? 'open' : 'closed';
+        const statusText = ticket.status === 'open' ? 'مفتوحة' : 'مغلقة';
+
+        ticketSummary.innerHTML = `
+            <div class="summary-item"><span class="label">نوع الاستفسار</span><span class="value">${ticket.inquiry_type || 'غير محدد'}</span></div>
+            <div class="summary-item"><span class="label">تاريخ الإنشاء</span><span class="value">${new Date(ticket.created_at).toLocaleDateString('ar-EG')}</span></div>
+            <div class="summary-item"><span class="label">آخر تحديث</span><span class="value">${ticket.updated_at ? new Date(ticket.updated_at).toLocaleString('ar-EG') : '-'}</span></div>
+            <div class="summary-item"><span class="label">الحالة</span><span class="value status ${statusClass}">${statusText}</span></div>
+        `;
+
+        messagesHistory.innerHTML = '';
+        messages.forEach(msg => appendMessage(msg));
+        messagesHistory.scrollTop = messagesHistory.scrollHeight;
+
+        const isClosed = ticket.status === 'closed';
+        replyMessage.disabled = isClosed;
+        replyAttachment.disabled = isClosed;
+        replyForm.querySelector('button[type="submit"]').disabled = isClosed;
+        closeTicketBtn.disabled = isClosed;
+        replyMessage.placeholder = isClosed ? 'تم إغلاق هذه المحادثة.' : 'اكتب رسالتك هنا...';
+    }
+
+    function appendMessage(msg, playSound = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${msg.sender}`;
+
+        let content = `<p>${msg.message || ''}</p>`;
+        if (msg.attachment_url) {
+            content += `<a href="${msg.attachment_url}" target="_blank" rel="noopener noreferrer">📎 عرض المرفق</a>`;
+        }
+        content += `<div class="meta">${new Date(msg.created_at).toLocaleString('ar-EG')}</div>`;
+
+        messageDiv.innerHTML = content;
+        messagesHistory.appendChild(messageDiv);
+        messagesHistory.scrollTop = messagesHistory.scrollHeight;
+
+        // ✅ صوت و إشعار
+        if (playSound) {
+            new Audio('/sounds/notify.mp3').play().catch(()=>{});
+            if (Notification.permission === "granted") {
+                new Notification("رسالة جديدة", { body: msg.message || "📎 مرفق جديد" });
             }
-            
-            function appendMessage(msg) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${msg.sender}`;
-                messageDiv.innerHTML = `
-                    <p>${(msg.message || '').replace(/\n/g, '<br>')}</p>
-                    ${msg.attachmentUrl ? `<a href="${msg.attachmentUrl}" target="_blank">عرض المرفق</a>` : ''}
-                    <div class="meta">${new Date(msg.createdAt).toLocaleString('ar-EG')}</div>
-                `;
-                messagesHistory.appendChild(messageDiv);
+        }
+    }
+
+    // --- إرسال رد ---
+    replyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const messageText = replyMessage.value.trim();
+        const attachmentFile = replyAttachment.files[0];
+        if (!messageText && !attachmentFile) return;
+        if (!currentTicketDbId) return alert('خطأ: لم يتم تحديد تذكرة.');
+
+        try {
+            let attachmentUrl = null;
+            if (attachmentFile) {
+                attachmentUrl = await uploadFile(attachmentFile, 'ticket-files'); // ✅ bucket الصحيح
             }
 
-            replyForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const messageText = replyMessage.value.trim();
-                const attachmentFile = replyAttachment.files[0];
-                if (!messageText && !attachmentFile) return;
+            const { data: newMessage, error } = await supabaseClient
+                .from('ticket_replies')
+                .insert({
+                    ticket_id: currentTicketDbId,
+                    message: messageText,
+                    sender: 'customer',
+                    attachment_url: attachmentUrl
+                })
+                .select()
+                .single();
 
-                const formData = new FormData();
-                formData.append('sender', 'user');
-                formData.append('message', messageText);
-                if (attachmentFile) {
-                    formData.append('attachment', attachmentFile);
+            if (error) throw error;
+
+            await supabaseClient.from('tickets').update({ updated_at: new Date() }).eq('id', currentTicketDbId);
+
+            appendMessage(newMessage);
+            replyForm.reset();
+
+        } catch (error) {
+            alert(`خطأ في إرسال الرد: ${error.message}`);
+        }
+    });
+
+    // --- إغلاق التذكرة ---
+    closeTicketBtn.addEventListener('click', async () => {
+        if (!currentTicketDbId || !confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟')) return;
+        try {
+            const { error } = await supabaseClient
+                .from('tickets')
+                .update({ status: 'closed', updated_at: new Date() })
+                .eq('id', currentTicketDbId);
+            if (error) throw error;
+
+            searchForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        } catch (error) {
+            alert(`خطأ في إغلاق التذكرة: ${error.message}`);
+        }
+    });
+
+    // --- Realtime ---
+    function subscribeToMessages(ticketId) {
+        supabaseClient
+            .channel(`ticket-${ticketId}`)
+            .on('postgres_changes', 
+                { event: 'INSERT', schema: 'public', table: 'ticket_replies', filter: `ticket_id=eq.${ticketId}` },
+                (payload) => {
+                    const msg = payload.new;
+                    appendMessage(msg, true); // ✅ مع صوت و إشعار
                 }
+            )
+            .subscribe();
+    }
 
-                try {
-                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}/messages`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const newMsg = await response.json();
-                    if (!response.ok) throw new Error(newMsg.error || 'فشل إرسال الرسالة.');
+    // --- Helpers ---
+    function showStatus(message, isError = false) {
+        statusMessage.textContent = message;
+        statusMessage.style.color = isError ? 'red' : 'black';
+        statusMessage.style.display = 'block';
+    }
 
-                    appendMessage(newMsg);
-                    messagesHistory.scrollTop = messagesHistory.scrollHeight;
-                    replyMessage.value = '';
-                    replyAttachment.value = '';
-
-                } catch (error) {
-                    alert(`خطأ: ${error.message}`);
-                }
-            });
-
-            closeTicketBtn.addEventListener('click', async () => {
-                if (!confirm('هل أنت متأكد من أنك تريد إغلاق هذه التذكرة؟ لا يمكنك إعادة فتحها.')) return;
-
-                try {
-                    const response = await fetch(`${API_URL}/api/tickets/${currentTicketId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status: 'closed' })
-                    });
-                    const result = await response.json();
-                    if (!response.ok) throw new Error(result.error || 'فشل إغلاق التذكرة.');
-
-                    searchForm.dispatchEvent(new Event('submit'));
-
-                } catch (error) {
-                    alert(`خطأ: ${error.message}`);
-                }
-            });
-        });
-    </script>
+    async function uploadFile(file, bucket) {
+        const fileExtension = file.name.split('.').pop();
+        const sanitizedCoreName = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z0-9\u0600-\u06FF.-]/g, '_');
+        const filePath = `${Date.now()}-${sanitizedCoreName}.${fileExtension}`;
+        const { error: uploadError } = await supabaseClient.storage.from(bucket).upload(filePath, file);
+        if (uploadError) throw new Error('فشل رفع الملف.');
+        const { data } = supabaseClient.storage.from(bucket).getPublicUrl(filePath);
+        return data.publicUrl;
+    }
+});
+</script>
 </body>
 </html>
+

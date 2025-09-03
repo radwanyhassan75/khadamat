@@ -147,171 +147,102 @@
         <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
     </footer>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+<script type="module">
+document.addEventListener('DOMContentLoaded', () => {
+    // --- نقاط الفحص الأولية ---
+    console.log("1. الصفحة جاهزة، جاري انتظار المصادقة من auth.js...");
+    
+    const ordersContainer = document.getElementById('orders-container');
+    const loadingState = document.getElementById('loading-state');
+    const emptyState = document.getElementById('empty-state');
+    const errorState = document.getElementById('error-state');
+    
+    async function loadUserOrders(user) {
+        console.log("3. تم استدعاء دالة `loadUserOrders` للمستخدم:", user);
 
-        const ui = {
-            trackForm: document.getElementById('track-form'),
-            trackButton: document.getElementById('track-button'),
-            orderIdInput: document.getElementById('order-id-input'),
-            resultArea: document.getElementById('result-area'),
-            notFoundMessage: document.getElementById('not-found-message'),
-            loadingMessage: document.getElementById('loading-message'),
-            progressLine: document.getElementById('progress-line'),
-        };
-        
-        const statusMap = {
-            'قيد المراجعة': { text: 'تم الاستلام', icon: 'fa-receipt', className: 'status-default', progress: 0 },
-            'جاري التحقق من الدفع': { text: 'جاري التحقق من الدفع', icon: 'fa-credit-card', className: 'status-verifying', progress: 1 },
-            'تم التحقق من الدفع': { text: 'جاري المعالجة', icon: 'fa-cogs', className: 'status-in-progress', progress: 2 },
-            'جاري المعالجة': { text: 'جاري المعالجة', icon: 'fa-cogs', className: 'status-in-progress', progress: 2 },
-            'مكتمل': { text: 'مكتمل', icon: 'fa-check-double', className: 'status-completed', progress: 3 },
-            'ملغي': { text: 'ملغي', icon: 'fa-times-circle', className: 'status-cancelled', progress: -1 }
-        };
-
-        function getStatusInfo(status) {
-            return statusMap[status] || statusMap['قيد المراجعة'];
+        if (!user || !user.email) {
+            console.warn("المستخدم غير مسجل دخوله أو لا يحتوي على بريد إلكتروني.");
+            loadingState.style.display = 'none';
+            ordersContainer.innerHTML = `<div class="empty-state"><h3>عليك تسجيل الدخول لعرض طلباتك</h3><p>للاطلاع على طلباتك السابقة وتتبع حالاتها، يرجى تسجيل الدخول.</p><a href="login.html" class="btn btn-primary" style="margin-top: 15px;">تسجيل الدخول</a></div>`;
+            return;
         }
 
-        ui.trackForm.addEventListener('submit', handleFormSubmit);
-        
-        function toggleButtonLoading(isLoading) {
-            ui.trackButton.classList.toggle('loading', isLoading);
-            ui.trackButton.disabled = isLoading;
-        }
+        try {
+            const supabaseClient = window.supabase;
+            const userEmail = user.email;
 
-        function showMessage(elementToShow, messageText = '') {
-            ui.loadingMessage.style.display = 'none';
-            ui.resultArea.style.display = 'none';
-            ui.resultArea.classList.remove('visible');
-            ui.notFoundMessage.style.display = 'none';
+            console.log(`4. جاري إرسال طلب إلى Supabase لجلب الطلبات الخاصة بـ: ${userEmail}`);
             
-            if (elementToShow) {
-                if (messageText) {
-                    elementToShow.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${messageText}`;
-                }
-                elementToShow.style.display = 'block';
-            }
-        }
+            const { data: orders, error } = await supabaseClient
+                .from('orders') 
+                .select('*') 
+                .eq('email', userEmail)
+                .order('created_at', { ascending: false });
 
-        async function searchForOrder(orderId) {
-            if (!orderId) return;
-            
-            showMessage(ui.loadingMessage);
-            toggleButtonLoading(true);
+            // --- الفحص رقم 5 (الأكثر أهمية) ---
+            console.log("5. تم استلام الرد من Supabase:", { orders, error });
 
-            try {
-                const { data: order, error } = await supabaseClient
-                    .from('orders')
-                    .select('*')
-                    .eq('public_order_id', orderId)
-                    .single();
-
-                if (error || !order) {
-                    throw new Error('رقم الطلب غير موجود أو حدث خطأ.');
-                }
-                
-                displayOrderData(order);
-                
-                // ✅ Start listening for REALTIME updates for THIS specific order
-                subscribeToOrderUpdates(order.id);
-
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                showMessage(ui.notFoundMessage, error.message);
-            } finally {
-                toggleButtonLoading(false);
-            }
-        }
-
-        function displayOrderData(order) {
-            document.getElementById('result-service-name').textContent = order.service_name || '-';
-            document.getElementById('result-order-id').textContent = order.public_order_id || '-';
-            document.getElementById('result-name').textContent = order.customer_name || '-';
-            
-            const creationDate = new Date(order.created_at);
-            document.getElementById('result-date').textContent = creationDate.toLocaleString('ar-EG-u-nu-latn', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            });
-
-            const statusInfo = getStatusInfo(order.status);
-            document.getElementById('result-status').innerHTML = `<span class="status-badge ${statusInfo.className}"><i class="fas ${statusInfo.icon}"></i> ${statusInfo.text}</span>`;
-            
-            updateProgressTracker(statusInfo);
-            
-            showMessage(null);
-            ui.resultArea.style.display = 'block';
-            setTimeout(() => ui.resultArea.classList.add('visible'), 50);
-        }
-        
-        function updateProgressTracker(statusInfo) {
-            const steps = [
-                document.getElementById('step1'), 
-                document.getElementById('step2'), 
-                document.getElementById('step3'),
-                document.getElementById('step4')
-            ];
-            steps.forEach(step => step.classList.remove('active', 'completed'));
-            
-            if (statusInfo.progress === -1) { // Cancelled
-                ui.progressLine.style.width = '0%';
-                steps[0].classList.add('active'); 
-                return;
+            if (error) {
+                console.error("حدث خطأ من Supabase:", error);
+                throw error;
             }
 
-            for (let i = 0; i <= statusInfo.progress; i++) {
-                if (i < statusInfo.progress) {
-                    steps[i].classList.add('completed');
-                } else {
-                    steps[i].classList.add('active');
-                }
-            }
-            
-            const progressPercentage = (statusInfo.progress / (steps.length - 1)) * 100;
-            setTimeout(() => { ui.progressLine.style.width = `${progressPercentage}%`; }, 100);
-        }
+            loadingState.style.display = 'none';
+            ordersContainer.innerHTML = ''; 
 
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            const orderId = ui.orderIdInput.value.trim();
-            if(orderId) {
-                const newUrl = new URL(window.location);
-                newUrl.searchParams.set('orderId', orderId);
-                window.history.pushState({ path: newUrl.href }, '', newUrl.href);
-                await searchForOrder(orderId);
-            }
-        }
-
-        // --- ✅ Supabase Realtime Subscription Function ---
-        let channel;
-        function subscribeToOrderUpdates(orderId) {
-            // Unsubscribe from any previous channel to avoid multiple listeners
-            if (channel) {
-                supabaseClient.removeChannel(channel);
+            if (orders && orders.length > 0) {
+                console.log(`تم العثور على ${orders.length} طلب.`);
+                orders.forEach((order, index) => {
+                    const card = createOrderCard(order);
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    ordersContainer.appendChild(card);
+                });
+            } else {
+                console.log("لم يتم العثور على أي طلبات لهذا البريد الإلكتروني.");
+                ordersContainer.appendChild(emptyState);
+                emptyState.style.display = 'block';
             }
 
-            channel = supabaseClient.channel(`public:orders:id=eq.${orderId}`)
-                .on('postgres_changes', 
-                    { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` }, 
-                    (payload) => {
-                        console.log('Realtime update received!', payload);
-                        // The payload contains the new data, so we can update the UI instantly
-                        displayOrderData(payload.new);
-                    }
-                )
-                .subscribe();
+        } catch (err) {
+            console.error('فشل في جلب الطلبات:', err);
+            loadingState.style.display = 'none';
+            ordersContainer.appendChild(errorState);
+            errorState.style.display = 'block';
         }
+    }
 
-        const params = new URLSearchParams(window.location.search);
-        const urlOrderId = params.get('orderId');
-        if (urlOrderId) {
-            ui.orderIdInput.value = urlOrderId;
-            searchForOrder(urlOrderId);
+    // (دوال createOrderCard و translateStatus تبقى كما هي بدون تغيير)
+    function translateStatus(status) {
+        const statusKey = (status || 'pending').toLowerCase();
+        switch (statusKey) {
+            case 'قيد المراجعة': case 'pending': return { text: 'قيد المراجعة', colorClass: 'orange' };
+            case 'جاري التنفيذ': case 'processing': return { text: 'قيد التنفيذ', colorClass: 'orange' };
+            case 'مكتمل': case 'completed': return { text: 'مكتمل', colorClass: 'green' };
+            case 'ملغي': case 'cancelled': case 'rejected': return { text: 'ملغي', colorClass: 'red' };
+            default: return { text: status, colorClass: 'orange' };
         }
-    });
-    </script>
+    }
+    function createOrderCard(order) {
+        const card = document.createElement('div');
+        card.className = 'order-card';
+        const statusInfo = translateStatus(order.status);
+        const orderDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' });
+        const formattedPrice = order.price ? `${Number(order.price).toLocaleString('en-US')} د.م` : 'غير محدد';
+        card.innerHTML = `<div class="order-card-header"><h3>${order.service_name||'خدمة غير محددة'}</h3><span class="order-id">#${order.public_order_id||order.id}</span></div><div class="order-card-body"><div class="info-item"><span class="label">تاريخ الطلب</span><span class="value">${orderDate}</span></div><div class="info-item"><span class="label">المبلغ الإجمالي</span><span class="value">${formattedPrice}</span></div><div class="info-item"><span class="label">طريقة الدفع</span><span class="value">${order.payment_method||'غير محدد'}</span></div><div class="info-item" style="grid-column: 1 / -1;"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusInfo.colorClass}">${statusInfo.text}</span></span></div>${(statusInfo.text==='ملغي'&&order.rejection_reason)?`<div class="rejection-reason"><strong>سبب الإلغاء:</strong><p>${order.rejection_reason}</p></div>`:''}</div>`;
+        return card;
+    }
+
+    const checkAuthReady = setInterval(() => {
+        if (window.authReady) {
+            console.log("2. المصادقة جاهزة! `window.authReady` أصبحت true.");
+            clearInterval(checkAuthReady);
+            loadUserOrders(window.currentUser);
+        }
+    }, 200);
+    
+    const currentYearEl = document.getElementById('current-year');
+    if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+});
+</script>
 </body>
 </html>

@@ -11,9 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Fuse.js for fuzzy search -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.min.js"></script>
-    <link rel="stylesheet" href="layout.css">
-
+    
     <style>
         :root {
             --primary-color: #0056b3;
@@ -36,51 +39,34 @@
         }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         
-        /* ==================== Header & Auth Buttons Styles ==================== */
         .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
         .navbar-logo img { height: 50px; }
-        .nav-links { list-style: none; display: none; gap: 30px; margin: 0; padding: 0; align-items: center; }
-        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
         .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; transition: color 0.3s ease; }
         .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
         .navbar-actions { display: flex; align-items: center; gap: 10px; min-width: 200px; justify-content: flex-end; }
-        .hamburger { display: block; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
-        @media (min-width: 1024px) { .hamburger { display: none; } }
-        
-        .btn { text-decoration: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; transition: all 0.3s ease; border: none; font-family: 'Cairo', sans-serif; cursor: pointer; font-size: 0.95rem; text-align: center; white-space: nowrap; }
-        .btn-primary { background-color: var(--primary-color); color: var(--light-color); }
-        .btn-primary:hover { background-color: #004494; }
-        .btn-secondary { background-color: #e9ecef; color: var(--dark-color); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background-color: #dbe1e6; }
+        .hamburger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-color); }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: block; }
+        }
 
-        .user-profile-dropdown { position: relative; cursor: pointer; }
-        .user-avatar { display: flex; align-items: center; gap: 8px; color: var(--dark-color); }
-        .avatar-icon { width: 40px; height: 40px; background-color: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
-        .dropdown-content { display: none; position: absolute; left: 0; top: 120%; background-color: var(--light-color); min-width: 240px; box-shadow: var(--box-shadow); border-radius: var(--border-radius); z-index: 1001; border: 1px solid var(--border-color); overflow: hidden; }
-        .user-profile-dropdown:hover .dropdown-content { display: block; }
-        .dropdown-header { padding: 15px; background-color: var(--gray-color); }
-        .user-email { margin: 0; font-size: 0.9rem; color: var(--text-color); text-align: left; direction: ltr; }
-        .dropdown-content a, .logout-button { text-decoration: none; color: var(--dark-color); padding: 12px 15px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; }
-        .dropdown-content a:hover, .logout-button:hover { background-color: var(--primary-light); color: var(--primary-color); }
-        .dropdown-divider { border-top: 1px solid var(--border-color); }
-        .logout-button { background: none; border: none; width: 100%; text-align: right; cursor: pointer; font-family: 'Cairo', sans-serif; }
-        .logout-button i, .dropdown-content a i { color: #888; transition: color 0.2s; }
-        .logout-button:hover i, .dropdown-content a:hover i { color: var(--primary-color); }
-        
-        /* ==================== Main Content Styles ==================== */
         .page-header { padding: 80px 20px; text-align: center; color: var(--light-color); border-radius: var(--border-radius); margin-bottom: 40px; background-image: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
         .page-header h1 { font-size: 3.5rem; font-weight: 900; margin: 0; }
         .page-header p { font-size: 1.3rem; margin-top: 10px; opacity: 0.9; }
+        
         .controls-container { background: var(--light-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
         .category-filters { display: flex; flex-wrap: wrap; gap: 10px; }
         .category-btn { background-color: #e9ecef; color: var(--dark-color); border: none; padding: 10px 20px; border-radius: 50px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
         .category-btn:hover { background-color: #ced4da; }
         .category-btn.active { background-color: var(--primary-color); color: var(--light-color); box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3); }
+        
         .search-wrapper { position: relative; width: 100%; max-width: 350px; }
         #search-input { width: 100%; padding: 12px 45px 12px 20px; border: 2px solid var(--border-color); border-radius: 50px; font-family: 'Cairo', sans-serif; font-size: 1rem; transition: all 0.3s ease; box-sizing: border-box; }
         #search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15); }
         .search-wrapper .search-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: #adb5bd; }
+        
         .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
         .service-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; border: 1px solid var(--border-color); }
         .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12); }
@@ -92,14 +78,21 @@
         .service-description { font-size: 1rem; line-height: 1.7; margin: 0 0 20px 0; flex-grow: 1; color: #6c757d; }
         .service-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 10px; }
         .service-price { font-size: 1.5rem; font-weight: 900; color: var(--primary-color); }
-        .action-btn { background-color: var(--primary-color); color: var(--light-color); text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; transition: all 0.3s ease; border: none; font-family: 'Cairo', sans-serif; cursor: pointer; font-size: 0.9rem; text-align: center; }
+        
+        .action-btn { 
+            background-color: var(--primary-color); color: var(--light-color); text-decoration: none; 
+            padding: 12px 20px; border-radius: 8px; font-weight: 700; 
+            transition: all 0.3s ease; border: none; font-family: 'Cairo', sans-serif; 
+            cursor: pointer; font-size: 0.9rem; text-align: center; 
+        }
         .action-btn.details-btn { background-color: #e9ecef; color: var(--dark-color); }
-        .action-btn:hover { background-color: #0b5ed7; color: var(--light-color); }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .action-btn.order-btn:hover { background-color: #004494; }
+        
         #loading-state, #error-state, #no-results-state { text-align: center; padding: 50px; font-size: 1.2rem; font-weight: 600; grid-column: 1 / -1; display: none; }
         .spinner { width: 50px; height: 50px; border: 5px solid #e9ecef; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ==================== MODIFIED Footer Styles ==================== */
         .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
         .footer-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto 40px; }
         .footer-section h4 { color: var(--light-color); font-size: 1.2rem; margin-bottom: 20px; position: relative; padding-bottom: 10px; }
@@ -126,12 +119,12 @@
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
             <div class="navbar-actions" id="navbar-actions">
-                 <a href="login.html" class="btn btn-secondary">تسجيل الدخول</a>
-                 <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
+                 <!-- Auth buttons will be rendered here by another script if available -->
             </div>
             <i class="fas fa-bars hamburger"></i>
         </nav>
     </header>
+    
     <main class="container">
         <header class="page-header">
             <h1>خدماتنا الرقمية</h1>
@@ -148,7 +141,10 @@
 
         <section id="services-grid" class="services-grid" aria-live="polite"></section>
         
-        <div id="loading-state" style="display: block;"><div class="spinner"></div><p>جاري تحميل الخدمات...</p></div>
+        <div id="loading-state" style="display: block;">
+            <div class="spinner"></div>
+            <p>جاري تحميل الخدمات...</p>
+        </div>
         <div id="error-state" style="display: none;"><p>عذراً، حدث خطأ أثناء تحميل الخدمات.</p></div>
         <div id="no-results-state" style="display: none;"><p>لا توجد خدمات تطابق بحثك.</p></div>
     </main>
@@ -160,10 +156,11 @@
                 <p>المكتب الرقمي هو بوابتك لإنجاز كافة معاملاتك الإدارية والرقمية في المغرب بكل سهولة واحترافية.</p>
             </div>
             <div class="footer-section">
-                <h4>خدماتنا</h4>
+                <h4>روابط سريعة</h4>
                 <ul>
                     <li><a href="tracking.html">تتبع طلبك</a></li>
                     <li><a href="blog.html">المدونة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -176,155 +173,164 @@
             </div>
             <div class="footer-section">
                 <h4>تواصل معنا</h4>
-                <ul>
-                    <li><a href="contact.html">صفحة التواصل</a></li>
-                </ul>
+                <p>لأي استفسار، لا تتردد في التواصل معنا عبر صفحة الاتصال.</p>
             </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
         </div>
     </footer>
-    <script>
-    (async () => {
-        await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
-        
-        if (!window.supabase) {
-            console.error("Supabase client is not available. Make sure auth.js is loaded correctly.");
-            const errorState = document.getElementById('error-state');
-            errorState.innerHTML = '<p>خطأ في تهيئة الصفحة. يرجى المحاولة مرة أخرى.</p>';
-            errorState.style.display = 'block';
-            document.getElementById('loading-state').style.display = 'none';
-            return;
-        }
-        
-        const supabase = window.supabase;
-        const servicesGrid = document.getElementById('services-grid');
-        const categoryFiltersContainer = document.getElementById('category-filters');
-        const searchInput = document.getElementById('search-input');
-        const loadingState = document.getElementById('loading-state');
-        const errorState = document.getElementById('error-state');
-        const noResultsState = document.getElementById('no-results-state');
-        
-        let allServicesData = [];
-        let fuse;
 
-        function sanitizeHTML(str) { 
-            if (!str) return '';
-            const temp = document.createElement('div');
-            temp.textContent = str;
-            return temp.innerHTML;
-        }
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-        async function main() {
-            try {
-                const { data: services, error } = await supabase
-                    .from('services')
-                    .select(`*, service_categories!fk_service_categories(name)`)
-                    .eq('status', 'available')
-                    .order('created_at', { ascending: false });
+    // --- ✅ CONFIGURATION ---
+    const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
 
-                if (error) throw error;
-                
-                allServicesData = services.map(service => ({
-                    id: service.id,
-                    title: service.title,
-                    slug: service.slug,
-                    description: service.description,
-                    price: service.price,
-                    category: service.service_categories ? service.service_categories.name : 'غير مصنف',
-                    imageUrl: service.image_url || 'https://placehold.co/600x400/e9ecef/343a40?text=No+Image'
-                }));
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-                const fuseOptions = { keys: ['title', 'description', 'category'], threshold: 0.4 };
-                fuse = new Fuse(allServicesData, fuseOptions);
-
-                const categories = [...new Set(allServicesData.map(s => s.category).filter(c => c !== 'غير مصنف'))];
-                renderCategories(categories);
-                renderServices(allServicesData);
-
-            } catch (error) {
-                console.error("Error fetching data from Supabase:", error);
-                errorState.style.display = 'block';
-            } finally {
-                loadingState.style.display = 'none';
-            }
-        }
-
-        function renderServices(services) {
-            servicesGrid.innerHTML = '';
-            noResultsState.style.display = services.length === 0 ? 'block' : 'none';
-
-            services.forEach(service => {
-                const card = document.createElement('article');
-                card.className = 'service-card';
-                const orderUrl = `payment-gateway.html?service_id=${service.id}`;
-                const detailsUrl = `service-details.html?slug=${service.slug}`;
-
-                card.innerHTML = `
-                    <div class="service-image-container">
-                        <a href="${detailsUrl}"><img src="${sanitizeHTML(service.imageUrl)}" alt="${sanitizeHTML(service.title)}" class="service-image"></a>
-                    </div>
-                    <div class="service-content">
-                        <h3 class="service-title"><a href="${detailsUrl}" style="text-decoration:none; color: inherit;">${sanitizeHTML(service.title)}</a></h3>
-                        <p class="service-description">${sanitizeHTML(service.description.substring(0, 100))}${service.description.length > 100 ? '...' : ''}</p>
-                        <div class="service-footer">
-                            <span class="service-price">${sanitizeHTML(String(service.price))} د.م.</span>
-                            <div style="display: flex; gap: 10px;">
-                                <a href="${detailsUrl}" class="action-btn details-btn">التفاصيل</a>
-                                <a href="${orderUrl}" class="action-btn">اطلب الآن</a>
-                            </div>
-                        </div>
-                    </div>`;
-                servicesGrid.appendChild(card);
-            });
-        }
-        
-        function renderCategories(categories) {
-            const allCategories = ['الكل', ...categories];
-            categoryFiltersContainer.innerHTML = '';
-            allCategories.forEach(category => {
-                const button = document.createElement('button');
-                button.className = 'category-btn';
-                button.textContent = category;
-                if (category === 'الكل') button.classList.add('active');
-                
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    filterAndSearch();
-                });
-                categoryFiltersContainer.appendChild(button);
-            });
-        }
-
-        function filterAndSearch() {
-            const activeCategory = document.querySelector('.category-btn.active')?.textContent || 'الكل';
-            const searchTerm = searchInput.value.trim().toLowerCase();
-
-            let servicesToRender = allServicesData;
-
-            if (activeCategory !== 'الكل') {
-                servicesToRender = servicesToRender.filter(service => service.category === activeCategory);
-            }
-
-            if (searchTerm !== '') {
-                const searchResults = fuse.search(searchTerm).map(result => result.item);
-                const serviceIdsFromSearch = new Set(searchResults.map(service => service.id));
-                servicesToRender = servicesToRender.filter(service => serviceIdsFromSearch.has(service.id));
-            }
-            
-            renderServices(servicesToRender);
-        }
-        
-        searchInput.addEventListener('input', filterAndSearch);
-
-        main();
-    })();
-    </script>
+    // --- DOM ELEMENTS ---
+    const servicesGrid = document.getElementById('services-grid');
+    const categoryFiltersContainer = document.getElementById('category-filters');
+    const searchInput = document.getElementById('search-input');
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const noResultsState = document.getElementById('no-results-state');
     
-    <script src="layout.js"></script>
-    <script type="module" src="auth.js"></script>
+    // --- STATE MANAGEMENT ---
+    let allServicesData = [];
+    let fuse;
+
+    // --- FUNCTIONS ---
+
+    function sanitizeHTML(str) { 
+        if (!str) return '';
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
+
+    async function main() {
+        try {
+            // ✅ FIX: Explicitly specify the foreign key relationship to use
+            // This resolves the "more than one relationship was found" error.
+            const { data: services, error } = await supabaseClient
+                .from('services')
+                .select(`*, service_categories!services_category_id_fkey(name)`)
+                .eq('status', 'available')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            
+            allServicesData = services.map(service => ({
+                id: service.id,
+                title: service.title,
+                slug: service.slug,
+                description: service.description,
+                price: service.price,
+                // The relationship is now unambiguous, so this will work correctly.
+                category: service.service_categories ? service.service_categories.name : 'غير مصنف',
+                imageUrl: service.image_url || 'https://placehold.co/600x400/e9ecef/343a40?text=No+Image'
+            }));
+
+            const fuseOptions = { keys: ['title', 'description', 'category'], threshold: 0.4 };
+            fuse = new Fuse(allServicesData, fuseOptions);
+
+            const categories = [...new Set(allServicesData.map(s => s.category).filter(Boolean))];
+            renderCategories(categories);
+            renderServices(allServicesData);
+
+        } catch (error) {
+            console.error("Error fetching data from Supabase:", error);
+            // Display the specific error message from Supabase to help with debugging
+            errorState.innerHTML = `<p>عذراً، حدث خطأ أثناء تحميل الخدمات. <br><small>${error.message}</small></p>`;
+            errorState.style.display = 'block';
+        } finally {
+            loadingState.style.display = 'none';
+        }
+    }
+
+    function renderServices(services) {
+        servicesGrid.innerHTML = '';
+        noResultsState.style.display = services.length === 0 ? 'block' : 'none';
+
+        services.forEach(service => {
+            const card = document.createElement('article');
+            card.className = 'service-card';
+
+            const encodedServiceName = encodeURIComponent(service.title);
+            const encodedServicePrice = encodeURIComponent(service.price);
+            const paymentUrl = `payment-gateway.html?service=${encodedServiceName}&price=${encodedServicePrice}`;
+            
+            const detailsUrl = `service-details.html?slug=${service.slug}`;
+
+            card.innerHTML = `
+                <div class="service-image-container">
+                    <a href="${detailsUrl}">
+                        <img src="${sanitizeHTML(service.imageUrl)}" alt="${sanitizeHTML(service.title)}" class="service-image" loading="lazy">
+                    </a>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">
+                        <a href="${detailsUrl}" style="text-decoration:none; color: inherit;">${sanitizeHTML(service.title)}</a>
+                    </h3>
+                    <p class="service-description">${sanitizeHTML(service.description.substring(0, 100))}${service.description.length > 100 ? '...' : ''}</p>
+                    <div class="service-footer">
+                        <span class="service-price">${sanitizeHTML(String(service.price))} د.م.</span>
+                        <div style="display: flex; gap: 10px;">
+                            <a href="${detailsUrl}" class="action-btn details-btn">التفاصيل</a>
+                            <a href="${paymentUrl}" class="action-btn order-btn">اطلب الآن</a>
+                        </div>
+                    </div>
+                </div>`;
+            servicesGrid.appendChild(card);
+        });
+    }
+    
+    function renderCategories(categories) {
+        const allCategories = ['الكل', ...categories];
+        categoryFiltersContainer.innerHTML = '';
+        allCategories.forEach(category => {
+            const button = document.createElement('button');
+            button.className = 'category-btn';
+            button.textContent = category;
+            if (category === 'الكل') button.classList.add('active');
+            
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterAndSearch();
+            });
+            categoryFiltersContainer.appendChild(button);
+        });
+    }
+
+    function filterAndSearch() {
+        const activeCategory = document.querySelector('.category-btn.active')?.textContent || 'الكل';
+        const searchTerm = searchInput.value.trim();
+
+        let servicesToRender = allServicesData;
+
+        if (activeCategory !== 'الكل') {
+            servicesToRender = servicesToRender.filter(service => service.category === activeCategory);
+        }
+
+        if (searchTerm) {
+            const searchResults = fuse.search(searchTerm).map(result => result.item);
+            const serviceIdsFromSearch = new Set(searchResults.map(service => service.id));
+            servicesToRender = servicesToRender.filter(service => serviceIdsFromSearch.has(service.id));
+        }
+        
+        renderServices(servicesToRender);
+    }
+    
+    searchInput.addEventListener('input', filterAndSearch);
+
+    main();
+});
+</script>
 
 </body>
 </html>
+

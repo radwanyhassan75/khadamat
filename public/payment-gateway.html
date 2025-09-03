@@ -193,7 +193,7 @@
             <h1>إتمام الطلب</h1>
         </header>
 
-        <form id="payment-form">
+        <form id="payment-form" novalidate>
             <div class="card">
                 <div class="card-header"><span class="step-icon"><i class="fas fa-shopping-cart"></i></span><h3>ملخص الطلب</h3></div>
                 <div class="form-group"><label>الخدمة المطلوبة:</label><input type="text" id="display-service-name" readonly></div>
@@ -261,14 +261,14 @@
                 <div class="form-group" id="receipt-upload-group" style="display: none;">
                     <label for="receipt-file-input">أرفق وصل الدفع (صورة أو PDF) <span class="required-star">*</span></label>
                      <div class="file-drop-area" id="receipt-drop-area">
-                        <input type="file" id="receipt-file-input" name="receiptFile" class="file-input-hidden" accept=".png,.jpg,.jpeg,.pdf" required>
-                        <i class="fas fa-receipt upload-icon"></i>
-                        <p>اسحب وأفلت وصل الدفع هنا، أو انقر للاختيار</p>
-                    </div>
-                    <div class="file-preview-wrapper" id="receipt-preview-wrapper">
-                        <div class="file-preview-info"></div>
-                        <button type="button" class="remove-file-btn" aria-label="إزالة الملف"><i class="fas fa-times"></i></button>
-                    </div>
+                         <input type="file" id="receipt-file-input" name="receiptFile" class="file-input-hidden" accept=".png,.jpg,.jpeg,.pdf" required>
+                         <i class="fas fa-receipt upload-icon"></i>
+                         <p>اسحب وأفلت وصل الدفع هنا، أو انقر للاختيار</p>
+                     </div>
+                     <div class="file-preview-wrapper" id="receipt-preview-wrapper">
+                         <div class="file-preview-info"></div>
+                         <button type="button" class="remove-file-btn" aria-label="إزالة الملف"><i class="fas fa-times"></i></button>
+                     </div>
                 </div>
                 
                 <div class="legal-agreements">
@@ -291,38 +291,38 @@
     <footer class="main-footer">
         <div class="footer-content">
              <div class="footer-section">
-                <h3 class="footer-title">المكتب الرقمي</h3>
-                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية في المغرب.</p>
-                <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                </div>
+                 <h3 class="footer-title">المكتب الرقمي</h3>
+                 <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية في المغرب.</p>
+                 <div class="social-links">
+                     <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                     <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                     <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                 </div>
              </div>
              <div class="footer-section">
-                <h3 class="footer-title">روابط مهمة</h3>
-                <ul>
-                    <li><a href="services.html"><i class="fas fa-cogs"></i> جميع الخدمات</a></li>
-                    <li><a href="tracking.html"><i class="fas fa-search-location"></i> تتبع طلبك</a></li>
-                    <li><a href="blog.html"><i class="fas fa-newspaper"></i> المدونة</a></li>
-                    <li><a href="contact.html"><i class="fas fa-headset"></i> اتصل بنا</a></li>
-                </ul>
+                 <h3 class="footer-title">روابط مهمة</h3>
+                 <ul>
+                     <li><a href="services.html"><i class="fas fa-cogs"></i> جميع الخدمات</a></li>
+                     <li><a href="tracking.html"><i class="fas fa-search-location"></i> تتبع طلبك</a></li>
+                     <li><a href="blog.html"><i class="fas fa-newspaper"></i> المدونة</a></li>
+                     <li><a href="contact.html"><i class="fas fa-headset"></i> اتصل بنا</a></li>
+                 </ul>
              </div>
              <div class="footer-section">
-                <h3 class="footer-title">قانوني</h3>
-                <ul>
-                    <li><a href="privacy.html"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a></li>
-                    <li><a href="terms.html"><i class="fas fa-file-contract"></i> الشروط والأحكام</a></li>
-                    <li><a href="refund.html"><i class="fas fa-undo-alt"></i> سياسة الاسترجاع</a></li>
-                </ul>
+                 <h3 class="footer-title">قانوني</h3>
+                 <ul>
+                     <li><a href="privacy.html"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a></li>
+                     <li><a href="terms.html"><i class="fas fa-file-contract"></i> الشروط والأحكام</a></li>
+                     <li><a href="refund.html"><i class="fas fa-undo-alt"></i> سياسة الاسترجاع</a></li>
+                 </ul>
              </div>
              <div class="footer-section">
-                <h3 class="footer-title">تواصل معنا</h3>
-                <ul>
-                    <li><a href="mailto:contact@example.com"><i class="fas fa-envelope"></i> contact@example.com</a></li>
-                    <li><a href="tel:+212000000000"><i class="fas fa-phone"></i> +212 000 000 000</a></li>
-                    <li><p><i class="fas fa-map-marker-alt"></i> الرباط، المغرب</p></li>
-                </ul>
+                 <h3 class="footer-title">تواصل معنا</h3>
+                 <ul>
+                     <li><a href="mailto:contact@example.com"><i class="fas fa-envelope"></i> contact@example.com</a></li>
+                     <li><a href="tel:+212000000000"><i class="fas fa-phone"></i> +212 000 000 000</a></li>
+                     <li><p><i class="fas fa-map-marker-alt"></i> الرباط، المغرب</p></li>
+                 </ul>
              </div>
         </div>
         <div class="footer-bottom">
@@ -389,11 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const { data, error } = await supabaseClient.from('payment_methods').select('*').eq('is_enabled', true);
             if (error) throw error;
             
-            // Filter out stripe if it comes from the DB to avoid duplication
             let filteredMethods = data.filter(method => method.id !== 'stripe');
             paymentMethods = filteredMethods;
             
-            // Manually add digital payment methods with new images
             paymentMethods.push({ 
                 id: 'stripe', 
                 name: 'البطاقة البنكية', 
@@ -441,7 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         paymentDetailsContainer.classList.toggle('active', isBankTransfer);
         
-        // Show Stripe info box
         stripeInfoBox.classList.toggle('active', selectedMethodId === 'stripe');
         if(selectedMethodId === 'stripe') {
             stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
@@ -470,13 +467,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GOOGLE PAY LOGIC ---
     window.onGooglePayLoaded = () => {
-        googlePaymentsClient = new google.payments.api.PaymentsClient({ environment: currentConfig.GOOGLE_PAY_ENVIRONMENT });
-        const button = googlePaymentsClient.createButton({
-            onClick: onGooglePayClicked,
-            buttonType: 'pay',
-            buttonSizeMode: 'fill',
-        });
-        googlePayContainer.appendChild(button);
+        try {
+            googlePaymentsClient = new google.payments.api.PaymentsClient({ environment: currentConfig.GOOGLE_PAY_ENVIRONMENT });
+            const button = googlePaymentsClient.createButton({
+                onClick: onGooglePayClicked,
+                buttonType: 'pay',
+                buttonSizeMode: 'fill',
+            });
+            googlePayContainer.appendChild(button);
+        } catch (err) {
+            console.error('Google Pay failed to initialize:', err);
+        }
     };
 
     function getGooglePaymentDataRequest() {
@@ -530,8 +531,11 @@ document.addEventListener('DOMContentLoaded', () => {
     async function processGooglePayOrder(paymentData) {
         showLoadingState(true, 'جاري معالجة الدفع...');
         try {
-            const attachmentUrl = await uploadFile(document.getElementById('attachment-file-input').files[0], 'attachments');
+            const attachmentFile = document.getElementById('attachment-file-input').files[0];
+            const attachmentUrl = await uploadFile(attachmentFile, 'attachments');
+            
             const orderData = {
+                // ✅ FIX: Use 'customer_name' to match database column
                 customer_name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
@@ -562,13 +566,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
 
         try {
+            const attachmentFile = document.getElementById('attachment-file-input').files[0];
+            const attachmentUrl = await uploadFile(attachmentFile, 'attachments');
+
             if (selectedMethodId === 'stripe') {
                 const stripeMetadata = {
+                    // ✅ FIX: Use 'customer_name' to match database column
                     customer_name: document.getElementById('name').value,
                     phone: document.getElementById('phone').value,
                     service_details: document.getElementById('service-details').value,
                     optional_link: document.getElementById('optional-link').value || 'N/A',
-                    payment_method: 'Stripe'
+                    payment_method: 'Stripe',
+                    attachment_url: attachmentUrl || ''
                 };
 
                 const { data, error } = await supabaseClient.functions.invoke('create-stripe-checkout', {
@@ -589,10 +598,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (stripeError) throw new Error('فشل التوجيه لصفحة الدفع: ' + stripeError.message);
 
             } else { // Bank Transfer Logic
-                const receiptUrl = await uploadFile(document.getElementById('receipt-file-input').files[0], 'receipts');
-                const attachmentUrl = await uploadFile(document.getElementById('attachment-file-input').files[0], 'attachments');
+                const receiptFile = document.getElementById('receipt-file-input').files[0];
+                const receiptUrl = await uploadFile(receiptFile, 'receipts');
 
                 const orderData = {
+                    // ✅ FIX: Use 'customer_name' to match database column
                     customer_name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
@@ -618,7 +628,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const requiredInputs = Array.from(form.querySelectorAll('[required]'));
         let isFormValid = true;
         requiredInputs.forEach(input => {
-            if (input.offsetParent === null && !input.classList.contains('file-input-hidden')) return;
+            if (input.offsetParent === null) return;
+            
             if ((input.type === 'checkbox' && !input.checked) ||
                 (input.type === 'file' && input.files.length === 0) ||
                 (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim())) {
@@ -640,12 +651,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return isFormValid;
     }
 
-    // --- UTILITY FUNCTIONS ---
+    // --- ✅ UTILITY FUNCTIONS (WITH FIX) ---
     async function uploadFile(file, folder) {
         if (!file) return null;
-        const filePath = `public/${folder}/${Date.now()}-${file.name}`;
-        const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file);
-        if (error) throw new Error(`فشل رفع الملف: ${error.message}`);
+
+        // ✅ FIX: Sanitize the filename to handle all characters, including Arabic
+        const fileExtension = file.name.split('.').pop();
+        const sanitizedCoreName = file.name.replace(/\.[^/.]+$/, "") 
+                                     .replace(/[^a-zA-Z0-9\u0600-\u06FF.-]/g, '_') // Keep Arabic letters, numbers, dots, hyphens
+                                     .replace(/_{2,}/g, '_');
+
+        const filePath = `public/${folder}/${Date.now()}-${sanitizedCoreName}.${fileExtension}`;
+
+        const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+        });
+
+        if (error) {
+            console.error('Supabase Storage Error:', error);
+            throw new Error(`فشل رفع الملف: ${error.message}`);
+        }
+
         const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
         return data.publicUrl;
     }
@@ -670,6 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = `val-${Math.random().toString(36).substr(2, 9)}`;
         return `<div class="detail-row"><span class="label">${label}:</span><span class="value" id="${id}">${value}<button type="button" class="copy-button" onclick="copyToClipboard('${id}')"><i class="far fa-copy"></i></button></span></div>`;
     }
+
     window.copyToClipboard = function(elementId) {
         if (soundsReady) copySound.triggerAttackRelease("C4", "8n");
         const textElement = document.getElementById(elementId);
@@ -686,6 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
+
     function setupUploader(dropAreaId, fileInputId, previewWrapperId) {
         const dropArea = document.getElementById(dropAreaId);
         const fileInput = document.getElementById(fileInputId);
@@ -703,6 +732,7 @@ document.addEventListener('DOMContentLoaded', () => {
             validateForm();
         });
     }
+
     function handleFiles(files, previewWrapper, fileInput) {
         const file = files[0];
         if (!file) return;
@@ -722,23 +752,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
 
     // --- PAGE INITIALIZATION ---
-    async function initializePage() {
+    function initializePage() {
         const params = new URLSearchParams(window.location.search);
-        document.getElementById('display-service-name').value = params.get('service') || "غير محدد";
-        document.getElementById('display-service-price').value = (params.get('price') || "0") + " درهم";
-        document.getElementById('form-service-name').value = params.get('service') || "غير محدد";
-        document.getElementById('form-service-price').value = params.get('price') || "0";
+        
+        const serviceName = decodeURIComponent(params.get('service') || 'غير محدد');
+        const servicePrice = decodeURIComponent(params.get('price') || '0');
+
+        document.getElementById('display-service-name').value = serviceName;
+        document.getElementById('display-service-price').value = `${servicePrice} درهم`;
+        document.getElementById('form-service-name').value = serviceName;
+        document.getElementById('form-service-price').value = servicePrice;
         
         form.addEventListener('submit', handleFormSubmit);
-        form.querySelectorAll('input, textarea, select').forEach(input => input.addEventListener('input', () => validateForm()));
+        form.querySelectorAll('input, textarea, select').forEach(input => {
+            input.addEventListener('input', () => validateForm());
+            input.addEventListener('change', () => validateForm());
+        });
         
-        await fetchPaymentMethods();
+        fetchPaymentMethods();
         validateForm();
     }
 
     initializePage();
 });
 </script>
-   
+    
 </body>
 </html>
+

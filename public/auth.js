@@ -13,13 +13,11 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 window.supabase = supabase;
 
-// --- ✅ This function has been upgraded ---
 function updateAuthButtons(user) {
     const navbarActions = document.getElementById('navbar-actions');
     if (!navbarActions) return;
 
     if (user) {
-        // Logged-in user gets the professional dropdown menu
         navbarActions.innerHTML = `
             <div class="user-profile-dropdown">
                 <div class="user-avatar">
@@ -39,20 +37,15 @@ function updateAuthButtons(user) {
                 </div>
             </div>
         `;
-
-        // Add interactive logic for the new dropdown
         const dropdown = navbarActions.querySelector('.user-profile-dropdown');
         dropdown.addEventListener('click', (event) => {
             event.stopPropagation();
             dropdown.classList.toggle('open');
         });
-
         document.getElementById('logout-button').addEventListener('click', () => {
             supabase.auth.signOut().then(() => window.location.href = "/index.html");
         });
-
     } else {
-        // Logged-out user sees the regular buttons
         navbarActions.innerHTML = `
             <a href="login.html" class="btn btn-secondary">تسجيل الدخول</a>
             <a href="register.html" class="btn btn-primary">إنشاء حساب</a>
@@ -60,7 +53,6 @@ function updateAuthButtons(user) {
     }
 }
 
-// Add a global click listener to close the dropdown when clicking outside
 window.addEventListener('click', () => {
     const openDropdown = document.querySelector('.user-profile-dropdown.open');
     if (openDropdown) {
@@ -68,7 +60,6 @@ window.addEventListener('click', () => {
     }
 });
 
-// --- Your Social Login function remains unchanged ---
 window.signInWithProvider = async function(provider) {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: provider,
@@ -80,14 +71,22 @@ window.signInWithProvider = async function(provider) {
     if (error) alert("فشل تسجيل الدخول: " + error.message);
 };
 
-// --- Your main smart listener remains unchanged ---
+// --- 💡 هذا هو الجزء الذي تم تعديله ---
 supabase.auth.onAuthStateChange((event, session) => {
     const user = session?.user;
+
+    // ✅ الإضافة الأولى: جعل معلومات المستخدم الحالية متاحة لكل الصفحات
+    window.currentUser = user;
+    
+    // ✅ الإضافة الثانية: إرسال إشارة بأن عملية المصادقة قد تمت
+    window.authReady = true;
+
+    // الآن يمكننا تحديث الأزرار وتوجيه المستخدم كما كان في السابق
     updateAuthButtons(user);
 
     const currentPage = window.location.pathname.split('/').pop();
     const isAuthPage = ['login.html', 'register.html'];
-    const isProtectedPage = ['dashboard.html'];
+    const isProtectedPage = ['dashboard.html', 'orders.html']; // أضف صفحة الطلبات هنا للحماية
 
     if (user && isAuthPage.includes(currentPage)) {
         window.location.replace('/dashboard.html');
