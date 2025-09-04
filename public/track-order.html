@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>تتبع طلبك - khadamatmaroc</title>
     
-    <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -75,24 +73,20 @@
         .progress-step.active .step-icon { background-color: var(--primary-color); }
         .progress-step.active .step-label { color: var(--dark-color); }
         .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; }
-        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
-        .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
-        .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
     </style>
 </head>
 <body>
     <header class="main-header">
-        <nav class="navbar">
+         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc"></a>
-            <ul class="nav-links" id="nav-links">
+            <ul class="nav-links">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="my-orders.html">طلباتي</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
-            <div id="navbar-actions" class="navbar-actions">
-                <!-- أزرار تسجيل الدخول/الخروج ستظهر هنا -->
-            </div>
+            <div id="navbar-actions" class="navbar-actions"></div>
         </nav>
     </header>
 
@@ -146,77 +140,44 @@
         </div>
     </main>
     
-    <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3 class="footer-title">khadamatmaroc</h3>
-                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-title">روابط مهمة</h3>
-                <ul>
-                    <li><a href="about.html">من نحن</a></li>
-                    <li><a href="services.html">جميع الخدمات</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3 class="footer-title">قانوني</h3>
-                <ul>
-                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
-                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom"><p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p></div>
-    </footer>
-
-<script>
+    <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Supabase Configuration ---
     const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
     const { createClient } = supabase;
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // --- Authentication Logic ---
     const navbarActions = document.getElementById('navbar-actions');
     supabaseClient.auth.onAuthStateChange((event, session) => {
-        navbarActions.innerHTML = ''; // Clear previous buttons
+        navbarActions.innerHTML = '';
         if (session) {
-            // User is logged in
             const dashboardButton = document.createElement('a');
             dashboardButton.href = '/dashboard.html';
             dashboardButton.className = 'btn-nav btn-nav-primary';
             dashboardButton.textContent = 'لوحة التحكم';
-            
             const logoutButton = document.createElement('button');
             logoutButton.className = 'btn-nav btn-nav-secondary';
             logoutButton.textContent = 'تسجيل الخروج';
             logoutButton.onclick = async () => {
                 await supabaseClient.auth.signOut();
-                window.location.href = '/index.html';
+                window.location.reload();
             };
-            
             navbarActions.appendChild(dashboardButton);
             navbarActions.appendChild(logoutButton);
         } else {
-            // User is logged out
             const loginButton = document.createElement('a');
             loginButton.href = '/login.html';
             loginButton.className = 'btn-nav btn-nav-secondary';
             loginButton.textContent = 'تسجيل الدخول';
-
             const registerButton = document.createElement('a');
             registerButton.href = '/register.html';
             registerButton.className = 'btn-nav btn-nav-primary';
             registerButton.textContent = 'إنشاء حساب';
-
             navbarActions.appendChild(loginButton);
             navbarActions.appendChild(registerButton);
         }
     });
     
-    // --- Tracking Logic ---
     const trackForm = document.getElementById('track-form');
     const orderIdInput = document.getElementById('order-id-input');
     const trackButton = document.getElementById('track-button');
@@ -224,11 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const notFoundMessage = document.getElementById('not-found-message');
     const resultArea = document.getElementById('result-area');
 
-    trackForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const orderId = orderIdInput.value.trim();
-        if (!orderId) return;
-
+    async function performSearch(orderId) {
         resultArea.classList.remove('visible');
         notFoundMessage.style.display = 'none';
         loadingMessage.style.display = 'block';
@@ -242,9 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .eq('public_order_id', orderId)
                 .single();
 
-            if (error && error.code !== 'PGRST116') {
-                throw error;
-            }
+            if (error && error.code !== 'PGRST116') throw error;
 
             if (data) {
                 displayOrderDetails(data);
@@ -252,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 notFoundMessage.textContent = `لم يتم العثور على طلب بالرقم "${orderId}". يرجى التحقق من الرقم والمحاولة مرة أخرى.`;
                 notFoundMessage.style.display = 'block';
             }
-
         } catch (err) {
             console.error('Error fetching order:', err);
             notFoundMessage.textContent = 'حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى لاحقًا.';
@@ -262,10 +216,25 @@ document.addEventListener('DOMContentLoaded', () => {
             trackButton.classList.remove('loading');
             trackButton.disabled = false;
         }
+    }
+
+    trackForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const orderId = orderIdInput.value.trim();
+        if (orderId) {
+            performSearch(orderId);
+        }
     });
     
+    // --- Auto-search logic ---
+    const params = new URLSearchParams(window.location.search);
+    const orderIdFromUrl = params.get('orderId');
+    if (orderIdFromUrl) {
+        orderIdInput.value = orderIdFromUrl;
+        performSearch(orderIdFromUrl); // Perform search automatically
+    }
+
     function displayOrderDetails(order) {
-        // Populate all fields
         document.getElementById('result-service-name').textContent = order.service_name || 'خدمة غير محددة';
         document.getElementById('result-order-id').textContent = order.public_order_id || order.id;
         document.getElementById('result-customer-name').textContent = order.customer_name || 'غير محدد';
@@ -278,12 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
             dateStyle: 'full', timeStyle: 'short'
         });
         
-        // Populate status badge
         const statusBadgeContainer = document.getElementById('result-status');
         const statusClass = `status-${(order.status || '').replace(/\s+/g, '-')}`;
         statusBadgeContainer.innerHTML = `<span class="status-badge ${statusClass}">${order.status || 'غير معروف'}</span>`;
         
-        // Handle links
         const linksContainer = document.getElementById('links-container');
         const resultLinks = document.getElementById('result-links');
         resultLinks.innerHTML = '';
@@ -311,31 +278,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateProgressTracker(status) {
         const statuses = ['قيد المراجعة', 'جاري التنفيذ', 'مكتمل'];
         let currentStatusIndex = statuses.indexOf(status);
+        if(status === 'ملغي') currentStatusIndex = -1;
 
-        // Handle cases where status might be different, e.g., 'ملغي'
-        if(status === 'ملغي') {
-             currentStatusIndex = -1; // No progress for cancelled orders
-        }
-
-        const steps = [
-            document.getElementById('step1'),
-            document.getElementById('step2'),
-            document.getElementById('step3'),
-        ];
-        
+        const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
         steps.forEach((step, index) => {
             step.classList.remove('active', 'completed');
-            if (index < currentStatusIndex) {
-                step.classList.add('completed');
-            } else if (index === currentStatusIndex) {
-                step.classList.add('completed', 'active');
-            }
+            if (index < currentStatusIndex) step.classList.add('completed');
+            else if (index === currentStatusIndex) step.classList.add('completed', 'active');
         });
         
         const progressLine = document.getElementById('progress-line');
         if (currentStatusIndex >= 0) {
-            const percentage = (currentStatusIndex / (statuses.length - 1)) * 100;
-            progressLine.style.width = `${percentage}%`;
+            progressLine.style.width = `${(currentStatusIndex / (statuses.length - 1)) * 100}%`;
         } else {
             progressLine.style.width = '0%';
         }
