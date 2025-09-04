@@ -3,61 +3,67 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>تتبع طلبك - المكتب الرقمي</title>
+    <title>تتبع طلبك - khadamatmaroc</title>
     
     <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
         :root {
-            --primary-color: #0d6efd; --primary-color-dark: #0a58ca; --dark-color: #2c3e50;
-            --light-color: #ffffff; --gray-color: #f8f9fa; --border-color: #dee2e6;
+            --primary-color: #0056b3; --primary-hover-color: #004494; --dark-color: #1d2d3d;
+            --light-color: #ffffff; --gray-color: #f7f9fc; --border-color: #dee2e6;
             --border-radius: 12px; --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
             --success-color: #198754; --warning-color: #ffc107; --danger-color: #dc3545;
-            --info-color: #0dcaf0;
+            --info-color: #0dcaf0; --footer-bg-color: #1c2331;
         }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Cairo', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); color: var(--dark-color); }
+        body { font-family: 'Tajawal', sans-serif; margin: 0; direction: rtl; background-color: var(--gray-color); color: var(--dark-color); }
         .main-header { background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
-        .navbar-logo img { height: 50px; }
+        .navbar-logo img { height: 60px; }
         .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
         .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; }
+        .navbar-actions { display: flex; gap: 10px; }
+        .btn-nav { padding: 8px 16px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; }
+        .btn-nav-primary { background-color: var(--primary-color); color: white; }
+        .btn-nav-primary:hover { background-color: var(--primary-hover-color); }
+        .btn-nav-secondary { background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+        .btn-nav-secondary:hover { background-color: var(--primary-color); color: white; }
         main { max-width: 800px; margin: auto; padding: 40px 2rem; }
         .track-form-card { background: var(--light-color); padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; border: 1px solid var(--border-color); }
         .track-form-card h1 { font-size: 2.2rem; color: var(--dark-color); margin-bottom: 15px; font-weight: 900; }
         .track-form { display: flex; gap: 10px; }
-        .track-form input { flex-grow: 1; padding: 14px 20px; border: 1px solid #ccc; border-radius: 50px; font-size: 1.1rem; font-family: 'Cairo', sans-serif; transition: all 0.3s ease; }
-        .track-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
+        .track-form input { flex-grow: 1; padding: 14px 20px; border: 1px solid #ccc; border-radius: 50px; font-size: 1.1rem; font-family: 'Tajawal', sans-serif; transition: all 0.3s ease; }
+        .track-form input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25); }
         .track-form button { padding: 14px 30px; background: var(--primary-color); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px; }
-        .track-form button:hover { background-color: var(--primary-color-dark); }
+        .track-form button:hover { background-color: var(--primary-hover-color); }
         .track-form button .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
         .track-form button.loading .button-text { display: none; }
         .track-form button.loading .spinner { display: block; }
-        .message-area { margin-top: 30px; padding: 2rem; border-radius: var(--border-radius); text-align: center; font-weight: 700; font-size: 1.1rem; }
+        .message-area { margin-top: 30px; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; font-weight: 700; font-size: 1.1rem; display: none; }
         #loading-message { color: var(--primary-color); }
         #loading-message i { font-size: 2rem; animation: spin 1.5s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         #not-found-message { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
-        .result-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-top: 30px; text-align: right; border-top: 5px solid var(--primary-color); overflow: hidden; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-        .result-card.visible { opacity: 1; transform: translateY(0); }
+        .result-card { background: var(--light-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-top: 30px; text-align: right; border-top: 5px solid var(--primary-color); overflow: hidden; opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; display: none; }
+        .result-card.visible { opacity: 1; transform: translateY(0); display: block; }
         .result-header { background: var(--gray-color); padding: 20px 25px; border-bottom: 1px solid var(--border-color); }
         .result-header h2 { margin: 0; font-size: 1.5rem; color: var(--dark-color); }
         .result-header p { margin: 5px 0 0 0; color: #555; }
         .result-body { padding: 25px; }
-        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .field { background: var(--gray-color); padding: 15px; border-radius: 8px; }
         .field .label { font-weight: 700; color: #888; font-size: 0.9rem; margin-bottom: 5px; display: block; }
-        .field .value { font-weight: 700; color: var(--dark-color); font-size: 1.1rem; }
+        .field .value { font-weight: 700; color: var(--dark-color); font-size: 1.1rem; word-break: break-all; }
+        .field.full-width { grid-column: 1 / -1; }
         .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 50px; font-weight: 700; font-size: 1rem; }
-        .status-badge.status-default { background-color: #6c757d; color: white; }
-        .status-badge.status-verifying { background-color: var(--info-color); color: var(--dark-color); }
-        .status-badge.status-in-progress { background-color: var(--primary-color); color: white; }
-        .status-badge.status-completed { background-color: var(--success-color); color: white; }
-        .status-badge.status-cancelled { background-color: var(--warning-color); color: var(--dark-color); }
+        .status-badge.status-قيد-المراجعة { background-color: var(--info-color); color: var(--dark-color); }
+        .status-badge.status-جاري-التنفيذ { background-color: var(--primary-color); color: white; }
+        .status-badge.status-مكتمل { background-color: var(--success-color); color: white; }
+        .status-badge.status-ملغي { background-color: var(--danger-color); color: white; }
         .progress-tracker { display: flex; justify-content: space-between; align-items: flex-start; padding: 25px 0; position: relative; }
         .progress-tracker::before { content: ''; position: absolute; top: 25px; right: 0; left: 0; height: 4px; background-color: var(--border-color); transform: translateY(-50%); }
         .progress-line { position: absolute; top: 25px; right: 0; height: 4px; background-color: var(--success-color); width: 0; transform: translateY(-50%); transition: width 0.8s ease-in-out; }
@@ -68,31 +74,25 @@
         .progress-step.completed .step-label { color: var(--dark-color); }
         .progress-step.active .step-icon { background-color: var(--primary-color); }
         .progress-step.active .step-label { color: var(--dark-color); }
-        .main-footer { background-color: var(--dark-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
         .footer-title { color: var(--light-color); font-size: 1.25rem; margin-bottom: 25px; font-weight: 700; position: relative; padding-bottom: 10px; }
         .footer-title::after { content: ''; position: absolute; bottom: 0; right: 0; width: 50px; height: 2px; background-color: var(--primary-color); }
-        .footer-section p, .footer-section ul { line-height: 1.8; list-style: none; padding: 0; margin: 0; }
-        .footer-section ul li { margin-bottom: 12px; }
-        .footer-section a { color: #bdc3c7; text-decoration: none; }
-        .newsletter-form { display: flex; margin-top: 20px; }
-        .newsletter-form input { width: 100%; border: none; padding: 12px; border-radius: 0 8px 8px 0; font-family: 'Cairo', sans-serif; }
-        .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 8px 0 0 8px; cursor: pointer; }
-        .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
     <header class="main-header">
         <nav class="navbar">
-            <a href="index.html" class="navbar-logo"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي"></a>
+            <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc"></a>
             <ul class="nav-links" id="nav-links">
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
-                <li><a href="blog.html">المدونة</a></li>
-                <li><a href="prices.html">الأسعار</a></li>
-                <li><a href="payment.html">طرق الدفع</a></li>
-                <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                <li><a href="my-orders.html">طلباتي</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
+            <div id="navbar-actions" class="navbar-actions">
+                <!-- أزرار تسجيل الدخول/الخروج ستظهر هنا -->
+            </div>
         </nav>
     </header>
 
@@ -110,11 +110,11 @@
         </div>
 
         <div id="message-container">
-            <div id="loading-message" class="message-area" style="display: none;"><i class="fas fa-spinner"></i><p>جاري البحث عن طلبك...</p></div>
-            <div id="not-found-message" class="message-area" style="display: none;"></div>
+            <div id="loading-message" class="message-area"><i class="fas fa-spinner"></i><p>جاري البحث عن طلبك...</p></div>
+            <div id="not-found-message" class="message-area"></div>
         </div>
 
-        <div id="result-area" class="result-card" style="display: none;">
+        <div id="result-area" class="result-card">
             <div class="result-header">
                 <h2 id="result-service-name"></h2>
                 <p>رقم الطلب: <strong id="result-order-id"></strong></p>
@@ -122,126 +122,224 @@
             <div class="result-body">
                 <div id="progress-tracker" class="progress-tracker">
                     <div class="progress-line" id="progress-line"></div>
-                    <div id="step1" class="progress-step"><div class="step-icon"><i class="fas fa-receipt"></i></div><div class="step-label">تم الاستلام</div></div>
-                    <div id="step2" class="progress-step"><div class="step-icon"><i class="fas fa-credit-card"></i></div><div class="step-label">التحقق من الدفع</div></div>
-                    <div id="step3" class="progress-step"><div class="step-icon"><i class="fas fa-cogs"></i></div><div class="step-label">جاري المعالجة</div></div>
-                    <div id="step4" class="progress-step"><div class="step-icon"><i class="fas fa-check-double"></i></div><div class="step-label">مكتمل</div></div>
+                    <div id="step1" class="progress-step"><div class="step-icon"><i class="fas fa-receipt"></i></div><div class="step-label">قيد المراجعة</div></div>
+                    <div id="step2" class="progress-step"><div class="step-icon"><i class="fas fa-cogs"></i></div><div class="step-label">جاري التنفيذ</div></div>
+                    <div id="step3" class="progress-step"><div class="step-icon"><i class="fas fa-check-double"></i></div><div class="step-label">مكتمل</div></div>
                 </div>
                 <hr style="margin: 20px 0;">
+                <h3 style="margin-bottom: 20px;">تفاصيل الطلب الكاملة</h3>
                 <div class="result-grid">
-                    <div class="field"><span class="label"><i class="fas fa-user"></i> الاسم الكامل</span><span class="value" id="result-name"></span></div>
-                    <div class="field"><span class="label"><i class="fas fa-calendar-alt"></i> تاريخ الطلب</span><span class="value" id="result-date"></span></div>
-                    <div class="field details-block"><span class="label"><i class="fas fa-info-circle"></i> حالة الطلب</span><div class="value" id="result-status"></div></div>
+                    <div class="field"><span class="label"><i class="fas fa-user"></i> الاسم الكامل</span><span class="value" id="result-customer-name"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-calendar-alt"></i> تاريخ الطلب</span><span class="value" id="result-created-at"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-envelope"></i> البريد الإلكتروني</span><span class="value" id="result-email"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-phone"></i> رقم الهاتف</span><span class="value" id="result-phone"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-credit-card"></i> طريقة الدفع</span><span class="value" id="result-payment-method"></span></div>
+                    <div class="field"><span class="label"><i class="fas fa-money-bill-wave"></i> السعر</span><span class="value" id="result-price"></span></div>
+                    <div class="field details-block full-width"><span class="label"><i class="fas fa-info-circle"></i> حالة الطلب</span><div class="value" id="result-status"></div></div>
+                    <div class="field full-width"><span class="label"><i class="fas fa-list-alt"></i> تفاصيل الخدمة</span><p class="value" id="result-service-details" style="white-space: pre-wrap;"></p></div>
+                    <div class="field full-width" id="links-container">
+                        <span class="label"><i class="fas fa-link"></i> الروابط المرفقة</span>
+                        <div id="result-links" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-
+    
     <footer class="main-footer">
         <div class="footer-content">
-            <div class="footer-section"><h3>المكتب الرقمي</h3><p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية.</p></div>
-            <div class="footer-section"><h3>روابط مهمة</h3><ul><li><a href="services.html">الخدمات</a></li><li><a href="contact.html">اتصل بنا</a></li><li><a href="faq.html">الأسئلة الشائعة</a></li></ul></div>
-            <div class="footer-section"><h3>قانوني</h3><ul><li><a href="privacy-policy.html">سياسة الخصوصية</a></li><li><a href="terms-and-conditions.html">الشروط والأحكام</a></li></ul></div>
-            <div class="footer-section"><h3>انضم لنشرتنا الإخبارية</h3><p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p><form id="newsletter-form" class="newsletter-form"><input type="email" placeholder="أدخل بريدك الإلكتروني" required><button type="submit">اشترك</button></form></div>
+            <div class="footer-section">
+                <h3 class="footer-title">khadamatmaroc</h3>
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">روابط مهمة</h3>
+                <ul>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="services.html">جميع الخدمات</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p></div>
+        <div class="footer-bottom"><p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p></div>
     </footer>
 
-<script type="module">
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- نقاط الفحص الأولية ---
-    console.log("1. الصفحة جاهزة، جاري انتظار المصادقة من auth.js...");
-    
-    const ordersContainer = document.getElementById('orders-container');
-    const loadingState = document.getElementById('loading-state');
-    const emptyState = document.getElementById('empty-state');
-    const errorState = document.getElementById('error-state');
-    
-    async function loadUserOrders(user) {
-        console.log("3. تم استدعاء دالة `loadUserOrders` للمستخدم:", user);
+    // --- Supabase Configuration ---
+    const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        if (!user || !user.email) {
-            console.warn("المستخدم غير مسجل دخوله أو لا يحتوي على بريد إلكتروني.");
-            loadingState.style.display = 'none';
-            ordersContainer.innerHTML = `<div class="empty-state"><h3>عليك تسجيل الدخول لعرض طلباتك</h3><p>للاطلاع على طلباتك السابقة وتتبع حالاتها، يرجى تسجيل الدخول.</p><a href="login.html" class="btn btn-primary" style="margin-top: 15px;">تسجيل الدخول</a></div>`;
-            return;
-        }
-
-        try {
-            const supabaseClient = window.supabase;
-            const userEmail = user.email;
-
-            console.log(`4. جاري إرسال طلب إلى Supabase لجلب الطلبات الخاصة بـ: ${userEmail}`);
+    // --- Authentication Logic ---
+    const navbarActions = document.getElementById('navbar-actions');
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+        navbarActions.innerHTML = ''; // Clear previous buttons
+        if (session) {
+            // User is logged in
+            const dashboardButton = document.createElement('a');
+            dashboardButton.href = '/dashboard.html';
+            dashboardButton.className = 'btn-nav btn-nav-primary';
+            dashboardButton.textContent = 'لوحة التحكم';
             
-            const { data: orders, error } = await supabaseClient
-                .from('orders') 
-                .select('*') 
-                .eq('email', userEmail)
-                .order('created_at', { ascending: false });
+            const logoutButton = document.createElement('button');
+            logoutButton.className = 'btn-nav btn-nav-secondary';
+            logoutButton.textContent = 'تسجيل الخروج';
+            logoutButton.onclick = async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = '/index.html';
+            };
+            
+            navbarActions.appendChild(dashboardButton);
+            navbarActions.appendChild(logoutButton);
+        } else {
+            // User is logged out
+            const loginButton = document.createElement('a');
+            loginButton.href = '/login.html';
+            loginButton.className = 'btn-nav btn-nav-secondary';
+            loginButton.textContent = 'تسجيل الدخول';
 
-            // --- الفحص رقم 5 (الأكثر أهمية) ---
-            console.log("5. تم استلام الرد من Supabase:", { orders, error });
+            const registerButton = document.createElement('a');
+            registerButton.href = '/register.html';
+            registerButton.className = 'btn-nav btn-nav-primary';
+            registerButton.textContent = 'إنشاء حساب';
 
-            if (error) {
-                console.error("حدث خطأ من Supabase:", error);
+            navbarActions.appendChild(loginButton);
+            navbarActions.appendChild(registerButton);
+        }
+    });
+    
+    // --- Tracking Logic ---
+    const trackForm = document.getElementById('track-form');
+    const orderIdInput = document.getElementById('order-id-input');
+    const trackButton = document.getElementById('track-button');
+    const loadingMessage = document.getElementById('loading-message');
+    const notFoundMessage = document.getElementById('not-found-message');
+    const resultArea = document.getElementById('result-area');
+
+    trackForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const orderId = orderIdInput.value.trim();
+        if (!orderId) return;
+
+        resultArea.classList.remove('visible');
+        notFoundMessage.style.display = 'none';
+        loadingMessage.style.display = 'block';
+        trackButton.classList.add('loading');
+        trackButton.disabled = true;
+        
+        try {
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('public_order_id', orderId)
+                .single();
+
+            if (error && error.code !== 'PGRST116') {
                 throw error;
             }
 
-            loadingState.style.display = 'none';
-            ordersContainer.innerHTML = ''; 
-
-            if (orders && orders.length > 0) {
-                console.log(`تم العثور على ${orders.length} طلب.`);
-                orders.forEach((order, index) => {
-                    const card = createOrderCard(order);
-                    card.style.animationDelay = `${index * 0.1}s`;
-                    ordersContainer.appendChild(card);
-                });
+            if (data) {
+                displayOrderDetails(data);
             } else {
-                console.log("لم يتم العثور على أي طلبات لهذا البريد الإلكتروني.");
-                ordersContainer.appendChild(emptyState);
-                emptyState.style.display = 'block';
+                notFoundMessage.textContent = `لم يتم العثور على طلب بالرقم "${orderId}". يرجى التحقق من الرقم والمحاولة مرة أخرى.`;
+                notFoundMessage.style.display = 'block';
             }
 
         } catch (err) {
-            console.error('فشل في جلب الطلبات:', err);
-            loadingState.style.display = 'none';
-            ordersContainer.appendChild(errorState);
-            errorState.style.display = 'block';
+            console.error('Error fetching order:', err);
+            notFoundMessage.textContent = 'حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى لاحقًا.';
+            notFoundMessage.style.display = 'block';
+        } finally {
+            loadingMessage.style.display = 'none';
+            trackButton.classList.remove('loading');
+            trackButton.disabled = false;
         }
-    }
-
-    // (دوال createOrderCard و translateStatus تبقى كما هي بدون تغيير)
-    function translateStatus(status) {
-        const statusKey = (status || 'pending').toLowerCase();
-        switch (statusKey) {
-            case 'قيد المراجعة': case 'pending': return { text: 'قيد المراجعة', colorClass: 'orange' };
-            case 'جاري التنفيذ': case 'processing': return { text: 'قيد التنفيذ', colorClass: 'orange' };
-            case 'مكتمل': case 'completed': return { text: 'مكتمل', colorClass: 'green' };
-            case 'ملغي': case 'cancelled': case 'rejected': return { text: 'ملغي', colorClass: 'red' };
-            default: return { text: status, colorClass: 'orange' };
-        }
-    }
-    function createOrderCard(order) {
-        const card = document.createElement('div');
-        card.className = 'order-card';
-        const statusInfo = translateStatus(order.status);
-        const orderDate = new Date(order.created_at).toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn' });
-        const formattedPrice = order.price ? `${Number(order.price).toLocaleString('en-US')} د.م` : 'غير محدد';
-        card.innerHTML = `<div class="order-card-header"><h3>${order.service_name||'خدمة غير محددة'}</h3><span class="order-id">#${order.public_order_id||order.id}</span></div><div class="order-card-body"><div class="info-item"><span class="label">تاريخ الطلب</span><span class="value">${orderDate}</span></div><div class="info-item"><span class="label">المبلغ الإجمالي</span><span class="value">${formattedPrice}</span></div><div class="info-item"><span class="label">طريقة الدفع</span><span class="value">${order.payment_method||'غير محدد'}</span></div><div class="info-item" style="grid-column: 1 / -1;"><span class="label">حالة الطلب</span><span class="value"><span class="status-badge ${statusInfo.colorClass}">${statusInfo.text}</span></span></div>${(statusInfo.text==='ملغي'&&order.rejection_reason)?`<div class="rejection-reason"><strong>سبب الإلغاء:</strong><p>${order.rejection_reason}</p></div>`:''}</div>`;
-        return card;
-    }
-
-    const checkAuthReady = setInterval(() => {
-        if (window.authReady) {
-            console.log("2. المصادقة جاهزة! `window.authReady` أصبحت true.");
-            clearInterval(checkAuthReady);
-            loadUserOrders(window.currentUser);
-        }
-    }, 200);
+    });
     
-    const currentYearEl = document.getElementById('current-year');
-    if(currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+    function displayOrderDetails(order) {
+        // Populate all fields
+        document.getElementById('result-service-name').textContent = order.service_name || 'خدمة غير محددة';
+        document.getElementById('result-order-id').textContent = order.public_order_id || order.id;
+        document.getElementById('result-customer-name').textContent = order.customer_name || 'غير محدد';
+        document.getElementById('result-email').textContent = order.email || 'غير محدد';
+        document.getElementById('result-phone').textContent = order.phone || 'غير محدد';
+        document.getElementById('result-payment-method').textContent = order.payment_method || 'غير محدد';
+        document.getElementById('result-price').textContent = order.price ? `${Number(order.price).toLocaleString('en-US')} د.م` : 'غير محدد';
+        document.getElementById('result-service-details').textContent = order.service_details || 'لا توجد تفاصيل إضافية.';
+        document.getElementById('result-created-at').textContent = new Date(order.created_at).toLocaleString('ar-MA', {
+            dateStyle: 'full', timeStyle: 'short'
+        });
+        
+        // Populate status badge
+        const statusBadgeContainer = document.getElementById('result-status');
+        const statusClass = `status-${(order.status || '').replace(/\s+/g, '-')}`;
+        statusBadgeContainer.innerHTML = `<span class="status-badge ${statusClass}">${order.status || 'غير معروف'}</span>`;
+        
+        // Handle links
+        const linksContainer = document.getElementById('links-container');
+        const resultLinks = document.getElementById('result-links');
+        resultLinks.innerHTML = '';
+        let hasLinks = false;
+        
+        if(order.receipt_url) {
+            resultLinks.innerHTML += `<a href="${order.receipt_url}" target="_blank" class="btn-nav btn-nav-secondary">عرض الإيصال</a>`;
+            hasLinks = true;
+        }
+        if(order.attachment_url) {
+            resultLinks.innerHTML += `<a href="${order.attachment_url}" target="_blank" class="btn-nav btn-nav-secondary">تحميل المرفقات</a>`;
+            hasLinks = true;
+        }
+        if(order.optional_link) {
+            resultLinks.innerHTML += `<a href="${order.optional_link}" target="_blank" class="btn-nav btn-nav-secondary">رابط إضافي</a>`;
+            hasLinks = true;
+        }
+        
+        linksContainer.style.display = hasLinks ? 'block' : 'none';
+        
+        updateProgressTracker(order.status);
+        resultArea.classList.add('visible');
+    }
+    
+    function updateProgressTracker(status) {
+        const statuses = ['قيد المراجعة', 'جاري التنفيذ', 'مكتمل'];
+        let currentStatusIndex = statuses.indexOf(status);
+
+        // Handle cases where status might be different, e.g., 'ملغي'
+        if(status === 'ملغي') {
+             currentStatusIndex = -1; // No progress for cancelled orders
+        }
+
+        const steps = [
+            document.getElementById('step1'),
+            document.getElementById('step2'),
+            document.getElementById('step3'),
+        ];
+        
+        steps.forEach((step, index) => {
+            step.classList.remove('active', 'completed');
+            if (index < currentStatusIndex) {
+                step.classList.add('completed');
+            } else if (index === currentStatusIndex) {
+                step.classList.add('completed', 'active');
+            }
+        });
+        
+        const progressLine = document.getElementById('progress-line');
+        if (currentStatusIndex >= 0) {
+            const percentage = (currentStatusIndex / (statuses.length - 1)) * 100;
+            progressLine.style.width = `${percentage}%`;
+        } else {
+            progressLine.style.width = '0%';
+        }
+    }
 });
 </script>
 </body>
