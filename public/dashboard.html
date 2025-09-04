@@ -393,16 +393,47 @@
                 }
             }
 
-            async function enable2FA() {
+async function enable2FA() {
+                showMessage(messageEl, 'info', '...جاري تجهيز رمز QR'); // رسالة توضيحية للمستخدم
+                
+                // --- ✨✨ هذا هو الجزء الجديد والمهم الذي يحل المشكلة ✨✨ ---
+                // أولاً، نقوم بتنظيف أي محاولات تفعيل قديمة وغير مكتملة
+                try {
+                    const { data: factors, error: listError } = await supabaseClient.auth.mfa.listFactors();
+                    if (listError) throw listError;
+
+                    if (factors && factors.totp) {
+                        const unverifiedFactors = factors.totp.filter(factor => factor.status === 'unverified');
+                        for (const factor of unverifiedFactors) {
+                            console.log(`Cleaning up unverified factor: ${factor.id}`);
+                            await supabaseClient.auth.mfa.unenroll({ factorId: factor.id });
+                        }
+                    }
+                } catch (cleanupError) {
+                    console.error("Error cleaning up old 2FA factors:", cleanupError);
+                    showMessage(messageEl, 'error', 'حدث خطأ أثناء التجهيز، يرجى المحاولة مرة أخرى.');
+                    return;
+                }
+                // --- نهاية الجزء الجديد ---
+
+                // الآن، نبدأ عملية التفعيل الجديدة بأمان
                 const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp' });
-                if (error) { showMessage(messageEl, 'error', `خطأ: ${error.message}`); return; }
+                if (error) { 
+                    showMessage(messageEl, 'error', `خطأ: ${error.message}`); 
+                    return; 
+                }
+
                 factorId = data.id;
                 qrEl.innerHTML = `<img src="${data.totp.qr_code}" alt="QR Code">`;
                 formEl.classList.remove('hidden');
                 statusEl.classList.add('hidden');
+                messageEl.classList.add('hidden'); // إخفاء الرسالة بعد النجاح
             }
             
             verifyBtn.onclick = async () => {
+// ... (الكود التالي يبقى كما هو) ...
+
+
                 const code = codeInput.value;
                 const { error: challengeError } = await supabaseClient.auth.mfa.challenge({ factorId });
                 if (challengeError) { showMessage(messageEl, 'error', `خطأ: ${challengeError.message}`); return; }
