@@ -4,15 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المراجعات - لوحة التحكم</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-<script src="../auth.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <style>
-        body { font-family: 'Cairo', 'Tahoma', sans-serif; }
+        body { font-family: 'Tajawal', 'Tahoma', sans-serif; }
         .sidebar-link { display: flex; align-items: center; padding: 0.75rem 1rem; border-radius: 0.5rem; transition: background-color 0.2s, color 0.2s; }
         .sidebar-link:hover { background-color: #f3f4f6; }
         .sidebar-link.active { background-color: #4f46e5; color: white; }
@@ -24,12 +26,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75" style="display: none;">
-        <!-- Password protection code -->
-    </div>
+    <div id="password-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75">
+        </div>
 
     <div id="dashboard-content" class="hidden md:flex h-screen">
-        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b border-gray-200">
                 <div class="flex items-center justify-between h-20 px-8">
@@ -54,7 +54,6 @@
                                 </tr>
                             </thead>
                             <tbody id="reviews-table-body" class="divide-y divide-gray-100">
-                                <!-- Loading State -->
                                 <tr>
                                     <td colspan="5" class="p-8 text-center text-gray-500">
                                         <div class="flex justify-center items-center space-x-2 space-x-reverse">
@@ -70,153 +69,145 @@
             </main>
         </div>
 
-        <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
             <div class="flex items-center justify-center h-20 border-b border-gray-200">
-                <h1 class="text-2xl font-bold text-indigo-600">المسؤول</h1>
+                <h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1>
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <a href="dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard" class="w-5 h-5 ml-3"></i><span>لوحة التحكم</span></a>
                 <a href="orders.html" class="sidebar-link"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3"></i><span>الطلبات</span></a>
-                <a href="users.html" class="sidebar-link"><i data-lucide="users" class="w-5 h-5 ml-3"></i><span>المستخدمون</span></a>
-                <a href="manage-services.html" class="sidebar-link"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span></a>
                 <a href="manage-reviews.html" class="sidebar-link active"><i data-lucide="star" class="w-5 h-5 ml-3"></i><span>المراجعات</span></a>
-                <a href="manage-blog.html" class="sidebar-link"><i data-lucide="file-text" class="w-5 h-5 ml-3"></i><span>المدونة</span></a>
-                <a href="support-log.html" class="sidebar-link"><i data-lucide="life-buoy" class="w-5 h-5 ml-3"></i><span>الدعم الفني</span></a>
-                <a href="settings.html" class="sidebar-link"><i data-lucide="settings" class="w-5 h-5 ml-3"></i><span>الإعدادات</span></a>
-            </nav>
+                </nav>
         </aside>
     </div>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <script src="admin-auth.js"></script>
+    
+    <script src="admin-auth.js"></script> 
+    
    <script>
-    function initializePage() {
-        lucide.createIcons();
-        const WORKER_URL = 'https://orders-worker.radwanyhassan75.workers.dev';
-        const tableBody = document.getElementById('reviews-table-body');
-        const reviewsCountEl = document.getElementById('reviews-count');
-
-        function renderStars(rating) {
-            let starsHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                starsHTML += `<i class="fas fa-star ${i <= rating ? '' : 'empty'}"></i>`;
-            }
-            return `<div class="star-rating">${starsHTML}</div>`;
-        }
-
-        async function fetchReviews() {
-            try {
-                const response = await fetch(`${WORKER_URL}/api/admin/reviews`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'فشل تحميل المراجعات');
-                }
-                const reviews = await response.json();
-                renderReviews(reviews);
-            } catch (error) {
-                console.error('Error fetching reviews:', error);
-                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">خطأ في تحميل المراجعات: ${error.message}</td></tr>`;
-            }
-        }
-
-        function renderReviews(reviews) {
-            tableBody.innerHTML = '';
-            reviewsCountEl.textContent = `${reviews.length} مراجعة`;
-
-            if (reviews.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500">لا توجد مراجعات حاليًا.</td></tr>`;
-                return;
-            }
-
-            reviews.forEach(review => {
-                const statusClass = review.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
-                const statusText = review.status === 'approved' ? 'موافق عليه' : 'قيد المراجعة';
-                
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-gray-50 transition-colors';
-                row.dataset.reviewId = review.id;
-
-                row.innerHTML = `
-                    <td class="p-4">
-                        <div class="font-semibold text-gray-900">${review.customerName}</div>
-                        <div class="text-xs text-gray-500">${review.serviceName}</div>
-                    </td>
-                    <td class="p-4">${renderStars(review.rating)}</td>
-                    <td class="p-4 text-gray-600 max-w-xs truncate" title="${review.comment || ''}">${review.comment || 'لا يوجد تعليق'}</td>
-                    <td class="p-4">
-                        <span class="status-badge px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${statusText}</span>
-                    </td>
-                    <td class="p-4 text-center">
-                        <div class="flex justify-center items-center space-x-2 space-x-reverse">
-                            ${review.status !== 'approved' ? `<button class="approve-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-green-600 rounded-md transition" title="موافقة"><i data-lucide="check-circle" class="w-4 h-4"></i></button>` : ''}
-                            <button class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- ✨✨ الكود الجديد والمعدل هنا ✨✨ ---
+        // This function contains all the logic for the page
+        async function initializePage(supabaseClient) {
             lucide.createIcons();
-            addEventListeners();
-        }
+            
+            const tableBody = document.getElementById('reviews-table-body');
+            const reviewsCountEl = document.getElementById('reviews-count');
 
-        function addEventListeners() {
-            document.querySelectorAll('.approve-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const row = e.currentTarget.closest('tr');
-                    const reviewId = row.dataset.reviewId;
+            function renderStars(rating) {
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    starsHTML += `<i class="fas fa-star ${i <= rating ? '' : 'empty'}"></i>`;
+                }
+                return `<div class="star-rating">${starsHTML}</div>`;
+            }
+
+            async function fetchReviews() {
+                try {
+                    const { data: reviews, error } = await supabaseClient
+                        .from('reviews')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (error) throw error;
+                    renderReviews(reviews);
+                } catch (error) {
+                    console.error('Error fetching reviews:', error);
+                    tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-500">خطأ في تحميل المراجعات: ${error.message}</td></tr>`;
+                }
+            }
+
+            function renderReviews(reviews) {
+                tableBody.innerHTML = '';
+                reviewsCountEl.textContent = `${reviews.length} مراجعة`;
+
+                if (reviews.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-500">لا توجد مراجعات حاليًا.</td></tr>`;
+                    return;
+                }
+
+                reviews.forEach(review => {
+                    const isApproved = review.is_approved;
+                    const statusClass = isApproved ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+                    const statusText = isApproved ? 'موافق عليه' : 'قيد المراجعة';
                     
-                    try {
-                        const response = await fetch(`${WORKER_URL}/api/admin/reviews/${reviewId}`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ status: 'approved' })
-                        });
-                        if (!response.ok) throw new Error('فشل الموافقة على المراجعة');
-                        const statusBadge = row.querySelector('.status-badge');
-                        statusBadge.textContent = 'موافق عليه';
-                        statusBadge.className = 'status-badge px-2.5 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800';
-                        e.currentTarget.remove();
-                    } catch (error) {
-                        console.error('Approve error:', error);
-                        alert(`خطأ في الموافقة على المراجعة: ${error.message}`);
-                    }
-                });
-            });
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const row = e.currentTarget.closest('tr');
-                    const reviewId = row.dataset.reviewId;
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 transition-colors';
+                    row.dataset.reviewId = review.id;
 
-                    if (confirm('هل أنت متأكد من حذف هذه المراجعة؟')) {
+                    row.innerHTML = `
+                        <td class="p-4">
+                            <div class="font-semibold text-gray-900">${review.customer_name || 'غير معروف'}</div>
+                            <div class="text-xs text-gray-500">${review.service_name || 'خدمة غير محددة'}</div>
+                        </td>
+                        <td class="p-4">${renderStars(review.rating)}</td>
+                        <td class="p-4 text-gray-600 max-w-xs truncate" title="${review.comment || ''}">${review.comment || 'لا يوجد تعليق'}</td>
+                        <td class="p-4">
+                            <span class="status-badge px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${statusText}</span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center items-center space-x-2 space-x-reverse">
+                                ${!isApproved ? `<button class="approve-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-green-600 rounded-md transition" title="موافقة"><i data-lucide="check-circle" class="w-4 h-4"></i></button>` : ''}
+                                <button class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                lucide.createIcons();
+                addEventListeners(supabaseClient);
+            }
+
+            function addEventListeners(supabaseClient) {
+                document.querySelectorAll('.approve-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const row = e.currentTarget.closest('tr');
+                        const reviewId = row.dataset.reviewId;
                         try {
-                            const response = await fetch(`${WORKER_URL}/api/admin/reviews/${reviewId}`, {
-                                method: 'DELETE'
-                            });
-                            if (!response.ok) throw new Error('فشل حذف المراجعة');
-                            row.remove();
-                            reviewsCountEl.textContent = `${document.querySelectorAll('#reviews-table-body tr').length} مراجعة`;
+                            const { error } = await supabaseClient.from('reviews').update({ is_approved: true }).eq('id', reviewId);
+                            if (error) throw error;
+                            const statusBadge = row.querySelector('.status-badge');
+                            statusBadge.textContent = 'موافق عليه';
+                            statusBadge.className = 'status-badge px-2.5 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800';
+                            e.currentTarget.remove();
                         } catch (error) {
-                            console.error('Delete error:', error);
-                            alert(`خطأ في حذف المراجعة: ${error.message}`);
+                            alert(`خطأ في الموافقة على المراجعة: ${error.message}`);
                         }
-                    }
+                    });
                 });
-            });
-        }
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const row = e.currentTarget.closest('tr');
+                        const reviewId = row.dataset.reviewId;
+                        if (confirm('هل أنت متأكد من حذف هذه المراجعة؟')) {
+                            try {
+                                const { error } = await supabaseClient.from('reviews').delete().eq('id', reviewId);
+                                if (error) throw error;
+                                row.remove();
+                                reviewsCountEl.textContent = `${document.querySelectorAll('#reviews-table-body tr').length} مراجعة`;
+                            } catch (error) {
+                                alert(`خطأ في حذف المراجعة: ${error.message}`);
+                            }
+                        }
+                    });
+                });
+            }
 
-        if (typeof showContent === 'function') {
-            window.initializePage = initializePage;
-        } else {
+            // Initial fetch
             fetchReviews();
         }
-    }
 
-    window.addEventListener('DOMContentLoaded', initializePage);
+        // This smart code waits for admin-auth.js to be ready
+        const checkAuthReady = setInterval(() => {
+            // Check if the supabaseClient is created by admin-auth.js
+            if (window.supabaseClient) {
+                clearInterval(checkAuthReady); // Stop checking
+                // Now that auth is ready, run the page logic
+                initializePage(window.supabaseClient);
+            }
+        }, 100); // Check every 100ms
+    });
 </script>
 </body>
 </html>

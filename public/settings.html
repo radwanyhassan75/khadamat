@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إعدادات الحساب - khadamatmaroc</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <header class="main-header bg-white shadow-sm sticky top-0 z-50">
+        <nav class="navbar container mx-auto flex justify-between items-center p-4">
+            <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc" class="h-14"></a>
+            <ul class="nav-links hidden md:flex space-x-8 space-x-reverse font-bold">
+                <li><a href="index.html" class="hover:text-blue-600">الرئيسية</a></li>
+                <li><a href="services.html" class="hover:text-blue-600">الخدمات</a></li>
+                <li><a href="my-orders.html" class="hover:text-blue-600">طلباتي</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-8">إعدادات الحساب</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Card: Change Password -->
+            <div class="card space-y-4">
+                <h2 class="text-xl font-bold border-b pb-3">تغيير كلمة المرور</h2>
+                <div id="password-message" class="hidden p-3 rounded-md text-center"></div>
+                <form id="change-password-form" class="space-y-4">
+                    <div>
+            <div class="bg-white rounded-xl shadow-md p-6 space-y-4">
+                        <input type="password" id="new-password" class="form-input" required minlength="6">
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block font-medium">تأكيد كلمة المرور الجديدة</label>
+                        <input type="password" id="confirm-password" class="form-input" required minlength="6">
+                        <input type="password" id="new-password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required minlength="6">
+                    <button type="submit" id="update-password-btn" class="btn-primary w-full">تحديث كلمة المرور</button>
+                </form>
+            </div>
+                        <input type="password" id="confirm-password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required minlength="6">
+            <!-- Card: Two-Factor Authentication (2FA) -->
+                    <button type="submit" id="update-password-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors w-full">تحديث كلمة المرور</button>
+                <h2 class="text-xl font-bold border-b pb-3">المصادقة الثنائية (2FA)</h2>
+                <p class="text-sm text-gray-600">أضف طبقة أمان إضافية لحسابك باستخدام تطبيق مصادقة مثل Google Authenticator.</p>
+                <div id="2fa-message" class="hidden p-3 rounded-md text-center"></div>
+                
+                <!-- 2FA Status and Actions -->
+                <div id="2fa-status-container" class="text-center">
+                    <!-- This will be populated by JS -->
+                </div>
+
+                <!-- 2FA Enrollment/Verification Form -->
+                <div id="2fa-form-container" class="hidden space-y-4">
+                    <div id="2fa-qr-code" class="mx-auto bg-white p-2 border rounded-lg w-48 h-48"></div>
+                    <div>
+                        <label for="2fa-code" class="block font-medium">أدخل الرمز من تطبيق المصادقة</label>
+                        <input type="text" id="2fa-code" class="form-input text-center tracking-widest" placeholder="123456">
+                    </div>
+                    <button id="verify-2fa-btn" class="btn-primary w-full">تحقق وتفعيل</button>
+                </div>
+            </div>
+                        <input type="text" id="2fa-code" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-center tracking-widest" placeholder="123456">
+    </main>
+                    <button id="verify-2fa-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors w-full">تحقق وتفعيل</button>
+    <footer class="main-footer bg-gray-800 text-white mt-12 p-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+            const { createClient } = supabase;
+            const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // --- Auth Check ---
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (!session) {
+                    window.location.href = '/login.html';
+                } else {
+                    initializePage(session.user);
+                }
+            });
+
+            function initializePage(user) {
+                // --- Password Change Logic ---
+                const passwordForm = document.getElementById('change-password-form');
+                const passwordMessage = document.getElementById('password-message');
+                passwordForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const newPassword = document.getElementById('new-password').value;
+                    const confirmPassword = document.getElementById('confirm-password').value;
+
+                    if (newPassword !== confirmPassword) {
+                        showMessage(passwordMessage, 'error', 'كلمتا المرور غير متطابقتين.');
+                        return;
+                    }
+
+                    const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+                    if (error) {
+                        showMessage(passwordMessage, 'error', `خطأ: ${error.message}`);
+                    } else {
+                        showMessage(passwordMessage, 'success', 'تم تحديث كلمة المرور بنجاح!');
+                        passwordForm.reset();
+                    }
+                });
+
+                // --- 2FA Logic ---
+                const statusContainer = document.getElementById('2fa-status-container');
+                const formContainer = document.getElementById('2fa-form-container');
+                const qrCodeContainer = document.getElementById('2fa-qr-code');
+                const verifyBtn = document.getElementById('verify-2fa-btn');
+                const codeInput = document.getElementById('2fa-code');
+                const twoFAMessage = document.getElementById('2fa-message');
+                let factorId = null;
+
+                async function check2FAStatus() {
+                    const { data, error } = await supabaseClient.auth.mfa.listFactors();
+                    if (error) {
+                        showMessage(twoFAMessage, 'error', 'فشل في التحقق من حالة المصادقة الثنائية.');
+                        return;
+                    }
+                    
+                    statusContainer.innerHTML = '';
+                    formContainer.classList.add('hidden');
+                    
+                    if (data.totp.length > 0) {
+                        factorId = data.totp[0].id;
+                        statusContainer.innerHTML = `
+                            <p class="text-green-600 font-bold">المصادقة الثنائية مُفعّلة.</p>
+                            <button id="disable-2fa-btn" class="btn-danger mt-2">إلغاء التفعيل</button>
+                        `;
+                        document.getElementById('disable-2fa-btn').addEventListener('click', disable2FA);
+                    } else {
+                        statusContainer.innerHTML = `
+                            <p class="text-gray-600">المصادقة الثنائية غير مُفعّلة.</p>
+                            <button id="enable-2fa-btn" class="btn-primary mt-2">تفعيل الآن</button>
+                        `;
+                        document.getElementById('enable-2fa-btn').addEventListener('click', enable2FA);
+                    }
+                }
+
+                async function enable2FA() {
+                    const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp' });
+                    if (error) {
+                        showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`);
+                        return;
+                    }
+                    factorId = data.id;
+                    qrCodeContainer.innerHTML = `<img src="${data.totp.qr_code}" alt="QR Code">`;
+                    formContainer.classList.remove('hidden');
+                    statusContainer.classList.add('hidden');
+                }
+                
+                verifyBtn.addEventListener('click', async () => {
+                    const code = codeInput.value;
+                    const { error: challengeError } = await supabaseClient.auth.mfa.challenge({ factorId: factorId });
+                    if (challengeError) { showMessage(twoFAMessage, 'error', `خطأ: ${challengeError.message}`); return; }
+
+                    const { error: verifyError } = await supabaseClient.auth.mfa.verify({ factorId: factorId, code: code });
+                    if (verifyError) {
+                        showMessage(twoFAMessage, 'error', 'الرمز غير صحيح. يرجى المحاولة مرة أخرى.');
+                    } else {
+                        showMessage(twoFAMessage, 'success', 'تم تفعيل المصادقة الثنائية بنجاح!');
+                        statusContainer.classList.remove('hidden');
+                        check2FAStatus();
+                    }
+                });
+
+                async function disable2FA() {
+                    const { error } = await supabaseClient.auth.mfa.unenroll({ factorId: factorId });
+                    if (error) {
+                        showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`);
+                    } else {
+                        showMessage(twoFAMessage, 'success', 'تم إلغاء تفعيل المصادقة الثنائية.');
+                        check2FAStatus();
+                    }
+                }
+
+                function showMessage(element, type, message) {
+                    element.textContent = message;
+                    element.className = `p-3 rounded-md text-center ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+                    element.classList.remove('hidden');
+                }
+
+                check2FAStatus();
+            }
+        });
+    </script>
+</body>
+</html>

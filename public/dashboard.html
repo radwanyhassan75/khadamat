@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - المكتب الرقمي</title>
+    <title>لوحة التحكم - khadamatmaroc</title>
+        <script type="module" src="auth.js"></script>
+    <script src="layout.js"></script>
+    <link rel="stylesheet" href="layout.css"></link>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <script type="module" src="auth.js"></script>
-    <script src="layout.js"></script>
-    <link rel="stylesheet" href="layout.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
 <style>
     /* ==================================================================
-       PROFESSIONAL DASHBOARD STYLES (v2.0)
-       - Fully Responsive & Polished -
+        PROFESSIONAL DASHBOARD STYLES (v3.0)
+        - Fully Integrated & Polished -
     ================================================================== */
 
     /* --- General Variables & Body --- */
     :root {
         --primary-color: #0056b3;
         --primary-hover: #00458e;
+        --danger-color: #dc3545;
+        --danger-hover: #b02a37;
+        --success-color: #198754;
         --light-bg: #f8f9fa;
         --text-dark: #2c3e50;
         --text-muted: #6c757d;
         --border-color: #dee2e6;
         --card-shadow: 0 8px 30px rgba(0,0,0,0.07);
+    }
+    
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Tajawal', sans-serif;
+        background-color: var(--light-bg);
+        color: var(--text-dark);
+        margin: 0;
     }
 
     .dashboard-wrapper {
@@ -34,6 +45,20 @@
         margin: 40px auto;
         padding: 0 20px;
     }
+
+    /* --- Header & Footer (Placeholder for your layout.js) --- */
+    .main-header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
+    .navbar-logo img { height: 60px; }
+    .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 1rem; }
+    .navbar-actions { display: flex; gap: 10px; }
+    .btn-nav { padding: 8px 16px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; }
+    .btn-nav-primary { background-color: var(--primary-color); color: white; }
+    .btn-nav-secondary { background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+    
+    .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+    .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
 
     /* --- Main Dashboard Layout --- */
     .dashboard-layout {
@@ -46,190 +71,105 @@
     /* --- Sidebar --- */
     .sidebar {
         background-color: white;
-        border-radius: 16px; /* Softer corners */
+        border-radius: 16px;
         box-shadow: var(--card-shadow);
         padding: 25px;
         position: sticky;
-        top: 110px; /* Adjusted for standard header height */
+        top: 120px; 
     }
-
     .sidebar-header {
-        text-align: center;
-        margin-bottom: 30px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 20px;
+        text-align: center; margin-bottom: 30px;
+        border-bottom: 1px solid var(--border-color); padding-bottom: 20px;
     }
-
     .avatar-wrapper img {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 4px solid var(--primary-color);
-        object-fit: cover;
-        background-color: var(--light-bg);
+        width: 120px; height: 120px; border-radius: 50%;
+        border: 4px solid var(--primary-color); object-fit: cover; background-color: var(--light-bg);
     }
-
     .sidebar-header h3 {
-        margin: 15px 0 0;
-        font-size: 1.4rem;
-        color: var(--text-dark);
-        /* ✅ Ensures long names/emails never break the layout */
-        word-wrap: break-word;
-        word-break: break-all;
+        margin: 15px 0 0; font-size: 1.4rem; color: var(--text-dark);
+        word-wrap: break-word; word-break: break-all;
     }
-
-    .sidebar-nav ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
+    .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
     .sidebar-nav a {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 15px;
-        text-decoration: none;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        font-weight: 700;
-        margin-bottom: 8px;
-        cursor: pointer;
-        color: #555;
+        display: flex; align-items: center; gap: 15px; padding: 15px;
+        text-decoration: none; border-radius: 12px; transition: all 0.3s ease;
+        font-weight: 700; margin-bottom: 8px; cursor: pointer; color: #555;
     }
-
     .sidebar-nav a.active, .sidebar-nav a:hover {
-        background-color: var(--primary-color);
-        color: white;
+        background-color: var(--primary-color); color: white;
         transform: translateX(-5px) scale(1.02);
         box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
     }
-
-    .sidebar-nav a i {
-        width: 20px;
-        text-align: center;
-    }
+    .sidebar-nav a i { width: 20px; text-align: center; }
 
     /* --- Main Content Area --- */
-    .content-pane {
-        display: none;
-    }
-
-    .content-pane.active {
-        display: block;
-        animation: fadeIn 0.5s ease-out;
-    }
-
+    .content-pane { display: none; }
+    .content-pane.active { display: block; animation: fadeIn 0.5s ease-out; }
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
     .card {
-        background: white;
-        padding: 30px 35px; /* More padding */
-        border-radius: 16px; /* Softer corners */
-        box-shadow: var(--card-shadow);
+        background: white; padding: 30px 35px;
+        border-radius: 16px; box-shadow: var(--card-shadow);
         margin-bottom: 25px;
     }
-
     .card h2 {
-        border-bottom: 2px solid var(--primary-color);
-        padding-bottom: 15px;
-        margin: 0 0 30px 0; /* Adjusted margins */
-        font-size: 1.6rem;
+        border-bottom: 2px solid var(--primary-color); padding-bottom: 15px;
+        margin: 0 0 30px 0; font-size: 1.6rem;
     }
-
     .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 25px;
     }
-
     .info-item label {
-        display: block;
-        color: var(--text-muted);
-        margin-bottom: 8px;
-        font-size: 0.9rem;
+        display: block; color: var(--text-muted); margin-bottom: 8px; font-size: 0.9rem;
     }
-
     .info-item p {
-        margin: 0;
-        font-weight: 700;
-        font-size: 1rem;
-        color: var(--text-dark);
-        /* ✅ Ensures long info never breaks the layout */
-        word-wrap: break-word;
-        word-break: break-all;
+        margin: 0; font-weight: 700; font-size: 1rem; color: var(--text-dark);
+        word-wrap: break-word; word-break: break-all;
     }
-
-    /* --- Polished Form Styles --- */
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 700;
-        color: var(--text-dark);
-    }
-
+    .form-group { margin-bottom: 25px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-dark); }
     .form-group input {
-        width: 100%;
-        padding: 12px 15px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        box-sizing: border-box;
-        font-family: 'Cairo', sans-serif;
-        font-size: 1rem;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%; padding: 12px 15px; border: 1px solid var(--border-color);
+        border-radius: 8px; box-sizing: border-box; font-family: 'Tajawal', sans-serif;
+        font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    
-    .form-group input::placeholder {
-        color: #aaa;
-    }
-
-    /* ✅ Interactive glow effect on focus */
     .form-group input:focus {
-        outline: none;
-        border-color: var(--primary-color);
+        outline: none; border-color: var(--primary-color);
         box-shadow: 0 0 8px rgba(0, 86, 179, 0.2);
     }
+    .btn {
+        padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer;
+        font-weight: 700; font-size: 1rem; transition: all 0.3s ease;
+    }
+    .btn-primary { background-color: var(--primary-color); color: white; }
+    .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+    .btn-danger { background-color: var(--danger-color); color: white; }
+    .btn-danger:hover { background-color: var(--danger-hover); }
+
+    /* --- Ticket Styles --- */
+    .ticket-card { border-right: 5px solid var(--primary-color); }
+    .status-badge {
+        padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 700;
+    }
     
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 12px 30px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-        transform: translateY(-2px);
-    }
-
-    /* ==================================================================
-       📱 RESPONSIVE DESIGN FOR MOBILE & TABLETS
-    ================================================================== */
+    /* --- Responsive Design --- */
     @media (max-width: 992px) {
-        .dashboard-layout {
-            grid-template-columns: 1fr; /* Stack sidebar and content */
-        }
-        .sidebar {
-            position: static; /* Sidebar will scroll with the page on mobile */
-            top: auto;
-        }
+        .dashboard-layout { grid-template-columns: 1fr; }
+        .sidebar { position: static; top: auto; }
     }
-
 </style>
 </head>
 <body>
-    <div id="header-placeholder"></div>
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc"></a>
+            <div id="navbar-actions" class="navbar-actions"></div>
+        </nav>
+    </header>
 
     <main class="dashboard-wrapper">
         <div class="dashboard-layout">
@@ -242,13 +182,15 @@
                     <ul>
                         <li><a data-target="view-profile" class="active"><i class="fas fa-user-circle"></i> ملفي الشخصي</a></li>
                         <li><a data-target="edit-profile"><i class="fas fa-edit"></i> تعديل البيانات</a></li>
+                        <li><a data-target="security-settings"><i class="fas fa-shield-alt"></i> إعدادات الأمان</a></li>
+                        <li><a data-target="support-tickets"><i class="fas fa-life-ring"></i> تذاكر الدعم</a></li>
                         <li><a href="my-orders.html"><i class="fas fa-list-alt"></i> طلباتي</a></li>
-                        <li><a href="contact.html"><i class="fas fa-headset"></i> تواصل معنا</a></li>
-                        <li><a href="delete-account.html"><i class="fas fa-trash-alt"></i> حذف الحساب</a></li>
+                        <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
                     </ul>
                 </nav>
             </aside>
             <div class="main-content">
+                <!-- Pane 1: View Profile -->
                 <div id="view-profile" class="content-pane active">
                     <div class="card">
                         <h2>تفاصيل معلوماتي الشخصية</h2>
@@ -260,51 +202,113 @@
                     </div>
                 </div>
 
+                <!-- Pane 2: Edit Profile -->
                 <div id="edit-profile" class="content-pane">
                     <div class="card">
                         <h2>تعديل البيانات</h2>
                         <form id="profile-form">
-                            <div class="form-group">
-                                <label for="edit-name">الاسم الكامل</label>
-                                <input type="text" id="edit-name">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit-email">البريد الإلكتروني</label>
-                                <input type="email" id="edit-email">
-                            </div>
-                            <div class="form-group">
-                                <label for="edit-phone">رقم الهاتف</label>
-                                <input type="tel" id="edit-phone">
-                            </div>
+                            <div class="form-group"><label for="edit-name">الاسم الكامل</label><input type="text" id="edit-name"></div>
+                            <div class="form-group"><label for="edit-email">البريد الإلكتروني</label><input type="email" id="edit-email"></div>
+                            <div class="form-group"><label for="edit-phone">رقم الهاتف</label><input type="tel" id="edit-phone"></div>
                             <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
-                            <div id="profile-message" style="margin-top: 15px;"></div>
+                            <div id="profile-message" class="mt-4 text-center"></div>
                         </form>
+                    </div>
+                </div>
+
+                <!-- Pane 3: Security Settings -->
+                <div id="security-settings" class="content-pane">
+                    <div class="card">
+                        <h2>تغيير كلمة المرور</h2>
+                        <p class="text-sm text-muted mb-6">تعليمات: أدخل كلمة مرور جديدة قوية (6 أحرف على الأقل) ثم قم بتأكيدها.</p>
+                        <div id="password-message" class="mb-4 text-center"></div>
+                        <form id="change-password-form" class="space-y-4">
+                            <div class="form-group"><label for="new-password">كلمة المرور الجديدة</label><input type="password" id="new-password" class="form-group input" required minlength="6"></div>
+                            <div class="form-group"><label for="confirm-password">تأكيد كلمة المرور الجديدة</label><input type="password" id="confirm-password" class="form-group input" required minlength="6"></div>
+                            <button type="submit" class="btn btn-primary w-full">تحديث كلمة المرور</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>المصادقة الثنائية (2FA)</h2>
+                        <p class="text-sm text-muted mb-6">تعليمات: قم بمسح رمز QR باستخدام تطبيق مصادقة، ثم أدخل الرمز المكون من 6 أرقام للتفعيل.</p>
+                        <div id="2fa-message" class="mb-4 text-center"></div>
+                        <div id="2fa-status-container" class="text-center"></div>
+                        <div id="2fa-form-container" class="hidden space-y-4 mt-4">
+                            <div id="2fa-qr-code" class="mx-auto bg-white p-2 border rounded-lg w-48 h-48"></div>
+                            <div class="form-group"><label for="2fa-code">أدخل الرمز من التطبيق</label><input type="text" id="2fa-code" class="form-group input text-center tracking-widest" placeholder="123456"></div>
+                            <button id="verify-2fa-btn" class="btn btn-primary w-full">تحقق وتفعيل</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 4: Support Tickets -->
+                <div id="support-tickets" class="content-pane">
+                    <div class="card">
+                        <div class="flex justify-between items-center mb-6 border-b pb-4">
+                           <h2 class="!m-0 !p-0 !border-0">تذاكر الدعم</h2>
+                           <a href="contact.html" class="btn btn-primary">فتح تذكرة جديدة</a>
+                        </div>
+                        <div id="tickets-container" class="space-y-6">
+                            <div id="tickets-loading" class="text-center py-10"><p>جاري تحميل التذاكر...</p></div>
+                            <div id="tickets-empty" class="text-center py-10 hidden">
+                                <h3 class="text-xl font-bold mb-2">لا توجد لديك تذاكر دعم بعد.</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="footer-placeholder"></div>
+    <footer class="main-footer">
+        <div class="footer-bottom"><p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p></div>
+    </footer>
 
     
     <script type="module">
+        const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let currentUser = null;
 
-        // --- تحميل وعرض البيانات عند فتح الصفحة ---
-        async function initializeDashboard() {
-            const { data: { session } } = await window.supabase.auth.getSession();
+        // --- Auth Check & Page Initialization ---
+        async function checkAuth() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const navbarActions = document.getElementById('navbar-actions');
+            navbarActions.innerHTML = '';
+            
             if (!session) {
                 window.location.href = '/login.html';
                 return;
             }
+            
             currentUser = session.user;
             
-            // ملء بيانات الشريط الجانبي
+            // Render user-specific navbar
+            const dashboardButton = document.createElement('a');
+            dashboardButton.href = '/dashboard.html';
+            dashboardButton.className = 'btn-nav btn-nav-primary';
+            dashboardButton.textContent = 'لوحة التحكم';
+            navbarActions.appendChild(dashboardButton);
+
+            initializeDashboard();
+        }
+
+        async function initializeDashboard() {
             updateSidebar(currentUser);
-            
-            // ملء بيانات قسم عرض الملف الشخصي وقسم التعديل
             loadProfileData();
+            setupPaneSwitching();
+            setupProfileForm();
+            setupPasswordForm();
+            setup2FA();
+            loadSupportTickets();
+            
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = '/index.html';
+            });
         }
 
         function updateSidebar(user) {
@@ -314,79 +318,175 @@
         }
 
         async function loadProfileData() {
-            // ملء البيانات من نظام المصادقة مباشرة
             document.getElementById('view-email').textContent = currentUser.email;
             document.getElementById('edit-email').value = currentUser.email;
             
-            // جلب البيانات الإضافية من جدول 'users'
-            const { data: profile } = await supabase.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
-            
+            const { data: profile } = await supabaseClient.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
             const fullName = profile?.full_name || currentUser.user_metadata.full_name || 'لا يوجد';
             const phone = profile?.phone_number || 'لم يتم إضافته';
 
-            // ملء قسم العرض
             document.getElementById('view-name').textContent = fullName;
             document.getElementById('view-phone').textContent = phone;
-            
-            // ملء نموذج التعديل
             document.getElementById('edit-name').value = fullName;
             document.getElementById('edit-phone').value = profile?.phone_number || '';
         }
 
-        // --- ربط نموذج تعديل البيانات ---
-        document.getElementById('profile-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const messageDiv = document.getElementById('profile-message');
-            messageDiv.textContent = 'جارٍ الحفظ...';
-            messageDiv.style.color = 'gray';
-
-            const newName = document.getElementById('edit-name').value;
-            const newEmail = document.getElementById('edit-email').value;
-            const newPhone = document.getElementById('edit-phone').value;
-
-            // 1. تحديث البيانات في جدول public.users (الاسم ورقم الهاتف)
-            const { error: profileError } = await supabase.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
-
-            // 2. تحديث بيانات المصادقة (الاسم والبريد الإلكتروني)
-            const { data: { user: updatedUser }, error: authError } = await supabase.auth.updateUser({ 
-                email: newEmail,
-                data: { full_name: newName } 
-            });
-
-            if (profileError || authError) {
-                messageDiv.textContent = 'حدث خطأ أثناء تحديث البيانات.';
-                messageDiv.style.color = 'red';
-                console.error(profileError || authError);
-            } else {
-                messageDiv.textContent = 'تم تحديث بياناتك بنجاح!';
-                if (newEmail !== currentUser.email) {
-                    messageDiv.textContent += ' الرجاء التحقق من بريدك الإلكتروني الجديد لتأكيده.';
-                }
-                messageDiv.style.color = 'green';
-                currentUser = updatedUser; // تحديث بيانات المستخدم الحالية
-                updateSidebar(currentUser); // تحديث الشريط الجانبي بالاسم الجديد
-                loadProfileData(); // إعادة تحميل البيانات في الأقسام
-            }
-        });
-
-        // --- نظام التنقل بين الأقسام ---
-        const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
-        const contentPanes = document.querySelectorAll('.main-content .content-pane');
-        navLinks.forEach(link => {
-            link.addEventListener('click', e => {
+        function setupProfileForm() {
+            document.getElementById('profile-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const targetId = link.getAttribute('data-target');
-                
-                navLinks.forEach(item => item.classList.remove('active'));
-                contentPanes.forEach(pane => pane.classList.remove('active'));
-                
-                link.classList.add('active');
-                document.getElementById(targetId).classList.add('active');
-            });
-        });
+                const messageDiv = document.getElementById('profile-message');
+                messageDiv.textContent = 'جارٍ الحفظ...';
+                messageDiv.style.color = 'gray';
 
-        // --- تشغيل كل شيء ---
-        document.addEventListener('DOMContentLoaded', initializeDashboard);
+                const newName = document.getElementById('edit-name').value;
+                const newEmail = document.getElementById('edit-email').value;
+                const newPhone = document.getElementById('edit-phone').value;
+
+                const { error: profileError } = await supabaseClient.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
+                const { data: { user: updatedUser }, error: authError } = await supabaseClient.auth.updateUser({ email: newEmail, data: { full_name: newName } });
+
+                if (profileError || authError) {
+                    messageDiv.textContent = 'حدث خطأ أثناء تحديث البيانات.';
+                    messageDiv.style.color = 'red';
+                } else {
+                    messageDiv.textContent = 'تم تحديث بياناتك بنجاح!';
+                    messageDiv.style.color = 'green';
+                    currentUser = updatedUser;
+                    updateSidebar(currentUser);
+                    loadProfileData();
+                }
+            });
+        }
+        
+        // --- Security Settings Logic ---
+        function setupPasswordForm() {
+            const passwordForm = document.getElementById('change-password-form');
+            const passwordMessage = document.getElementById('password-message');
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                if (newPassword !== confirmPassword) { showMessage(passwordMessage, 'error', 'كلمتا المرور غير متطابقتين.'); return; }
+                const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+                if (error) { showMessage(passwordMessage, 'error', `خطأ: ${error.message}`); } 
+                else { showMessage(passwordMessage, 'success', 'تم تحديث كلمة المرور بنجاح!'); passwordForm.reset(); }
+            });
+        }
+        
+        function setup2FA() {
+            const statusContainer = document.getElementById('2fa-status-container');
+            const formContainer = document.getElementById('2fa-form-container');
+            const qrCodeContainer = document.getElementById('2fa-qr-code');
+            const verifyBtn = document.getElementById('verify-2fa-btn');
+            const codeInput = document.getElementById('2fa-code');
+            const twoFAMessage = document.getElementById('2fa-message');
+            let factorId = null;
+
+            async function check2FAStatus() {
+                const { data, error } = await supabaseClient.auth.mfa.listFactors();
+                if (error) { showMessage(twoFAMessage, 'error', 'فشل التحقق من حالة المصادقة.'); return; }
+                statusContainer.innerHTML = '';
+                formContainer.classList.add('hidden');
+                if (data.totp.length > 0) {
+                    factorId = data.totp[0].id;
+                    statusContainer.innerHTML = `<p class="text-green-600 font-bold">المصادقة الثنائية مُفعّلة.</p><button id="disable-2fa-btn" class="btn btn-danger mt-2">إلغاء التفعيل</button>`;
+                    document.getElementById('disable-2fa-btn').onclick = disable2FA;
+                } else {
+                    statusContainer.innerHTML = `<p class="text-gray-600">المصادقة الثنائية غير مُفعّلة.</p><button id="enable-2fa-btn" class="btn btn-primary mt-2">تفعيل الآن</button>`;
+                    document.getElementById('enable-2fa-btn').onclick = enable2FA;
+                }
+            }
+
+            async function enable2FA() {
+                const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp' });
+                if (error) { showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`); return; }
+                factorId = data.id;
+                qrCodeContainer.innerHTML = `<img src="${data.totp.qr_code}" alt="QR Code">`;
+                formContainer.classList.remove('hidden');
+                statusContainer.classList.add('hidden');
+            }
+            
+            verifyBtn.onclick = async () => {
+                const code = codeInput.value;
+                const { error: challengeError } = await supabaseClient.auth.mfa.challenge({ factorId: factorId });
+                if (challengeError) { showMessage(twoFAMessage, 'error', `خطأ: ${challengeError.message}`); return; }
+                const { error: verifyError } = await supabaseClient.auth.mfa.verify({ factorId: factorId, code: code });
+                if (verifyError) { showMessage(twoFAMessage, 'error', 'الرمز غير صحيح. حاول مرة أخرى.'); } 
+                else { showMessage(twoFAMessage, 'success', 'تم تفعيل المصادقة الثنائية بنجاح!'); statusContainer.classList.remove('hidden'); check2FAStatus(); }
+            };
+
+            async function disable2FA() {
+                const { error } = await supabaseClient.auth.mfa.unenroll({ factorId: factorId });
+                if (error) { showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`); } 
+                else { showMessage(twoFAMessage, 'success', 'تم إلغاء تفعيل المصادقة الثنائية.'); check2FAStatus(); }
+            }
+            check2FAStatus();
+        }
+
+        function showMessage(element, type, message) {
+            element.textContent = message;
+            element.className = `p-3 rounded-md text-center ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+        }
+        
+        // --- Support Tickets Logic ---
+        async function loadSupportTickets() {
+            const ticketsContainer = document.getElementById('tickets-container');
+            const loadingState = document.getElementById('tickets-loading');
+            const emptyState = document.getElementById('tickets-empty');
+            
+            try {
+                const { data: tickets, error } = await supabaseClient.from('tickets').select('*').eq('email', currentUser.email).order('created_at', { ascending: false });
+                if (error) throw error;
+                loadingState.style.display = 'none';
+                if (tickets.length === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    tickets.forEach(ticket => ticketsContainer.appendChild(createTicketCard(ticket)));
+                }
+            } catch(err) {
+                loadingState.innerHTML = `<p class="text-red-600">حدث خطأ أثناء تحميل التذاكر.</p>`;
+            }
+        }
+
+        function createTicketCard(ticket) {
+            const card = document.createElement('div');
+            card.className = 'ticket-card p-6';
+            const statusColors = { 'مفتوحة': 'bg-green-100 text-green-700', 'قيد المعالجة': 'bg-yellow-100 text-yellow-700', 'مغلقة': 'bg-gray-100 text-gray-700' };
+            const statusColor = statusColors[ticket.status] || 'bg-gray-100 text-gray-700';
+            const ticketDate = new Date(ticket.created_at).toLocaleString('ar-MA', { dateStyle: 'long', timeStyle: 'short' });
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500">رقم التذكرة: ${ticket.public_ticket_id || ticket.id}</p>
+                        <h3 class="text-lg font-bold text-gray-800">${ticket.subject || 'بدون موضوع'}</h3>
+                    </div>
+                    <span class="status-badge ${statusColor}">${ticket.status}</span>
+                </div>
+                <p class="text-gray-600 my-4 border-r-4 border-blue-200 pr-4">${ticket.message}</p>
+                <div class="text-sm text-gray-500 border-t pt-4 mt-4">
+                    <span>تاريخ الإنشاء: ${ticketDate}</span>
+                </div>`;
+            return card;
+        }
+
+        // --- Pane Switching Logic ---
+        function setupPaneSwitching() {
+            const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
+            const contentPanes = document.querySelectorAll('.main-content .content-pane');
+            navLinks.forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    contentPanes.forEach(pane => pane.classList.remove('active'));
+                    link.classList.add('active');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        }
+        
+        // --- Run Everything ---
+        document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
     <script src="public/layout.js"></script>
     <script type="module" src="public/auth.js"></script>
