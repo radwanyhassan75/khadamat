@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة التحكم - khadamatmaroc</title>
-        <script type="module" src="auth.js"></script>
-    <script src="layout.js"></script>
-    <link rel="stylesheet" href="layout.css"></link>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
@@ -14,8 +11,8 @@
     
 <style>
     /* ==================================================================
-        PROFESSIONAL DASHBOARD STYLES (v3.0)
-        - Fully Integrated & Polished -
+        PROFESSIONAL DASHBOARD & LAYOUT STYLES (v4.0)
+        - Fully Integrated, Polished, and Responsive -
     ================================================================== */
 
     /* --- General Variables & Body --- */
@@ -30,6 +27,7 @@
         --text-muted: #6c757d;
         --border-color: #dee2e6;
         --card-shadow: 0 8px 30px rgba(0,0,0,0.07);
+        --footer-bg-color: #1c2331;
     }
     
     html { scroll-behavior: smooth; }
@@ -40,133 +38,100 @@
         margin: 0;
     }
 
-    .dashboard-wrapper {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-
-    /* --- Header & Footer (Placeholder for your layout.js) --- */
+    /* --- Header Styles from your design --- */
     .main-header { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; width: 100%; z-index: 1000; }
     .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 5%; max-width: 1200px; margin: 0 auto; }
     .navbar-logo img { height: 60px; }
-    .nav-links { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
-    .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 1rem; }
-    .navbar-actions { display: flex; gap: 10px; }
-    .btn-nav { padding: 8px 16px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; }
+    .navbar-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; align-items: center; }
+    .navbar-menu a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 1rem; padding: 10px 0; }
+    .dropdown { position: relative; }
+    .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-menu {
+        position: absolute; top: 100%; right: 0; background-color: white;
+        box-shadow: var(--card-shadow); border-radius: 8px; margin-top: 10px;
+        padding: 10px; z-index: 1100; opacity: 0; visibility: hidden;
+        transform: translateY(10px); transition: all 0.3s ease;
+    }
+    .dropdown-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px 15px; list-style: none; padding: 0; min-width: 300px; }
+    .dropdown-grid a { display: block; padding: 8px 12px; border-radius: 6px; white-space: nowrap; }
+    .dropdown-grid a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+    .navbar-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-nav { padding: 8px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; white-space: nowrap; }
     .btn-nav-primary { background-color: var(--primary-color); color: white; }
-    .btn-nav-secondary { background-color: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); }
+    .btn-nav-secondary { background-color: transparent; color: var(--text-dark); border: 2px solid var(--border-color); }
     
-    .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
-    .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
-
-    /* --- Main Dashboard Layout --- */
-    .dashboard-layout {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        gap: 30px;
-        align-items: flex-start;
-    }
-
-    /* --- Sidebar --- */
+    /* --- Dashboard Specific Styles --- */
+    .dashboard-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .dashboard-layout { display: grid; grid-template-columns: 280px 1fr; gap: 30px; align-items: flex-start; }
     .sidebar {
-        background-color: white;
-        border-radius: 16px;
-        box-shadow: var(--card-shadow);
-        padding: 25px;
-        position: sticky;
-        top: 120px; 
+        background-color: white; border-radius: 16px; box-shadow: var(--card-shadow);
+        padding: 25px; position: sticky; top: 120px; 
     }
-    .sidebar-header {
-        text-align: center; margin-bottom: 30px;
-        border-bottom: 1px solid var(--border-color); padding-bottom: 20px;
-    }
-    .avatar-wrapper img {
-        width: 120px; height: 120px; border-radius: 50%;
-        border: 4px solid var(--primary-color); object-fit: cover; background-color: var(--light-bg);
-    }
-    .sidebar-header h3 {
-        margin: 15px 0 0; font-size: 1.4rem; color: var(--text-dark);
-        word-wrap: break-word; word-break: break-all;
-    }
+    .sidebar-header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+    .avatar-wrapper img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--primary-color); object-fit: cover; background-color: var(--light-bg); }
+    .sidebar-header h3 { margin: 15px 0 0; font-size: 1.4rem; color: var(--text-dark); word-wrap: break-word; word-break: break-all; }
     .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
-    .sidebar-nav a {
-        display: flex; align-items: center; gap: 15px; padding: 15px;
-        text-decoration: none; border-radius: 12px; transition: all 0.3s ease;
-        font-weight: 700; margin-bottom: 8px; cursor: pointer; color: #555;
-    }
-    .sidebar-nav a.active, .sidebar-nav a:hover {
-        background-color: var(--primary-color); color: white;
-        transform: translateX(-5px) scale(1.02);
-        box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
-    }
+    .sidebar-nav a { display: flex; align-items: center; gap: 15px; padding: 15px; text-decoration: none; border-radius: 12px; transition: all 0.3s ease; font-weight: 700; margin-bottom: 8px; cursor: pointer; color: #555; }
+    .sidebar-nav a.active, .sidebar-nav a:hover { background-color: var(--primary-color); color: white; transform: translateX(-5px) scale(1.02); box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3); }
     .sidebar-nav a i { width: 20px; text-align: center; }
-
-    /* --- Main Content Area --- */
     .content-pane { display: none; }
     .content-pane.active { display: block; animation: fadeIn 0.5s ease-out; }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-        background: white; padding: 30px 35px;
-        border-radius: 16px; box-shadow: var(--card-shadow);
-        margin-bottom: 25px;
-    }
-    .card h2 {
-        border-bottom: 2px solid var(--primary-color); padding-bottom: 15px;
-        margin: 0 0 30px 0; font-size: 1.6rem;
-    }
-    .info-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 25px;
-    }
-    .info-item label {
-        display: block; color: var(--text-muted); margin-bottom: 8px; font-size: 0.9rem;
-    }
-    .info-item p {
-        margin: 0; font-weight: 700; font-size: 1rem; color: var(--text-dark);
-        word-wrap: break-word; word-break: break-all;
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: white; padding: 30px 35px; border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 25px; }
+    .card h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 15px; margin: 0 0 30px 0; font-size: 1.6rem; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; }
+    .info-item label { display: block; color: var(--text-muted); margin-bottom: 8px; font-size: 0.9rem; }
+    .info-item p { margin: 0; font-weight: 700; font-size: 1rem; color: var(--text-dark); word-wrap: break-word; word-break: break-all; }
     .form-group { margin-bottom: 25px; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: var(--text-dark); }
-    .form-group input {
-        width: 100%; padding: 12px 15px; border: 1px solid var(--border-color);
-        border-radius: 8px; box-sizing: border-box; font-family: 'Tajawal', sans-serif;
-        font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .form-group input:focus {
-        outline: none; border-color: var(--primary-color);
-        box-shadow: 0 0 8px rgba(0, 86, 179, 0.2);
-    }
-    .btn {
-        padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer;
-        font-weight: 700; font-size: 1rem; transition: all 0.3s ease;
-    }
+    .form-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-family: 'Tajawal', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
+    .form-group input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 8px rgba(0, 86, 179, 0.2); }
+    .btn { padding: 12px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s ease; }
     .btn-primary { background-color: var(--primary-color); color: white; }
     .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
     .btn-danger { background-color: var(--danger-color); color: white; }
     .btn-danger:hover { background-color: var(--danger-hover); }
-
-    /* --- Ticket Styles --- */
-    .ticket-card { border-right: 5px solid var(--primary-color); }
-    .status-badge {
-        padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 700;
-    }
+    .ticket-card { border-right: 5px solid var(--primary-color); padding: 20px; background-color: #fff; border-radius: 8px; }
+    .status-badge { padding: 4px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; }
     
-    /* --- Responsive Design --- */
-    @media (max-width: 992px) {
-        .dashboard-layout { grid-template-columns: 1fr; }
-        .sidebar { position: static; top: auto; }
-    }
+    /* --- Footer Styles from your design --- */
+    .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 60px 5% 20px; margin-top: 60px; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+    .footer-logo { filter: brightness(0) invert(1); height: 50px; margin-bottom: 15px; }
+    .footer-title { color: white; font-size: 1.1rem; margin-bottom: 20px; font-weight: 700; }
+    .footer-section ul { list-style: none; padding: 0; margin: 0; }
+    .footer-section a { color: #bdc3c7; text-decoration: none; line-height: 2.2; }
+    .footer-section a:hover { color: white; }
+    .newsletter-form { display: flex; margin-top: 15px; }
+    .newsletter-form input { width: 100%; border: none; padding: 10px; border-radius: 0 5px 5px 0; font-family: 'Tajawal', sans-serif; }
+    .newsletter-form button { border: none; background-color: var(--primary-color); color: white; padding: 0 15px; border-radius: 5px 0 0 5px; cursor: pointer; font-weight: bold; }
+    .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
+    
+    @media (max-width: 992px) { .dashboard-layout { grid-template-columns: 1fr; } .sidebar { position: static; top: auto; } }
 </style>
 </head>
 <body>
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc"></a>
+            <ul class="navbar-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="blog.html">المدونة</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">القائمة <i class="fas fa-chevron-down fa-xs"></i></a>
+                    <div class="dropdown-menu">
+                        <ul class="dropdown-grid">
+                            <li><a href="about.html">من نحن</a></li>
+                            <li><a href="prices.html">قائمة الأسعار</a></li>
+                            <li><a href="payment.html">طرق الدفع</a></li>
+                            <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                            <li><a href="contact.html">اتصل بنا</a></li>
+                            <li><a href="track-order.html">تتبع طلبك</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
             <div id="navbar-actions" class="navbar-actions"></div>
         </nav>
     </header>
@@ -223,8 +188,8 @@
                         <p class="text-sm text-muted mb-6">تعليمات: أدخل كلمة مرور جديدة قوية (6 أحرف على الأقل) ثم قم بتأكيدها.</p>
                         <div id="password-message" class="mb-4 text-center"></div>
                         <form id="change-password-form" class="space-y-4">
-                            <div class="form-group"><label for="new-password">كلمة المرور الجديدة</label><input type="password" id="new-password" class="form-group input" required minlength="6"></div>
-                            <div class="form-group"><label for="confirm-password">تأكيد كلمة المرور الجديدة</label><input type="password" id="confirm-password" class="form-group input" required minlength="6"></div>
+                            <div class="form-group"><label for="new-password">كلمة المرور الجديدة</label><input type="password" id="new-password" required minlength="6"></div>
+                            <div class="form-group"><label for="confirm-password">تأكيد كلمة المرور الجديدة</label><input type="password" id="confirm-password" required minlength="6"></div>
                             <button type="submit" class="btn btn-primary w-full">تحديث كلمة المرور</button>
                         </form>
                     </div>
@@ -235,7 +200,7 @@
                         <div id="2fa-status-container" class="text-center"></div>
                         <div id="2fa-form-container" class="hidden space-y-4 mt-4">
                             <div id="2fa-qr-code" class="mx-auto bg-white p-2 border rounded-lg w-48 h-48"></div>
-                            <div class="form-group"><label for="2fa-code">أدخل الرمز من التطبيق</label><input type="text" id="2fa-code" class="form-group input text-center tracking-widest" placeholder="123456"></div>
+                            <div class="form-group"><label for="2fa-code">أدخل الرمز من التطبيق</label><input type="text" id="2fa-code" class="text-center tracking-widest" placeholder="123456"></div>
                             <button id="verify-2fa-btn" class="btn btn-primary w-full">تحقق وتفعيل</button>
                         </div>
                     </div>
@@ -248,11 +213,9 @@
                            <h2 class="!m-0 !p-0 !border-0">تذاكر الدعم</h2>
                            <a href="contact.html" class="btn btn-primary">فتح تذكرة جديدة</a>
                         </div>
-                        <div id="tickets-container" class="space-y-6">
+                        <div id="tickets-container" class="space-y-4">
                             <div id="tickets-loading" class="text-center py-10"><p>جاري تحميل التذاكر...</p></div>
-                            <div id="tickets-empty" class="text-center py-10 hidden">
-                                <h3 class="text-xl font-bold mb-2">لا توجد لديك تذاكر دعم بعد.</h3>
-                            </div>
+                            <div id="tickets-empty" class="text-center py-10 hidden"><h3 class="text-xl font-bold">لا توجد لديك تذاكر دعم بعد.</h3></div>
                         </div>
                     </div>
                 </div>
@@ -261,9 +224,39 @@
     </main>
 
     <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc" class="footer-logo">
+                <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">خدمة العملاء</h3>
+                <ul>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                    <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                    <li><a href="track-order.html">تتبع طلبك</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">قانوني</h3>
+                <ul>
+                    <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                    <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                    <li><a href="refund-policy.html">سياسة الاسترجاع</a></li>
+                </ul>
+            </div>
+             <div class="footer-section">
+                <h3 class="footer-title">النشرة الإخبارية</h3>
+                <p>كن أول من يعرف عن خدماتنا الجديدة والعروض الحصرية.</p>
+                <form id="newsletter-form" class="newsletter-form">
+                    <input type="email" id="newsletter-email" placeholder="أدخل بريدك الإلكتروني" required>
+                    <button type="submit" id="newsletter-btn">اشتراك</button>
+                </form>
+                <div id="newsletter-message" style="margin-top: 10px; font-weight: bold;"></div>
+            </div>
+        </div>
         <div class="footer-bottom"><p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p></div>
     </footer>
-
     
     <script type="module">
         const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
@@ -274,7 +267,7 @@
         let currentUser = null;
 
         // --- Auth Check & Page Initialization ---
-        async function checkAuth() {
+        async function checkAuthAndInit() {
             const { data: { session } } = await supabaseClient.auth.getSession();
             const navbarActions = document.getElementById('navbar-actions');
             navbarActions.innerHTML = '';
@@ -286,7 +279,7 @@
             
             currentUser = session.user;
             
-            // Render user-specific navbar
+            // Render user-specific navbar buttons
             const dashboardButton = document.createElement('a');
             dashboardButton.href = '/dashboard.html';
             dashboardButton.className = 'btn-nav btn-nav-primary';
@@ -304,6 +297,7 @@
             setupPasswordForm();
             setup2FA();
             loadSupportTickets();
+            setupNewsletterForm();
             
             document.getElementById('logout-btn').addEventListener('click', async () => {
                 await supabaseClient.auth.signOut();
@@ -312,7 +306,7 @@
         }
 
         function updateSidebar(user) {
-            const userName = user.user_metadata.full_name || user.email;
+            const userName = user.user_metadata.full_name || user.email.split('@')[0];
             document.getElementById('sidebar-user-name').textContent = userName;
             document.getElementById('sidebar-user-avatar').src = user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=0056b3&color=fff`;
         }
@@ -321,14 +315,15 @@
             document.getElementById('view-email').textContent = currentUser.email;
             document.getElementById('edit-email').value = currentUser.email;
             
-            const { data: profile } = await supabaseClient.from('users').select('full_name, phone_number').eq('id', currentUser.id).single();
+            // Assuming you have a public 'profiles' table linked to auth.users
+            const { data: profile } = await supabaseClient.from('profiles').select('full_name, phone').eq('id', currentUser.id).single();
             const fullName = profile?.full_name || currentUser.user_metadata.full_name || 'لا يوجد';
-            const phone = profile?.phone_number || 'لم يتم إضافته';
+            const phone = profile?.phone || 'لم يتم إضافته';
 
             document.getElementById('view-name').textContent = fullName;
             document.getElementById('view-phone').textContent = phone;
             document.getElementById('edit-name').value = fullName;
-            document.getElementById('edit-phone').value = profile?.phone_number || '';
+            document.getElementById('edit-phone').value = profile?.phone || '';
         }
 
         function setupProfileForm() {
@@ -341,13 +336,15 @@
                 const newName = document.getElementById('edit-name').value;
                 const newEmail = document.getElementById('edit-email').value;
                 const newPhone = document.getElementById('edit-phone').value;
-
-                const { error: profileError } = await supabaseClient.from('users').update({ full_name: newName, phone_number: newPhone }).eq('id', currentUser.id);
+                
+                // Supabase requires updating auth and profiles table separately
+                const { error: profileError } = await supabaseClient.from('profiles').update({ full_name: newName, phone: newPhone }).eq('id', currentUser.id);
                 const { data: { user: updatedUser }, error: authError } = await supabaseClient.auth.updateUser({ email: newEmail, data: { full_name: newName } });
 
                 if (profileError || authError) {
                     messageDiv.textContent = 'حدث خطأ أثناء تحديث البيانات.';
                     messageDiv.style.color = 'red';
+                    console.error(profileError || authError);
                 } else {
                     messageDiv.textContent = 'تم تحديث بياناتك بنجاح!';
                     messageDiv.style.color = 'green';
@@ -358,93 +355,85 @@
             });
         }
         
-        // --- Security Settings Logic ---
         function setupPasswordForm() {
-            const passwordForm = document.getElementById('change-password-form');
-            const passwordMessage = document.getElementById('password-message');
-            passwordForm.addEventListener('submit', async (e) => {
+            const form = document.getElementById('change-password-form');
+            const messageEl = document.getElementById('password-message');
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const newPassword = document.getElementById('new-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                if (newPassword !== confirmPassword) { showMessage(passwordMessage, 'error', 'كلمتا المرور غير متطابقتين.'); return; }
+                const newPassword = form.querySelector('#new-password').value;
+                const confirmPassword = form.querySelector('#confirm-password').value;
+                if (newPassword !== confirmPassword) { showMessage(messageEl, 'error', 'كلمتا المرور غير متطابقتين.'); return; }
                 const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
-                if (error) { showMessage(passwordMessage, 'error', `خطأ: ${error.message}`); } 
-                else { showMessage(passwordMessage, 'success', 'تم تحديث كلمة المرور بنجاح!'); passwordForm.reset(); }
+                if (error) { showMessage(messageEl, 'error', `خطأ: ${error.message}`); } 
+                else { showMessage(messageEl, 'success', 'تم تحديث كلمة المرور بنجاح!'); form.reset(); }
             });
         }
         
         function setup2FA() {
-            const statusContainer = document.getElementById('2fa-status-container');
-            const formContainer = document.getElementById('2fa-form-container');
-            const qrCodeContainer = document.getElementById('2fa-qr-code');
+            const statusEl = document.getElementById('2fa-status-container');
+            const formEl = document.getElementById('2fa-form-container');
+            const qrEl = document.getElementById('2fa-qr-code');
             const verifyBtn = document.getElementById('verify-2fa-btn');
             const codeInput = document.getElementById('2fa-code');
-            const twoFAMessage = document.getElementById('2fa-message');
+            const messageEl = document.getElementById('2fa-message');
             let factorId = null;
 
             async function check2FAStatus() {
                 const { data, error } = await supabaseClient.auth.mfa.listFactors();
-                if (error) { showMessage(twoFAMessage, 'error', 'فشل التحقق من حالة المصادقة.'); return; }
-                statusContainer.innerHTML = '';
-                formContainer.classList.add('hidden');
+                if (error) { showMessage(messageEl, 'error', 'فشل التحقق من حالة المصادقة.'); return; }
+                statusEl.innerHTML = '';
+                formEl.classList.add('hidden');
                 if (data.totp.length > 0) {
                     factorId = data.totp[0].id;
-                    statusContainer.innerHTML = `<p class="text-green-600 font-bold">المصادقة الثنائية مُفعّلة.</p><button id="disable-2fa-btn" class="btn btn-danger mt-2">إلغاء التفعيل</button>`;
+                    statusEl.innerHTML = `<p class="text-green-600 font-bold">المصادقة الثنائية مُفعّلة.</p><button id="disable-2fa-btn" class="btn btn-danger mt-2">إلغاء التفعيل</button>`;
                     document.getElementById('disable-2fa-btn').onclick = disable2FA;
                 } else {
-                    statusContainer.innerHTML = `<p class="text-gray-600">المصادقة الثنائية غير مُفعّلة.</p><button id="enable-2fa-btn" class="btn btn-primary mt-2">تفعيل الآن</button>`;
+                    statusEl.innerHTML = `<p class="text-gray-600">المصادقة الثنائية غير مُفعّلة.</p><button id="enable-2fa-btn" class="btn btn-primary mt-2">تفعيل الآن</button>`;
                     document.getElementById('enable-2fa-btn').onclick = enable2FA;
                 }
             }
 
             async function enable2FA() {
                 const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp' });
-                if (error) { showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`); return; }
+                if (error) { showMessage(messageEl, 'error', `خطأ: ${error.message}`); return; }
                 factorId = data.id;
-                qrCodeContainer.innerHTML = `<img src="${data.totp.qr_code}" alt="QR Code">`;
-                formContainer.classList.remove('hidden');
-                statusContainer.classList.add('hidden');
+                qrEl.innerHTML = `<img src="${data.totp.qr_code}" alt="QR Code">`;
+                formEl.classList.remove('hidden');
+                statusEl.classList.add('hidden');
             }
             
             verifyBtn.onclick = async () => {
                 const code = codeInput.value;
-                const { error: challengeError } = await supabaseClient.auth.mfa.challenge({ factorId: factorId });
-                if (challengeError) { showMessage(twoFAMessage, 'error', `خطأ: ${challengeError.message}`); return; }
-                const { error: verifyError } = await supabaseClient.auth.mfa.verify({ factorId: factorId, code: code });
-                if (verifyError) { showMessage(twoFAMessage, 'error', 'الرمز غير صحيح. حاول مرة أخرى.'); } 
-                else { showMessage(twoFAMessage, 'success', 'تم تفعيل المصادقة الثنائية بنجاح!'); statusContainer.classList.remove('hidden'); check2FAStatus(); }
+                const { error: challengeError } = await supabaseClient.auth.mfa.challenge({ factorId });
+                if (challengeError) { showMessage(messageEl, 'error', `خطأ: ${challengeError.message}`); return; }
+                const { error: verifyError } = await supabaseClient.auth.mfa.verify({ factorId, code });
+                if (verifyError) { showMessage(messageEl, 'error', 'الرمز غير صحيح. حاول مرة أخرى.'); } 
+                else { showMessage(messageEl, 'success', 'تم تفعيل المصادقة بنجاح!'); statusEl.classList.remove('hidden'); check2FAStatus(); }
             };
 
             async function disable2FA() {
-                const { error } = await supabaseClient.auth.mfa.unenroll({ factorId: factorId });
-                if (error) { showMessage(twoFAMessage, 'error', `خطأ: ${error.message}`); } 
-                else { showMessage(twoFAMessage, 'success', 'تم إلغاء تفعيل المصادقة الثنائية.'); check2FAStatus(); }
+                const { error } = await supabaseClient.auth.mfa.unenroll({ factorId });
+                if (error) { showMessage(messageEl, 'error', `خطأ: ${error.message}`); } 
+                else { showMessage(messageEl, 'success', 'تم إلغاء تفعيل المصادقة.'); check2FAStatus(); }
             }
             check2FAStatus();
         }
 
-        function showMessage(element, type, message) {
-            element.textContent = message;
-            element.className = `p-3 rounded-md text-center ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-        }
-        
-        // --- Support Tickets Logic ---
         async function loadSupportTickets() {
-            const ticketsContainer = document.getElementById('tickets-container');
-            const loadingState = document.getElementById('tickets-loading');
-            const emptyState = document.getElementById('tickets-empty');
-            
+            const container = document.getElementById('tickets-container');
+            const loadingEl = document.getElementById('tickets-loading');
+            const emptyEl = document.getElementById('tickets-empty');
             try {
                 const { data: tickets, error } = await supabaseClient.from('tickets').select('*').eq('email', currentUser.email).order('created_at', { ascending: false });
                 if (error) throw error;
-                loadingState.style.display = 'none';
+                loadingEl.style.display = 'none';
                 if (tickets.length === 0) {
-                    emptyState.style.display = 'block';
+                    emptyEl.style.display = 'block';
                 } else {
-                    tickets.forEach(ticket => ticketsContainer.appendChild(createTicketCard(ticket)));
+                    tickets.forEach(ticket => container.appendChild(createTicketCard(ticket)));
                 }
             } catch(err) {
-                loadingState.innerHTML = `<p class="text-red-600">حدث خطأ أثناء تحميل التذاكر.</p>`;
+                loadingEl.innerHTML = `<p class="text-red-600">حدث خطأ أثناء تحميل التذاكر.</p>`;
             }
         }
 
@@ -453,7 +442,7 @@
             card.className = 'ticket-card p-6';
             const statusColors = { 'مفتوحة': 'bg-green-100 text-green-700', 'قيد المعالجة': 'bg-yellow-100 text-yellow-700', 'مغلقة': 'bg-gray-100 text-gray-700' };
             const statusColor = statusColors[ticket.status] || 'bg-gray-100 text-gray-700';
-            const ticketDate = new Date(ticket.created_at).toLocaleString('ar-MA', { dateStyle: 'long', timeStyle: 'short' });
+            const date = new Date(ticket.created_at).toLocaleString('ar-MA', { dateStyle: 'long', timeStyle: 'short' });
             card.innerHTML = `
                 <div class="flex justify-between items-start">
                     <div>
@@ -462,14 +451,11 @@
                     </div>
                     <span class="status-badge ${statusColor}">${ticket.status}</span>
                 </div>
-                <p class="text-gray-600 my-4 border-r-4 border-blue-200 pr-4">${ticket.message}</p>
-                <div class="text-sm text-gray-500 border-t pt-4 mt-4">
-                    <span>تاريخ الإنشاء: ${ticketDate}</span>
-                </div>`;
+                <p class="text-gray-600 my-4">${ticket.message}</p>
+                <div class="text-sm text-gray-500 border-t pt-4 mt-4"><span>تاريخ الإنشاء: ${date}</span></div>`;
             return card;
         }
 
-        // --- Pane Switching Logic ---
         function setupPaneSwitching() {
             const navLinks = document.querySelectorAll('.sidebar-nav a[data-target]');
             const contentPanes = document.querySelectorAll('.main-content .content-pane');
@@ -485,10 +471,31 @@
             });
         }
         
-        // --- Run Everything ---
-        document.addEventListener('DOMContentLoaded', checkAuth);
+        function setupNewsletterForm() {
+            const form = document.getElementById('newsletter-form');
+            const emailInput = document.getElementById('newsletter-email');
+            const messageEl = document.getElementById('newsletter-message');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const { error } = await supabaseClient.from('subscribers').insert({ email: emailInput.value });
+                    if (error) throw error;
+                    messageEl.textContent = 'شكراً لاشتراكك!';
+                    messageEl.style.color = 'lightgreen';
+                } catch (err) {
+                    messageEl.textContent = 'هذا البريد مسجل بالفعل.';
+                    messageEl.style.color = 'orange';
+                }
+            });
+        }
+        
+        function showMessage(element, type, message) {
+            element.textContent = message;
+            element.className = `p-3 my-2 rounded-md text-center ${type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', checkAuthAndInit);
     </script>
-    <script src="public/layout.js"></script>
-    <script type="module" src="public/auth.js"></script>
 </body>
 </html>
+
