@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <title>تفاصيل الخدمة - المكتب الرقمي</title>
+    <title>تفاصيل الخدمة - khadamatmaroc</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         :root {
-            --primary-color: #0056b3; /* اللون الأزرق الأساسي */
+            --primary-color: #0056b3; 
             --primary-hover-color: #004494;
             --dark-color: #1a202c;
-            --light-color: #ffffff; /* اللون الأبيض الأساسي */
+            --light-color: #ffffff;
             --gray-color-100: #f7fafc;
             --footer-bg-color: #1c2331;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        body { font-family: 'Cairo', sans-serif; background-color: var(--gray-color-100); }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--gray-color-100); }
         .main-header { position: sticky; top: 0; z-index: 50; background-color: rgba(255,255,255,0.9); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .service-sidebar { position: sticky; top: 120px; }
         
@@ -46,31 +48,64 @@
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s; }
         .modal-content { background-color: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        /* Styles for your header and footer */
+        .navbar { display: flex; justify-content: space-between; align-items: center; height: 90px; }
+        .navbar-logo img { height: 70px; }
+        .navbar-menu { display: flex; list-style: none; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .navbar-menu a { color: var(--dark-color); text-decoration: none; font-weight: 700; font-size: 1rem; }
+        .dropdown { position: relative; }
+        .dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; right: 0; background-color: white; box-shadow: var(--box-shadow); border-radius: var(--border-radius); padding: 10px; z-index: 1100; }
+        .dropdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 15px; list-style: none; padding: 0; min-width: 300px; }
+        .dropdown-grid a { display: block; padding: 8px 12px; border-radius: 6px; }
+        .dropdown-grid a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+        .navbar-actions { display: flex; align-items: center; gap: 10px; }
+        .btn-nav { padding: 8px 20px; border-radius: 50px; text-decoration: none; font-weight: 700; }
+        .btn-nav-primary { background-color: var(--primary-color); color: white; }
+        .btn-nav-secondary { background-color: transparent; border: 2px solid #e2e8f0; }
+        .main-footer { background-color: var(--footer-bg-color); color: #bdc3c7; padding: 80px 5% 30px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; }
+        .footer-logo { max-width: 180px; margin-bottom: 20px; filter: brightness(0) invert(1); }
+        .footer-title { color: white; font-size: 1.3rem; margin-bottom: 25px; font-weight: 700; }
+        .footer-bottom { text-align: center; border-top: 1px solid #3e5268; padding-top: 30px; font-size: 0.9rem; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
     <!-- ======================= HEADER ======================= -->
     <header class="main-header">
-        <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html"><img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="h-14"></a>
-            <ul class="hidden lg:flex items-center space-x-reverse space-x-6 font-bold text-gray-700">
+        <nav class="container mx-auto px-6 py-4 navbar">
+            <a href="index.html" class="navbar-logo"><img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc"></a>
+            <ul class="hidden lg:flex navbar-menu">
                 <li><a href="index.html" class="hover:text-primary-color">الرئيسية</a></li>
                 <li><a href="services.html" class="text-primary-color">الخدمات</a></li>
                 <li><a href="blog.html" class="hover:text-primary-color">المدونة</a></li>
-                <li><a href="faq.html" class="hover:text-primary-color">الأسئلة الشائعة</a></li>
-                <li><a href="legal.html" class="hover:text-primary-color">الشؤون القانونية</a></li>
-                <li><a href="contact.html" class="hover:text-primary-color">اتصل بنا</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">القائمة <i class="fas fa-chevron-down fa-xs"></i></a>
+                    <div class="dropdown-menu">
+                        <ul class="dropdown-grid">
+                           <li><a href="about.html">من نحن</a></li>
+                           <li><a href="prices.html">قائمة الأسعار</a></li>
+                           <li><a href="payment.html">طرق الدفع</a></li>
+                           <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                           <li><a href="contact.html">اتصل بنا</a></li>
+                           <li><a href="track-order.html">تتبع طلبك</a></li>
+                           <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                           <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
-            <div id="navbar-actions" class="hidden lg:flex"></div>
+            <div id="navbar-actions" class="hidden lg:flex navbar-actions"></div>
             <button id="mobile-menu-button" class="lg:hidden text-2xl"><i class="fas fa-bars"></i></button>
         </nav>
     </header>
 
     <!-- ======================= MAIN CONTENT ======================= -->
-    <main class="container mx-auto mt-10 mb-20 px-6">
-        <div id="loader"><p class="text-center text-xl py-20">جاري التحميل...</p></div>
-        <div id="error-message" class="hidden"><p class="text-center text-xl text-red-600 py-20">عذراً، الخدمة غير متوفرة.</p></div>
+    <main class="container mx-auto mt-10 mb-20 px-6 flex-grow">
+        <div id="loader"><p class="text-center text-xl py-20">جاري تحميل تفاصيل الخدمة...</p></div>
+        <div id="error-message" class="hidden"><p class="text-center text-xl text-red-600 py-20">عذراً، هذه الخدمة غير متوفرة حاليًا.</p></div>
 
         <div id="service-layout" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-12">
             <!-- Main Content -->
@@ -83,7 +118,7 @@
             <!-- Sidebar -->
             <aside class="service-sidebar space-y-6">
                 <div class="bg-white rounded-2xl shadow-lg p-6 text-center" style="animation: fadeIn 0.5s 0.2s ease-out backwards;">
-                    <p class="text-lg text-gray-600 mb-2">سعر الخدمة</p>
+                    <p class="text-lg text-gray-600 mb-2">سعر الخدمة يبدأ من</p>
                     <div id="sidebar-price" class="text-5xl font-black text-primary-color mb-6"></div>
                     <a id="order-button" href="#" class="btn-primary inline-block w-full font-bold py-4 px-8 rounded-lg text-lg">
                         <i class="fas fa-shopping-cart mr-2"></i>اطلب الخدمة الآن
@@ -96,8 +131,7 @@
                         <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a>
                         <a id="share-twitter" href="#" target="_blank" class="share-btn twitter"><i class="fab fa-twitter"></i></a>
                         <a id="share-whatsapp" href="#" target="_blank" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
-                        <button id="copy-link-button" class="share-btn"><i class="fas fa-link"></i></button>
-                        <button id="embed-button" class="share-btn"><i class="fas fa-code"></i></button>
+                        <button id="copy-link-button" class="share-btn" title="نسخ الرابط"><i class="fas fa-link"></i></button>
                     </div>
                 </div>
             </aside>
@@ -110,138 +144,113 @@
     </main>
 
     <!-- ======================= FOOTER (Complete Version) ======================= -->
-    <footer style="background-color: var(--footer-bg-color);" class="text-gray-300">
-        <div class="container mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                <!-- About Section -->
-                <div class="space-y-4">
-                    <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي" class="h-14">
-                    <p class="text-sm">المكتب الرقمي يقدم حلولاً متكاملة وموثوقة لجميع احتياجاتك الإدارية والرقمية.</p>
-                    <div class="flex space-x-reverse space-x-4 pt-2">
-                        <a href="#" class="text-xl hover:text-white"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-xl hover:text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-xl hover:text-white"><i class="fab fa-instagram"></i></a>
-                    </div>
+    <footer class="main-footer">
+        <div class="container mx-auto">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <img src="https://khadamatmaroc.co.uk/images/logo.png" alt="شعار khadamatmaroc" class="footer-logo">
+                    <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية.</p>
                 </div>
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="font-bold text-white text-lg mb-4">روابط سريعة</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="index.html" class="hover:text-white">الرئيسية</a></li>
-                        <li><a href="services.html" class="hover:text-white">الخدمات</a></li>
-                        <li><a href="blog.html" class="hover:text-white">المدونة</a></li>
-                        <li><a href="contact.html" class="hover:text-white">اتصل بنا</a></li>
+                <div class="footer-section">
+                    <h3 class="footer-title">روابط مهمة</h3>
+                    <ul>
+                         <li><a href="about.html">من نحن</a></li>
+                         <li><a href="prices.html">قائمة الأسعار</a></li>
                     </ul>
                 </div>
-                <!-- Legal Links -->
-                <div>
-                    <h3 class="font-bold text-white text-lg mb-4">الشؤون القانونية</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="legal.html?page=privacy" class="hover:text-white">سياسة الخصوصية</a></li>
-                        <li><a href="legal.html?page=terms" class="hover:text-white">شروط الاستخدام</a></li>
-                        <li><a href="faq.html" class="hover:text-white">الأسئلة الشائعة</a></li>
+                <div class="footer-section">
+                    <h3 class="footer-title">خدمة العملاء</h3>
+                    <ul>
+                         <li><a href="contact.html">اتصل بنا</a></li>
+                         <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                         <li><a href="track-order.html">تتبع طلبك</a></li>
                     </ul>
                 </div>
-                <!-- ✅ FIX: Contact Info Section -->
-                <div>
-                    <h3 class="font-bold text-white text-lg mb-4">تواصل معنا</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="contact.html" class="hover:text-white underline">اضغط هنا للتواصل معنا</a></li>
+                 <div class="footer-section">
+                    <h3 class="footer-title">قانوني</h3>
+                    <ul>
+                         <li><a href="privacy-policy.html">سياسة الخصوصية</a></li>
+                         <li><a href="terms-and-conditions.html">الشروط والأحكام</a></li>
                     </ul>
                 </div>
             </div>
-        </div>
-        <div class="bg-black bg-opacity-20 text-center py-4 text-sm">
-            <p>&copy; 2025 المكتب الرقمي. جميع الحقوق محفوظة.</p>
+            <div class="footer-bottom">
+                <p>&copy; 2025 khadamatmaroc. جميع الحقوق محفوظة.</p>
+            </div>
         </div>
     </footer>
     
-    <!-- Embed Modal -->
-    <div id="embed-modal" class="modal-overlay hidden">
-        <div class="modal-content relative">
-            <button id="close-modal-button" class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black">&times;</button>
-            <h2 class="text-xl font-bold mb-4">تضمين الخدمة</h2>
-            <p class="text-sm text-gray-600 mb-4">انسخ الكود التالي وألصقه في موقعك لعرض هذه الخدمة.</p>
-            <textarea id="embed-code" readonly class="w-full h-24 p-2 border rounded-md font-mono text-sm bg-gray-100"></textarea>
-            <button id="copy-code-button" class="mt-4 w-full bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700">نسخ الكود</button>
-        </div>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="auth.js"></script>
-
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const loader = document.getElementById('loader');
         const errorMessage = document.getElementById('error-message');
         const serviceLayout = document.getElementById('service-layout');
-        const relatedServicesSection = document.getElementById('related-services-section');
-        const embedModal = document.getElementById('embed-modal');
-
+        
+        // --- Auth Buttons in Header ---
+        const navbarActions = document.getElementById('navbar-actions');
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            navbarActions.innerHTML = ''; // Clear previous buttons
+            if (session) {
+                // User is logged in
+                const dashboardButton = document.createElement('a');
+                dashboardButton.href = '/dashboard.html';
+                dashboardButton.className = 'btn-nav btn-nav-primary';
+                dashboardButton.textContent = 'لوحة التحكم';
+                navbarActions.appendChild(dashboardButton);
+            } else {
+                // User is logged out
+                const loginButton = document.createElement('a');
+                loginButton.href = '/login.html';
+                loginButton.className = 'btn-nav btn-nav-secondary';
+                loginButton.textContent = 'تسجيل الدخول';
+                const registerButton = document.createElement('a');
+                registerButton.href = '/register.html';
+                registerButton.className = 'btn-nav btn-nav-primary';
+                registerButton.textContent = 'إنشاء حساب';
+                navbarActions.appendChild(loginButton);
+                navbarActions.appendChild(registerButton);
+            }
+        });
+        
         function showError() {
             loader.style.display = 'none';
             errorMessage.classList.remove('hidden');
         }
 
-        // ✅ FIX: Share Buttons Logic
         function setupShareButtons(service) {
             const pageUrl = window.location.href;
             const encodedUrl = encodeURIComponent(pageUrl);
             const title = encodeURIComponent(service.title);
-
             document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
             document.getElementById('share-twitter').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${title}`;
             document.getElementById('share-whatsapp').href = `https://api.whatsapp.com/send?text=${title}%20${encodedUrl}`;
             
             const copyLinkButton = document.getElementById('copy-link-button');
-            copyLinkButton.addEventListener('click', (e) => {
+            copyLinkButton.addEventListener('click', () => {
                 const originalIcon = copyLinkButton.innerHTML;
                 navigator.clipboard.writeText(pageUrl).then(() => {
                     copyLinkButton.innerHTML = '<i class="fas fa-check text-green-500"></i>';
                     setTimeout(() => { copyLinkButton.innerHTML = originalIcon; }, 2000);
                 });
             });
-
-            // Embed Modal Logic
-            const embedButton = document.getElementById('embed-button');
-            const closeModalButton = document.getElementById('close-modal-button');
-            const embedCodeTextarea = document.getElementById('embed-code');
-            const copyCodeButton = document.getElementById('copy-code-button');
-            
-            embedCodeTextarea.value = `<iframe src="${pageUrl}" width="100%" height="600" style="border:none;" title="${service.title}"></iframe>`;
-            
-            embedButton.addEventListener('click', () => embedModal.classList.remove('hidden'));
-            closeModalButton.addEventListener('click', () => embedModal.classList.add('hidden'));
-            embedModal.addEventListener('click', (e) => { if (e.target === embedModal) { embedModal.classList.add('hidden'); }});
-            
-            copyCodeButton.addEventListener('click', () => {
-                const originalText = copyCodeButton.textContent;
-                navigator.clipboard.writeText(embedCodeTextarea.value).then(() => {
-                    copyCodeButton.textContent = 'تم النسخ بنجاح!';
-                    setTimeout(() => {
-                        copyCodeButton.textContent = originalText;
-                        embedModal.classList.add('hidden');
-                    }, 2000);
-                });
-            });
         }
 
         async function fetchRelatedServices(categoryId, currentServiceId) {
             const container = document.getElementById('related-services-container');
-            const { data, error } = await supabase
+            const section = document.getElementById('related-services-section');
+            const { data, error } = await supabaseClient
                 .from('services')
                 .select('title, slug, image_url, description')
                 .eq('category_id', categoryId)
                 .neq('id', currentServiceId)
                 .limit(3);
-
             if (data && data.length > 0) {
-                relatedServicesSection.classList.remove('hidden');
+                section.classList.remove('hidden');
                 container.innerHTML = data.map(service => `
                     <a href="service-details.html?slug=${service.slug}" class="block bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2">
                         <img src="${service.image_url || 'https://placehold.co/400x250'}" class="h-48 w-full object-cover" alt="${service.title}">
@@ -249,19 +258,25 @@
                             <h3 class="text-lg font-bold text-dark-color">${service.title}</h3>
                             <p class="text-gray-600 mt-2 text-sm">${(service.description || '').substring(0, 100)}...</p>
                         </div>
-                    </a>
-                `).join('');
+                    </a>`).join('');
             }
         }
 
         function renderService(service) {
-            document.title = `${service.title} - المكتب الرقمي`;
+            document.title = `${service.title} - khadamatmaroc`;
             document.getElementById('service-image').src = service.image_url || 'https://placehold.co/1200x600?text=Service+Image';
             document.getElementById('service-image').alt = service.title;
             document.getElementById('service-title-main').textContent = service.title;
-            document.getElementById('service-long-description').innerHTML = service.long_description || '';
+            document.getElementById('service-long-description').innerHTML = service.long_description || '<p>لا يوجد وصف تفصيلي لهذه الخدمة حاليًا.</p>';
             document.getElementById('sidebar-price').innerHTML = `${service.price} <span class="text-xl font-semibold">درهم</span>`;
-            document.getElementById('order-button').href = `payment-gateway.html?service_id=${service.id}`;
+            
+            // --- ✅ THE CRITICAL BUG FIX IS HERE ---
+            // We now pass all necessary info to the payment gateway URL
+            const orderUrl = new URL('payment-gateway.html', window.location.origin);
+            orderUrl.searchParams.set('service_id', service.id);
+            orderUrl.searchParams.set('title', service.title);
+            orderUrl.searchParams.set('price', service.price);
+            document.getElementById('order-button').href = orderUrl.toString();
             
             loader.style.display = 'none';
             serviceLayout.classList.remove('hidden');
@@ -273,13 +288,14 @@
             if (!serviceSlug) { showError(); return; }
 
             try {
-                const { data: service, error } = await supabase.from('services').select('*').eq('slug', serviceSlug).single();
+                const { data: service, error } = await supabaseClient.from('services').select('*').eq('slug', serviceSlug).single();
                 if (error || !service) { showError(); return; }
                 
                 renderService(service);
                 setupShareButtons(service);
-                fetchRelatedServices(service.category_id, service.id);
-
+                if (service.category_id) {
+                    fetchRelatedServices(service.category_id, service.id);
+                }
             } catch (err) {
                 console.error(err);
                 showError();

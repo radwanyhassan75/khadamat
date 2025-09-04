@@ -10,14 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Supabase Client Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
-    <!-- Tone.js for sound effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <!-- Google Pay API -->
     <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
     
 
@@ -43,6 +39,8 @@
             font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--gray-color);
             direction: rtl; color: var(--text-color);
         }
+
+        /* --- ✅ MODIFICATION START: Header & Responsive Navigation --- */
         .main-header {
             background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky; top: 0; width: 100%; z-index: 1000;
@@ -53,14 +51,16 @@
         }
         .navbar-logo img { height: 60px; transition: transform 0.3s ease; }
         .navbar-logo img:hover { transform: scale(1.05); }
-        .nav-links { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; align-items: center; }
+        .nav-links { list-style: none; display: flex; gap: 35px; margin: 0; padding: 0; align-items: center; transition: transform 0.3s ease-in-out; }
         .nav-links a { text-decoration: none; color: var(--dark-color); font-weight: 700; font-size: 1rem; transition: color 0.3s ease; position: relative; padding-bottom: 5px; }
         .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; right: 0; background-color: var(--primary-color); transition: width 0.3s ease-in-out; }
         .nav-links a:hover { color: var(--primary-color); }
         .nav-links a:hover::after { width: 100%; }
-        .hamburger { display: none; }
+        .hamburger { display: none; cursor: pointer; font-size: 1.8rem; color: var(--dark-color); z-index: 1001; }
+        /* --- ✅ MODIFICATION END --- */
+
         .page-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        .page-header h1 { font-size: 2.5rem; font-weight: 900; color: var(--dark-color); margin: 10px 0; text-align: center; margin-bottom: 40px;}
+        .page-header h1 { font-size: 2.5rem; font-weight: 900; color: var(--dark-color); text-align: center; margin-bottom: 40px;}
         .card {
             background: var(--light-color); padding: 30px 40px; border-radius: var(--border-radius);
             box-shadow: var(--box-shadow); margin-bottom: 30px; border: 1px solid #e9ecef;
@@ -77,11 +77,13 @@
             border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
             font-size: 1.2rem; flex-shrink: 0;
         }
-        .form-group { margin-bottom: 25px; }
+
+        /* --- ✅ MODIFICATION START: Form Validation Styles --- */
+        .form-group { margin-bottom: 25px; position: relative; }
         label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
         .required-star { color: var(--danger-color); }
         .input-wrapper { position: relative; }
-        .input-icon { position: absolute; top: 50%; transform: translateY(-50%); right: 18px; color: #adb5bd; }
+        .input-icon { position: absolute; top: 50%; transform: translateY(-50%); right: 18px; color: #adb5bd; transition: color 0.3s ease; }
         input, textarea {
             width: 100%; padding: 14px 50px 14px 18px; border: 1px solid #ced4da;
             border-radius: 10px; font-size: 1rem; font-family: 'Cairo', sans-serif;
@@ -91,6 +93,16 @@
             outline: none; border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
         }
+        input:focus ~ .input-icon { color: var(--primary-color); }
+        .form-group.invalid input, .form-group.invalid textarea { border-color: var(--danger-color); }
+        .form-group.invalid .input-icon { color: var(--danger-color); }
+        .error-message {
+            color: var(--danger-color); font-size: 0.8rem; font-weight: 600;
+            margin-top: 5px; display: none;
+        }
+        .form-group.invalid .error-message { display: block; }
+        /* --- ✅ MODIFICATION END --- */
+
         input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
         .field-note { font-size: 0.85rem; color: #6c757d; margin-top: 8px; }
         .submit-btn {
@@ -142,7 +154,7 @@
         .remove-file-btn { background: none; border: none; font-size: 1.2rem; color: var(--danger-color); cursor: pointer; flex-shrink: 0; margin-right: auto; }
 
         .legal-agreements { margin-top: 30px; padding: 20px; border-top: 1px solid var(--border-color); background-color: #fcfdff; border-radius: 10px; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; } /* ✅ Added position relative */
         .checkbox-group:last-child { margin-bottom: 0; }
         .checkbox-group input[type="checkbox"] { flex-shrink: 0; margin-top: 6px; appearance: none; -webkit-appearance: none; width: 1.3em; height: 1.3em; border: 2px solid #adb5bd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease-in-out; position: relative; }
         .checkbox-group input[type="checkbox"]:checked { background-color: var(--primary-color); border-color: var(--primary-color); }
@@ -150,6 +162,7 @@
         .checkbox-group label { font-weight: normal; font-size: 0.95rem; line-height: 1.7; margin: 0; }
         .checkbox-group a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
         .checkbox-group a:hover { text-decoration: underline; }
+        .form-group.invalid .checkbox-group label { color: var(--danger-color); } /* ✅ Style for invalid checkbox */
         
         .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
@@ -164,27 +177,64 @@
         .social-links a:hover { color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
 
+        /* --- ✅ MODIFICATION START: Loader Overlay Styles --- */
+        #loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; flex-direction: column; gap: 20px;
+        }
+        #loader-overlay .spinner {
+            border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-color);
+            border-radius: 50%; width: 60px; height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        #loader-overlay p { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- ✅ MODIFICATION END --- */
+
         @media (max-width: 768px) {
-            .nav-links { display: none; } 
+            .navbar { position: relative; } /* ✅ Added for positioning menu */
             .hamburger { display: block; }
+            .nav-links {
+                position: absolute; top: 80px; right: 0;
+                background: var(--light-color);
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                padding: 10px 0;
+            }
+            .nav-links.active { transform: translateY(0); } /* ✅ Show menu */
+            .nav-links li { width: 100%; text-align: center; }
+            .nav-links a { display: block; padding: 20px; width: 100%; }
+            .nav-links a::after { right: 50%; transform: translateX(50%); }
+
             .card { padding: 20px; }
             .card-header { padding: 15px 20px; margin: -20px -20px 20px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
+    <div id="loader-overlay">
+        <div class="spinner"></div>
+        <p id="loader-text">جاري الإرسال...</p>
+    </div>
 
     <header class="main-header">
         <nav class="navbar">
             <a href="index.html" class="navbar-logo">
                 <img src="https://github.com/radwanyhassan75/logo.png/blob/main/20832c91-c5a0-4bb1-a95f-b8c8bd097d7a-removebg-preview.png?raw=true" alt="شعار المكتب الرقمي">
             </a>
-            <ul class="nav-links">
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="blog.html">المدونة</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="tracking.html">تتبع الطلب</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
             </ul>
+            <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
@@ -207,23 +257,27 @@
                 <div class="card-header"><span class="step-icon"><i class="fas fa-user"></i></span><h3>معلوماتك الشخصية</h3></div>
                 <div class="form-group">
                     <label for="name">الاسم الكامل <span class="required-star">*</span></label>
-                    <div class="input-wrapper"><i class="fas fa-user input-icon"></i><input type="text" name="customerName" id="name" required /></div>
+                    <div class="input-wrapper"><i class="fas fa-user input-icon"></i><input type="text" name="customerName" id="name" placeholder="مثال: محمد أمين" required /></div>
+                    <div class="error-message">الاسم الكامل حقل مطلوب.</div>
                 </div>
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
-                    <div class="input-wrapper"><i class="fas fa-envelope input-icon"></i><input type="email" name="email" id="email" required /></div>
+                    <div class="input-wrapper"><i class="fas fa-envelope input-icon"></i><input type="email" name="email" id="email" placeholder="example@mail.com" required /></div>
+                    <div class="error-message">بريد إلكتروني صحيح حقل مطلوب.</div>
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
-                    <div class="input-wrapper"><i class="fab fa-whatsapp input-icon"></i><input type="tel" name="phone" id="phone" required /></div>
+                    <div class="input-wrapper"><i class="fab fa-whatsapp input-icon"></i><input type="tel" name="phone" id="phone" placeholder="مثال: 0612345678" required /></div>
+                    <div class="error-message">رقم الهاتف حقل مطلوب.</div>
                 </div>
-            </div>
+                </div>
 
             <div class="card">
                 <div class="card-header"><span class="step-icon"><i class="fas fa-pencil-alt"></i></span><h3>تفاصيل إضافية ومرفقات</h3></div>
                 <div class="form-group">
                     <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                    <textarea name="serviceDetails" id="service-details" rows="4" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية احترافية باللغة الإنجليزية..."></textarea>
+                    <textarea name="serviceDetails" id="service-details" rows="4" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية احترافية باللغة الإنجليزية للتقديم على وظيفة مدير تسويق..."></textarea>
+                    <div class="error-message">يرجى تقديم تفاصيل طلبك.</div>
                 </div>
                 <div class="form-group">
                     <label for="optional-link">رابط إضافي (اختياري)</label>
@@ -251,11 +305,10 @@
                         <p class="loading-text">جاري تحميل خيارات الدفع...</p>
                     </div>
                     <input type="hidden" name="paymentMethod" id="payment-method-input" required>
+                    <div class="error-message">يرجى اختيار وسيلة دفع.</div>
                 </div>
-                
                 <div id="payment-details-container" class="payment-details-container"></div>
                 <div id="stripe-info-box" class="stripe-info-box"></div>
-                <!-- Google Pay Button Container -->
                 <div id="google-pay-button-container" style="display: none; margin-top: 20px; justify-content: center;"></div>
                 
                 <div class="form-group" id="receipt-upload-group" style="display: none;">
@@ -269,9 +322,9 @@
                          <div class="file-preview-info"></div>
                          <button type="button" class="remove-file-btn" aria-label="إزالة الملف"><i class="fas fa-times"></i></button>
                      </div>
+                     <div class="error-message">وصل الدفع مطلوب لإتمام الطلب.</div>
                 </div>
-                
-                <div class="legal-agreements">
+                <div class="legal-agreements form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="terms-agree" required>
                         <label for="terms-agree">أقر بأنني قرأت ووافقت على <a href="terms.html" target="_blank">الشروط والأحكام</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a>.</label>
@@ -280,8 +333,8 @@
                         <input type="checkbox" id="data-consent" required>
                         <label for="data-consent">أوافق على جمع بياناتي الشخصية لمعالجة طلبي وفقًا للقانون 09-08.</label>
                     </div>
+                    <div class="error-message">يجب الموافقة على جميع الشروط للمتابعة.</div>
                 </div>
-
                 <button type="submit" class="submit-btn" id="submit-btn" disabled><i class="fas fa-lock"></i> أكمل الحقول والموافقات المطلوبة</button>
                 <div id="form-error"></div>
             </div>
@@ -380,8 +433,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const stripeInfoBox = document.getElementById('stripe-info-box');
     const receiptUploadGroup = document.getElementById('receipt-upload-group');
     const googlePayContainer = document.getElementById('google-pay-button-container');
-    
+    const loaderOverlay = document.getElementById('loader-overlay'); // ✅ MODIFICATION: Get loader element
+    const loaderText = document.getElementById('loader-text'); // ✅ MODIFICATION: Get loader text element
+
     let paymentMethods = [];
+    
+    // --- ✅ MODIFICATION: Responsive Navigation ---
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
 
     // --- PAYMENT METHODS LOGIC ---
     async function fetchPaymentMethods() {
@@ -483,38 +545,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function getGooglePaymentDataRequest() {
         const price = document.getElementById('form-service-price').value;
         return {
-            apiVersion: 2,
-            apiVersionMinor: 0,
+            apiVersion: 2, apiVersionMinor: 0,
             allowedPaymentMethods: [{
                 type: 'CARD',
-                parameters: {
-                    allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                    allowedCardNetworks: ["VISA", "MASTERCARD"]
-                },
+                parameters: { allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"], allowedCardNetworks: ["VISA", "MASTERCARD"] },
                 tokenizationSpecification: {
                     type: 'PAYMENT_GATEWAY',
-                    parameters: {
-                        'gateway': 'stripe',
-                        'stripe:version': '2020-08-27',
-                        'stripe:publishableKey': currentConfig.STRIPE_PUBLISHABLE_KEY
-                    }
+                    parameters: { 'gateway': 'stripe', 'stripe:version': '2020-08-27', 'stripe:publishableKey': currentConfig.STRIPE_PUBLISHABLE_KEY }
                 }
             }],
-            transactionInfo: {
-                totalPriceStatus: 'FINAL',
-                totalPrice: price,
-                currencyCode: 'MAD'
-            },
-            merchantInfo: {
-                merchantId: currentConfig.GOOGLE_PAY_MERCHANT_ID,
-                merchantName: currentConfig.GOOGLE_PAY_MERCHANT_NAME
-            }
+            transactionInfo: { totalPriceStatus: 'FINAL', totalPrice: price, currencyCode: 'MAD' },
+            merchantInfo: { merchantId: currentConfig.GOOGLE_PAY_MERCHANT_ID, merchantName: currentConfig.GOOGLE_PAY_MERCHANT_NAME }
         };
     }
 
     async function onGooglePayClicked() {
-        if (!validateForm(true)) {
+        if (!validateForm(false, true)) { // ✅ MODIFICATION: Pass flag to skip button update
             showError('الرجاء ملء جميع الحقول المطلوبة والموافقة على الشروط قبل الدفع.');
+            form.querySelector(':invalid')?.focus();
             return;
         }
         
@@ -535,16 +583,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const attachmentUrl = await uploadFile(attachmentFile, 'attachments');
             
             const orderData = {
-                // ✅ FIX: Use 'customer_name' to match database column
-                customer_name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                service_name: document.getElementById('form-service-name').value,
+                customer_name: document.getElementById('name').value, email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value, service_name: document.getElementById('form-service-name').value,
                 price: parseFloat(document.getElementById('form-service-price').value),
-                service_details: document.getElementById('service-details').value,
-                optional_link: document.getElementById('optional-link').value,
-                payment_method: 'Google Pay',
-                attachment_url: attachmentUrl,
+                service_details: document.getElementById('service-details').value, optional_link: document.getElementById('optional-link').value,
+                payment_method: 'Google Pay', attachment_url: attachmentUrl,
                 google_pay_token: paymentData.paymentMethodData.tokenizationData.token
             };
 
@@ -560,7 +603,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- FORM SUBMISSION & VALIDATION ---
     async function handleFormSubmit(e) {
         e.preventDefault();
-        if (submitBtn.disabled) return;
+        
+        // ✅ MODIFICATION: Re-validate on submit to show all errors
+        if (!validateForm(false)) {
+            showError('يرجى تصحيح الأخطاء في الحقول المشار إليها باللون الأحمر.');
+            form.querySelector('.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
         
         showLoadingState(true);
         const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
@@ -570,49 +619,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const attachmentUrl = await uploadFile(attachmentFile, 'attachments');
 
             if (selectedMethodId === 'stripe') {
+                showLoadingState(true, 'جاري التوجيه للدفع الآمن...');
                 const stripeMetadata = {
-                    // ✅ FIX: Use 'customer_name' to match database column
-                    customer_name: document.getElementById('name').value,
-                    phone: document.getElementById('phone').value,
+                    customer_name: document.getElementById('name').value, phone: document.getElementById('phone').value,
                     service_details: document.getElementById('service-details').value,
                     optional_link: document.getElementById('optional-link').value || 'N/A',
-                    payment_method: 'Stripe',
-                    attachment_url: attachmentUrl || ''
+                    payment_method: 'Stripe', attachment_url: attachmentUrl || ''
                 };
-
                 const { data, error } = await supabaseClient.functions.invoke('create-stripe-checkout', {
                     body: {
                         serviceName: document.getElementById('form-service-name').value,
                         price: parseFloat(document.getElementById('form-service-price').value),
-                        customerEmail: document.getElementById('email').value,
-                        metadata: stripeMetadata
+                        customerEmail: document.getElementById('email').value, metadata: stripeMetadata
                     }
                 });
-
                 if (error) throw new Error('فشل إنشاء جلسة الدفع: ' + error.message);
-                
                 const { sessionId } = data;
                 if (!sessionId) throw new Error('لم يتم استلام معرف جلسة الدفع.');
-
                 const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
                 if (stripeError) throw new Error('فشل التوجيه لصفحة الدفع: ' + stripeError.message);
 
             } else { // Bank Transfer Logic
                 const receiptFile = document.getElementById('receipt-file-input').files[0];
                 const receiptUrl = await uploadFile(receiptFile, 'receipts');
-
                 const orderData = {
-                    // ✅ FIX: Use 'customer_name' to match database column
-                    customer_name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    service_name: document.getElementById('form-service-name').value,
+                    customer_name: document.getElementById('name').value, email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value, service_name: document.getElementById('form-service-name').value,
                     price: parseFloat(document.getElementById('form-service-price').value),
-                    service_details: document.getElementById('service-details').value,
-                    optional_link: document.getElementById('optional-link').value,
-                    payment_method: document.getElementById('payment-method-input').value,
-                    receipt_url: receiptUrl,
-                    attachment_url: attachmentUrl,
+                    service_details: document.getElementById('service-details').value, optional_link: document.getElementById('optional-link').value,
+                    payment_method: document.getElementById('payment-method-input').value, receipt_url: receiptUrl, attachment_url: attachmentUrl,
                 };
                 const { data, error } = await supabaseClient.functions.invoke('submit-order', { body: orderData });
                 if (error) throw error;
@@ -624,20 +659,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function validateForm(silent = false) {
-        const requiredInputs = Array.from(form.querySelectorAll('[required]'));
+    // --- ✅ MODIFICATION START: Rewritten validation logic ---
+    function validateField(input) {
+        let isValid = true;
+        // Ignore hidden fields unless they are part of a visible group (like file inputs)
+        if (input.offsetParent === null && input.type !== 'file' && input.type !== 'hidden') return true; 
+
+        if (!input.required) return true;
+
+        if (input.type === 'checkbox') {
+            isValid = input.checked;
+        } else if (input.type === 'file') {
+            isValid = input.files.length > 0;
+        } else if (input.type === 'email') {
+            isValid = input.value.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);
+        } else {
+            isValid = input.value.trim() !== '';
+        }
+        
+        // Handle special case for checkbox group
+        const parentGroup = input.closest('.form-group');
+        if (parentGroup) {
+            parentGroup.classList.toggle('invalid', !isValid);
+        }
+
+        return isValid;
+    }
+
+    function validateForm(isSilent = false, forGooglePay = false) {
         let isFormValid = true;
-        requiredInputs.forEach(input => {
-            if (input.offsetParent === null) return;
-            
-            if ((input.type === 'checkbox' && !input.checked) ||
-                (input.type === 'file' && input.files.length === 0) ||
-                (input.type !== 'file' && input.type !== 'checkbox' && !input.value.trim())) {
+        const requiredFields = form.querySelectorAll('[required]');
+
+        requiredFields.forEach(input => {
+            if (!validateField(input)) {
                 isFormValid = false;
             }
         });
         
-        if (silent) return isFormValid;
+        // Validate checkbox groups as one
+        const legalAgreements = document.querySelector('.legal-agreements');
+        const checkboxes = legalAgreements.querySelectorAll('input[type="checkbox"][required]');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        legalAgreements.classList.toggle('invalid', !allChecked);
+        if (!allChecked) isFormValid = false;
+
+
+        if (isSilent) return isFormValid;
+        
+        // For Google Pay, we don't need to update the regular submit button
+        if (forGooglePay) return isFormValid;
 
         submitBtn.disabled = !isFormValid;
         const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
@@ -648,20 +718,26 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
             submitBtn.className = 'submit-btn';
         }
+
         return isFormValid;
     }
+    // --- ✅ MODIFICATION END ---
 
+    // --- ✅ UTILITY FUNCTIONS (WITH FIX) ---
     // --- ✅ UTILITY FUNCTIONS (WITH FIX) ---
     async function uploadFile(file, folder) {
         if (!file) return null;
 
-        // ✅ FIX: Sanitize the filename to handle all characters, including Arabic
+        // ✅ تغيير: استخلاص امتداد الملف فقط
         const fileExtension = file.name.split('.').pop();
-        const sanitizedCoreName = file.name.replace(/\.[^/.]+$/, "") 
-                                     .replace(/[^a-zA-Z0-9\u0600-\u06FF.-]/g, '_') // Keep Arabic letters, numbers, dots, hyphens
-                                     .replace(/_{2,}/g, '_');
+        
+        // ✅ تغيير: إنشاء اسم ملف جديد، آمن، وفريد تمامًا
+        // يتكون من (الوقت الحالي) - (سلسلة عشوائية) . (امتداد الملف)
+        // مثال: 1678886400000-a1b2c3d4.png
+        const newFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${fileExtension}`;
 
-        const filePath = `public/${folder}/${Date.now()}-${sanitizedCoreName}.${fileExtension}`;
+        // ✅ تغيير: استخدام اسم الملف الجديد والآمن في المسار
+        const filePath = `public/${folder}/${newFileName}`;
 
         const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file, {
             cacheControl: '3600',
@@ -670,26 +746,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (error) {
             console.error('Supabase Storage Error:', error);
-            throw new Error(`فشل رفع الملف: ${error.message}`);
+            // ✅ تحسين: جعل رسالة الخطأ أكثر وضوحًا
+            throw new Error(`فشل رفع الملف إلى المخزن. الخطأ: ${error.message}`);
         }
 
         const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
         return data.publicUrl;
     }
     
+    // ✅ MODIFICATION: Updated loading state to use overlay
     function showLoadingState(isLoading, text = 'جاري الإرسال...') {
         if (isLoading) {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${text}`;
-            errorDiv.style.display = 'none';
+            loaderText.textContent = text;
+            loaderOverlay.style.display = 'flex';
         } else {
-            validateForm();
+            loaderOverlay.style.display = 'none';
+            validateForm(); // Re-enable button if needed after error
         }
     }
 
     function showError(message) {
         errorDiv.textContent = message;
         errorDiv.style.display = 'block';
+        window.scrollTo({ top: errorDiv.offsetTop - 100, behavior: 'smooth' });
     }
     
     function createDetailRow(label, value) {
@@ -754,7 +833,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- PAGE INITIALIZATION ---
     function initializePage() {
         const params = new URLSearchParams(window.location.search);
-        
         const serviceName = decodeURIComponent(params.get('service') || 'غير محدد');
         const servicePrice = decodeURIComponent(params.get('price') || '0');
 
@@ -764,8 +842,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('form-service-price').value = servicePrice;
         
         form.addEventListener('submit', handleFormSubmit);
-        form.querySelectorAll('input, textarea, select').forEach(input => {
+        // ✅ MODIFICATION: Use blur event for instant feedback after user leaves a field
+        form.querySelectorAll('input[required], textarea[required]').forEach(input => {
+            input.addEventListener('blur', () => validateField(input));
             input.addEventListener('input', () => validateForm());
+        });
+        form.querySelectorAll('input[type=checkbox][required], input[type=file][required]').forEach(input => {
             input.addEventListener('change', () => validateForm());
         });
         
@@ -779,4 +861,3 @@ document.addEventListener('DOMContentLoaded', () => {
     
 </body>
 </html>
-
