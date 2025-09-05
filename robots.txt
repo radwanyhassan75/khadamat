@@ -1,0 +1,56 @@
+# ملف robots.txt لموقع المكتب الرقمي
+# يحدد الصفحات المسموح بزحفها وتلك المحظورة
+
+User-agent: *
+
+# منع الزحف إلى الصفحات الحساسة
+Disallow: /auth-callback.html
+Disallow: /complete-profile.html
+Disallow: /confirmation.html
+Disallow: /dashboard.html
+Disallow: /delete-account.html
+Disallow: /forgot-password.html
+Disallow: /login.html
+Disallow: /my-orders.html
+Disallow: /payment-gateway.html
+Disallow: /register.html
+Disallow: /settings.html
+Disallow: /success.html
+Disallow: /update-password.html
+Disallow: /verify-email.html
+
+# منع الزحف إلى دليل الإدارة بالكامل
+Disallow: /admin/
+
+# منع الزحف إلى ملفات JavaScript حساسة
+Disallow: /admin/*.js
+Disallow: /auth.js
+Disallow: /chatbot.js
+Disallow: /cookie-consent.js
+Disallow: /layout.js
+Disallow: /script.js
+Disallow: /Stripe.js
+Disallow: /theme.js
+Disallow: /translations.js
+
+# السماح بالزحف إلى الصفحات العامة
+Allow: /about.html
+Allow: /blog-post-1.html
+Allow: /blog.html
+Allow: /contact-success.html
+Allow: /contact.html
+Allow: /faq.html
+Allow: /index.html
+Allow: /payment.html
+Allow: /prices.html
+Allow: /privacy-policy.html
+Allow: /refund-policy.html
+Allow: /service-details.html
+Allow: /services.html
+Allow: /terms-and-conditions.html
+Allow: /track-order.html
+Allow: /track-ticket.html
+Allow: /sitemap.xml
+
+# رابط خريطة الموقع
+Sitemap: https://khadamatmaroc.co.uk/sitemap.xml
