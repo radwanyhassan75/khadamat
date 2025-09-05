@@ -5,28 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة الخدمات - لوحة التحكم</title>
 
-    <!-- ✅ 1. استدعاء "حارس الأمن" أولاً -->
     <script type="module" src="admin-auth.js" defer></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- ✅ 2. استدعاء مكتبات التصدير -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     
     <style>
         body { font-family: 'Cairo', sans-serif; }
         .sidebar-link.active { background-color: #eef2ff; color: #4f46e5; font-weight: 700; }
         .sidebar-link.active .lucide { color: #4f46e5; }
+        .modal-backdrop { transition: opacity 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50" style="display: none;">
 
     <div class="flex h-screen bg-gray-50">
-        <!-- Sidebar -->
         <aside class="w-64 bg-white border-l border-gray-200 flex flex-col">
             <div class="flex items-center justify-center h-20 border-b"><h1 class="text-2xl font-bold text-indigo-600">لوحة التحكم</h1></div>
             <nav class="flex-1 px-4 py-6 space-y-2">
@@ -34,52 +28,72 @@
                 <a href="orders.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="shopping-cart" class="w-5 h-5 ml-3 text-gray-500"></i><span>الطلبات</span></a>
                 <a href="tickets.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="life-buoy" class="w-5 h-5 ml-3 text-gray-500"></i><span>تذاكر الدعم</span></a>
                 <a href="manage-services.html" class="sidebar-link flex items-center p-3 rounded-lg active"><i data-lucide="briefcase" class="w-5 h-5 ml-3"></i><span>الخدمات</span></a>
+                 <a href="settings.html" class="sidebar-link flex items-center p-3 rounded-lg hover:bg-gray-100"><i data-lucide="settings" class="w-5 h-5 ml-3 text-gray-500"></i><span>الإعدادات</span></a>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white border-b h-20 flex items-center justify-between px-8">
                 <h1 class="text-xl font-bold text-gray-800">إدارة الخدمات</h1>
                 <div class="flex items-center gap-4">
-                    <div class="relative" id="export-container" style="display: none;">
-                        <button id="export-btn" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center shadow-sm">
-                            <i data-lucide="download" class="w-5 h-5 ml-2"></i> تصدير
-                        </button>
-                        <div id="export-menu" class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden">
-                            <a href="#" id="export-csv" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-spreadsheet" class="w-4 h-4 text-green-600"></i> تصدير كـ CSV</a>
-                            <a href="#" id="export-xml" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-code" class="w-4 h-4 text-blue-600"></i> تصدير كـ XML</a>
-                            <a href="#" id="export-pdf" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="file-text" class="w-4 h-4 text-red-600"></i> تصدير كـ PDF</a>
-                        </div>
-                    </div>
-                    <a href="edit-service.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center shadow-sm">
-                        <i data-lucide="plus" class="w-5 h-5 ml-2"></i> إضافة خدمة جديدة
+                    <button id="export-btn" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 flex items-center gap-2 text-sm font-bold" style="display: none;">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>تصدير الكتالوج</span>
+                    </button>
+                    <a href="edit-service.html" class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 flex items-center gap-2 text-sm font-bold">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>إضافة خدمة جديدة</span>
                     </a>
                 </div>
             </header>
 
             <main class="flex-1 overflow-y-auto p-8">
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                     <h2 class="text-lg font-bold text-gray-800 mb-4">قائمة الخدمات</h2>
+                     <div id="services-table-container" class="overflow-x-auto">
+                        <table class="w-full text-sm text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
-                                    <th class="p-4 text-right font-semibold text-gray-600">الخدمة</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">السعر</th>
-                                    <th class="p-4 text-right font-semibold text-gray-600">الحالة</th>
-                                    <th class="p-4 text-center font-semibold text-gray-600">إجراءات</th>
+                                    <th class="p-4 font-semibold">الخدمة</th>
+                                    <th class="p-4 font-semibold">السعر</th>
+                                    <th class="p-4 font-semibold">الحالة</th>
+                                    <th class="p-4 font-semibold text-center">إجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody id="services-table-body" class="divide-y divide-gray-100">
-                                <tr><td colspan="4" class="p-8 text-center text-gray-500">جاري تحميل الخدمات...</td></tr>
+                            <tbody id="services-table-body">
+                                <tr><td colspan="4" class="py-8 text-center text-gray-500">جاري تحميل الخدمات...</td></tr>
                             </tbody>
                         </table>
-                    </div>
+                     </div>
                 </div>
             </main>
         </div>
     </div>
     
+    <div id="export-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal-backdrop hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                 <h3 class="text-2xl font-bold text-gray-800">تصدير كتالوج الخدمات</h3>
+                 <button id="close-export-modal-btn" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <p class="text-gray-600 mt-2 mb-6">اختر التنسيق المطلوب. سيتم تصدير جميع الخدمات الموجودة في قائمتك.</p>
+            <div class="flex flex-col gap-4">
+                <button data-format="google" class="export-format-btn bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 w-full flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span>تصدير لـ Google Merchant</span>
+                </button>
+                <button data-format="facebook" class="export-format-btn bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 w-full flex items-center justify-center gap-2">
+                    <i data-lucide="facebook" class="w-5 h-5"></i>
+                    <span>تصدير لـ Facebook Catalog</span>
+                </button>
+                 <button data-format="generic" class="export-format-btn bg-gray-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-gray-700 w-full flex items-center justify-center gap-2">
+                    <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                    <span>تصدير عام (CSV)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="confirmation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60 hidden">
         <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto">
             <h3 class="text-lg font-bold text-gray-900 mb-4">تأكيد الحذف</h3>
@@ -94,38 +108,30 @@
     <script>
         function initializePage(supabaseClient) {
             lucide.createIcons();
+
+            // DOM Elements
             const tableBody = document.getElementById('services-table-body');
             const modal = document.getElementById('confirmation-modal');
             const confirmDeleteBtn = document.getElementById('confirm-delete');
             const cancelDeleteBtn = document.getElementById('cancel-delete');
+            const exportBtn = document.getElementById('export-btn');
+            const exportModal = document.getElementById('export-modal');
+            const closeExportModalBtn = document.getElementById('close-export-modal-btn');
+            
+            // State
             let serviceIdToDelete = null;
             let allServices = [];
-            let arabicFontBase64 = null; // ✅ Variable to store the pre-loaded font
-
-            // ✅ Function to pre-load the font for faster PDF export
-            async function loadPdfFont() {
-                try {
-                    const fontUrl = 'https://raw.githubusercontent.com/google/fonts/main/ofl/amiri/Amiri-Regular.ttf';
-                    const fontResponse = await fetch(fontUrl);
-                    const font = await fontResponse.arrayBuffer();
-                    arabicFontBase64 = btoa(new Uint8Array(font).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-                } catch (fontError) {
-                    console.error("Could not pre-load Arabic font for PDF.", fontError);
-                }
-            }
 
             async function fetchServices() {
                 try {
-                    // ✅ FIX: Specify the foreign key relationship to avoid ambiguity
                     const { data, error } = await supabaseClient
                         .from('services')
-                        .select('*, service_categories!fk_service_categories(name)')
+                        .select(`*, service_categories!fk_service_categories (name)`)
                         .order('created_at', { ascending: false });
 
                     if (error) throw error;
                     allServices = data;
                     renderTable(data);
-                    document.getElementById('export-container').style.display = data.length > 0 ? 'block' : 'none';
                 } catch (error) {
                     console.error("Error fetching services:", error);
                     tableBody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-red-600">فشل تحميل الخدمات. الخطأ: ${error.message}</td></tr>`;
@@ -136,91 +142,208 @@
                 tableBody.innerHTML = '';
                 if (services.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">لا توجد خدمات مضافة حاليًا.</td></tr>';
+                    exportBtn.style.display = 'none';
                     return;
                 }
+                
+                exportBtn.style.display = 'flex';
+
                 services.forEach(service => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50';
                     const statusClass = service.status === 'available' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                     const statusText = service.status === 'available' ? 'متوفر' : 'غير متوفر';
-                    // ✅ FIX: Handle case where service_categories might be null
                     const categoryName = service.service_categories ? service.service_categories.name : 'غير مصنف';
-                    row.innerHTML = `<td class="p-4"><div class="flex items-center gap-4"><img src="${service.image_url || 'https://placehold.co/64x64/e2e8f0/cccccc?text=صورة'}" alt="${service.title}" class="w-12 h-12 object-cover rounded-lg"><div><div class="font-semibold text-gray-900">${service.title}</div><div class="text-xs text-gray-500">${categoryName}</div></div></div></td><td class="p-4 font-medium text-gray-700">${service.price} د.م</td><td class="p-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${statusText}</span></td><td class="p-4 text-center"><div class="flex justify-center items-center gap-2"><a href="edit-service.html?id=${service.id}" class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-md transition" title="تعديل"><i data-lucide="edit-2" class="w-4 h-4"></i></a><button data-id="${service.id}" class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div></td>`;
+                    
+                    row.innerHTML = `
+                        <td class="p-4">
+                            <div class="flex items-center gap-4">
+                                <img src="${service.image_url || 'https://placehold.co/64x64/e2e8f0/cccccc?text=صورة'}" alt="${service.title}" class="w-12 h-12 object-cover rounded-lg">
+                                <div>
+                                    <div class="font-semibold text-gray-900">${service.title}</div>
+                                    <div class="text-xs text-gray-500">${categoryName}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4 font-medium text-gray-700">${service.price} د.م</td>
+                        <td class="p-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${statusText}</span></td>
+                        <td class="p-4 text-center">
+                            <div class="flex justify-center items-center gap-2">
+                                <a href="edit-service.html?id=${service.id}" class="p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 rounded-md transition" title="تعديل"><i data-lucide="edit-2" class="w-4 h-4"></i></a>
+                                <button data-id="${service.id}" class="delete-btn p-2 text-gray-500 hover:bg-gray-100 hover:text-red-600 rounded-md transition" title="حذف"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                            </div>
+                        </td>
+                    `;
                     tableBody.appendChild(row);
                 });
                 lucide.createIcons();
                 addDeleteListeners();
             }
             
-            function addDeleteListeners() { /* ... existing code ... */ }
-            async function deleteService(id) { /* ... existing code ... */ }
-            function closeModal() { /* ... existing code ... */ }
-            confirmDeleteBtn.addEventListener('click', () => { if (serviceIdToDelete) deleteService(serviceIdToDelete); });
+            function addDeleteListeners() {
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        serviceIdToDelete = button.dataset.id;
+                        modal.classList.remove('hidden');
+                    });
+                });
+            }
+
+            async function deleteService(id) {
+                try {
+                    const { error } = await supabaseClient.from('services').delete().eq('id', id);
+                    if (error) throw error;
+                    closeModal();
+                    fetchServices();
+                } catch (error) {
+                    alert('فشل حذف الخدمة.');
+                    console.error('Error deleting service:', error);
+                }
+            }
+            
+            function closeModal() {
+                serviceIdToDelete = null;
+                modal.classList.add('hidden');
+            }
+
+            confirmDeleteBtn.addEventListener('click', () => {
+                if (serviceIdToDelete) deleteService(serviceIdToDelete);
+            });
             cancelDeleteBtn.addEventListener('click', closeModal);
 
             // --- Export Logic ---
-            const exportBtn = document.getElementById('export-btn');
-            const exportMenu = document.getElementById('export-menu');
-
-            exportBtn.addEventListener('click', () => exportMenu.classList.toggle('hidden'));
-            document.addEventListener('click', (e) => {
-                if (!exportBtn.contains(e.target) && !exportMenu.contains(e.target)) {
-                    exportMenu.classList.add('hidden');
+            function escapeCSV(str) {
+                if (str === null || str === undefined) return '';
+                let result = String(str).replace(/\r\n|\n|\r/g, ' ');
+                if (/[",]/.test(result)) {
+                    result = `"${result.replace(/"/g, '""')}"`;
                 }
-            });
-
-            function downloadFile(filename, content, mimeType) {
-                const bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // BOM for UTF-8
-                const blob = new Blob([bom, content], { type: mimeType });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url; a.download = filename;
-                document.body.appendChild(a); a.click();
-                document.body.removeChild(a); URL.revokeObjectURL(url);
+                return result;
             }
 
-            document.getElementById('export-csv').addEventListener('click', (e) => { /* ... existing code ... */ });
-            document.getElementById('export-xml').addEventListener('click', (e) => { /* ... existing code ... */ });
+            function convertToCSV(data, headers) {
+                const headerRow = headers.join(',');
+                const rows = data.map(row => 
+                    headers.map(header => escapeCSV(row[header])).join(',')
+                );
+                return '\uFEFF' + [headerRow, ...rows].join('\n');
+            }
 
-            // ✅ FIX: Updated PDF Export Logic
-            document.getElementById('export-pdf').addEventListener('click', (e) => {
-                e.preventDefault();
-                if (!arabicFontBase64) {
-                    alert("الخط العربي غير جاهز بعد، يرجى المحاولة مرة أخرى بعد لحظات.");
+            function downloadCSV(csvString, fileName) {
+                try {
+                    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    console.error("Download failed:", e);
+                    alert("فشل بدء التحميل.");
+                }
+            }
+            
+            function exportDataAsCSV(format) {
+                if (allServices.length === 0) {
+                    alert('لا توجد خدمات لتصديرها.');
                     return;
                 }
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                
+                let headers = [];
+                let data = [];
+                let fileName = 'export.csv';
+                
+                const YOUR_WEBSITE_URL = "https://khadamatmaroc.co.uk";
+                const YOUR_BRAND_NAME = "khadamatmaroc";
 
-                doc.addFileToVFS('Amiri-Regular.ttf', arabicFontBase64);
-                doc.addFont('Amiri-Regular.ttf', 'Amiri', 'normal');
-                doc.setFont('Amiri');
-                
-                doc.setR2L(true);
-                doc.text("قائمة الخدمات", doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
-                
-                const tableColumn = ["الحالة", "السعر", "الخدمة"];
-                const tableRows = allServices.map(service => [
-                    service.status === 'available' ? 'متوفر' : 'غير متوفر',
-                    `${service.price} د.م`,
-                    service.title
-                ]);
+                switch (format) {
+                    case 'google':
+                        fileName = 'google_products_export.csv';
+                        // ✅ UPDATE: Added 'google_product_category' to headers
+                        headers = ['id', 'title', 'description', 'price', 'condition', 'link', 'availability', 'image_link', 'brand', 'google_product_category'];
+                        data = allServices.map(service => ({
+                            id: service.id,
+                            title: service.title,
+                            description: service.description,
+                            price: `${service.price} MAD`,
+                            condition: 'new',
+                            // ✅ UPDATE: Switched from 'id' to 'slug' for the link
+                            link: `${YOUR_WEBSITE_URL}/service-details?slug=${service.slug}`,
+                            availability: service.status === 'available' ? 'in stock' : 'out of stock',
+                            image_link: service.image_url,
+                            brand: YOUR_BRAND_NAME,
+                            // ✅ UPDATE: Added category name from your DB as a placeholder
+                            google_product_category: service.service_categories ? service.service_categories.name : ''
+                        }));
+                        break;
 
-                doc.autoTable({
-                    head: [tableColumn],
-                    body: tableRows,
-                    startY: 20,
-                    theme: 'grid',
-                    styles: { font: 'Amiri', halign: 'right', cellPadding: 2 },
-                    headStyles: { fillColor: [79, 70, 229], fontStyle: 'bold' }
-                });
+                    case 'facebook':
+                        fileName = 'facebook_catalog_export.csv';
+                        // ✅ UPDATE: Added category fields to headers
+                        headers = ['id','title','description','availability','condition','price','link','image_link','brand', 'google_product_category', 'fb_product_category'];
+                        data = allServices.map(service => ({
+                            id: service.id,
+                            title: service.title,
+                            description: service.description,
+                            availability: service.status === 'available' ? 'in stock' : 'out of stock',
+                            condition: 'new',
+                            price: `${service.price} MAD`,
+                            // ✅ UPDATE: Switched from 'id' to 'slug' for the link
+                            link: `${YOUR_WEBSITE_URL}/service-details?slug=${service.slug}`,
+                            image_link: service.image_url,
+                            brand: YOUR_BRAND_NAME,
+                            // ✅ UPDATE: Added category name from your DB as a placeholder for both fields
+                            google_product_category: service.service_categories ? service.service_categories.name : '',
+                            fb_product_category: service.service_categories ? service.service_categories.name : ''
+                        }));
+                        break;
+                        
+                    case 'generic':
+                    default:
+                        fileName = 'services_export.csv';
+                        headers = ['id', 'title', 'description', 'price', 'status', 'category', 'slug', 'link'];
+                        data = allServices.map(service => ({
+                            id: service.id,
+                            title: service.title,
+                            description: service.description,
+                            price: service.price,
+                            status: service.status,
+                            category: service.service_categories ? service.service_categories.name : '',
+                            slug: service.slug,
+                            // ✅ UPDATE: Added the new link format to the generic export as well
+                            link: `${YOUR_WEBSITE_URL}/service-details?slug=${service.slug}`
+                        }));
+                        break;
+                }
                 
-                doc.save('services-list.pdf');
+                const csvString = convertToCSV(data, headers);
+                downloadCSV(csvString, fileName);
+                exportModal.classList.add('hidden');
+            }
+
+            exportBtn.addEventListener('click', () => {
+                exportModal.classList.remove('hidden');
+                lucide.createIcons();
+            });
+            closeExportModalBtn.addEventListener('click', () => {
+                exportModal.classList.add('hidden');
+            });
+            exportModal.addEventListener('click', (e) => {
+                if (e.target === exportModal) {
+                    exportModal.classList.add('hidden');
+                }
+                const formatBtn = e.target.closest('.export-format-btn');
+                if (formatBtn) {
+                    exportDataAsCSV(formatBtn.dataset.format);
+                }
             });
 
-            // Start fetching data and pre-loading the font
+            // Initial Fetch
             fetchServices();
-            loadPdfFont();
         }
     </script>
 </body>

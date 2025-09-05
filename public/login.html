@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>تسجيل الدخول - المكتب الرقمي</title>
@@ -14,9 +15,47 @@
 <meta property="fb:app_id" content="24385253824462027" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <link rel="stylesheet" href="layout.css">
+ <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "الرئيسية",
+        "item": "https://khadamatmaroc.co.uk/index.html"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "تسجيل الدخول"
+      }]
+    }
+    </script>
+
 </head>
 <body>
-
+<style>
+   /* --- تنسيق فتات الخبز (Breadcrumbs) --- */
+.breadcrumbs {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 20px;
+    text-align: right;
+}
+.breadcrumbs a {
+    color: var(--primary-color); /* سيستخدم اللون الأساسي لموقعك */
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+.breadcrumbs .fa-chevron-left {
+    font-size: 0.7rem;
+    margin: 0 10px;
+    vertical-align: middle;
+}
+</style>
     <div id="header-placeholder"></div>
 
     <main class="main-content">
@@ -28,9 +67,18 @@
                 </div>
             </div>
 
-            <div class="form-section">
-                <div class="form-box">
-                    <h1>تسجيل الدخول</h1>
+<div class="form-section">
+    <div class="form-box">
+        
+        <!-- ======================= الإضافة الجديدة هنا ======================= -->
+        <div class="breadcrumbs">
+            <a href="index.html">الرئيسية</a>
+            <i class="fas fa-chevron-left"></i>
+            <span>تسجيل الدخول</span>
+        </div>
+        <!-- ======================= نهاية الإضافة ======================= -->
+
+        <h1>تسجيل الدخول</h1>
                     <p>أدخل بياناتك للمتابعة.</p>
                     
                     <div id="message-box"></div>
@@ -119,6 +167,8 @@
                 messageBox.textContent = text;
             }
         });
+        
     </script>
+    
 </body>
 </html>
