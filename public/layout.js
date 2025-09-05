@@ -49,11 +49,21 @@ const footerHTML = `
             <div class="footer-section about">
                 <h3 class="footer-title">المكتب الرقمي</h3>
                 <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية، مصممة لتلبية احتياجاتك اليومية.</p>
-                 <div class="social-links">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                </div>
+               <div class="footer-section">
+  <h3>تواصل معنا</h3>
+  <div class="social-links">
+    <a href="https://m.me/548280335029651" target="_blank" rel="noopener noreferrer" title="Facebook Messenger">
+      <i class="fab fa-facebook-messenger"></i>
+    </a>
+    <a href="https://wa.me/212720327932" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="https://www.instagram.com/khadmatidigital/" target="_blank" rel="noopener noreferrer" title="Instagram">
+      <i class="fab fa-instagram"></i>
+    </a>
+  </div>
+</div>
+
             </div>
             <div class="footer-section links">
                 <h3 class="footer-title">روابط مهمة</h3>
@@ -78,7 +88,7 @@ const footerHTML = `
              <div class="footer-section contact">
                 <h3 class="footer-title">تواصل معنا</h3>
                 <ul class="contact-details">
-                    <li><i class="fas fa-phone-alt"></i> <a href="tel:+212600000000">+212 6 00 00 00 00</a></li>
+                    <li><i class="fas fa-phone-alt"></i> <a href="tel:+212720327932">+212720327932</a></li>
                     <li><i class="fas fa-envelope"></i> <a href="mailto:support@khadamatmaroc.co.uk">support@khadamatmaroc.co.uk</a></li>
                 </ul>
             </div>
