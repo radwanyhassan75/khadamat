@@ -302,4 +302,292 @@
     </script>
     <script src="layout.js"></script>
 </body>
+<style>
+  /* ----- إعدادات أساسية ومتغيرات التصميم ----- */
+  :root {
+    --wa-green: #25D366;
+    --wa-dark-green: #128C7E;
+    --wa-light-bg: #E5DDD5;
+    --wa-white: #FFFFFF;
+    --wa-dark-text: #333333;
+    --wa-light-text: #667781;
+    --wa-timing: 0.4s;
+    --wa-bezier: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ----- أيقونة الواتساب العائمة (FAB) ----- */
+  .wa-chat-widget {
+    position: fixed;
+    bottom: 110px;
+    right: 30px;
+    z-index: 1000;
+  }
+
+  .wa-fab {
+    width: 65px;
+    height: 65px;
+    background-color: var(--wa-green);
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform var(--wa-timing) var(--wa-bezier), box-shadow var(--wa-timing) ease;
+    transform: scale(1);
+  }
+
+  .wa-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .wa-fab svg {
+    width: 38px;
+    height: 38px;
+    fill: var(--wa-white);
+    transition: transform var(--wa-timing) var(--wa-bezier);
+  }
+  
+  /* ----- نافذة المحادثة ----- */
+  .wa-chat-box {
+    position: absolute;
+    bottom: 85px; /* فوق الزر العائم */
+    right: 0;
+    width: 360px;
+    height: auto;
+    background: rgba(255, 255, 255, 0.85); /* تأثير زجاجي */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+    /* حالة الإخفاء الأولية */
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    pointer-events: none;
+    transition: opacity var(--wa-timing) var(--wa-bezier), transform var(--wa-timing) var(--wa-bezier);
+  }
+
+  /* ----- حالة الظهور (عند إضافة كلاس .active) ----- */
+  .wa-chat-widget.active .wa-chat-box {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+
+  /* تغيير شكل الأيقونة عند فتح النافذة */
+  .wa-chat-widget.active .wa-fab svg.wa-icon-whatsapp {
+      transform: scale(0);
+      opacity: 0;
+  }
+  .wa-chat-widget.active .wa-fab svg.wa-icon-close {
+      transform: scale(1);
+      opacity: 1;
+  }
+  .wa-fab svg.wa-icon-close {
+      position: absolute;
+      transform: scale(0);
+      opacity: 0;
+      width: 30px;
+      height: 30px;
+  }
+
+  /* ----- تصميم رأس النافذة (Header) ----- */
+  .wa-header {
+    background: var(--wa-dark-green);
+    color: var(--wa-white);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .wa-header-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    background-image: url('https://khadamatmaroc.co.uk/images/logo.png'); /* يمكنك وضع رابط لوجو شركتك هنا */
+    background-size: cover;
+    border: 2px solid var(--wa-white);
+  }
+  .wa-header-text h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .wa-header-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  /* ----- تصميم جسم المحادثة ----- */
+  .wa-body {
+    padding: 20px;
+    flex-grow: 1;
+  }
+  .wa-message-box {
+    background: var(--wa-white);
+    padding: 15px;
+    border-radius: 0 10px 10px 10px;
+    max-width: 85%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .wa-message-box p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--wa-dark-text);
+  }
+
+  /* ----- تصميم حقل الإدخال والإرسال ----- */
+  .wa-footer {
+    display: flex;
+    padding: 15px;
+    background: rgba(240, 242, 245, 0.8);
+  }
+  .wa-input {
+    flex-grow: 1;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 25px;
+    background: var(--wa-white);
+    font-size: 15px;
+    outline: none;
+    color: var(--wa-dark-text);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .wa-send-btn {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    border: none;
+    background: var(--wa-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .wa-send-btn:hover {
+    background-color: var(--wa-dark-green);
+  }
+  .wa-send-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--wa-white);
+  }
+
+  /* ----- تصميم للشاشات الصغيرة (Mobile) ----- */
+  @media (max-width: 480px) {
+    .wa-chat-widget {
+      bottom: 15px;
+      right: 15px;
+    }
+    .wa-chat-box {
+      width: calc(100vw - 30px);
+      bottom: 80px;
+    }
+  }
+</style>
+
+<div class="wa-chat-widget" id="wa-widget">
+  
+  <div class="wa-chat-box">
+    <div class="wa-header">
+      <div class="wa-header-img"></div>
+      <div class="wa-header-text">
+        <h3>Khadamat Maroc</h3>
+        <p>عادةً نرد خلال دقائق</p>
+      </div>
+    </div>
+    <div class="wa-body">
+      <div class="wa-message-box">
+        <p>أهلاً بك! 👋<br>كيف يمكننا مساعدتك اليوم؟</p>
+      </div>
+    </div>
+    <div class="wa-footer">
+      <textarea id="wa-input-message" class="wa-input" placeholder="اكتب رسالتك هنا..."></textarea>
+      <button class="wa-send-btn" id="wa-send-button">
+        <svg viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="wa-fab" id="wa-fab-button">
+    <svg class="wa-icon-whatsapp" viewBox="0 0 90 90">
+      <path d="M90,43.841c0,24.213-19.779,43.841-44.182,43.841c-7.747,0-15.025-1.98-21.357-5.455L0,90l7.975-23.522   c-4.023-6.606-6.34-14.354-6.34-22.637C1.635,19.628,21.416,0,45.818,0C70.223,0,90,19.628,90,43.841z M45.818,6.982   c-20.484,0-37.146,16.535-37.146,36.859c0,8.065,2.629,15.534,7.076,21.61L11.107,79.14l14.275-4.537   c5.865,3.851,12.891,6.097,20.437,6.097c20.481,0,37.146-16.533,37.146-36.857S66.301,6.982,45.818,6.982z M68.129,53.938   c-0.273-0.447-0.994-0.717-2.076-1.254c-1.084-0.537-6.41-3.138-7.4-3.495c-0.993-0.358-1.714-0.538-2.438,0.538   c-0.721,1.076-2.797,3.495-3.43,4.212c-0.632,0.719-1.263,0.809-2.347,0.271c-1.082-0.537-4.571-1.673-8.708-5.333   c-3.219-2.848-5.393-6.364-6.025-7.441c-0.631-1.075-0.066-1.656,0.475-2.191c0.488-0.482,1.084-1.255,1.625-1.882   c0.543-0.628,0.723-1.075,1.082-1.793c0.363-0.717,0.182-1.344-0.09-1.883c-0.27-0.537-2.438-5.825-3.34-8.001   c-0.876-2.12-1.753-1.822-2.438-1.852c-0.658-0.034-1.443-0.034-2.225-0.034c-0.782,0-2.048,0.271-3.13,1.344   c-1.082,1.077-4.16,4.052-4.16,9.875c0,5.823,4.258,11.468,4.842,12.247c0.583,0.779,8.254,12.623,20.109,17.656   c11.857,5.032,11.857,3.35,13.981,3.138c2.121-0.211,6.409-2.599,7.312-5.107C68.397,55.981,68.397,54.386,68.129,53.938z"/>
+    </svg>
+    <svg class="wa-icon-close" viewBox="0 0 24 24">
+      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+    </svg>
+  </div>
+</div>
+
+<audio id="wa-popup-sound" src="http://khadamatmaroc.co.uk/sound/sharp-pop.mp3" preload="auto"></audio>
+
+<script>
+  // ننتظر حتى يتم تحميل كل عناصر الصفحة
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    // تعريف العناصر الرئيسية
+    const widget = document.getElementById('wa-widget');
+    const fabButton = document.getElementById('wa-fab-button');
+    const sendButton = document.getElementById('wa-send-button');
+    const inputMessage = document.getElementById('wa-input-message');
+    const popupSound = document.getElementById('wa-popup-sound');
+
+    // رقم هاتفك مع رمز الدولة
+    const phoneNumber = '212720327932';
+
+    // وظيفة لفتح/إغلاق نافذة المحادثة
+    function toggleWidget() {
+      // تشغيل الصوت فقط عند فتح النافذة
+      if (!widget.classList.contains('active')) {
+        popupSound.play().catch(e => console.error("لا يمكن تشغيل الصوت:", e));
+      }
+      widget.classList.toggle('active');
+    }
+
+    // وظيفة لإرسال الرسالة
+    function sendMessage() {
+      const message = inputMessage.value.trim();
+      if (message === "") {
+        // يمكنك هنا إظهار رسالة خطأ بسيطة إذا أردت
+        return;
+      }
+      
+      // تشفير الرسالة لتكون صالحة في الرابط
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      
+      // فتح واتساب في نافذة جديدة
+      window.open(whatsappUrl, '_blank');
+      
+      // إغلاق النافذة بعد الإرسال
+      toggleWidget();
+      // مسح حقل الإدخال
+      inputMessage.value = '';
+    }
+
+    // ربط الأحداث بالوظائف
+    fabButton.addEventListener('click', toggleWidget);
+    sendButton.addEventListener('click', sendMessage);
+
+    // السماح بالإرسال عند الضغط على Enter في حقل الإدخال
+    inputMessage.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { // يرسل عند ضغط Enter وليس Shift+Enter
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+  });
+</script>
 </html>
