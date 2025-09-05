@@ -1,8 +1,9 @@
 # Supabase Edge Functions Rewrite Rule
 /functions/v1/* https://dlzmyxsycjzedhuqzvpg.supabase.co/functions/v1/:splat    200
-
-/admin/*              /admin/admin-login.html    200
-/*    /index.html   200
+/admin/* /admin/admin-login.html    200
+/* /index.html   200
+!/sitemap.xml
+!/robots.txt
 !/*.js
 !/*.css
 !/*.png
