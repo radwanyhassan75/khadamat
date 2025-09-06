@@ -14,9 +14,7 @@
     
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <script async src="https://pay.google.com/gp/p/js/pay.js" onload="onGooglePayLoaded()"></script>
-    <!-- Structured Data for Google (Breadcrumbs) -->
-<script type="application/ld+json">
+    <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -56,7 +54,6 @@
             direction: rtl; color: var(--text-color);
         }
 
-        /* --- ✅ MODIFICATION START: Header & Responsive Navigation --- */
         .main-header {
             background: var(--light-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky; top: 0; width: 100%; z-index: 1000;
@@ -73,7 +70,6 @@
         .nav-links a:hover { color: var(--primary-color); }
         .nav-links a:hover::after { width: 100%; }
         .hamburger { display: none; cursor: pointer; font-size: 1.8rem; color: var(--dark-color); z-index: 1001; }
-        /* --- ✅ MODIFICATION END --- */
 
         .page-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
         .page-header h1 { font-size: 2.5rem; font-weight: 900; color: var(--dark-color); text-align: center; margin-bottom: 40px;}
@@ -94,7 +90,6 @@
             font-size: 1.2rem; flex-shrink: 0;
         }
 
-        /* --- ✅ MODIFICATION START: Form Validation Styles --- */
         .form-group { margin-bottom: 25px; position: relative; }
         label { font-weight: 700; margin-bottom: 8px; display: block; color: var(--dark-color); }
         .required-star { color: var(--danger-color); }
@@ -115,12 +110,11 @@
         .error-message {
             color: var(--danger-color); font-size: 0.8rem; font-weight: 600;
             margin-top: 5px; display: none;
+            animation: fadeIn 0.3s;
         }
         .form-group.invalid .error-message { display: block; }
-        /* --- ✅ MODIFICATION END --- */
 
         input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
-        .field-note { font-size: 0.85rem; color: #6c757d; margin-top: 8px; }
         .submit-btn {
             width: 100%; padding: 16px; font-size: 1.25rem; border: none;
             color: white; font-weight: bold; border-radius: 10px;
@@ -133,27 +127,42 @@
         #form-error { display: none; background-color: #f8d7da; color: #842029; padding: 15px; border-radius: var(--border-radius); margin-top: 20px; font-weight: 700; border: 1px solid #f5c2c7; }
         
         .payment-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .payment-option { 
+        .payment-option {
             border: 2px solid var(--border-color); border-radius: var(--border-radius); padding: 20px 10px;
             cursor: pointer; transition: all 0.3s ease; text-align: center; display: flex; flex-direction: column;
             align-items: center; justify-content: center; height: 150px; background-color: var(--light-color);
         }
         .payment-option:hover { transform: translateY(-5px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-color: var(--secondary-color); }
         .payment-option.active { border-color: var(--success-color); background-color: #f0fff8; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .payment-option.stripe.active, .payment-option.google-pay.active { border-color: var(--stripe-color); background-color: var(--info-color); }
+        .payment-option.stripe.active { border-color: var(--stripe-color); background-color: var(--info-color); }
         .payment-option img { height: auto; max-height: 65px; width: 100%; max-width: 110px; object-fit: contain; margin-bottom: 15px; }
         .payment-option span { font-weight: 700; color: var(--dark-color); font-size: 1rem; line-height: 1.3; }
 
         .payment-details-container, .stripe-info-box { display: none; padding: 25px; border-radius: var(--border-radius); margin-top: 20px; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .payment-details-container.active, .stripe-info-box.active { display: block; }
-        .payment-details-container { background: #e9f5ff; border: 1px solid #bde0fe; }
-        .stripe-info-box { background-color: var(--info-color); border-right: 6px solid var(--stripe-color); }
-        .payment-instructions h4, .stripe-info-box h4 { font-size: 1.4rem; font-weight: 900; color: var(--dark-color); margin-top: 0; margin-bottom: 20px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #e9ecef; }
-        .detail-row:last-child { border-bottom: none; }
+        .payment-details-container { background: #f8f9fa; border: 1px solid #dee2e6; }
+        .stripe-info-box { background-color: var(--info-color); border-right: 6px solid var(--stripe-color); padding: 20px; }
+        
+        .payment-summary-box { background-color: var(--info-color); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 5px solid var(--primary-color); }
+        .payment-summary-box h4 { margin: 0 0 15px 0; font-size: 1.2rem; color: var(--dark-color); display: flex; align-items: center; gap: 10px; }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #dce4ff; }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row span { font-weight: 600; color: #555; }
+        .summary-row strong { font-weight: 700; color: var(--dark-color); font-size: 1.1rem; }
+        
+        .payment-instructions h5 { font-size: 1.1rem; font-weight: 800; color: var(--dark-color); margin: 25px 0 15px 0; padding-bottom: 5px; border-bottom: 2px solid var(--primary-color); display: inline-block; }
+        .payment-instructions ul { list-style: none; padding-right: 20px; margin: 0 0 20px 0; }
+        .payment-instructions li { position: relative; padding-right: 30px; margin-bottom: 12px; line-height: 1.7; font-size: 0.95rem; }
+        .payment-instructions li::before {
+            font-family: "Font Awesome 6 Free"; font-weight: 900; content: '\f100';
+            position: absolute; right: 0; top: 4px; color: var(--primary-color); font-size: 1rem;
+        }
+        .payment-instructions .final-step { font-weight: 700; color: var(--danger-color); background-color: #fff3f3; padding: 10px; border-radius: 8px; margin-top: 25px; border-right: 4px solid var(--danger-color); }
+        
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 8px; background-color: #fff; margin-bottom: 10px; border: 1px solid #e9ecef;}
         .detail-row .label { font-weight: 700; color: #6c757d; }
-        .detail-row .value { font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .detail-row .value { font-weight: 700; color: var(--dark-color); direction: ltr; text-align: left; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
         .copy-button { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 1.1rem; }
 
         .file-drop-area { border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
@@ -170,7 +179,7 @@
         .remove-file-btn { background: none; border: none; font-size: 1.2rem; color: var(--danger-color); cursor: pointer; flex-shrink: 0; margin-right: auto; }
 
         .legal-agreements { margin-top: 30px; padding: 20px; border-top: 1px solid var(--border-color); background-color: #fcfdff; border-radius: 10px; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; } /* ✅ Added position relative */
+        .checkbox-group { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; position: relative; }
         .checkbox-group:last-child { margin-bottom: 0; }
         .checkbox-group input[type="checkbox"] { flex-shrink: 0; margin-top: 6px; appearance: none; -webkit-appearance: none; width: 1.3em; height: 1.3em; border: 2px solid #adb5bd; border-radius: 5px; cursor: pointer; transition: all 0.2s ease-in-out; position: relative; }
         .checkbox-group input[type="checkbox"]:checked { background-color: var(--primary-color); border-color: var(--primary-color); }
@@ -178,7 +187,7 @@
         .checkbox-group label { font-weight: normal; font-size: 0.95rem; line-height: 1.7; margin: 0; }
         .checkbox-group a { color: var(--primary-color); font-weight: 700; text-decoration: none; }
         .checkbox-group a:hover { text-decoration: underline; }
-        .form-group.invalid .checkbox-group label { color: var(--danger-color); } /* ✅ Style for invalid checkbox */
+        .form-group.invalid .checkbox-group label { color: var(--danger-color); } 
         
         .main-footer { background-color: #1c2331; color: #bdc3c7; padding: 60px 5% 20px; }
         .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
@@ -193,7 +202,6 @@
         .social-links a:hover { color: var(--primary-color); }
         .footer-bottom { text-align: center; border-top: 1px solid #34495e; padding-top: 20px; font-size: 0.9rem; }
 
-        /* --- ✅ MODIFICATION START: Loader Overlay Styles --- */
         #loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px);
@@ -207,10 +215,9 @@
         }
         #loader-overlay p { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* --- ✅ MODIFICATION END --- */
 
         @media (max-width: 768px) {
-            .navbar { position: relative; } /* ✅ Added for positioning menu */
+            .navbar { position: relative; }
             .hamburger { display: block; }
             .nav-links {
                 position: absolute; top: 80px; right: 0;
@@ -222,7 +229,7 @@
                 transform: translateY(-150%);
                 padding: 10px 0;
             }
-            .nav-links.active { transform: translateY(0); } /* ✅ Show menu */
+            .nav-links.active { transform: translateY(0); }
             .nav-links li { width: 100%; text-align: center; }
             .nav-links a { display: block; padding: 20px; width: 100%; }
             .nav-links a::after { right: 50%; transform: translateX(50%); }
@@ -274,17 +281,17 @@
                 <div class="form-group">
                     <label for="name">الاسم الكامل <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fas fa-user input-icon"></i><input type="text" name="customerName" id="name" placeholder="مثال: محمد أمين" required /></div>
-                    <div class="error-message">الاسم الكامل حقل مطلوب.</div>
+                    <div class="error-message">الاسم الكامل مطلوب (حروف فقط).</div>
                 </div>
                 <div class="form-group">
                     <label for="email">البريد الإلكتروني <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fas fa-envelope input-icon"></i><input type="email" name="email" id="email" placeholder="example@mail.com" required /></div>
-                    <div class="error-message">بريد إلكتروني صحيح حقل مطلوب.</div>
+                    <div class="error-message">يرجى إدخال بريد إلكتروني صحيح.</div>
                 </div>
                 <div class="form-group">
                     <label for="phone">رقم الهاتف / واتساب <span class="required-star">*</span></label>
                     <div class="input-wrapper"><i class="fab fa-whatsapp input-icon"></i><input type="tel" name="phone" id="phone" placeholder="مثال: 0612345678" required /></div>
-                    <div class="error-message">رقم الهاتف حقل مطلوب.</div>
+                    <div class="error-message">رقم هاتف مغربي صحيح مطلوب (مثل 0612345678).</div>
                 </div>
                 </div>
 
@@ -292,7 +299,13 @@
                 <div class="card-header"><span class="step-icon"><i class="fas fa-pencil-alt"></i></span><h3>تفاصيل إضافية ومرفقات</h3></div>
                 <div class="form-group">
                     <label for="service-details">تفاصيل الخدمة المطلوبة <span class="required-star">*</span></label>
-                    <textarea name="serviceDetails" id="service-details" rows="4" required placeholder="مثلاً: أحتاج كتابة سيرة ذاتية احترافية باللغة الإنجليزية للتقديم على وظيفة مدير تسويق..."></textarea>
+                    <textarea name="serviceDetails" id="service-details" rows="5" required 
+placeholder="يرجى تقديم كل التفاصيل لمساعدتنا على تنفيذ طلبك بدقة.
+
+أمثلة:
+- أحتاج سيرة ذاتية احترافية باللغة الإنجليزية لوظيفة مدير تسويق...
+- أريد حجز موعد 'Timos' في القنصلية الإسبانية في أقرب وقت...
+- أطلب كتابة رسالة شكوى رسمية لمالك العقار بخصوص..."></textarea>
                     <div class="error-message">يرجى تقديم تفاصيل طلبك.</div>
                 </div>
                 <div class="form-group">
@@ -323,9 +336,12 @@
                     <input type="hidden" name="paymentMethod" id="payment-method-input" required>
                     <div class="error-message">يرجى اختيار وسيلة دفع.</div>
                 </div>
+                
                 <div id="payment-details-container" class="payment-details-container"></div>
-                <div id="stripe-info-box" class="stripe-info-box"></div>
-                <div id="google-pay-button-container" style="display: none; margin-top: 20px; justify-content: center;"></div>
+                
+                <div id="stripe-info-box" class="stripe-info-box">
+                    <h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية. تواصل مع البنك الخاص بك للتفعيل.</p>
+                </div>
                 
                 <div class="form-group" id="receipt-upload-group" style="display: none;">
                     <label for="receipt-file-input">أرفق وصل الدفع (صورة أو PDF) <span class="required-star">*</span></label>
@@ -340,6 +356,7 @@
                      </div>
                      <div class="error-message">وصل الدفع مطلوب لإتمام الطلب.</div>
                 </div>
+                
                 <div class="legal-agreements form-group">
                     <div class="checkbox-group">
                         <input type="checkbox" id="terms-agree" required>
@@ -351,6 +368,7 @@
                     </div>
                     <div class="error-message">يجب الموافقة على جميع الشروط للمتابعة.</div>
                 </div>
+
                 <button type="submit" class="submit-btn" id="submit-btn" disabled><i class="fas fa-lock"></i> أكمل الحقول والموافقات المطلوبة</button>
                 <div id="form-error"></div>
             </div>
@@ -362,21 +380,11 @@
              <div class="footer-section">
                  <h3 class="footer-title">المكتب الرقمي</h3>
                  <p>منصة متكاملة لتسهيل جميع معاملاتك الإدارية والرقمية بكفاءة وموثوقية عالية في المغرب.</p>
-                 <div class="footer-section">
-  <h3>تواصل معنا</h3>
-  <div class="social-links">
-    <a href="https://m.me/548280335029651" target="_blank" rel="noopener noreferrer" title="Facebook Messenger">
-      <i class="fab fa-facebook-messenger"></i>
-    </a>
-    <a href="https://wa.me/212720327932" target="_blank" rel="noopener noreferrer" title="WhatsApp">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-    <a href="https://www.instagram.com/khadmatidigital/" target="_blank" rel="noopener noreferrer" title="Instagram">
-      <i class="fab fa-instagram"></i>
-    </a>
-  </div>
-</div>
-
+                 <div class="social-links">
+                   <a href="https://m.me/548280335029651" target="_blank" rel="noopener noreferrer" title="Facebook Messenger"><i class="fab fa-facebook-messenger"></i></a>
+                   <a href="https://wa.me/212720327932" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                   <a href="https://www.instagram.com/khadmatidigital/" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+                 </div>
              </div>
              <div class="footer-section">
                  <h3 class="footer-title">روابط مهمة</h3>
@@ -399,7 +407,7 @@
                  <h3 class="footer-title">تواصل معنا</h3>
                  <ul>
                      <li><a href="mailto:support@khadamatmaroc.co.uk"><i class="fas fa-envelope"></i> support@khadamatmaroc.co.uk</a></li>
-                     <li><a href="tel:+2120720327932"><i class="fas fa-phone"></i> +212720327932</a></li>
+                     <li><a href="tel:+212720327932"><i class="fas fa-phone"></i> +212720327932</a></li>
                      <li><p><i class="fas fa-map-marker-alt"></i> الرباط، المغرب</p></li>
                  </ul>
              </div>
@@ -411,45 +419,29 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ✅ CONFIGURATION ---
+    // -----------------------------------------------------------------
+    // --- 1. الإعدادات والتهيئة ---
+    // -----------------------------------------------------------------
+    
     const IS_PRODUCTION = true;
 
-    // --- Supabase Configuration ---
     const SUPABASE_URL = 'https://dlzmyxsycjzedhuqzvpg.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsem15eHN5Y2p6ZWRodXF6dnBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNTI5ODAsImV4cCI6MjA3MTcyODk4MH0.d8Mk01dOUWyOV3wLWM2NIYFzZhN_azr9S4kOZFA6ZvA';
 
-    // --- Payment Provider Keys ---
     const PAYMENT_CONFIG = {
-        PRODUCTION: {
-            STRIPE_PUBLISHABLE_KEY: 'pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF',
-            GOOGLE_PAY_MERCHANT_ID: 'BCR2DN7T6DV6N4KO',
-            GOOGLE_PAY_MERCHANT_NAME: 'khadamatmaroc',
-            GOOGLE_PAY_ENVIRONMENT: 'PRODUCTION'
-        },
-        TEST: {
-            STRIPE_PUBLISHABLE_KEY: 'pk_test_YOUR_TEST_KEY_HERE', 
-            GOOGLE_PAY_MERCHANT_ID: '12345678901234567890',
-            GOOGLE_PAY_MERCHANT_NAME: 'Example Merchant (Test)',
-            GOOGLE_PAY_ENVIRONMENT: 'TEST'
-        }
+        PRODUCTION: { STRIPE_PUBLISHABLE_KEY: 'pk_live_51Rp6K4Ju30ddBm3eqv8Og0m6doq0KMWOQKuNnbwDpMVBOeeAj44HSTeGk9O3Eb96ETblaveavwk1YWVOvFpVSvo9008NBFxGeF' },
+        TEST: { STRIPE_PUBLISHABLE_KEY: 'pk_test_YOUR_TEST_KEY_HERE' }
     };
     
     const currentConfig = IS_PRODUCTION ? PAYMENT_CONFIG.PRODUCTION : PAYMENT_CONFIG.TEST;
-
-    // --- INITIALIZATION ---
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const stripe = Stripe(currentConfig.STRIPE_PUBLISHABLE_KEY); 
-    let googlePaymentsClient;
+    const stripe = Stripe(currentConfig.STRIPE_PUBLISHABLE_KEY);
 
-    // --- SOUND EFFECTS ---
     let soundsReady = false;
     const selectSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 1 } }).toDestination();
     const copySound = new Tone.MembraneSynth({ pitchDecay: 0.008, octaves: 2, envelope: { attack: 0.001, decay: 0.2, sustain: 0 } }).toDestination();
-    document.body.addEventListener('click', async () => {
-        if (!soundsReady) { await Tone.start(); soundsReady = true; }
-    }, { once: true });
+    document.body.addEventListener('click', async () => { if (!soundsReady) { await Tone.start(); soundsReady = true; } }, { once: true });
 
-    // --- DOM ELEMENTS ---
     const form = document.getElementById('payment-form');
     const submitBtn = document.getElementById('submit-btn');
     const errorDiv = document.getElementById('form-error');
@@ -458,46 +450,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const paymentDetailsContainer = document.getElementById('payment-details-container');
     const stripeInfoBox = document.getElementById('stripe-info-box');
     const receiptUploadGroup = document.getElementById('receipt-upload-group');
-    const googlePayContainer = document.getElementById('google-pay-button-container');
-    const loaderOverlay = document.getElementById('loader-overlay'); // ✅ MODIFICATION: Get loader element
-    const loaderText = document.getElementById('loader-text'); // ✅ MODIFICATION: Get loader text element
-
+    const loaderOverlay = document.getElementById('loader-overlay');
+    const loaderText = document.getElementById('loader-text');
     let paymentMethods = [];
-    
-    // --- ✅ MODIFICATION: Responsive Navigation ---
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
-    hamburger.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-    });
+    hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
 
-    // --- PAYMENT METHODS LOGIC ---
+    // ----------------------------------------------------
+    // --- 2. منطق طرق الدفع ---
+    // ----------------------------------------------------
+
     async function fetchPaymentMethods() {
         try {
-            const { data, error } = await supabaseClient.from('payment_methods').select('*').eq('is_enabled', true);
-            if (error) throw error;
-            
-            let filteredMethods = data.filter(method => method.id !== 'stripe');
-            paymentMethods = filteredMethods;
-            
-            paymentMethods.push({ 
-                id: 'stripe', 
-                name: 'البطاقة البنكية', 
-                logo_url: 'https://www.uwo.ca/finance/images/visamastercard.png' 
-            });
-            paymentMethods.push({ 
-                id: 'google-pay', 
-                name: 'Google Pay', 
-                logo_url: 'https://khadamatmaroc.co.uk/images/GPay_Acceptance_Mark_800.png' 
-            });
+            const { data, error } = await supabaseClient
+                .from('payment_methods')
+                .select('*')
+                .eq('is_enabled', true)
+                .order('display_order', { ascending: true });
 
+            if (error) throw error;
+            paymentMethods = data;
             renderPaymentOptions();
         } catch (error) {
-            console.error("Error fetching payment methods:", error);
-            paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color);">فشل تحميل طرق الدفع.</p>`;
+            console.error("خطأ في جلب طرق الدفع:", error);
+            paymentOptionsContainer.innerHTML = `<p style="color: var(--danger-color);">فشل تحميل طرق الدفع. يرجى تحديث الصفحة.</p>`;
         }
     }
-
+    
     function renderPaymentOptions() {
         paymentOptionsContainer.innerHTML = '';
         paymentMethods.forEach(method => {
@@ -520,117 +500,74 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedMethod = paymentMethods.find(m => m.id === selectedMethodId);
         paymentMethodInput.value = selectedMethod.name;
 
-        const isBankTransfer = !['stripe', 'google-pay'].includes(selectedMethodId);
+        const isBankTransfer = selectedMethodId !== 'stripe';
         
         receiptUploadGroup.style.display = isBankTransfer ? 'block' : 'none';
         document.getElementById('receipt-file-input').required = isBankTransfer;
-        
         paymentDetailsContainer.classList.toggle('active', isBankTransfer);
+        stripeInfoBox.classList.toggle('active', !isBankTransfer);
         
-        stripeInfoBox.classList.toggle('active', selectedMethodId === 'stripe');
-        if(selectedMethodId === 'stripe') {
-            stripeInfoBox.innerHTML = `<h4><i class="fas fa-info-circle"></i> تنبيه هام للدفع بالبطاقة</h4><p>لضمان نجاح الدفع، يجب تفعيل <strong>"مخصصات التجارة الإلكترونية" (Dotation e-commerce)</strong> على بطاقتك البنكية.</p>`;
-        }
-
-        googlePayContainer.style.display = selectedMethodId === 'google-pay' ? 'flex' : 'none';
-        submitBtn.style.display = selectedMethodId === 'google-pay' ? 'none' : 'flex';
-
         if (isBankTransfer) {
-            renderPaymentDetails(selectedMethodId);
+            const serviceName = document.getElementById('display-service-name').value;
+            const servicePrice = document.getElementById('display-service-price').value;
+            renderPaymentDetails(selectedMethod, serviceName, servicePrice);
         }
         
         validateForm();
     }
 
-    function renderPaymentDetails(methodId) {
-        const method = paymentMethods.find(m => m.id === methodId);
-        if (!method || !method.details) return;
-        const beneficiary = method.details.beneficiary || 'غير محدد';
-        let detailsHtml = `<h4><i class="fas fa-money-check-alt"></i> معلومات الدفع لـ: ${beneficiary}</h4>`;
-        if (method.details.iban) detailsHtml += createDetailRow('IBAN', method.details.iban);
-        if (method.details.rib) detailsHtml += createDetailRow('رقم الحساب (RIB)', method.details.rib);
+    function renderPaymentDetails(method, serviceName, servicePrice) {
+        if (!method || !method.details) {
+            paymentDetailsContainer.innerHTML = '<p>تفاصيل الدفع غير متاحة حالياً لهذه الطريقة.</p>';
+            return;
+        }
+
+        const beneficiary = method.details.beneficiary || 'اسم المستفيد';
+        let detailsHtml = `
+            <div class="payment-summary-box">
+                <h4><i class="fas fa-file-invoice"></i> ملخص الدفع المطلوب</h4>
+                <div class="summary-row"><span>الخدمة:</span><strong>${serviceName}</strong></div>
+                <div class="summary-row"><span>المبلغ للدفع:</span><strong>${servicePrice}</strong></div>
+                <div class="summary-row"><span>الوسيلة المختارة:</span><strong>${method.name}</strong></div>
+            </div>
+            <div class="payment-instructions">
+                <h5><i class="fas fa-mobile-alt"></i> الطريقة الأولى: عبر تطبيقك البنكي</h5>
+                <ul>
+                    <li>افتح تطبيق البنك الخاص بك واختر "تحويل الأموال" (Virement).</li>
+                    <li>أضف المستفيد الجديد باستخدام البيانات التالية.</li>
+                    <li>أدخل المبلغ المطلوب واسمك الكامل في خانة "السبب" أو "Motif".</li>
+                    <li>أكمل التحويل واحفظ لقطة شاشة (Screenshot) لوصل الدفع.</li>
+                </ul>
+                <h5><i class="fas fa-university"></i> الطريقة الثانية: في وكالة بنكية أو وكالة تحويل أموال</h5>
+                <ul>
+                    <li>توجه إلى أقرب فرع لبنك المستفيد أو وكالة (مثل وفاكاش، كاش بلوس).</li>
+                    <li>اطلب إجراء تحويل أو إيداع وقدم لهم بيانات حساب المستفيد أدناه.</li>
+                    <li>احتفظ بالوصل الورقي الذي ستحصل عليه وقم بتصويره بشكل واضح.</li>
+                </ul>
+                <h5 style="margin-top: 25px;">بيانات حساب المستفيد</h5>
+                <div class="details-box">
+        `;
+
+        detailsHtml += createDetailRow('اسم المستفيد', beneficiary);
         if (method.details.phone) detailsHtml += createDetailRow('رقم الهاتف', method.details.phone);
+        if (method.details.rib) detailsHtml += createDetailRow('رقم الحساب (RIB)', method.details.rib);
+        
+        detailsHtml += `
+                </div>
+                <p class="final-step">⚠️ هام جداً: بعد إتمام الدفع، يجب عليك إرفاق صورة واضحة لوصل الدفع في الحقل المخصص أدناه لتأكيد طلبك.</p>
+            </div>
+        `;
+        
         paymentDetailsContainer.innerHTML = detailsHtml;
     }
 
-    // --- GOOGLE PAY LOGIC ---
-    window.onGooglePayLoaded = () => {
-        try {
-            googlePaymentsClient = new google.payments.api.PaymentsClient({ environment: currentConfig.GOOGLE_PAY_ENVIRONMENT });
-            const button = googlePaymentsClient.createButton({
-                onClick: onGooglePayClicked,
-                buttonType: 'pay',
-                buttonSizeMode: 'fill',
-            });
-            googlePayContainer.appendChild(button);
-        } catch (err) {
-            console.error('Google Pay failed to initialize:', err);
-        }
-    };
+    // --------------------------------------------------------------------
+    // --- 3. منطق إرسال النموذج والتحقق ---
+    // --------------------------------------------------------------------
 
-    function getGooglePaymentDataRequest() {
-        const price = document.getElementById('form-service-price').value;
-        return {
-            apiVersion: 2, apiVersionMinor: 0,
-            allowedPaymentMethods: [{
-                type: 'CARD',
-                parameters: { allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"], allowedCardNetworks: ["VISA", "MASTERCARD"] },
-                tokenizationSpecification: {
-                    type: 'PAYMENT_GATEWAY',
-                    parameters: { 'gateway': 'stripe', 'stripe:version': '2020-08-27', 'stripe:publishableKey': currentConfig.STRIPE_PUBLISHABLE_KEY }
-                }
-            }],
-            transactionInfo: { totalPriceStatus: 'FINAL', totalPrice: price, currencyCode: 'MAD' },
-            merchantInfo: { merchantId: currentConfig.GOOGLE_PAY_MERCHANT_ID, merchantName: currentConfig.GOOGLE_PAY_MERCHANT_NAME }
-        };
-    }
-
-    async function onGooglePayClicked() {
-        if (!validateForm(false, true)) { // ✅ MODIFICATION: Pass flag to skip button update
-            showError('الرجاء ملء جميع الحقول المطلوبة والموافقة على الشروط قبل الدفع.');
-            form.querySelector(':invalid')?.focus();
-            return;
-        }
-        
-        try {
-            const paymentDataRequest = getGooglePaymentDataRequest();
-            const paymentData = await googlePaymentsClient.loadPaymentData(paymentDataRequest);
-            await processGooglePayOrder(paymentData);
-        } catch (err) {
-            console.error(err);
-            showError('فشل الدفع عبر Google Pay. ' + (err.statusMessage || 'تأكد من أن حسابك مفعّل.'));
-        }
-    }
-
-    async function processGooglePayOrder(paymentData) {
-        showLoadingState(true, 'جاري معالجة الدفع...');
-        try {
-            const attachmentFile = document.getElementById('attachment-file-input').files[0];
-            const attachmentUrl = await uploadFile(attachmentFile, 'attachments');
-            
-            const orderData = {
-                customer_name: document.getElementById('name').value, email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value, service_name: document.getElementById('form-service-name').value,
-                price: parseFloat(document.getElementById('form-service-price').value),
-                service_details: document.getElementById('service-details').value, optional_link: document.getElementById('optional-link').value,
-                payment_method: 'Google Pay', attachment_url: attachmentUrl,
-                google_pay_token: paymentData.paymentMethodData.tokenizationData.token
-            };
-
-            const { data, error } = await supabaseClient.functions.invoke('process-google-pay-order', { body: orderData });
-            if (error) throw error;
-            window.location.href = `success.html?orderId=${data.orderId}`;
-        } catch (error) {
-            showError('فشل إرسال الطلب بعد الدفع. ' + error.message);
-            showLoadingState(false);
-        }
-    }
-
-    // --- FORM SUBMISSION & VALIDATION ---
     async function handleFormSubmit(e) {
         e.preventDefault();
         
-        // ✅ MODIFICATION: Re-validate on submit to show all errors
         if (!validateForm(false)) {
             showError('يرجى تصحيح الأخطاء في الحقول المشار إليها باللون الأحمر.');
             form.querySelector('.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -665,7 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
                 if (stripeError) throw new Error('فشل التوجيه لصفحة الدفع: ' + stripeError.message);
 
-            } else { // Bank Transfer Logic
+            } else {
                 const receiptFile = document.getElementById('receipt-file-input').files[0];
                 const receiptUrl = await uploadFile(receiptFile, 'receipts');
                 const orderData = {
@@ -685,55 +622,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- ✅ MODIFICATION START: Rewritten validation logic ---
     function validateField(input) {
+        if (!input) return true;
         let isValid = true;
-        // Ignore hidden fields unless they are part of a visible group (like file inputs)
-        if (input.offsetParent === null && input.type !== 'file' && input.type !== 'hidden') return true; 
+        let errorMessage = input.dataset.defaultError || 'هذا الحقل مطلوب.';
 
+        if (input.offsetParent === null && !['file', 'hidden', 'checkbox'].includes(input.type)) return true;
         if (!input.required) return true;
+
+        const value = input.value.trim();
 
         if (input.type === 'checkbox') {
             isValid = input.checked;
         } else if (input.type === 'file') {
             isValid = input.files.length > 0;
-        } else if (input.type === 'email') {
-            isValid = input.value.trim() !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);
+        } else if (value === '') {
+            isValid = false;
         } else {
-            isValid = input.value.trim() !== '';
+            switch (input.id) {
+                case 'name':
+                    isValid = /^[a-zA-Z\u0600-\u06FF\s\-']+$/.test(value);
+                    if (!isValid) errorMessage = "الاسم يجب أن يحتوي على حروف ومسافات فقط.";
+                    break;
+                case 'email':
+                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                    if (!isValid) errorMessage = "يرجى إدخال بريد إلكتروني بالصيغة الصحيحة.";
+                    break;
+                case 'phone':
+                    isValid = /^(0[5-7])\d{8}$/.test(value);
+                    if (!isValid) errorMessage = "يجب أن يكون رقم هاتف مغربي صالح (يبدأ بـ 06 أو 07 أو 05).";
+                    break;
+            }
         }
         
-        // Handle special case for checkbox group
         const parentGroup = input.closest('.form-group');
         if (parentGroup) {
             parentGroup.classList.toggle('invalid', !isValid);
+            const errorElement = parentGroup.querySelector('.error-message');
+            if (errorElement) errorElement.textContent = errorMessage;
         }
-
         return isValid;
     }
 
-    function validateForm(isSilent = false, forGooglePay = false) {
+    function validateForm(isSilent = false) {
         let isFormValid = true;
-        const requiredFields = form.querySelectorAll('[required]');
-
-        requiredFields.forEach(input => {
-            if (!validateField(input)) {
-                isFormValid = false;
-            }
+        form.querySelectorAll('[required]').forEach(input => {
+            if (!validateField(input)) isFormValid = false;
         });
-        
-        // Validate checkbox groups as one
-        const legalAgreements = document.querySelector('.legal-agreements');
-        const checkboxes = legalAgreements.querySelectorAll('input[type="checkbox"][required]');
-        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-        legalAgreements.classList.toggle('invalid', !allChecked);
-        if (!allChecked) isFormValid = false;
-
 
         if (isSilent) return isFormValid;
-        
-        // For Google Pay, we don't need to update the regular submit button
-        if (forGooglePay) return isFormValid;
 
         submitBtn.disabled = !isFormValid;
         const selectedMethodId = document.querySelector('.payment-option.active')?.dataset.method;
@@ -744,50 +681,34 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = '<i class="fas fa-lock"></i> أكمل الحقول المطلوبة';
             submitBtn.className = 'submit-btn';
         }
-
         return isFormValid;
     }
-    // --- ✅ MODIFICATION END ---
 
-    // --- ✅ UTILITY FUNCTIONS (WITH FIX) ---
-    // --- ✅ UTILITY FUNCTIONS (WITH FIX) ---
+    // ----------------------------------------------------
+    // --- 4. دوال مساعدة ---
+    // ----------------------------------------------------
+    
     async function uploadFile(file, folder) {
         if (!file) return null;
-
-        // ✅ تغيير: استخلاص امتداد الملف فقط
         const fileExtension = file.name.split('.').pop();
-        
-        // ✅ تغيير: إنشاء اسم ملف جديد، آمن، وفريد تمامًا
-        // يتكون من (الوقت الحالي) - (سلسلة عشوائية) . (امتداد الملف)
-        // مثال: 1678886400000-a1b2c3d4.png
         const newFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${fileExtension}`;
-
-        // ✅ تغيير: استخدام اسم الملف الجديد والآمن في المسار
         const filePath = `public/${folder}/${newFileName}`;
-
-        const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false
-        });
-
+        const { error } = await supabaseClient.storage.from('order-files').upload(filePath, file, { cacheControl: '3600', upsert: false });
         if (error) {
-            console.error('Supabase Storage Error:', error);
-            // ✅ تحسين: جعل رسالة الخطأ أكثر وضوحًا
-            throw new Error(`فشل رفع الملف إلى المخزن. الخطأ: ${error.message}`);
+            console.error('خطأ في رفع الملف:', error);
+            throw new Error(`فشل رفع الملف. الخطأ: ${error.message}`);
         }
-
         const { data } = supabaseClient.storage.from('order-files').getPublicUrl(filePath);
         return data.publicUrl;
     }
     
-    // ✅ MODIFICATION: Updated loading state to use overlay
     function showLoadingState(isLoading, text = 'جاري الإرسال...') {
         if (isLoading) {
             loaderText.textContent = text;
             loaderOverlay.style.display = 'flex';
         } else {
             loaderOverlay.style.display = 'none';
-            validateForm(); // Re-enable button if needed after error
+            validateForm();
         }
     }
 
@@ -841,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFiles(files, previewWrapper, fileInput) {
         const file = files[0];
         if (!file) return;
-        fileInput.files = files;
+        fileInput.files = files; 
         previewWrapper.style.display = 'flex';
         const previewInfo = previewWrapper.querySelector('.file-preview-info');
         if (file.type.startsWith('image/')) {
@@ -853,13 +774,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         validateForm();
     }
-    setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
-    setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
+    
+    // ----------------------------------------------------
+    // --- 5. تشغيل الصفحة ---
+    // ----------------------------------------------------
 
-    // --- PAGE INITIALIZATION ---
     function initializePage() {
         const params = new URLSearchParams(window.location.search);
-        const serviceName = decodeURIComponent(params.get('service') || 'غير محدد');
+        const serviceName = decodeURIComponent(params.get('service') || 'خدمة غير محددة');
         const servicePrice = decodeURIComponent(params.get('price') || '0');
 
         document.getElementById('display-service-name').value = serviceName;
@@ -868,19 +790,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('form-service-price').value = servicePrice;
         
         form.addEventListener('submit', handleFormSubmit);
-        // ✅ MODIFICATION: Use blur event for instant feedback after user leaves a field
+
+        const nameInput = document.getElementById('name');
+        const phoneInput = document.getElementById('phone');
+        
+        nameInput.addEventListener('input', () => {
+            nameInput.value = nameInput.value.replace(/[^a-zA-Z\u0600-\u06FF\s\-']/g, '');
+            validateField(nameInput);
+        });
+
+        phoneInput.addEventListener('input', () => {
+            phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+            validateField(phoneInput);
+        });
+        
         form.querySelectorAll('input[required], textarea[required]').forEach(input => {
-            input.addEventListener('blur', () => validateField(input));
+            const errorElement = input.closest('.form-group')?.querySelector('.error-message');
+            if (errorElement) input.dataset.defaultError = errorElement.textContent;
             input.addEventListener('input', () => validateForm());
+            input.addEventListener('blur', () => validateField(input));
         });
-        form.querySelectorAll('input[type=checkbox][required], input[type=file][required]').forEach(input => {
-            input.addEventListener('change', () => validateForm());
-        });
+        
+        setupUploader('attachment-drop-area', 'attachment-file-input', 'attachment-preview-wrapper');
+        setupUploader('receipt-drop-area', 'receipt-file-input', 'receipt-preview-wrapper');
         
         fetchPaymentMethods();
         validateForm();
     }
-
+    
     initializePage();
 });
 </script>
